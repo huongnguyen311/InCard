@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Your Points</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green:         #009037;
+      --green-light:   #2eb07a;
+      --green-bg:      rgba(0,144,55,0.1);
+      --slate-900:     #0f172a;
+      --slate-700:     #334155;
+      --slate-600:     #475569;
+      --slate-500:     #64748b;
+      --slate-400:     #94a3b8;
+      --slate-200:     #e2e8f0;
+      --slate-100:     #f1f5f9;
+      --gray-bg:       #f8f6f6;
+      --white:         #ffffff;
+      --gold:          #d4af37;
+      --gold-light:    #f0c040;
+      --gold-bg:       rgba(212,175,55,0.1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; scrollbar-width: none; }
+    body::-webkit-scrollbar { display: none; }
+
+    body {
+      font-family: 'Public Sans', sans-serif;
+      width: 390px; height: 844px;
+      background: var(--gray-bg);
+      display: flex; flex-direction: column;
+      overflow: hidden; position: relative;
+    }
+
+    /* ── Dimmed backdrop (bottom sheet context) ── */
+    .backdrop {
+      position: absolute; inset: 0;
+      background: rgba(15,23,42,0.45);
+      z-index: 1;
+    }
+
+    /* ── Bottom sheet ── */
+    .sheet {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: var(--white);
+      border-radius: 24px 24px 0 0;
+      z-index: 2;
+      display: flex; flex-direction: column;
+      max-height: 88%;
+    }
+
+    /* drag handle */
+    .sheet-handle {
+      width: 36px; height: 4px; border-radius: 9999px;
+      background: var(--slate-200);
+      margin: 12px auto 0;
+      flex-shrink: 0;
+    }
+
+    /* sheet header */
+    .sheet-header {
+      padding: 16px 20px 12px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+      border-bottom: 1px solid var(--slate-200);
+    }
+    .sheet-title {
+      font-size: 16px; font-weight: 700; color: var(--slate-900);
+    }
+    .sheet-close {
+      width: 30px; height: 30px; border-radius: 9999px;
+      background: var(--slate-100);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
+      border: none;
+    }
+
+    /* total points hero */
+    .points-hero {
+      padding: 20px 20px 16px;
+      display: flex; align-items: center; gap: 16px;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a2f 60%, #009037 140%);
+      flex-shrink: 0;
+      position: relative; overflow: hidden;
+    }
+    .points-hero::before {
+      content: '';
+      position: absolute; top: -30px; right: -30px;
+      width: 110px; height: 110px; border-radius: 9999px;
+      background: rgba(255,255,255,0.07);
+    }
+    .points-hero::after {
+      content: '';
+      position: absolute; bottom: -20px; left: 30px;
+      width: 70px; height: 70px; border-radius: 9999px;
+      background: rgba(255,255,255,0.05);
+    }
+    .hero-icon {
+      width: 52px; height: 52px; border-radius: 16px;
+      background: rgba(255,255,255,0.18);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; position: relative; z-index: 1;
+      border: 1.5px solid rgba(255,255,255,0.25);
+    }
+    .hero-text { flex: 1; position: relative; z-index: 1; }
+    .hero-label {
+      font-size: 11px; font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase; letter-spacing: 0.8px;
+    }
+    .hero-points {
+      font-size: 32px; font-weight: 800; color: #fff;
+      line-height: 1.1; margin-top: 2px;
+    }
+    .hero-sub {
+      font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 2px;
+    }
+    .hero-rank {
+      text-align: center; flex-shrink: 0;
+      position: relative; z-index: 1;
+    }
+    .hero-rank-num {
+      font-size: 26px; font-weight: 800; color: #fff; line-height: 1;
+    }
+    .hero-rank-lbl {
+      font-size: 10px; font-weight: 600;
+      color: rgba(255,255,255,0.65); margin-top: 2px;
+    }
+
+    /* profile selector */
+    .profile-row {
+      padding: 12px 20px;
+      display: flex; gap: 8px;
+      flex-shrink: 0;
+      border-bottom: 1px solid var(--slate-200);
+    }
+    .profile-chip {
+      display: flex; align-items: center; gap: 7px;
+      padding: 6px 12px 6px 8px;
+      border-radius: 20px;
+      border: 1.5px solid var(--slate-200);
+      background: var(--white);
+      cursor: pointer; flex-shrink: 0;
+    }
+    .profile-chip.active {
+      border-color: var(--green);
+      background: var(--green-bg);
+    }
+    .profile-chip-avatar {
+      width: 22px; height: 22px; border-radius: 9999px;
+      overflow: hidden; flex-shrink: 0;
+    }
+    .profile-chip-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .profile-chip-name {
+      font-size: 12px; font-weight: 600;
+    }
+    .profile-chip.active .profile-chip-name { color: var(--green); }
+    .profile-chip:not(.active) .profile-chip-name { color: var(--slate-600); }
+    .profile-chip-pts {
+      font-size: 11px; font-weight: 700;
+      padding: 2px 6px; border-radius: 9999px;
+    }
+    .profile-chip.active .profile-chip-pts {
+      background: var(--green); color: #fff;
+    }
+    .profile-chip:not(.active) .profile-chip-pts {
+      background: var(--slate-100); color: var(--slate-500);
+    }
+
+    /* scrollable list */
+    .sheet-body {
+      flex: 1; overflow-y: auto; padding: 16px 20px 24px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .sheet-body::-webkit-scrollbar { display: none; }
+
+    .section-label {
+      font-size: 11px; font-weight: 700; color: var(--slate-400);
+      letter-spacing: 0.6px; text-transform: uppercase;
+      margin-bottom: 4px; margin-top: 4px;
+    }
+
+    /* points row */
+    .pts-row {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: 14px;
+      padding: 13px 14px;
+    }
+    .pts-icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 18px;
+    }
+    .pts-info { flex: 1; min-width: 0; }
+    .pts-name {
+      font-size: 14px; font-weight: 600; color: var(--slate-900);
+      line-height: 1.3;
+    }
+    .pts-desc {
+      font-size: 12px; color: var(--slate-500);
+      line-height: 1.4; margin-top: 1px;
+    }
+    .pts-right { text-align: right; flex-shrink: 0; }
+    .pts-value {
+      font-size: 15px; font-weight: 700; color: var(--green);
+      line-height: 1.2;
+    }
+    .pts-earned {
+      font-size: 11px; color: var(--slate-400);
+      margin-top: 1px;
+    }
+    .pts-progress-wrap {
+      margin-top: 6px;
+      background: var(--slate-100);
+      border-radius: 9999px; height: 4px; overflow: hidden;
+    }
+    .pts-progress-bar {
+      height: 100%; border-radius: 9999px;
+      background: linear-gradient(90deg, var(--green), var(--green-light));
+    }
+
+    /* home indicator */
+    .home-indicator {
+      height: 28px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .home-bar {
+      width: 110px; height: 4px; border-radius: 9999px;
+      background: rgba(0,0,0,0.12);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Backdrop (shows underlying screen is dimmed) -->
+  <div class="backdrop"></div>
+
+  <!-- Bottom Sheet -->
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+
+    <!-- Sheet header -->
+    <div class="sheet-header">
+      <div class="sheet-title">Your Points</div>
+      <button class="sheet-close">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M1 1l12 12M13 1L1 13" stroke="var(--slate-500)" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Total points hero -->
+    <div class="points-hero">
+      <div class="hero-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2C12 2 12.8 5.8 14.2 7.4C15.6 9 19 10 19 10C19 10 15.6 11 14.2 12.6C12.8 14.2 12 18 12 18C12 18 11.2 14.2 9.8 12.6C8.4 11 5 10 5 10C5 10 8.4 9 9.8 7.4C11.2 5.8 12 2 12 2Z" fill="white"/>
+          <path d="M19 3C19 3 19.4 4.6 20 5.2C20.6 5.8 22 6.5 22 6.5C22 6.5 20.6 7.2 20 7.8C19.4 8.4 19 10 19 10C19 10 18.6 8.4 18 7.8C17.4 7.2 16 6.5 16 6.5C16 6.5 17.4 5.8 18 5.2C18.6 4.6 19 3 19 3Z" fill="white" opacity="0.65"/>
+        </svg>
+      </div>
+      <div class="hero-text">
+        <div class="hero-label">Total Points</div>
+        <div class="hero-points">700 pts</div>
+        <div class="hero-sub">Across all your profiles</div>
+      </div>
+      <div class="hero-rank">
+        <div class="hero-rank-num">#8</div>
+        <div class="hero-rank-lbl">Your Rank</div>
+      </div>
+    </div>
+
+    <!-- Points breakdown list -->
+    <div class="sheet-body">
+
+      <div class="section-label">How you earn points</div>
+
+      <!-- Profile View -->
+      <div class="pts-row">
+        <div class="pts-icon" style="background: rgba(99,102,241,0.1);">👁️</div>
+        <div class="pts-info">
+          <div class="pts-name">Profile View</div>
+          <div class="pts-desc">Someone viewed your digital card</div>
+        </div>
+        <div class="pts-right">
+          <div class="pts-value">+5 pts</div>
+        </div>
+      </div>
+
+      <!-- QR / NFC Scan -->
+      <div class="pts-row">
+        <div class="pts-icon" style="background: rgba(0,144,55,0.08);">📲</div>
+        <div class="pts-info">
+          <div class="pts-name">QR / NFC Scan</div>
+          <div class="pts-desc">Your card was scanned in person</div>
+        </div>
+        <div class="pts-right">
+          <div class="pts-value">+10 pts</div>
+        </div>
+      </div>
+
+      <!-- Meeting Booked -->
+      <div class="pts-row">
+        <div class="pts-icon" style="background: rgba(245,158,11,0.1);">📅</div>
+        <div class="pts-info">
+          <div class="pts-name">Meeting Booked</div>
+          <div class="pts-desc">A contact booked a meeting with you</div>
+        </div>
+        <div class="pts-right">
+          <div class="pts-value">+20 pts</div>
+        </div>
+      </div>
+
+      <!-- Contacts Connected -->
+      <div class="pts-row">
+        <div class="pts-icon" style="background: rgba(14,165,233,0.1);">🤝</div>
+        <div class="pts-info">
+          <div class="pts-name">Contacts Connected</div>
+          <div class="pts-desc">A new contact accepted your request</div>
+        </div>
+        <div class="pts-right">
+          <div class="pts-value">+15 pts</div>
+        </div>
+      </div>
+
+      <!-- Successful Referral -->
+      <div class="pts-row">
+        <div class="pts-icon" style="background: rgba(212,175,55,0.12);">🎁</div>
+        <div class="pts-info">
+          <div class="pts-name">Successful Referral</div>
+          <div class="pts-desc">Someone signed up with your referral code</div>
+        </div>
+        <div class="pts-right">
+          <div class="pts-value">+50 pts</div>
+        </div>
+      </div>
+
+    </div><!-- /sheet-body -->
+
+    <div class="home-indicator"><div class="home-bar"></div></div>
+  </div>
+
+</body>
+</html>

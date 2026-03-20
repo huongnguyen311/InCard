@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — My Member</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green:         #009037;
+      --green-dark:    #007a2f;
+      --green-light:   #2eb07a;
+      --green-bg:      rgba(0,144,55,0.08);
+      --green-border:  rgba(0,144,55,0.18);
+      --green-surface: #dcfce7;
+      --slate-900:     #0f172a;
+      --slate-800:     #1e293b;
+      --slate-700:     #334155;
+      --slate-600:     #475569;
+      --slate-500:     #64748b;
+      --slate-400:     #94a3b8;
+      --slate-300:     #cbd5e1;
+      --slate-200:     #e2e8f0;
+      --slate-100:     #f1f5f9;
+      --slate-50:      #f8fafc;
+      --gray-bg:       #f4f4f5;
+      --red-50:        #fef2f2;
+      --red-100:       #fee2e2;
+      --red-500:       #ef4444;
+      --red-600:       #dc2626;
+      --white:         #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { scrollbar-width: none; -ms-overflow-style: none; }
+    html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+
+    body {
+      background: var(--gray-bg);
+      font-family: 'Public Sans', sans-serif;
+      width: 390px;
+      min-height: 100vh;
+      padding-bottom: 168px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      position: sticky;
+      top: 0; z-index: 10;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--slate-200);
+      padding: 16px 20px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .back-btn {
+      width: 36px; height: 36px;
+      border-radius: 12px;
+      background: var(--slate-100);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .header-title {
+      flex: 1;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.3px;
+    }
+
+    /* ── SECTION TABS ── */
+    .section-tabs {
+      display: flex;
+      gap: 0;
+      padding: 16px 20px 0;
+      border-bottom: 1px solid var(--slate-200);
+      background: var(--white);
+    }
+    .tab {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding-bottom: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-400);
+      cursor: pointer;
+      border-bottom: 2.5px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .tab.active {
+      color: var(--green);
+      border-bottom-color: var(--green);
+    }
+    .tab-badge {
+      font-size: 10px; font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 20px;
+      background: var(--slate-100);
+      color: var(--slate-500);
+      line-height: 1.6;
+    }
+    .tab.active .tab-badge {
+      background: var(--green-bg);
+      color: var(--green);
+    }
+
+    /* ── SCROLL BODY ── */
+    .scroll-body {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding: 20px 20px 0;
+    }
+
+    /* ── CARD ITEM ── */
+    .card-item {
+      background: var(--white);
+      border-radius: 20px;
+      border: 1px solid var(--slate-200);
+      padding: 16px;
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .card-item.my-card {
+      border-color: var(--green-border);
+      box-shadow: 0 2px 12px rgba(0,144,55,0.08), 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    /* active indicator stripe */
+    .card-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 16px; bottom: 16px;
+      width: 3px;
+      border-radius: 0 2px 2px 0;
+      background: var(--green);
+      opacity: 0;
+    }
+    .card-item.my-card::before { opacity: 1; }
+
+    /* Card meta row */
+    .card-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .card-avatar {
+      width: 44px; height: 44px;
+      border-radius: 9999px;
+      background: var(--slate-100);
+      border: 2px solid var(--slate-200);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .card-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 9999px; }
+    .card-avatar-ph {
+      width: 100%; height: 100%;
+      border-radius: 9999px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 700;
+      color: var(--slate-500);
+    }
+    .card-info { flex: 1; min-width: 0; }
+    .card-name {
+      font-size: 14px; font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.2px;
+      line-height: 1.4;
+    }
+    .card-sub {
+      font-size: 12px;
+      color: var(--slate-500);
+      line-height: 1.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Action buttons row */
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--slate-100);
+    }
+    .act-btn {
+      flex: 1;
+      height: 36px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .act-btn:active { transform: scale(0.97); }
+    .act-btn.view {
+      background: var(--green-bg);
+      color: var(--green);
+    }
+    .act-btn.view:hover { background: rgba(0,144,55,0.14); }
+    .act-btn.delete {
+      width: 36px; flex: none;
+      background: var(--red-50);
+      color: var(--red-600);
+    }
+    .act-btn.delete:hover { background: var(--red-100); }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0;
+      width: 390px;
+      height: 72px;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      padding: 0 4px;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      z-index: 100;
+    }
+    .nav-link {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-end;
+      gap: 3px;
+      cursor: pointer;
+      padding-bottom: 10px;
+    }
+    .nav-icon {
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-label {
+      font-size: 10px; font-weight: 600;
+      color: var(--slate-400);
+      line-height: 1;
+      letter-spacing: 0.1px;
+    }
+    .nav-label.active { color: var(--green); }
+    .nav-dot {
+      width: 4px; height: 4px;
+      border-radius: 2px;
+      background: var(--green);
+      opacity: 0;
+    }
+    .nav-link:has(.nav-label.active) .nav-dot { opacity: 1; }
+    .nav-fab-wrap {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding-bottom: 0;
+    }
+    .nav-fab {
+      width: 50px; height: 50px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,144,55,0.40), 0 1px 4px rgba(0,0,0,0.12);
+      margin-top: -12px;
+    }
+    .nav-fab svg { width: 22px; height: 22px; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="back-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path d="M15 19l-7-7 7-7" stroke="var(--slate-700)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="header-title">My Cards</div>
+  </div>
+
+  <!-- Section Tabs -->
+  <div class="section-tabs">
+    <div class="tab">
+      My Cards
+      <span class="tab-badge">2</span>
+    </div>
+    <div class="tab active">
+      My Member
+      <span class="tab-badge">2</span>
+    </div>
+  </div>
+
+  <!-- Scroll Body -->
+  <div class="scroll-body">
+
+    <!-- Member Card 1 -->
+    <div class="card-item my-card">
+      <div class="card-meta-row">
+        <div class="card-avatar">
+          <img src="https://www.figma.com/api/mcp/asset/4f58f727-9beb-4364-af7c-197f459157e4" alt="Alex Rivera" />
+        </div>
+        <div class="card-info">
+          <div class="card-name">Sr. Product Designer</div>
+          <div class="card-sub">Design Solutions Inc.</div>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button class="act-btn view">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+            <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" stroke="var(--green)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="12" r="3" stroke="var(--green)" stroke-width="1.75"/>
+          </svg>
+          View Card
+        </button>
+        <button class="act-btn delete">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <polyline points="3 6 5 6 21 6" stroke="var(--red-600)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M19 6l-1 14H6L5 6" stroke="var(--red-600)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 11v6M14 11v6" stroke="var(--red-600)" stroke-width="1.75" stroke-linecap="round"/>
+            <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" stroke="var(--red-600)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Member Card 2 -->
+    <div class="card-item my-card" style="border-left-color: transparent;">
+      <div class="card-meta-row">
+        <div class="card-avatar">
+          <div class="card-avatar-ph">AR</div>
+        </div>
+        <div class="card-info">
+          <div class="card-name">Freelance Consultant</div>
+          <div class="card-sub">Rivera Designs</div>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button class="act-btn view">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+            <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" stroke="var(--green)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="12" r="3" stroke="var(--green)" stroke-width="1.75"/>
+          </svg>
+          View Card
+        </button>
+        <button class="act-btn delete">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <polyline points="3 6 5 6 21 6" stroke="var(--red-600)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M19 6l-1 14H6L5 6" stroke="var(--red-600)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 11v6M14 11v6" stroke="var(--red-600)" stroke-width="1.75" stroke-linecap="round"/>
+            <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" stroke="var(--red-600)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /scroll-body -->
+
+  <!-- Bottom Nav — Home active -->
+  <div class="bottom-nav">
+    <div class="nav-link">
+      <div class="nav-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1h-4v-7H8v7H5a1 1 0 01-1-1V9.5z" fill="var(--green)"/></svg>
+      </div>
+      <span class="nav-label active">Home</span>
+      <span class="nav-dot"></span>
+    </div>
+    <div class="nav-link">
+      <div class="nav-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="7" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="17" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M7.5 12h5.5M13 12l3.5-4M13 12l3.5 4" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="nav-label">Network</span>
+      <span class="nav-dot"></span>
+    </div>
+    <div class="nav-fab-wrap">
+      <div class="nav-fab">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="14" y="18" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="18" width="3" height="3" rx="0.5" fill="white"/></svg>
+      </div>
+    </div>
+    <div class="nav-link">
+      <div class="nav-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M16.5 7.5l-3 6-5.5 2.5 3-6 5.5-2.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="1" fill="var(--slate-400)"/></svg>
+      </div>
+      <span class="nav-label">Explore</span>
+      <span class="nav-dot"></span>
+    </div>
+    <div class="nav-link">
+      <div class="nav-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round"/></svg>
+      </div>
+      <span class="nav-label">Profile</span>
+      <span class="nav-dot"></span>
+    </div>
+  </div>
+
+</body>
+</html>

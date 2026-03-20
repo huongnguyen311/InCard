@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Filter Contacts</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green:         #009037;
+      --green-light:   #2eb07a;
+      --green-bg:      rgba(0,144,55,0.1);
+      --slate-900:     #0f172a;
+      --slate-800:     #1e293b;
+      --slate-700:     #334155;
+      --slate-600:     #475569;
+      --slate-500:     #64748b;
+      --slate-400:     #94a3b8;
+      --slate-200:     #e2e8f0;
+      --slate-100:     #f1f5f9;
+      --slate-50:      #f8fafc;
+      --gray-bg:       #f8f6f6;
+      --white:         #ffffff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { scrollbar-width: none; -ms-overflow-style: none; }
+    html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+    body {
+      background: var(--gray-bg);
+      font-family: 'Public Sans', sans-serif;
+      width: 390px;
+      min-height: 844px;
+      display: flex; flex-direction: column;
+    }
+
+    /* ── Header ── */
+    .header {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-200);
+      padding: 0 16px;
+      height: 56px;
+      display: flex; align-items: center; gap: 0;
+      flex-shrink: 0;
+    }
+    .back-btn {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 10px; background: var(--slate-100);
+      flex-shrink: 0; cursor: pointer; border: none;
+    }
+    .header-title {
+      flex: 1; text-align: center;
+      font-size: 16px; font-weight: 700;
+      color: var(--slate-900); letter-spacing: -0.2px;
+    }
+    .header-reset {
+      font-size: 13px; font-weight: 600; color: var(--green);
+      background: none; border: none; cursor: pointer;
+      font-family: 'Public Sans', sans-serif;
+      white-space: nowrap;
+    }
+
+    /* ── Scroll area ── */
+    .filter-scroll {
+      flex: 1; overflow-y: auto;
+      padding: 12px 16px 16px;
+    }
+
+    /* ── Section ── */
+    .filter-section { margin-bottom: 10px; }
+    .filter-section-title {
+      font-size: 10px; font-weight: 700; color: var(--slate-400);
+      text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .filter-divider {
+      height: 1px; background: var(--slate-200); margin: 0 0 10px;
+    }
+
+    /* ── Show more/less ── */
+    .industry-extra { display: none; }
+    .industry-extra.visible { display: contents; }
+    .show-more-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      margin-top: 6px;
+      background: none; border: none; cursor: pointer;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 11px; font-weight: 700; color: var(--slate-500);
+      padding: 2px 0;
+    }
+    .show-more-btn:hover { color: var(--green); }
+    .show-more-btn svg { transition: transform 0.2s; }
+    .show-more-btn.open svg { transform: rotate(180deg); }
+
+    /* ── Chips ── */
+    .chip-group { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 5px 12px; border-radius: 9999px;
+      font-size: 12px; font-weight: 500; color: var(--slate-600);
+      background: var(--white);
+      border: 1.5px solid var(--slate-200);
+      cursor: pointer;
+      font-family: 'Public Sans', sans-serif;
+      white-space: nowrap;
+      transition: all 0.12s;
+    }
+    .chip:hover { border-color: var(--slate-400); }
+    .chip.active {
+      background: var(--green-bg);
+      color: var(--green);
+      border-color: var(--green);
+      font-weight: 700;
+    }
+
+    /* ── Date range ── */
+    .date-row { display: flex; align-items: flex-end; gap: 8px; }
+    .date-input-wrap { flex: 1; }
+    .date-label {
+      font-size: 10px; font-weight: 700; color: var(--slate-400);
+      text-transform: uppercase; letter-spacing: 0.7px;
+      margin-bottom: 4px;
+    }
+    .date-input {
+      width: 100%; height: 38px;
+      background: var(--white); border: 1.5px solid var(--slate-200);
+      border-radius: 9px; padding: 0 10px;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 12px; font-weight: 500; color: var(--slate-700);
+      outline: none;
+    }
+    .date-input:focus { border-color: var(--green); }
+    .date-separator {
+      font-size: 16px; color: var(--slate-300);
+      padding-bottom: 8px; flex-shrink: 0;
+    }
+
+    /* ── Active filter count badge ── */
+    .filter-count-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--green); color: white;
+      width: 18px; height: 18px; border-radius: 9999px;
+      font-size: 10px; font-weight: 800;
+      margin-left: 6px; vertical-align: middle;
+    }
+
+    /* ── Footer ── */
+    .filter-footer {
+      position: sticky; bottom: 0;
+      background: var(--white);
+      border-top: 1px solid var(--slate-200);
+      padding: 10px 16px 24px;
+      display: flex; gap: 8px;
+      flex-shrink: 0;
+    }
+    .btn-cancel {
+      flex: 1; height: 46px; border-radius: 12px;
+      background: var(--slate-100); border: none;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 14px; font-weight: 700; color: var(--slate-600);
+      cursor: pointer;
+    }
+    .btn-apply {
+      flex: 2; height: 46px; border-radius: 12px;
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      border: none;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 14px; font-weight: 700; color: white;
+      cursor: pointer;
+      box-shadow: 0 3px 12px rgba(0,144,55,0.3);
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <button class="back-btn" onclick="history.back()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M10 12L6 8l4-4" stroke="var(--slate-800)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="header-title">
+      Filter Contacts
+      <span class="filter-count-badge" id="activeCount">3</span>
+    </div>
+    <button class="header-reset" onclick="resetFilters()">Reset</button>
+  </div>
+
+  <!-- Scrollable filter content -->
+  <div class="filter-scroll">
+
+    <!-- 1. Filter by Date (top) -->
+    <div class="filter-section">
+      <div class="filter-section-title">Filter by Date</div>
+      <div class="date-row">
+        <div class="date-input-wrap">
+          <div class="date-label">From</div>
+          <input class="date-input" type="date" value="2026-01-01" />
+        </div>
+        <div class="date-separator">—</div>
+        <div class="date-input-wrap">
+          <div class="date-label">To</div>
+          <input class="date-input" type="date" value="2026-03-18" />
+        </div>
+      </div>
+    </div>
+    <div class="filter-divider"></div>
+
+    <!-- 2. Contact Type -->
+    <div class="filter-section">
+      <div class="filter-section-title">Contact Type</div>
+      <div class="chip-group">
+        <button class="chip" onclick="toggleChip(this)">Partner</button>
+        <button class="chip" onclick="toggleChip(this)">Customer</button>
+        <button class="chip" onclick="toggleChip(this)">Supplier</button>
+        <button class="chip" onclick="toggleChip(this)">Investor</button>
+        <button class="chip" onclick="toggleChip(this)">Collaborator</button>
+      </div>
+    </div>
+    <div class="filter-divider"></div>
+
+    <!-- 3. Potential Level -->
+    <div class="filter-section">
+      <div class="filter-section-title">Potential Level</div>
+      <div class="chip-group">
+        <button class="chip active" onclick="toggleChip(this)">Very Important</button>
+        <button class="chip" onclick="toggleChip(this)">Important</button>
+        <button class="chip" onclick="toggleChip(this)">Average</button>
+        <button class="chip" onclick="toggleChip(this)">Exploring</button>
+      </div>
+    </div>
+    <div class="filter-divider"></div>
+
+    <!-- 4. Industry (4 visible, rest collapsible) -->
+    <div class="filter-section">
+      <div class="filter-section-title">Industry</div>
+      <div class="chip-group" id="industryGroup">
+        <button class="chip active" onclick="toggleChip(this)">Information Technology</button>
+        <button class="chip" onclick="toggleChip(this)">Real Estate</button>
+        <button class="chip" onclick="toggleChip(this)">Finance</button>
+        <button class="chip" onclick="toggleChip(this)">Healthcare &amp; Medical</button>
+        <!-- hidden extras -->
+        <span class="industry-extra" id="industryExtra">
+          <button class="chip" onclick="toggleChip(this)">Education</button>
+          <button class="chip" onclick="toggleChip(this)">Entertainment &amp; Media</button>
+          <button class="chip" onclick="toggleChip(this)">Commerce &amp; Retail</button>
+          <button class="chip" onclick="toggleChip(this)">Manufacturing &amp; Industry</button>
+          <button class="chip" onclick="toggleChip(this)">Agriculture</button>
+          <button class="chip" onclick="toggleChip(this)">Transportation &amp; Logistics</button>
+          <button class="chip" onclick="toggleChip(this)">Tourism &amp; Hospitality</button>
+          <button class="chip" onclick="toggleChip(this)">MKT &amp; Advertising</button>
+          <button class="chip" onclick="toggleChip(this)">Legal &amp; Consulting</button>
+        </span>
+      </div>
+      <button class="show-more-btn" id="industryToggle" onclick="toggleIndustry()">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+          <path d="M4 6l4 4 4-4" stroke="var(--slate-500)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Show 9 more
+      </button>
+    </div>
+    <div class="filter-divider"></div>
+
+    <!-- 5. Suggested Actions -->
+    <div class="filter-section">
+      <div class="filter-section-title">Suggested Actions</div>
+      <div class="chip-group">
+        <button class="chip" onclick="toggleChip(this)">Follow-up</button>
+        <button class="chip" onclick="toggleChip(this)">Send Materials</button>
+        <button class="chip active" onclick="toggleChip(this)">Arrange a Meeting</button>
+        <button class="chip" onclick="toggleChip(this)">Make an Introduction</button>
+        <button class="chip" onclick="toggleChip(this)">Review Later</button>
+      </div>
+    </div>
+    <div class="filter-divider"></div>
+
+    <!-- 6. Other -->
+    <div class="filter-section">
+      <div class="filter-section-title">Other</div>
+      <div class="chip-group">
+        <button class="chip" onclick="toggleChip(this)">BNI</button>
+        <button class="chip" onclick="toggleChip(this)">VBCI</button>
+        <button class="chip" onclick="toggleChip(this)">VINASA</button>
+        <button class="chip" onclick="toggleChip(this)">BCA</button>
+        <button class="chip" onclick="toggleChip(this)">Other</button>
+      </div>
+    </div>
+
+  </div><!-- /filter-scroll -->
+
+  <!-- Footer -->
+  <div class="filter-footer">
+    <button class="btn-cancel">Cancel</button>
+    <button class="btn-apply">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+        <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Apply Filters
+    </button>
+  </div>
+
+  <script>
+    function toggleChip(el) {
+      el.classList.toggle('active');
+      updateCount();
+    }
+    function resetFilters() {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.date-input').forEach(i => i.value = '');
+      updateCount();
+    }
+    function updateCount() {
+      const n = document.querySelectorAll('.chip.active').length;
+      document.getElementById('activeCount').textContent = n;
+      document.getElementById('activeCount').style.display = n > 0 ? 'inline-flex' : 'none';
+    }
+    function toggleIndustry() {
+      const extra = document.getElementById('industryExtra');
+      const btn   = document.getElementById('industryToggle');
+      const open  = extra.classList.toggle('visible');
+      btn.classList.toggle('open', open);
+      btn.innerHTML = `
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+          <path d="M4 6l4 4 4-4" stroke="var(--slate-500)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        ${open ? 'Show less' : 'Show 9 more'}`;
+    }
+    updateCount();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Syncing Database</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green:         #009037;
+      --green-light:   #2eb07a;
+      --green-bg:      rgba(0,144,55,0.1);
+      --slate-900:     #0f172a;
+      --slate-800:     #1e293b;
+      --slate-700:     #334155;
+      --slate-600:     #475569;
+      --slate-500:     #64748b;
+      --slate-400:     #94a3b8;
+      --slate-200:     #e2e8f0;
+      --slate-100:     #f1f5f9;
+      --slate-50:      #f8fafc;
+      --gray-bg:       #f8f6f6;
+      --white:         #ffffff;
+      --orange:        #ef5023;
+      --orange-light:  #fa987d;
+      --orange-bg:     rgba(239,80,35,0.1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow: hidden; }
+    body { background: var(--gray-bg); font-family: 'Public Sans', sans-serif; }
+    .screen { width: 390px; min-height: 844px; position: relative; }
+
+    /* Blurred background */
+    .bg-content {
+      position: absolute; inset: 0;
+      padding: 24px 16px; display: flex; flex-direction: column; gap: 16px;
+      filter: blur(1px); opacity: 0.15; pointer-events: none;
+    }
+    .bg-header { height: 56px; background: var(--white); border-radius: 12px; }
+    .bg-row { height: 72px; background: var(--white); border-radius: 14px; }
+    .bg-row-sm { height: 56px; background: var(--white); border-radius: 14px; }
+    .bg-card { height: 120px; background: var(--white); border-radius: 20px; }
+    .bg-half { display: flex; gap: 12px; }
+    .bg-half > div { flex: 1; height: 100px; background: var(--white); border-radius: 16px; }
+
+    /* Overlay */
+    .modal-overlay {
+      position: absolute; inset: 0;
+      background: rgba(15,23,42,0.45);
+      backdrop-filter: blur(3px);
+      display: flex; align-items: flex-end; justify-content: center;
+    }
+
+    /* Bottom sheet modal */
+    .modal {
+      background: var(--white);
+      border-radius: 28px 28px 0 0;
+      width: 100%;
+      padding: 0 24px 40px;
+      box-shadow: 0 -8px 40px rgba(0,0,0,0.18);
+    }
+    .modal-handle {
+      width: 40px; height: 5px;
+      background: var(--slate-200); border-radius: 9999px;
+      margin: 14px auto 32px;
+    }
+
+    /* Icon */
+    .icon-wrap {
+      width: 72px; height: 72px; border-radius: 9999px;
+      background: var(--green-bg);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .icon-wrap svg { width: 32px; height: 32px; }
+
+    /* Spinning ring */
+    .spin-ring {
+      width: 72px; height: 72px; border-radius: 9999px;
+      border: 3px solid var(--green-bg);
+      border-top-color: var(--green);
+      animation: spin 1s linear infinite;
+      position: absolute; top: 0; left: 0;
+    }
+    .icon-outer { position: relative; width: 72px; height: 72px; margin: 0 auto 20px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .modal-label {
+      font-size: 11px; font-weight: 700;
+      color: var(--green); letter-spacing: 1px;
+      text-transform: uppercase; text-align: center;
+      margin-bottom: 8px;
+    }
+    .modal-title {
+      font-size: 22px; font-weight: 700;
+      color: var(--slate-900); text-align: center;
+      letter-spacing: -0.4px; margin-bottom: 8px;
+    }
+    .modal-sub {
+      font-size: 14px; color: var(--slate-500);
+      text-align: center; line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    /* Progress */
+    .progress-wrap { margin-bottom: 32px; }
+    .progress-meta {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 10px;
+    }
+    .progress-step { font-size: 13px; font-weight: 600; color: var(--slate-700); }
+    .progress-pct { font-size: 13px; font-weight: 700; color: var(--green); }
+    .progress-track {
+      height: 8px; background: var(--slate-100);
+      border-radius: 9999px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; width: 65%;
+      background: linear-gradient(90deg, var(--green) 0%, var(--green-light) 100%);
+      border-radius: 9999px;
+    }
+    .progress-hint {
+      font-size: 12px; color: var(--slate-400);
+      margin-top: 8px; text-align: center;
+    }
+
+    /* Steps */
+    .steps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+    .step-row { display: flex; align-items: center; gap: 10px; }
+    .step-dot {
+      width: 20px; height: 20px; border-radius: 9999px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .step-dot.done { background: var(--green); }
+    .step-dot.done svg { width: 10px; height: 10px; }
+    .step-dot.active {
+      background: var(--green-bg);
+      border: 2px solid var(--green);
+    }
+    .step-dot.pending { background: var(--slate-100); }
+    .step-text { font-size: 13px; font-weight: 500; color: var(--slate-700); }
+    .step-text.active { color: var(--green); font-weight: 600; }
+    .step-text.pending { color: var(--slate-400); }
+
+    /* Cancel */
+    .cancel-btn {
+      width: 100%; height: 50px; border-radius: 14px;
+      background: var(--slate-100);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    .cancel-btn span { font-size: 15px; font-weight: 600; color: var(--slate-600); }
+  </style>
+</head>
+<body>
+  <div class="screen">
+
+    <!-- Background -->
+    <div class="bg-content">
+      <div class="bg-header"></div>
+      <div class="bg-row"></div>
+      <div class="bg-row-sm"></div>
+      <div class="bg-card"></div>
+      <div class="bg-half">
+        <div></div><div></div>
+      </div>
+      <div class="bg-row"></div>
+    </div>
+
+    <!-- Modal overlay -->
+    <div class="modal-overlay">
+      <div class="modal">
+        <div class="modal-handle"></div>
+
+        <!-- Spinning icon -->
+        <div class="icon-outer">
+          <div class="icon-wrap">
+            <svg viewBox="0 0 32 32" fill="none">
+              <ellipse cx="16" cy="16" rx="13" ry="5.5" stroke="var(--green)" stroke-width="1.8"/>
+              <ellipse cx="16" cy="16" rx="13" ry="5.5" stroke="var(--green)" stroke-width="1.8" transform="rotate(60 16 16)"/>
+              <ellipse cx="16" cy="16" rx="13" ry="5.5" stroke="var(--green)" stroke-width="1.8" transform="rotate(120 16 16)"/>
+              <circle cx="16" cy="16" r="2.5" fill="var(--green)"/>
+            </svg>
+          </div>
+          <div class="spin-ring"></div>
+        </div>
+
+        <div class="modal-label">In Progress</div>
+        <div class="modal-title">Syncing Database</div>
+        <div class="modal-sub">Finding the best connections for your network. This may take a moment.</div>
+
+        <!-- Progress bar -->
+        <div class="progress-wrap">
+          <div class="progress-meta">
+            <span class="progress-step">Scanning profiles</span>
+            <span class="progress-pct">65%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill"></div>
+          </div>
+        </div>
+
+        <!-- Cancel -->
+        <div class="cancel-btn">
+          <span>Cancel</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

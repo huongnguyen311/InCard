@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Extracting LinkedIn Data</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green:         #009037;
+      --green-light:   #2eb07a;
+      --green-bg:      rgba(0,144,55,0.1);
+      --green-surface: #dcfce7;
+      --slate-900:     #0f172a;
+      --slate-800:     #1e293b;
+      --slate-500:     #64748b;
+      --slate-400:     #94a3b8;
+      --slate-200:     #e2e8f0;
+      --slate-100:     #f1f5f9;
+      --slate-50:      #f8fafc;
+      --white:         #ffffff;
+      --border-light:  #f3f4f6;
+      --linkedin:      #0a66c2;
+      --linkedin-bg:   #eef3fb;
+      --orange:        #ef5023;
+      --orange-light:  #fa987d;
+      --orange-bg:     rgba(239,80,35,0.1);
+    }
+    html, body { scrollbar-width: none; -ms-overflow-style: none; }
+    html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+    body { background: #0f172a; font-family: 'Public Sans', sans-serif; margin: 0; padding: 0; }
+
+    .screen {
+      width: 390px; min-height: 844px;
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column; justify-content: flex-end;
+    }
+    .bg-layer {
+      position: absolute; inset: 0;
+      background: linear-gradient(160deg, #0a2d4a 0%, #061828 60%, #030e18 100%);
+    }
+    .bg-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.45); backdrop-filter: blur(3px);
+    }
+
+    .sheet {
+      background: white; border-radius: 28px 28px 0 0;
+      box-shadow: 0 -8px 40px rgba(0,0,0,0.3);
+      position: relative; z-index: 10;
+    }
+    .handle-wrap { padding: 14px 0 0; display: flex; justify-content: center; }
+    .handle { width: 40px; height: 4px; background: var(--slate-200); border-radius: 9999px; }
+
+    /* Centered loading area */
+    .loading-body {
+      padding: 36px 32px 40px;
+      display: flex; flex-direction: column; align-items: center; gap: 0;
+      text-align: center;
+    }
+
+    /* Circular progress + LinkedIn icon */
+    .icon-area {
+      position: relative;
+      width: 140px; height: 140px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 10px;
+    }
+    .progress-svg {
+      position: absolute; inset: 0;
+    }
+    .icon-circle {
+      width: 90px; height: 90px; border-radius: 50%;
+      background: var(--linkedin);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 24px rgba(10,102,194,0.35);
+      position: relative; z-index: 2;
+    }
+    .percent-row {
+      display: flex; align-items: baseline; gap: 3px;
+      margin-bottom: 24px;
+    }
+    .percent-number {
+      font-weight: 600; font-size: 15px; color: var(--linkedin);
+    }
+    .percent-label {
+      font-size: 12px; font-weight: 500; color: var(--slate-400);
+    }
+
+    .loading-title {
+      font-weight: 800; font-size: 22px; color: var(--slate-900);
+      letter-spacing: -0.5px; margin-bottom: 8px;
+    }
+    .loading-subtitle {
+      font-size: 14px; color: var(--slate-500); line-height: 1.6;
+      max-width: 270px; margin-bottom: 32px;
+    }
+
+    /* Step list */
+    .step-list {
+      width: 100%;
+      display: flex; flex-direction: column; gap: 0;
+      border: 1px solid var(--border-light);
+      border-radius: 16px; overflow: hidden;
+      margin-bottom: 0;
+    }
+    .step-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-light);
+      background: white;
+    }
+    .step-row:last-child { border-bottom: none; }
+
+    .step-icon {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-icon.done    { background: var(--green-surface); }
+    .step-icon.active  { background: var(--linkedin-bg); }
+    .step-icon.pending { background: var(--slate-100); }
+
+    .step-label { flex: 1; font-size: 14px; font-weight: 600; color: var(--slate-700); }
+    .step-label.pending { color: var(--slate-400); font-weight: 500; }
+
+    .step-status { font-size: 11px; font-weight: 700; flex-shrink: 0; }
+    .status-done    { color: var(--green); }
+    .status-active  { color: var(--linkedin); }
+    .status-pending { color: var(--slate-300); }
+
+    /* Spinner for active step */
+    .spinner { animation: spin 0.9s linear infinite; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <div class="bg-layer"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="sheet">
+      <div class="handle-wrap"><div class="handle"></div></div>
+
+      <div class="loading-body">
+
+        <!-- Circular progress around LinkedIn icon -->
+        <div class="icon-area">
+          <!-- cx=cy=70, r=62 → circ=389.6; 55% filled → offset=175.3 -->
+          <svg class="progress-svg" width="140" height="140" viewBox="0 0 140 140">
+            <defs>
+              <linearGradient id="progressGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#60a5fa"/>
+                <stop offset="100%" stop-color="#0a66c2"/>
+              </linearGradient>
+            </defs>
+            <circle cx="70" cy="70" r="62" fill="none" stroke="#dbeafe" stroke-width="6"/>
+            <circle cx="70" cy="70" r="62" fill="none"
+              stroke="url(#progressGrad)" stroke-width="6"
+              stroke-linecap="round"
+              stroke-dasharray="389.6"
+              stroke-dashoffset="175.3"
+              transform="rotate(-90 70 70)"/>
+          </svg>
+          <div class="icon-circle">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z"/></svg>
+          </div>
+        </div>
+        <div class="percent-row">
+          <span class="percent-number">55%</span>
+          <span class="percent-label">complete</span>
+        </div>
+
+        <div class="loading-title">Extracting Your Data</div>
+        <div class="loading-subtitle">Scanning your LinkedIn profile and importing your information into InCard…</div>
+
+        <!-- Step progress -->
+        <div class="step-list">
+
+          <div class="step-row">
+            <div class="step-icon done">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="step-label">Connecting to LinkedIn</span>
+            <span class="step-status status-done">Done</span>
+          </div>
+
+          <div class="step-row">
+            <div class="step-icon done">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="step-label">Reading profile &amp; bio</span>
+            <span class="step-status status-done">Done</span>
+          </div>
+
+          <div class="step-row">
+            <div class="step-icon active">
+              <svg class="spinner" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="6" stroke="var(--slate-200)" stroke-width="2"/>
+                <path d="M8 2a6 6 0 016 6" stroke="var(--linkedin)" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="step-label">Extracting skills &amp; strengths</span>
+            <span class="step-status status-active">In progress</span>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

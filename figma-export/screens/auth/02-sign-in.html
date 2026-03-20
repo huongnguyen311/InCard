@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Sign In</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --canvas-bg:     #a49d9d;
+      --shadow-frame:  0 4px 24px rgba(0,0,0,0.28);
+      --green:         #009037;
+      --green-dark:    #007a2f;
+      --green-light:   #2eb07a;
+      --green-bg:      rgba(0,144,55,0.1);
+      --green-surface: #dcfce7;
+      --emerald:       #10b981;
+      --emerald-bg:    #ecfdf5;
+      --slate-900:     #0f172a;
+      --slate-800:     #1e293b;
+      --slate-700:     #334155;
+      --slate-600:     #475569;
+      --slate-500:     #64748b;
+      --slate-400:     #94a3b8;
+      --slate-200:     #e2e8f0;
+      --slate-100:     #f1f5f9;
+      --slate-50:      #f8fafc;
+      --gray-bg:       #f8f6f6;
+      --red-100:       #fee2e2;
+      --red-600:       #dc2626;
+      --orange:        #ef5023;
+      --orange-light:  #fa987d;
+      --orange-bg:     rgba(239,80,35,0.1);
+      --white:         #ffffff;
+      --social-btn-bg: #f2f2f2;
+      --input-border:  #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow: hidden; }
+    body {
+      background: var(--white);
+      font-family: 'Public Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .screen {
+      width: 390px;
+      background: var(--slate-50);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px;
+    }
+
+    /* Main Content */
+    .main-content {
+      width: 100%;
+      padding-top: 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Logo Section */
+    .logo-section {
+      padding-bottom: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .logo-img {
+      width: 84px;
+      height: 84px;
+      object-fit: contain;
+    }
+
+    /* Header Section */
+    .header-section {
+      width: 100%;
+      padding-bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .heading-display {
+      font-weight: 800;
+      font-size: 22px;
+      line-height: 1.2;
+      color: var(--slate-900);
+    }
+    .heading-sub {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--slate-500);
+    }
+
+    /* Social Login */
+    .social-login-section {
+      width: 100%;
+      padding-bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .btn-social {
+      width: 100%;
+      background: var(--social-btn-bg);
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+    .btn-social img {
+      width: 20px;
+      height: 20px;
+    }
+    .btn-social span {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--slate-800);
+      font-family: 'Public Sans', sans-serif;
+    }
+
+    /* Separator */
+    .separator {
+      width: 100%;
+      padding-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .separator-line {
+      flex: 1;
+      height: 1px;
+      background: var(--slate-200);
+    }
+    .separator-text {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--slate-400);
+    }
+
+    /* Login Form */
+    .login-form {
+      width: 100%;
+      padding-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .field-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .field-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--slate-700);
+      line-height: 1.43;
+    }
+    .field-link {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--green);
+      line-height: 1.43;
+      text-decoration: none;
+    }
+    .input-wrapper {
+      position: relative;
+    }
+    .input-wrapper input {
+      width: 100%;
+      height: 56px;
+      background: var(--white);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      padding: 0 44px;
+      font-size: 16px;
+      font-family: 'Public Sans', sans-serif;
+      color: var(--slate-600);
+      outline: none;
+    }
+    .input-wrapper input::placeholder {
+      color: var(--slate-400);
+    }
+    .input-icon-left {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .input-icon-right {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    /* Submit Button */
+    .btn-submit span {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+      font-family: 'Public Sans', sans-serif;
+    }
+
+    /* Signup Link */
+    .signup-link {
+      padding-top: 32px;
+      font-size: 16px;
+      text-align: center;
+      line-height: 1.5;
+    }
+    .signup-link .muted {
+      color: var(--slate-500);
+      font-weight: 400;
+    }
+    .signup-link a {
+      color: var(--green);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    /* Footer Links */
+    .footer-links {
+      width: 100%;
+      padding: 32px 0;
+      display: flex;
+      gap: 33px;
+      justify-content: center;
+    }
+    .footer-links a {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--slate-400);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <div class="main-content">
+
+      <!-- Logo -->
+      <div class="logo-section">
+        <img class="logo-img" src="../../logo.png" alt="InCard" />
+      </div>
+
+      <!-- Header -->
+      <div class="header-section">
+        <h1 class="heading-display">Welcome back</h1>
+        <p class="heading-sub">Access InCard to unlock smarter networking</p>
+      </div>
+
+      <!-- Login Form -->
+      <div class="login-form">
+        <!-- Email Field -->
+        <div class="field-group">
+          <label class="field-label" for="email">Email address</label>
+          <div class="input-wrapper">
+            <div class="input-icon-left">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2.5 5.833A1.667 1.667 0 0 1 4.167 4.167h11.666A1.667 1.667 0 0 1 17.5 5.833v8.334a1.667 1.667 0 0 1-1.667 1.666H4.167A1.667 1.667 0 0 1 2.5 14.167V5.833z" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2.5 6.667l7.5 5 7.5-5" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <input type="email" id="email" placeholder="alex@example.com" value="alex@example.com" />
+          </div>
+        </div>
+
+        <!-- Password Field -->
+        <div class="field-group">
+          <div class="field-label-row">
+            <label class="field-label" for="password">Password</label>
+            <a href="#" class="field-link">Forgot?</a>
+          </div>
+          <div class="input-wrapper">
+            <div class="input-icon-left">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5.833 9.167V6.667a4.167 4.167 0 1 1 8.334 0v2.5" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="2.5" y="9.167" width="15" height="9.166" rx="2" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="10" cy="13.75" r="1.25" fill="var(--slate-400)"/>
+              </svg>
+            </div>
+            <input type="password" id="password" placeholder="password123" value="password123" />
+            <div class="input-icon-right">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2.5 10s2.917-5.833 7.5-5.833S17.5 10 17.5 10s-2.917 5.833-7.5 5.833S2.5 10 2.5 10z" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="10" cy="10" r="2.083" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button class="btn-submit" type="submit">
+          <span>Sign in</span>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4.167 10h11.666M10.833 5l5 5-5 5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Separator -->
+      <div class="separator">
+        <div class="separator-line"></div>
+        <span class="separator-text">Or continue with</span>
+        <div class="separator-line"></div>
+      </div>
+
+      <!-- Social Login -->
+      <div class="social-login-section">
+        <button class="btn-social" type="button">
+          <!-- Google logo — official brand colors kept -->
+          <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19.6 10.23c0-.68-.06-1.36-.18-2H10v3.79h5.39a4.6 4.6 0 0 1-2 3.02v2.52h3.24c1.9-1.75 3-4.32 3-7.33z" fill="#4285F4"/>
+            <path d="M10 20c2.7 0 4.97-.9 6.62-2.44l-3.24-2.52a6.01 6.01 0 0 1-3.38.93c-2.6 0-4.8-1.75-5.59-4.1H1.07v2.6A10 10 0 0 0 10 20z" fill="#34A853"/>
+            <path d="M4.41 11.87A5.99 5.99 0 0 1 4.1 10c0-.65.11-1.28.31-1.87V5.53H1.07A10 10 0 0 0 0 10c0 1.61.39 3.14 1.07 4.47l3.34-2.6z" fill="#FBBC05"/>
+            <path d="M10 3.96c1.47 0 2.79.5 3.83 1.5l2.87-2.87C14.97 1 12.7 0 10 0A10 10 0 0 0 1.07 5.53l3.34 2.6C5.2 5.71 7.4 3.96 10 3.96z" fill="#EA4335"/>
+          </svg>
+          <span>Sign in with Google</span>
+        </button>
+        <button class="btn-social" type="button">
+          <!-- Apple logo — official brand color -->
+          <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14.05 0c.08 1.09-.32 2.18-.96 2.97-.64.8-1.67 1.41-2.71 1.33-.1-1.06.38-2.17 1-2.93C11.98.57 13.06.02 14.05 0zm3.63 14.54c-.44 1.25-.98 2.35-1.71 3.22-.67.8-1.5 1.24-2.43 1.24-.72 0-1.43-.22-2.1-.44-.61-.2-1.19-.39-1.79-.39-.63 0-1.23.19-1.86.4-.67.22-1.37.44-2.11.45-.97.01-1.87-.47-2.58-1.32C.64 16.46-.05 13.96 0 11.56c.04-2.1.66-4.14 1.99-5.65.88-1.01 2.14-1.66 3.49-1.67.8-.01 1.57.26 2.26.5.59.2 1.12.39 1.57.39.42 0 .94-.18 1.53-.38.77-.26 1.64-.55 2.55-.48 1.04.08 2.04.47 2.8 1.18.24.22.45.47.63.74-.32.19-2.24 1.2-2.22 3.56.02 2.79 2.49 3.71 2.58 3.79z" fill="#000000"/>
+          </svg>
+          <span>Sign in with Apple</span>
+        </button>
+        <button class="btn-social" type="button" style="background:#eef3fb;border:1.5px solid #c8d9f0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#0a66c2">
+            <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z"/>
+          </svg>
+          <span style="color:#0a66c2;font-weight:600;">Sign in with LinkedIn</span>
+        </button>
+      </div>
+
+      <!-- Signup Link -->
+      <div class="signup-link">
+        <span class="muted">New to InCard? </span>
+        <a href="#">Create Pro Account</a>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

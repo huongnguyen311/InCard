@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Digital Profile (Own View)</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --canvas-bg:     #a49d9d;
+      --shadow-frame:  0 4px 24px rgba(0,0,0,0.28);
+      --green:         #009037;
+      --green-dark:    #007a2f;
+      --green-light:   #2eb07a;
+      --green-bg:      rgba(0,144,55,0.1);
+      --green-surface: #dcfce7;
+      --emerald:       #10b981;
+      --emerald-bg:    #ecfdf5;
+      --slate-900:     #0f172a;
+      --slate-800:     #1e293b;
+      --slate-700:     #334155;
+      --slate-600:     #475569;
+      --slate-500:     #64748b;
+      --slate-400:     #94a3b8;
+      --slate-200:     #e2e8f0;
+      --slate-100:     #f1f5f9;
+      --slate-50:      #f8fafc;
+      --gray-bg:       #f8f6f6;
+      --red-100:       #fee2e2;
+      --red-600:       #dc2626;
+      --white:         #ffffff;
+      --border-light:  #f3f4f6;
+      --orange:        #ef5023;
+      --orange-light:  #fa987d;
+      --orange-bg:     rgba(239,80,35,0.1);
+      --whatsapp:      #10b981;
+      --zalo:          #2563eb;
+      --x-dark:        #1e293b;
+      --facebook:      #3b82f6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { scrollbar-width: none; -ms-overflow-style: none; }
+    html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+    body {
+      background: var(--white);
+      font-family: 'Public Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .screen {
+      width: 390px;
+      background: var(--white);
+      padding-bottom: 72px;
+    }
+
+    /* Top Nav */
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .top-nav .nav-btn {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    .top-nav .title {
+      font-weight: 600;
+      font-size: 20px;
+      color: var(--slate-800);
+      line-height: 1.4;
+    }
+
+    .scroll-body { overflow: visible; }
+
+    /* Profile Header */
+    .profile-header-section {
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 0;
+      position: relative;
+    }
+    .green-band {
+      height: 160px;
+      flex-shrink: 0;
+      background: var(--green-surface);
+      overflow: hidden;
+      position: relative;
+    }
+    .green-band img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .header-content {
+      padding: 0 24px;
+      margin-top: -56px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+      z-index: 2;
+    }
+    .avatar-stats-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+    .avatar {
+      width: 112px; height: 112px;
+      border-radius: 50%;
+      border: 4px solid var(--white);
+      overflow: hidden;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+      background: var(--slate-200);
+      flex-shrink: 0;
+    }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .stats-row {
+      display: flex;
+      align-items: flex-start;
+      padding-bottom: 8px;
+    }
+    .stat-item { display: flex; flex-direction: column; gap: 2px; }
+    .stat-item.divider {
+      border-right: 1px solid var(--border-light);
+      padding-right: 17px;
+    }
+    .stat-item.second { padding-left: 16px; }
+    .stat-label {
+      display: flex; align-items: center; gap: 4px;
+      font-weight: 700; font-size: 10px; letter-spacing: 0.9px;
+      text-transform: uppercase; color: var(--slate-400);
+    }
+    .stat-value { font-weight: 700; font-size: 16px; color: var(--slate-800); line-height: 1.5; }
+
+    .name-title {
+      display: flex; flex-direction: column; gap: 8px;
+      align-items: center; padding-bottom: 16px; text-align: center;
+    }
+    .profile-name { font-weight: 700; font-size: 22px; color: var(--slate-900); letter-spacing: -0.55px; }
+    .profile-subtitle { font-weight: 400; font-size: 14px; color: var(--slate-500); line-height: 1.625; }
+
+    /* Action Buttons — own view */
+    .section-actions {
+      padding: 0 24px;
+      display: flex; flex-direction: column; gap: 16px;
+      margin-top: 16px;
+    }
+    .btn-nfc {
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      height: 54px;
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-weight: 700; font-size: 15px; color: var(--white); cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 144, 55, 0.35);
+    }
+    .secondary-btns {
+      display: flex; gap: 12px;
+    }
+    .action-btn {
+      flex: 1;
+      border: none;
+      border-radius: 16px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 13px 8px; gap: 4px; cursor: pointer;
+      background: transparent;
+    }
+    .action-btn-icon { width: 20px; height: 20px; color: var(--green-light); }
+    .action-btn-label { font-weight: 400; font-size: 10px; color: var(--slate-500); text-align: center; }
+
+    /* Social */
+    .section-social {
+      padding: 0 24px;
+      display: flex; flex-direction: column; gap: 16px;
+      margin-top: 24px; align-items: center;
+    }
+    .section-label {
+      font-weight: 700; font-size: 10px; letter-spacing: -0.275px;
+      text-transform: uppercase; color: var(--slate-400); text-align: center;
+    }
+    .social-icons { display: flex; gap: 16px; align-items: center; justify-content: center; }
+    .social-circle {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; cursor: pointer;
+    }
+
+    /* Info sections */
+    .section-info { padding: 0 24px; margin-top: 24px; }
+    .industries-row { display: flex; flex-direction: column; gap: 8px; padding-bottom: 16px; }
+    .section-heading { font-weight: 700; font-size: 14px; color: var(--slate-900); line-height: 1.5; }
+    .tags-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tag {
+      background: var(--slate-100); border-radius: 9999px; padding: 6px 12px;
+      font-weight: 500; font-size: 12px; color: var(--slate-600);
+    }
+    .accordion-item {
+      border-top: 1px solid var(--border-light); padding: 17px 0;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .accordion-header { display: flex; align-items: center; justify-content: space-between; }
+    .accordion-body { font-weight: 400; font-size: 14px; color: var(--slate-500); line-height: 1.625; }
+    .accordion-collapsed {
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--border-light); padding: 17px 0;
+    }
+    .accordion-collapsed-label { font-weight: 700; font-size: 13px; color: var(--slate-800); }
+    .strength-list { display: flex; flex-direction: column; gap: 12px; }
+    .strength-item { display: flex; align-items: center; gap: 8px; }
+    .strength-text { font-weight: 500; font-size: 12px; color: var(--slate-600); }
+
+    /* Products */
+    .section-products { margin-top: 24px; }
+    .products-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; margin-bottom: 24px;
+    }
+    .products-dots { display: flex; gap: 4px; align-items: center; }
+    .dot-active { width: 8px; height: 8px; border-radius: 50%; background: var(--emerald); }
+    .dot-inactive { width: 8px; height: 8px; border-radius: 50%; background: var(--slate-200); }
+    .products-carousel {
+      overflow-x: auto; padding: 0 24px 16px;
+      display: flex; gap: 16px; scrollbar-width: none;
+    }
+    .products-carousel::-webkit-scrollbar { display: none; }
+    .product-card {
+      flex-shrink: 0; width: 280px; background: var(--white);
+      border: 1px solid #f9fafb; border-radius: 24px; overflow: hidden;
+      box-shadow: 0 4px 20px -2px rgba(0,0,0,0.05);
+    }
+    .product-img { width: 100%; height: 160px; object-fit: cover; display: block; background: var(--slate-100); }
+    .product-body { padding: 20px; display: flex; flex-direction: column; gap: 8px; }
+    .product-title { font-weight: 700; font-size: 16px; color: var(--slate-900); }
+    .product-desc { font-weight: 400; font-size: 14px; color: var(--slate-500); line-height: 1.625; }
+    .product-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 8px; }
+    .product-link { font-weight: 700; font-size: 12px; color: var(--emerald); }
+    .product-arrow {
+      width: 32px; height: 32px; background: var(--emerald-bg);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Portfolio */
+    .section-portfolio { padding: 0 24px 48px; margin-top: 16px; display: flex; flex-direction: column; gap: 16px; }
+    .portfolio-featured { width: 100%; border-radius: 24px; overflow: hidden; position: relative; }
+    .portfolio-featured-img { width: 100%; height: 192px; object-fit: cover; display: block; background: var(--slate-700); }
+    .portfolio-overlay {
+      position: absolute; inset: 0; background: rgba(0,0,0,0.4);
+      display: flex; flex-direction: column; justify-content: space-between; padding: 20px;
+    }
+    .featured-badge {
+      background: rgba(255,255,255,0.9); border-radius: 9999px; padding: 4px 12px;
+      font-weight: 700; font-size: 10px; color: var(--slate-800); display: inline-block;
+    }
+    .play-btn {
+      width: 48px; height: 48px; background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(2px); border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center; align-self: center;
+    }
+    .portfolio-featured-title { font-weight: 700; font-size: 16px; color: var(--white); }
+    .portfolio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .portfolio-item { border-radius: 24px; overflow: hidden; position: relative; aspect-ratio: 1; }
+    .portfolio-item-img { width: 100%; height: 100%; object-fit: cover; display: block; background: var(--slate-200); }
+    .portfolio-item-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+      display: flex; align-items: flex-end; padding: 16px;
+    }
+    .portfolio-item-title { font-weight: 500; font-size: 14px; color: var(--white); }
+    .portfolio-data-item { background: #1c4e58; }
+    .data-graph { width: 100%; height: 100%; padding: 16px; display: flex; align-items: center; justify-content: center; }
+    .data-graph-inner { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .graph-bar-full { height: 4px; background: rgba(255,255,255,0.2); border-radius: 9999px; }
+    .graph-bar-partial { height: 4px; width: 60%; background: rgba(255,255,255,0.4); border-radius: 9999px; }
+    .graph-bars { display: flex; gap: 4px; height: 48px; align-items: flex-end; }
+    .graph-bar { width: 4px; background: rgba(255,255,255,0.8); border-radius: 2px; }
+
+    /* ── Bottom Nav ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0;
+      width: 390px;
+      height: 72px;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      padding: 0 4px;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      z-index: 100;
+    }
+    .nav-link {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-end;
+      gap: 3px;
+      cursor: pointer;
+      padding-bottom: 10px;
+      position: relative;
+    }
+    .nav-icon {
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-label {
+      font-size: 10px; font-weight: 600;
+      color: var(--slate-400);
+      line-height: 1;
+      letter-spacing: 0.1px;
+    }
+    .nav-label.active { color: var(--green); }
+    .nav-dot {
+      width: 4px; height: 4px;
+      border-radius: 2px;
+      background: var(--green);
+      opacity: 0;
+    }
+    .nav-link:has(.nav-label.active) .nav-dot { opacity: 1; }
+    .nav-fab-wrap {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding-bottom: 0;
+    }
+    .nav-fab {
+      width: 50px; height: 50px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,144,55,0.40), 0 1px 4px rgba(0,0,0,0.12);
+      margin-top: -12px;
+    }
+    .nav-fab svg { width: 22px; height: 22px; }
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <!-- Top Nav -->
+    <div class="top-nav">
+      <div class="nav-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-800)"><polyline points="15 18 9 12 15 6"/></svg>
+      </div>
+      <span class="title">Digital Profile</span>
+      <div class="nav-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-800)"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      </div>
+    </div>
+
+    <div class="scroll-body">
+      <!-- Header -->
+      <div class="profile-header-section">
+      <div class="green-band">
+        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80" alt="Cover" />
+      </div>
+      <div class="header-content">
+        <div class="avatar-stats-row">
+          <div class="avatar">
+            <img src="https://www.figma.com/api/mcp/asset/c6279a20-7551-4819-ba2d-70137c4d1149" alt="Alex Rivera" />
+          </div>
+          <div class="stats-row">
+            <div class="stat-item divider">
+              <div class="stat-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                VIEWS
+              </div>
+              <div class="stat-value">1,248</div>
+            </div>
+            <div class="stat-item second">
+              <div class="stat-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                SCANS
+              </div>
+              <div class="stat-value">458</div>
+            </div>
+          </div>
+        </div>
+        <div class="name-title">
+          <div class="profile-name">Alex Rivera</div>
+          <div class="profile-subtitle">Creative Strategist &amp; Design Consultant</div>
+        </div>
+      </div>
+      </div>
+
+      <!-- Actions — own view has NFC button + Edit/Web -->
+      <div class="section-actions">
+        <div class="btn-nfc">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <rect x="2" y="7" width="14" height="10" rx="2" stroke="white" stroke-width="1.8"/>
+            <line x1="2" y1="10.5" x2="16" y2="10.5" stroke="white" stroke-width="1.8"/>
+            <path d="M19 9.5c1.1 1.1 1.1 3.9 0 5" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M21.5 7c2.3 2.3 2.3 7.7 0 10" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          Activate your NFC card
+        </div>
+        <div class="secondary-btns">
+          <div class="action-btn">
+            <svg class="action-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            <span class="action-btn-label">Edit profile</span>
+          </div>
+          <div class="action-btn">
+            <svg class="action-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <span class="action-btn-label">Web profile</span>
+          </div>
+          <div class="action-btn">
+            <svg class="action-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3" rx="0.5"/><rect x="18" y="14" width="3" height="3" rx="0.5"/><rect x="14" y="18" width="3" height="3" rx="0.5"/><rect x="18" y="18" width="3" height="3" rx="0.5"/></svg>
+            <span class="action-btn-label">My QR</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Social Connect -->
+      <div class="section-social">
+        <div class="section-label">Connect with me</div>
+        <div class="social-icons">
+          <div class="social-circle" style="background:var(--whatsapp)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.477 2 2 6.484 2 12.017c0 1.99.525 3.853 1.44 5.461L2.05 22l4.635-1.21A9.954 9.954 0 0012 22c5.523 0 10-4.484 10-10.017C22 6.484 17.522 2 12 2z"/></svg>
+          </div>
+          <div class="social-circle" style="background:var(--zalo)">
+            <span style="color:white;font-weight:700;font-size:18px;font-family:'Public Sans',sans-serif;">Z</span>
+          </div>
+          <div class="social-circle" style="background:var(--x-dark)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.254 5.622L18.245 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
+          </div>
+          <div class="social-circle" style="background:var(--facebook)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </div>
+          <div class="social-circle" style="background:var(--red-600)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Sections -->
+      <div class="section-info">
+        <div class="industries-row">
+          <div class="section-heading">Industries</div>
+          <div class="tags-row">
+            <span class="tag">Product Design</span>
+            <span class="tag">Strategy</span>
+            <span class="tag">FinTech</span>
+            <span class="tag">Web3</span>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <div class="section-heading">About Me</div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><polyline points="18 15 12 9 6 15"/></svg>
+          </div>
+          <div class="accordion-body">I bridge the gap between complex business challenges and elegant user experiences. With over 10 years of experience...</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <div class="section-heading" style="font-size:13px;">Key Strengths</div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><polyline points="18 15 12 9 6 15"/></svg>
+          </div>
+          <div class="strength-list">
+            <div class="strength-item">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.5" stroke="var(--green)" stroke-width="1"/><path d="M5 8l2 2 4-4" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="strength-text">Strategic Brand Development</span>
+            </div>
+            <div class="strength-item">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.5" stroke="var(--green)" stroke-width="1"/><path d="M5 8l2 2 4-4" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="strength-text">Cross-functional Team Leadership</span>
+            </div>
+            <div class="strength-item">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.5" stroke="var(--green)" stroke-width="1"/><path d="M5 8l2 2 4-4" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="strength-text">User-Centric Product Design</span>
+            </div>
+            <div class="strength-item">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.5" stroke="var(--green)" stroke-width="1"/><path d="M5 8l2 2 4-4" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="strength-text">Data-Driven Decision Making</span>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-collapsed">
+          <span class="accordion-collapsed-label">Main Services</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </div>
+        <div class="accordion-collapsed">
+          <span class="accordion-collapsed-label">Looking For</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </div>
+        <div class="accordion-collapsed">
+          <span class="accordion-collapsed-label">Collaboration</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </div>
+      </div>
+
+      <!-- Signature Products -->
+      <div class="section-products">
+        <div class="products-header">
+          <span class="section-heading">Signature Products</span>
+          <div class="products-dots">
+            <span class="dot-active"></span>
+            <span class="dot-inactive"></span>
+            <span class="dot-inactive"></span>
+          </div>
+        </div>
+        <div class="products-carousel">
+          <div class="product-card">
+            <img class="product-img" src="https://www.figma.com/api/mcp/asset/1857c14d-7b6a-4289-97f1-418cf7066f95" alt="Brand Strategy Workshop" />
+            <div class="product-body">
+              <div class="product-title">Brand Strategy Workshop</div>
+              <div class="product-desc">Transform your visual identity in 4 weeks</div>
+              <div class="product-footer">
+                <span class="product-link">Learn More</span>
+                <div class="product-arrow">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="product-card" style="opacity:0.85;">
+            <img class="product-img" src="https://www.figma.com/api/mcp/asset/0a506524-f5c9-4d98-b485-a11c5ee4db79" alt="UX Audit" />
+            <div class="product-body">
+              <div class="product-title">UX Audit</div>
+              <div class="product-desc">Deep dive analysis of your product</div>
+              <div class="product-footer">
+                <span class="product-link">Learn More</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio -->
+      <div class="section-portfolio">
+        <div class="section-heading" style="padding-bottom:8px;">Portfolio Highlights</div>
+        <div class="portfolio-featured">
+          <img class="portfolio-featured-img" src="https://www.figma.com/api/mcp/asset/ae9468a9-b3d6-46ce-b459-921f422a63aa" alt="Brand Strategy Overview" />
+          <div class="portfolio-overlay">
+            <div><span class="featured-badge">FEATURED</span></div>
+            <div class="play-btn">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+            <div class="portfolio-featured-title">Brand Strategy Overview</div>
+          </div>
+        </div>
+        <div class="portfolio-grid">
+          <div class="portfolio-item">
+            <img class="portfolio-item-img" src="https://www.figma.com/api/mcp/asset/583ba358-f2d9-4988-b7cd-477d393dca00" alt="UI Design System" />
+            <div class="portfolio-item-overlay"><span class="portfolio-item-title">UI Design System</span></div>
+          </div>
+          <div class="portfolio-item portfolio-data-item">
+            <div class="data-graph">
+              <div class="data-graph-inner">
+                <div class="graph-bar-full"></div>
+                <div class="graph-bar-partial"></div>
+                <div class="graph-bars">
+                  <div class="graph-bar" style="height:16px;"></div>
+                  <div class="graph-bar" style="height:32px;"></div>
+                  <div class="graph-bar" style="height:24px;"></div>
+                  <div class="graph-bar" style="height:40px;background:white;"></div>
+                  <div class="graph-bar" style="height:20px;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="portfolio-item-overlay"><span class="portfolio-item-title">User Research</span></div>
+          </div>
+          <div class="portfolio-item">
+            <img class="portfolio-item-img" src="https://www.figma.com/api/mcp/asset/b284b0d6-60bc-4f76-bc87-74ccc589939b" alt="FinTech App" />
+            <div class="portfolio-item-overlay"><span class="portfolio-item-title">FinTech App</span></div>
+          </div>
+          <div class="portfolio-item">
+            <img class="portfolio-item-img" src="https://www.figma.com/api/mcp/asset/2d9e079f-f9ff-48d8-a595-ef83f8bcab54" alt="Web Development" />
+            <div class="portfolio-item-overlay"><span class="portfolio-item-title">Web Development</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Nav -->
+    <div class="bottom-nav">
+      <div class="nav-link">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 21v-8h6v8" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="nav-label">Home</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-link">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="7" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="17" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M7.5 12h5.5M13 12l3.5-4M13 12l3.5 4" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="nav-label">Network</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-fab-wrap">
+        <div class="nav-fab">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="14" y="18" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="18" width="3" height="3" rx="0.5" fill="white"/></svg>
+        </div>
+      </div>
+      <div class="nav-link">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M16.5 7.5l-3 6-5.5 2.5 3-6 5.5-2.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="1" fill="var(--slate-400)"/></svg>
+        </div>
+        <span class="nav-label">Explore</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-link">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" fill="var(--green)"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="var(--green)" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <span class="nav-label active">Profile</span>
+        <span class="nav-dot"></span>
+      </div>
+    </div>
+    </div>
+  </div>
+</body>
+</html>

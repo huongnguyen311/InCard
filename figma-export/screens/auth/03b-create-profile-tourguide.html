@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Create Profile Tour Guide</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green:         #009037;
+      --green-dark:    #007a2f;
+      --green-light:   #2eb07a;
+      --green-bg:      rgba(0,144,55,0.1);
+      --green-surface: #dcfce7;
+      --slate-900:     #0f172a;
+      --slate-800:     #1e293b;
+      --slate-700:     #334155;
+      --slate-600:     #475569;
+      --slate-500:     #64748b;
+      --slate-400:     #94a3b8;
+      --slate-300:     #cbd5e1;
+      --slate-200:     #e2e8f0;
+      --slate-100:     #f1f5f9;
+      --slate-50:      #f8fafc;
+      --white:         #ffffff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { scrollbar-width: none; -ms-overflow-style: none; }
+    html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+    body {
+      font-family: 'Public Sans', sans-serif;
+      width: 390px;
+      height: 844px;
+      background: var(--slate-50);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── Mocked create-profile background ── */
+    .bg-screen {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+    }
+
+    /* Header */
+    .mock-header {
+      background: rgba(248,250,252,0.95);
+      border-bottom: 1px solid var(--slate-200);
+      padding: 16px;
+      display: flex; align-items: center;
+      flex-shrink: 0;
+    }
+    .mock-back {
+      width: 40px; height: 40px; border-radius: 9999px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .mock-header-title {
+      flex: 1; text-align: center; padding-right: 40px;
+      font-size: 20px; font-weight: 700; color: var(--slate-900);
+      letter-spacing: -0.4px;
+    }
+
+    /* Progress bar */
+    .mock-progress {
+      padding: 14px 24px 10px;
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-100);
+      flex-shrink: 0;
+    }
+    .progress-steps {
+      display: flex; gap: 6px;
+    }
+    .progress-step {
+      flex: 1; height: 4px; border-radius: 9999px;
+      background: var(--slate-200);
+    }
+    .progress-step.done { background: var(--green); }
+    .progress-step.active { background: var(--green-light); }
+    .progress-label {
+      font-size: 11px; font-weight: 600; color: var(--slate-400);
+      margin-top: 8px;
+    }
+    .progress-label span { color: var(--green); font-weight: 700; }
+
+    /* Mock content */
+    .mock-content {
+      flex: 1; padding: 24px;
+      display: flex; flex-direction: column; gap: 24px;
+      overflow: hidden;
+    }
+    .mock-photo-section {
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+    }
+    .mock-avatar {
+      width: 100px; height: 100px; border-radius: 9999px;
+      background: var(--slate-200);
+      border: 4px solid var(--white);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .mock-photo-title { font-size: 20px; font-weight: 800; color: var(--slate-900); }
+    .mock-photo-sub { font-size: 13px; color: var(--slate-500); }
+    .mock-fields { display: flex; flex-direction: column; gap: 14px; }
+    .mock-field-label { font-size: 13px; font-weight: 700; color: var(--slate-600); margin-bottom: 5px; }
+    .mock-field {
+      height: 52px; border-radius: 12px;
+      background: var(--white); border: 1px solid var(--slate-200);
+      display: flex; align-items: center; padding: 0 16px;
+      font-size: 14px; color: var(--slate-300);
+    }
+    .mock-field.filled { color: var(--slate-800); font-weight: 500; }
+    .mock-name-row { display: flex; gap: 12px; }
+    .mock-name-row .mock-field-wrap { flex: 1; }
+    .mock-btn {
+      height: 54px; border-radius: 14px;
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 800; color: var(--white);
+      box-shadow: 0 4px 14px rgba(0, 144, 55, 0.35);
+    }
+
+    /* ── Tour overlay ── */
+    .tour-overlay {
+      position: absolute; inset: 0;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    /* Dimmed backdrop with spotlight cutout via box-shadow */
+    .spotlight {
+      position: absolute;
+      border-radius: 16px;
+      box-shadow: 0 0 0 9999px rgba(15,23,42,0.62);
+      pointer-events: none;
+    }
+
+    /* Tour card */
+    .tour-card {
+      position: absolute;
+      background: var(--white);
+      border-radius: 18px;
+      padding: 18px 20px 16px;
+      width: 300px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.1);
+      pointer-events: all;
+    }
+
+    /* Arrow pointer */
+    .tour-card::before {
+      content: '';
+      position: absolute;
+      width: 0; height: 0;
+    }
+    .tour-card.arrow-top::before {
+      top: -10px; left: 28px;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 10px solid var(--white);
+    }
+    .tour-card.arrow-bottom::before {
+      bottom: -10px; left: 28px;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 10px solid var(--white);
+    }
+
+    .tour-step-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--green-surface);
+      border-radius: 9999px; padding: 3px 10px 3px 6px;
+      margin-bottom: 10px;
+    }
+    .tour-step-dot {
+      width: 18px; height: 18px; border-radius: 9999px;
+      background: var(--green);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 800; color: var(--white);
+      flex-shrink: 0;
+    }
+    .tour-step-label {
+      font-size: 11px; font-weight: 700; color: var(--green);
+      letter-spacing: 0.3px;
+    }
+
+    .tour-title {
+      font-size: 15px; font-weight: 800; color: var(--slate-900);
+      letter-spacing: -0.3px; margin-bottom: 6px;
+    }
+    .tour-desc {
+      font-size: 13px; font-weight: 400; color: var(--slate-500);
+      line-height: 1.6;
+    }
+
+    .tour-footer {
+      display: flex; align-items: center;
+      margin-top: 16px; gap: 10px;
+    }
+    .tour-dots { display: flex; gap: 5px; flex: 1; }
+    .tour-dot {
+      width: 6px; height: 6px; border-radius: 9999px;
+      background: var(--slate-200);
+    }
+    .tour-dot.active { background: var(--green); width: 18px; }
+
+    .tour-skip {
+      font-size: 12px; font-weight: 600; color: var(--slate-400);
+      background: none; border: none; cursor: pointer;
+      font-family: 'Public Sans', sans-serif; padding: 0;
+    }
+    .tour-next {
+      display: flex; align-items: center; gap: 6px;
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%); border: none; border-radius: 10px;
+      padding: 8px 16px; cursor: pointer;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 13px; font-weight: 700; color: var(--white);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Mocked Create Profile screen beneath ── -->
+  <div class="bg-screen">
+
+    <div class="mock-header">
+      <div class="mock-back">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M11 14L7 9l4-5" stroke="var(--slate-400)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="mock-header-title">Create Profile</div>
+    </div>
+
+    <!-- Progress -->
+    <div class="mock-progress">
+      <div class="progress-steps">
+        <div class="progress-step active"></div>
+        <div class="progress-step"></div>
+        <div class="progress-step"></div>
+        <div class="progress-step"></div>
+      </div>
+      <div class="progress-label">Step <span>1</span> of 4 — Basic Info</div>
+    </div>
+
+    <!-- Content -->
+    <div class="mock-content">
+
+      <!-- Photo -->
+      <div class="mock-photo-section">
+        <div class="mock-avatar">
+          <svg width="44" height="44" viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="18" r="10" fill="var(--slate-300)"/>
+            <ellipse cx="24" cy="40" rx="16" ry="9" fill="var(--slate-300)"/>
+          </svg>
+        </div>
+        <div class="mock-photo-title">Your Profile</div>
+        <div class="mock-photo-sub">Add a photo to stand out</div>
+      </div>
+
+      <!-- Fields -->
+      <div class="mock-fields">
+        <div>
+          <div class="mock-field-label">Full name</div>
+          <div class="mock-name-row">
+            <div class="mock-field-wrap">
+              <div class="mock-field filled">Alex</div>
+            </div>
+            <div class="mock-field-wrap">
+              <div class="mock-field filled">Sterling</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="mock-field-label">Job title</div>
+          <div class="mock-field">e.g. Product Designer</div>
+        </div>
+        <div>
+          <div class="mock-field-label">Company</div>
+          <div class="mock-field">e.g. InCard</div>
+        </div>
+      </div>
+
+      <div class="mock-btn">Continue</div>
+
+    </div>
+  </div>
+
+  <!-- ── Tour Step 1: Photo (no spotlight, floating card only) ── -->
+  <div class="tour-overlay" id="step-1">
+    <div class="tour-card arrow-top" style="top:278px; left:44px;">
+      <div class="tour-step-badge">
+        <div class="tour-step-dot">1</div>
+        <span class="tour-step-label">Profile Photo</span>
+      </div>
+      <div class="tour-title">Add your profile photo</div>
+      <div class="tour-desc">A great photo makes your card 3× more memorable. Tap the avatar to upload from your gallery or take a selfie.</div>
+      <div class="tour-footer">
+        <div class="tour-dots">
+          <div class="tour-dot active"></div>
+          <div class="tour-dot"></div>
+          <div class="tour-dot"></div>
+        </div>
+        <button class="tour-skip" onclick="showStep(2)">Skip</button>
+        <button class="tour-next" onclick="showStep(2)">
+          Next
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M4 2l4 4-4 4" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Tour Step 2: Basic Info ── -->
+  <div class="tour-overlay" id="step-2" style="display:none;">
+
+    <!-- Spotlight on fields -->
+    <div class="spotlight" style="top:338px; left:16px; width:358px; height:186px;"></div>
+
+    <div class="tour-card arrow-bottom" style="top:176px; left:44px;">
+      <div class="tour-step-badge">
+        <div class="tour-step-dot">2</div>
+        <span class="tour-step-label">Basic Info</span>
+      </div>
+      <div class="tour-title">Fill in your basic details</div>
+      <div class="tour-desc">Your name, job title, and company are shown on your digital card. Keep it professional — this is your first impression.</div>
+      <div class="tour-footer">
+        <div class="tour-dots">
+          <div class="tour-dot"></div>
+          <div class="tour-dot active"></div>
+          <div class="tour-dot"></div>
+        </div>
+        <button class="tour-skip" onclick="showStep(3)">Skip</button>
+        <button class="tour-next" onclick="showStep(3)">
+          Next
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M4 2l4 4-4 4" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Tour Step 3: Continue button ── -->
+  <div class="tour-overlay" id="step-3" style="display:none;">
+
+    <!-- Spotlight on Continue button -->
+    <div class="spotlight" style="top:712px; left:24px; width:342px; height:54px; border-radius:14px;"></div>
+
+    <div class="tour-card arrow-bottom" style="top:548px; left:44px;">
+      <div class="tour-step-badge">
+        <div class="tour-step-dot">3</div>
+        <span class="tour-step-label">All set!</span>
+      </div>
+      <div class="tour-title">Ready to build your card</div>
+      <div class="tour-desc">Tap Continue when you're done with each step. Your card is automatically saved — no need to worry about losing progress.</div>
+      <div class="tour-footer">
+        <div class="tour-dots">
+          <div class="tour-dot"></div>
+          <div class="tour-dot"></div>
+          <div class="tour-dot active"></div>
+        </div>
+        <button class="tour-skip" onclick="endTour()">Skip</button>
+        <button class="tour-next" onclick="endTour()" style="background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);">
+          Done!
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+            <path d="M2 7l3.5 3.5L12 3" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showStep(n) {
+      document.querySelectorAll('.tour-overlay').forEach(function(el) {
+        el.style.display = 'none';
+      });
+      var el = document.getElementById('step-' + n);
+      if (el) el.style.display = '';
+    }
+    function endTour() {
+      document.querySelectorAll('.tour-overlay').forEach(function(el) {
+        el.style.display = 'none';
+      });
+    }
+  </script>
+
+</body>
+</html>

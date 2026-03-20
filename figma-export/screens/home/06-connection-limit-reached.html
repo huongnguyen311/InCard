@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Connection Limit Reached</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green:         #009037;
+      --green-light:   #2eb07a;
+      --green-bg:      rgba(0,144,55,0.1);
+      --slate-900:     #0f172a;
+      --slate-800:     #1e293b;
+      --slate-700:     #334155;
+      --slate-600:     #475569;
+      --slate-500:     #64748b;
+      --slate-400:     #94a3b8;
+      --slate-200:     #e2e8f0;
+      --slate-100:     #f1f5f9;
+      --slate-50:      #f8fafc;
+      --gray-bg:       #f8f6f6;
+      --white:         #ffffff;
+      --amber:         #f59e0b;
+      --amber-dark:    #d97706;
+      --amber-bg:      rgba(245,158,11,0.1);
+      --red-100:       #fee2e2;
+      --red-600:       #dc2626;
+      --orange:        #ef5023;
+      --orange-light:  #fa987d;
+      --orange-bg:     rgba(239,80,35,0.1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow: hidden; }
+    body { background: var(--gray-bg); font-family: 'Public Sans', sans-serif; }
+    .screen { width: 390px; min-height: 844px; position: relative; }
+
+    /* Blurred background */
+    .bg-content {
+      position: absolute; inset: 0;
+      padding: 24px 16px; display: flex; flex-direction: column; gap: 16px;
+      filter: blur(1px); opacity: 0.15; pointer-events: none;
+    }
+    .bg-header { height: 56px; background: var(--white); border-radius: 12px; }
+    .bg-row { height: 72px; background: var(--white); border-radius: 14px; }
+    .bg-row-sm { height: 56px; background: var(--white); border-radius: 14px; }
+    .bg-card { height: 120px; background: var(--white); border-radius: 20px; }
+    .bg-half { display: flex; gap: 12px; }
+    .bg-half > div { flex: 1; height: 100px; background: var(--white); border-radius: 16px; }
+
+    /* Overlay */
+    .modal-overlay {
+      position: absolute; inset: 0;
+      background: rgba(15,23,42,0.45);
+      backdrop-filter: blur(3px);
+      display: flex; align-items: flex-end; justify-content: center;
+    }
+
+    /* Bottom sheet */
+    .modal {
+      background: var(--white);
+      border-radius: 28px 28px 0 0;
+      width: 100%;
+      padding: 0 24px 40px;
+      box-shadow: 0 -8px 40px rgba(0,0,0,0.18);
+    }
+    .modal-handle {
+      width: 40px; height: 5px;
+      background: var(--slate-200); border-radius: 9999px;
+      margin: 14px auto 28px;
+    }
+
+    /* Icon */
+    .icon-outer { position: relative; width: 72px; height: 72px; margin: 0 auto 20px; }
+    .icon-wrap {
+      width: 72px; height: 72px; border-radius: 9999px;
+      background: var(--amber-bg);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .icon-wrap svg { width: 32px; height: 32px; }
+    .icon-badge {
+      position: absolute; top: -2px; right: -2px;
+      width: 22px; height: 22px; border-radius: 9999px;
+      background: var(--amber);
+      border: 3px solid var(--white);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .icon-badge svg { width: 9px; height: 9px; }
+
+    .modal-label {
+      font-size: 11px; font-weight: 700;
+      color: var(--amber-dark); letter-spacing: 1px;
+      text-transform: uppercase; text-align: center;
+      margin-bottom: 8px;
+    }
+    .modal-title {
+      font-size: 22px; font-weight: 700;
+      color: var(--slate-900); text-align: center;
+      letter-spacing: -0.4px; margin-bottom: 8px;
+    }
+    .modal-sub {
+      font-size: 14px; color: var(--slate-500);
+      text-align: center; line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    /* Usage bar */
+    .usage-wrap { margin-bottom: 28px; }
+    .usage-card {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .usage-meta {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 10px;
+    }
+    .usage-label { font-size: 12px; font-weight: 600; color: var(--slate-500); }
+    .usage-count {
+      font-size: 13px; font-weight: 700;
+      color: var(--amber-dark);
+      background: var(--amber-bg);
+      padding: 2px 10px; border-radius: 9999px;
+    }
+    .usage-track {
+      height: 8px; background: var(--slate-200);
+      border-radius: 9999px; overflow: hidden; margin-bottom: 10px;
+    }
+    .usage-fill {
+      height: 100%; width: 100%;
+      background: linear-gradient(90deg, var(--amber) 0%, var(--amber-dark) 100%);
+      border-radius: 9999px;
+    }
+    .usage-msg { display: flex; align-items: center; gap: 6px; }
+    .usage-msg svg { width: 13px; height: 13px; }
+    .usage-msg-text { font-size: 12px; font-weight: 600; color: var(--amber-dark); }
+
+    /* Pro perks */
+    .perks { display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; }
+    .perk-row { display: flex; align-items: center; gap: 10px; }
+    .perk-dot {
+      width: 18px; height: 18px; border-radius: 9999px;
+      background: var(--green-bg);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .perk-dot svg { width: 9px; height: 9px; }
+    .perk-text { font-size: 13px; font-weight: 500; color: var(--slate-700); }
+
+    /* Buttons */
+    .upgrade-btn {
+      width: 100%; height: 54px; border-radius: 14px;
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      box-shadow: 0 4px 14px rgba(0, 144, 55, 0.35);
+      cursor: pointer; margin-bottom: 10px;
+    }
+    .upgrade-btn svg { width: 18px; height: 18px; }
+    .upgrade-btn span { font-size: 15px; font-weight: 700; color: var(--white); }
+    .later-btn {
+      width: 100%; height: 46px; border-radius: 14px;
+      background: var(--slate-100);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    .later-btn span { font-size: 14px; font-weight: 600; color: var(--slate-600); }
+  </style>
+</head>
+<body>
+  <div class="screen">
+
+    <!-- Background -->
+    <div class="bg-content">
+      <div class="bg-header"></div>
+      <div class="bg-row"></div>
+      <div class="bg-row-sm"></div>
+      <div class="bg-card"></div>
+      <div class="bg-half">
+        <div></div><div></div>
+      </div>
+      <div class="bg-row"></div>
+    </div>
+
+    <!-- Modal overlay -->
+    <div class="modal-overlay">
+      <div class="modal">
+        <div class="modal-handle"></div>
+
+        <!-- Icon -->
+        <div class="icon-outer">
+          <div class="icon-wrap">
+            <svg viewBox="0 0 32 32" fill="none">
+              <circle cx="16" cy="16" r="13" stroke="var(--amber)" stroke-width="2"/>
+              <path d="M16 10v8" stroke="var(--amber)" stroke-width="2.2" stroke-linecap="round"/>
+              <circle cx="16" cy="22" r="1.2" fill="var(--amber)"/>
+            </svg>
+          </div>
+          <div class="icon-badge">
+            <svg viewBox="0 0 9 9" fill="none">
+              <path d="M1 8h7M4.5 1L1 7h7L4.5 1z" stroke="white" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="modal-label">Limit Reached</div>
+        <div class="modal-title">Connection Limit Reached</div>
+        <div class="modal-sub">You've used all 10 of your free connections. Upgrade to Pro for unlimited networking.</div>
+
+        <!-- Usage bar -->
+        <div class="usage-wrap">
+          <div class="usage-card">
+            <div class="usage-meta">
+              <span class="usage-label">Free Plan Usage</span>
+              <span class="usage-count">10 / 10</span>
+            </div>
+            <div class="usage-track">
+              <div class="usage-fill"></div>
+            </div>
+            <div class="usage-msg">
+              <svg viewBox="0 0 13 13" fill="none">
+                <circle cx="6.5" cy="6.5" r="5.5" stroke="var(--amber-dark)" stroke-width="1.2"/>
+                <path d="M6.5 4.5v3" stroke="var(--amber-dark)" stroke-width="1.2" stroke-linecap="round"/>
+                <circle cx="6.5" cy="9" r="0.6" fill="var(--amber-dark)"/>
+              </svg>
+              <span class="usage-msg-text">Maximum limit reached</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="upgrade-btn">
+          <svg viewBox="0 0 18 18" fill="none">
+            <path d="M9 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L9 13.27l-4.77 2.44.91-5.32L1.27 6.62l5.34-.78L9 1z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Upgrade to Pro</span>
+        </div>
+        <div class="later-btn">
+          <span>Maybe Later</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — AI Search Profile</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green:       #009037;
+      --green-light: #2eb07a;
+      --green-bg:    rgba(0,144,55,0.08);
+      --ink:         #0f172a;
+      --slate-700:   #334155;
+      --slate-600:   #475569;
+      --slate-500:   #64748b;
+      --slate-400:   #94a3b8;
+      --slate-300:   #cbd5e1;
+      --slate-200:   #e2e8f0;
+      --slate-100:   #f1f5f9;
+      --white:       #ffffff;
+      --bg:          #f8f6f6;
+      --border:      rgba(0,0,0,0.07);
+      --border-strong: #e2e8f0;
+
+      --violet:      #7c3aed;
+      --violet-bg:   rgba(124,58,237,0.08);
+      --amber:       #d97706;
+      --amber-bg:    rgba(217,119,6,0.08);
+      --sky:         #0284c7;
+      --sky-bg:      rgba(2,132,199,0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { scrollbar-width: none; height: 100%; overflow: hidden; }
+    body::-webkit-scrollbar { display: none; }
+
+    body {
+      font-family: 'Public Sans', sans-serif;
+      width: 390px; height: 844px;
+      background: var(--bg);
+      display: flex; flex-direction: column;
+      overflow: hidden; position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: absolute; top: -30px; left: 50%;
+      transform: translateX(-50%);
+      width: 300px; height: 180px;
+      background: radial-gradient(ellipse, rgba(0,144,55,0.07) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      position: relative; z-index: 2;
+      padding: 20px 20px 16px;
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(248,246,246,0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .back-btn {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--white); border: 1px solid var(--border-strong);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .header-title {
+      font-size: 16px; font-weight: 700; color: var(--ink); flex: 1;
+    }
+    /* Filter icon button */
+    .filter-btn {
+      position: relative;
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--white); border: 1px solid var(--border-strong);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .filter-btn.has-filters {
+      background: var(--green-bg);
+      border-color: rgba(0,144,55,0.3);
+    }
+    /* active filter dot badge */
+    .filter-badge {
+      position: absolute; top: -3px; right: -3px;
+      width: 10px; height: 10px; border-radius: 9999px;
+      background: var(--green);
+      border: 2px solid var(--bg);
+    }
+
+    /* ── SCROLLABLE BODY ── */
+    .body {
+      flex: 1; overflow-y: auto; padding: 20px 16px 24px;
+      display: flex; flex-direction: column; gap: 20px;
+      position: relative; z-index: 1;
+    }
+    .body::-webkit-scrollbar { display: none; }
+
+    /* ── NETWORK TOGGLE ── */
+    .network-toggle {
+      display: flex;
+      background: var(--slate-100);
+      border-radius: 14px;
+      padding: 4px; gap: 3px;
+    }
+    .net-btn {
+      flex: 1; padding: 10px 8px;
+      border-radius: 11px; border: none;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all 0.15s;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      color: var(--slate-500); background: none;
+    }
+    .net-btn.active {
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      color: var(--white);
+      box-shadow: 0 3px 12px rgba(0,144,55,0.35);
+    }
+    .net-btn-icon {
+      width: 20px; height: 20px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .net-btn.active .net-btn-icon { background: rgba(255,255,255,0.2); }
+    .net-btn:not(.active) .net-btn-icon { background: transparent; }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-size: 11px; font-weight: 700;
+      color: var(--slate-400);
+      letter-spacing: 0.8px; text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+
+    /* ── CATEGORY SLIDER ── */
+    .cat-scroll {
+      display: flex; gap: 10px;
+      overflow-x: auto;
+      margin: 0 -16px;
+      padding: 0 16px 2px;
+      scrollbar-width: none;
+    }
+    .cat-scroll::-webkit-scrollbar { display: none; }
+    .cat-chip {
+      flex-shrink: 0;
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 14px;
+      background: var(--white);
+      border: 1.5px solid var(--border-strong);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+      white-space: nowrap;
+    }
+    .cat-chip.active {
+      border-color: transparent;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .cat-chip.active.violet { background: var(--violet-bg); border-color: rgba(124,58,237,0.25); }
+    .cat-chip.active.amber  { background: var(--amber-bg);  border-color: rgba(217,119,6,0.25); }
+    .cat-chip.active.sky    { background: var(--sky-bg);    border-color: rgba(2,132,199,0.25); }
+    .cat-chip-icon {
+      width: 28px; height: 28px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .cat-chip.active.violet .cat-chip-icon { background: rgba(124,58,237,0.12); }
+    .cat-chip.active.amber  .cat-chip-icon { background: rgba(217,119,6,0.12); }
+    .cat-chip.active.sky    .cat-chip-icon { background: rgba(2,132,199,0.12); }
+    .cat-chip:not(.active) .cat-chip-icon  { background: var(--slate-100); }
+    .cat-chip-label {
+      font-size: 12px; font-weight: 700;
+    }
+    .cat-chip.active.violet .cat-chip-label { color: var(--violet); }
+    .cat-chip.active.amber  .cat-chip-label { color: var(--amber); }
+    .cat-chip.active.sky    .cat-chip-label { color: var(--sky); }
+    .cat-chip:not(.active)  .cat-chip-label { color: var(--slate-600); }
+    .cat-chip-sub {
+      font-size: 10px; font-weight: 500; color: var(--slate-400);
+      margin-top: 1px;
+    }
+
+    /* ── RESULTS SLIDER ── */
+    .results-bar-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .results-bar-label {
+      font-size: 12px; font-weight: 700; color: var(--ink);
+    }
+    .results-bar-count {
+      font-size: 11px; font-weight: 600;
+      color: var(--green);
+      background: var(--green-bg);
+      padding: 3px 9px; border-radius: 9999px;
+    }
+    .results-scroll {
+      display: flex; gap: 10px;
+      overflow-x: auto;
+      margin: 0 -16px;
+      padding: 0 16px 4px;
+      scrollbar-width: none;
+    }
+    .results-scroll::-webkit-scrollbar { display: none; }
+
+    /* profile card in slider */
+    .pcard {
+      flex-shrink: 0;
+      width: 130px;
+      background: var(--white);
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      padding: 14px 12px 12px;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 6px; cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.15s;
+      position: relative;
+    }
+    .pcard:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+    .pcard-avatar {
+      width: 52px; height: 52px; border-radius: 9999px;
+      object-fit: cover;
+      border: 2px solid var(--border-strong);
+      background: var(--slate-100);
+    }
+    /* avatar placeholder gradient */
+    .pcard-avatar-ph {
+      width: 52px; height: 52px; border-radius: 9999px;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 700; color: var(--white);
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+    .pcard-name {
+      font-size: 12px; font-weight: 700; color: var(--ink);
+      text-align: center; line-height: 1.3;
+      max-width: 100%; overflow: hidden;
+      text-overflow: ellipsis; white-space: nowrap; width: 100%;
+    }
+    .pcard-role {
+      font-size: 10px; font-weight: 500; color: var(--slate-500);
+      text-align: center; line-height: 1.4;
+      display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden;
+      width: 100%;
+    }
+    .pcard-connect {
+      margin-top: 4px;
+      width: 100%; padding: 6px 0;
+      border-radius: 8px; border: none;
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      cursor: pointer;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 11px; font-weight: 700; color: var(--white);
+      box-shadow: 0 2px 8px rgba(0,144,55,0.3);
+    }
+    /* match score badge */
+    .pcard-match {
+      position: absolute; top: 9px; right: 9px;
+      font-size: 9px; font-weight: 800;
+      padding: 2px 6px; border-radius: 9999px;
+      background: var(--green-bg); color: var(--green);
+    }
+
+    /* ── CHIPS STICKY BAR ── */
+    .chips-sticky {
+      flex-shrink: 0;
+      padding: 10px 0 8px;
+      background: var(--bg);
+      border-top: 1px solid var(--border-strong);
+      position: relative; z-index: 2;
+    }
+    .chips-sticky .cat-scroll {
+      margin: 0;
+      padding: 0 16px 2px;
+    }
+
+    /* ── INPUT BAR ── */
+    .input-bar {
+      padding: 10px 16px 20px;
+      flex-shrink: 0;
+      position: relative; z-index: 2;
+      background: linear-gradient(0deg, var(--bg) 60%, transparent);
+      border-top: 1px solid var(--border-strong);
+    }
+    .input-shell {
+      display: flex; align-items: center;
+      background: var(--white);
+      border: 1.5px solid var(--border-strong);
+      border-radius: 16px;
+      padding: 10px 10px 10px 16px;
+      gap: 8px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .input-shell:focus-within {
+      border-color: rgba(0,144,55,0.5);
+      box-shadow: 0 0 0 3px rgba(0,144,55,0.08);
+    }
+    .spark-icon { display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .input-placeholder {
+      flex: 1; font-family: 'DM Sans', sans-serif;
+      font-size: 14px; color: var(--slate-400);
+    }
+    .send-btn {
+      width: 38px; height: 38px; border-radius: 11px;
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 3px 12px rgba(0,144,55,0.4);
+      flex-shrink: 0;
+    }
+
+    /* ── HOME INDICATOR ── */
+    .home-indicator {
+      height: 24px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .home-bar {
+      width: 110px; height: 4px; border-radius: 9999px;
+      background: rgba(0,0,0,0.12);
+    }
+
+    /* ── FILTER BOTTOM SHEET ── */
+    .sheet-backdrop {
+      position: absolute; inset: 0;
+      background: rgba(15,23,42,0.4);
+      z-index: 10;
+    }
+    .filter-sheet {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: var(--white);
+      border-radius: 24px 24px 0 0;
+      z-index: 11;
+      display: flex; flex-direction: column;
+      max-height: 82%;
+    }
+    .sheet-handle {
+      width: 36px; height: 4px; border-radius: 9999px;
+      background: var(--slate-200);
+      margin: 12px auto 0; flex-shrink: 0;
+    }
+    .sheet-header {
+      padding: 14px 20px 12px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border-strong);
+      flex-shrink: 0;
+    }
+    .sheet-title { font-size: 16px; font-weight: 700; color: var(--ink); }
+    .sheet-close {
+      width: 30px; height: 30px; border-radius: 9999px;
+      background: var(--slate-100);
+      display: flex; align-items: center; justify-content: center;
+      border: none; cursor: pointer;
+    }
+    .sheet-body {
+      flex: 1; overflow-y: auto; padding: 16px 20px 0;
+    }
+    .sheet-body::-webkit-scrollbar { display: none; }
+
+    /* filter rows inside sheet */
+    .adv-card {
+      background: var(--white);
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .adv-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--slate-100);
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .adv-row:last-child { border-bottom: none; }
+    .adv-row:hover { background: var(--slate-100); }
+    .adv-row-icon {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: var(--slate-100);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .adv-row-body { flex: 1; min-width: 0; }
+    .adv-row-label { font-size: 11px; font-weight: 500; color: var(--slate-400); margin-bottom: 4px; }
+    .adv-row-value { font-size: 14px; font-weight: 600; color: var(--ink); }
+    .adv-row-value.placeholder { color: var(--slate-400); font-weight: 400; }
+    .adv-chevron { flex-shrink: 0; }
+
+    .adv-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .adv-tag {
+      font-size: 11px; font-weight: 600;
+      padding: 3px 9px; border-radius: 9999px;
+      border: 1.5px solid var(--border-strong);
+      color: var(--slate-600); background: var(--white);
+    }
+    .adv-tag.active {
+      background: var(--green-bg);
+      border-color: rgba(0,144,55,0.25);
+      color: var(--green);
+    }
+
+    /* ── FILTER SECTIONS ── */
+    .filter-section { margin-bottom: 20px; }
+    .filter-section-title {
+      font-size: 10px; font-weight: 700;
+      color: var(--slate-400); letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 10px;
+    }
+    .filter-group {
+      background: var(--white);
+      border: 1px solid var(--border-strong);
+      border-radius: 16px; overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .filter-row {
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--slate-100);
+    }
+    .filter-row:last-child { border-bottom: none; }
+    .filter-row-label {
+      font-size: 11px; font-weight: 600; color: var(--slate-500);
+      margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .filter-row-label svg { flex-shrink: 0; }
+    .filter-input {
+      width: 100%; padding: 9px 12px;
+      border: 1.5px solid var(--border-strong);
+      border-radius: 10px; background: var(--slate-50);
+      font-family: 'Public Sans', sans-serif;
+      font-size: 13px; color: var(--ink);
+      outline: none;
+    }
+    .filter-input::placeholder { color: var(--slate-400); }
+    .filter-input:focus { border-color: rgba(0,144,55,0.4); box-shadow: 0 0 0 3px rgba(0,144,55,0.07); }
+    .filter-select-wrap { position: relative; }
+    .filter-select {
+      width: 100%; padding: 9px 32px 9px 12px;
+      border: 1.5px solid var(--border-strong);
+      border-radius: 10px; background: var(--slate-50);
+      font-family: 'Public Sans', sans-serif;
+      font-size: 13px; color: var(--ink);
+      appearance: none; outline: none; cursor: pointer;
+    }
+    .filter-select:focus { border-color: rgba(0,144,55,0.4); }
+    .filter-select-arrow {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      pointer-events: none;
+    }
+    .role-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .role-chip {
+      font-size: 11px; font-weight: 600;
+      padding: 5px 11px; border-radius: 9999px;
+      border: 1.5px solid var(--border-strong);
+      color: var(--slate-600); background: var(--white);
+      cursor: pointer; transition: all 0.15s;
+    }
+    .role-chip.active {
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      border-color: transparent;
+      color: var(--white);
+      box-shadow: 0 2px 8px rgba(0,144,55,0.3);
+    }
+    .role-chip-hint { font-size: 10px; color: var(--slate-400); margin-top: 6px; }
+    .exp-row { display: flex; align-items: center; gap: 10px; }
+    .exp-minus, .exp-plus {
+      width: 30px; height: 30px; border-radius: 8px;
+      border: 1.5px solid var(--border-strong);
+      background: var(--white); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 600; color: var(--slate-600);
+      flex-shrink: 0; line-height: 1;
+    }
+    .exp-plus { border-color: transparent; color: var(--white); background: linear-gradient(135deg, #2eb07a 0%, #009037 100%); box-shadow: 0 2px 8px rgba(0,144,55,0.3); }
+    .exp-label { flex: 1; font-size: 13px; font-weight: 600; color: var(--ink); text-align: center; }
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; }
+    .toggle-switch {
+      width: 44px; height: 26px; border-radius: 9999px;
+      background: var(--slate-200);
+      position: relative; cursor: pointer; flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .toggle-switch.on { background: var(--green); }
+    .toggle-knob {
+      width: 20px; height: 20px; border-radius: 9999px;
+      background: var(--white); box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      position: absolute; top: 3px; left: 3px;
+      transition: left 0.2s;
+    }
+    .toggle-switch.on .toggle-knob { left: 21px; }
+
+    /* apply button */
+    .sheet-footer {
+      padding: 12px 20px 24px;
+      flex-shrink: 0;
+    }
+    .apply-btn {
+      width: 100%; padding: 15px;
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      border: none; border-radius: 14px;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 15px; font-weight: 700; color: var(--white);
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 144, 55, 0.35);
+    }
+
+    /* ── CHAT BUBBLES ── */
+    .chat-area {
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .msg-row {
+      display: flex; align-items: flex-end; gap: 8px;
+    }
+    .msg-row.me {
+      flex-direction: row-reverse;
+    }
+    .bubble {
+      max-width: 78%;
+      padding: 10px 14px;
+      border-radius: 16px;
+      font-size: 14px; line-height: 1.5;
+    }
+    .bubble.me {
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%);
+      color: var(--white);
+      border-bottom-right-radius: 4px;
+      font-weight: 500;
+    }
+    .bubble.them {
+      background: var(--white);
+      color: var(--ink);
+      border: 1px solid var(--border-strong);
+      border-bottom-left-radius: 4px;
+      font-weight: 400;
+    }
+    .bubble.them strong { color: var(--green); }
+    .ai-avatar {
+      width: 30px; height: 30px; border-radius: 9999px;
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0,144,55,0.35);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .network-toggle              { animation: fadeUp 0.3s ease 0.05s both; }
+    .section-block:nth-child(2)  { animation: fadeUp 0.3s ease 0.12s both; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <button class="back-btn">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M10 12L6 8l4-4" stroke="var(--slate-600)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="header-title">AI Search Profile</div>
+  </div>
+
+  <!-- Body -->
+  <div class="body">
+
+    <!-- Network scope toggle -->
+    <div class="network-toggle">
+      <button class="net-btn active">
+        <div class="net-btn-icon">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+            <circle cx="5" cy="12" r="2.5" stroke="var(--green)" stroke-width="1.8"/>
+            <circle cx="19" cy="6" r="2.5" stroke="var(--green)" stroke-width="1.8"/>
+            <circle cx="19" cy="18" r="2.5" stroke="var(--green)" stroke-width="1.8"/>
+            <path d="M7.5 12h4M13.5 12l4-4.5M13.5 12l4 4.5" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        InCard Network
+      </button>
+      <button class="net-btn">
+        <div class="net-btn-icon">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="9" stroke="var(--slate-400)" stroke-width="1.8"/>
+            <path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20" stroke="var(--slate-400)" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        Open Network
+      </button>
+    </div>
+
+    <!-- Chat messages -->
+    <div class="chat-area">
+
+      <!-- User message -->
+      <div class="msg-row me">
+        <div class="bubble me">Find 7 owners of domestic cosmetics brands</div>
+      </div>
+
+      <!-- AI reply -->
+      <div class="msg-row them">
+        <div class="ai-avatar">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C12 2 12.8 6 14.2 7.4C15.6 8.8 19 10 19 10C19 10 15.6 11.2 14.2 12.6C12.8 14 12 18 12 18C12 18 11.2 14 9.8 12.6C8.4 11.2 5 10 5 10C5 10 8.4 8.8 9.8 7.4C11.2 6 12 2 12 2Z" fill="white"/>
+          </svg>
+        </div>
+        <div class="bubble them">I've found <strong>7 relevant profiles</strong> from InCard Network based on your search. Here are the top matches.</div>
+      </div>
+
+    </div>
+
+    <!-- Profile cards slide -->
+    <div class="results-scroll">
+
+      <div class="pcard">
+        <div class="pcard-match">97%</div>
+        <div class="pcard-avatar-ph" style="background: linear-gradient(135deg, #be185d, #f472b6);">L</div>
+        <div class="pcard-name">Linh Pham</div>
+        <div class="pcard-role">Owner · Linh Beauty</div>
+        <button class="pcard-connect">Connect</button>
+      </div>
+
+      <div class="pcard">
+        <div class="pcard-match">94%</div>
+        <div class="pcard-avatar-ph" style="background: linear-gradient(135deg, #7c3aed, #c4b5fd);">M</div>
+        <div class="pcard-name">Mai Tran</div>
+        <div class="pcard-role">Founder · Maia Skin</div>
+        <button class="pcard-connect">Connect</button>
+      </div>
+
+      <div class="pcard">
+        <div class="pcard-match">91%</div>
+        <div class="pcard-avatar-ph" style="background: linear-gradient(135deg, #d97706, #fcd34d);">H</div>
+        <div class="pcard-name">Hoa Nguyen</div>
+        <div class="pcard-role">CEO · Viet Glow Co.</div>
+        <button class="pcard-connect">Connect</button>
+      </div>
+
+      <div class="pcard">
+        <div class="pcard-match">89%</div>
+        <div class="pcard-avatar-ph" style="background: linear-gradient(135deg, #0891b2, #67e8f9);">T</div>
+        <div class="pcard-name">Thuy Le</div>
+        <div class="pcard-role">Owner · ThuySkin Lab</div>
+        <button class="pcard-connect">Connect</button>
+      </div>
+
+      <div class="pcard">
+        <div class="pcard-match">86%</div>
+        <div class="pcard-avatar-ph" style="background: linear-gradient(135deg, #009037, #2eb07a);">A</div>
+        <div class="pcard-name">An Vo</div>
+        <div class="pcard-role">Founder · AnNature</div>
+        <button class="pcard-connect">Connect</button>
+      </div>
+
+      <div class="pcard">
+        <div class="pcard-match">83%</div>
+        <div class="pcard-avatar-ph" style="background: linear-gradient(135deg, #dc2626, #fca5a5);">N</div>
+        <div class="pcard-name">Nhi Dang</div>
+        <div class="pcard-role">Owner · Nhi Cosmetics</div>
+        <button class="pcard-connect">Connect</button>
+      </div>
+
+      <div class="pcard">
+        <div class="pcard-match">81%</div>
+        <div class="pcard-avatar-ph" style="background: linear-gradient(135deg, #0f172a, #475569);">P</div>
+        <div class="pcard-name">Phuong Bui</div>
+        <div class="pcard-role">CEO · PureViet Beauty</div>
+        <button class="pcard-connect">Connect</button>
+      </div>
+
+    </div>
+
+  </div><!-- /body -->
+
+  <!-- Category chips — sticky above input -->
+  <div class="chips-sticky">
+    <div class="cat-scroll">
+
+      <div class="cat-chip active violet">
+        <div class="cat-chip-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2l2.4 4.8 5.3.8-3.8 3.7.9 5.3L12 14l-4.8 2.6.9-5.3L4.3 7.6l5.3-.8L12 2z" stroke="var(--violet)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="cat-chip-label">Decision Makers</div>
+          <div class="cat-chip-sub">Founder · CEO · C-Level</div>
+        </div>
+      </div>
+
+      <div class="cat-chip amber">
+        <div class="cat-chip-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="var(--slate-400)" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="9" cy="7" r="4" stroke="var(--slate-400)" stroke-width="1.8"/>
+            <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="var(--slate-400)" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="cat-chip-label">Partners</div>
+          <div class="cat-chip-sub">Partner · Investor</div>
+        </div>
+      </div>
+
+      <div class="cat-chip sky">
+        <div class="cat-chip-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <circle cx="9" cy="7" r="3" stroke="var(--slate-400)" stroke-width="1.8"/>
+            <circle cx="17" cy="7" r="3" stroke="var(--slate-400)" stroke-width="1.8"/>
+            <path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6" stroke="var(--slate-400)" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M17 14c2 0 4 1.2 4 3" stroke="var(--slate-400)" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="cat-chip-label">Collaborators</div>
+          <div class="cat-chip-sub">BD · Sales · Marketing</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Input bar -->
+  <div class="input-bar">
+    <div class="input-shell">
+      <div class="spark-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2C12 2 12.8 6 14.2 7.4C15.6 8.8 19 10 19 10C19 10 15.6 11.2 14.2 12.6C12.8 14 12 18 12 18C12 18 11.2 14 9.8 12.6C8.4 11.2 5 10 5 10C5 10 8.4 8.8 9.8 7.4C11.2 6 12 2 12 2Z" fill="var(--green)"/>
+        </svg>
+      </div>
+      <span class="input-placeholder">Describe who you're looking for…</span>
+      <button class="filter-btn has-filters" onclick="document.getElementById('filterSheet').style.display='flex'; document.getElementById('filterBackdrop').style.display='block';">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M3 6h18M7 12h10M11 18h2" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="filter-badge"></div>
+      </button>
+      <button class="send-btn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+          <path d="M22 2L11 13" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="home-indicator"><div class="home-bar"></div></div>
+
+  <!-- ── FILTER BOTTOM SHEET ── -->
+  <div id="filterBackdrop" class="sheet-backdrop" style="display:none;"></div>
+  <div id="filterSheet" class="filter-sheet" style="display:none;">
+
+    <div class="sheet-handle"></div>
+
+    <div class="sheet-header">
+      <div class="sheet-title">Search Filters</div>
+      <button class="sheet-close" onclick="document.getElementById('filterSheet').style.display='none'; document.getElementById('filterBackdrop').style.display='none';">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+          <path d="M1 1l12 12M13 1L1 13" stroke="var(--slate-500)" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="sheet-body">
+
+      <!-- ① Core Profile Filters -->
+      <div class="filter-section">
+        <div class="filter-section-title">Core Profile Filters</div>
+
+        <div class="filter-group">
+
+          <!-- Industry -->
+          <div class="filter-row">
+            <div class="filter-row-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                <rect x="2" y="7" width="5" height="14" rx="1.5" stroke="var(--slate-400)" stroke-width="1.8"/>
+                <rect x="9" y="3" width="5" height="18" rx="1.5" stroke="var(--slate-400)" stroke-width="1.8"/>
+                <rect x="16" y="10" width="5" height="11" rx="1.5" stroke="var(--slate-400)" stroke-width="1.8"/>
+              </svg>
+              Industry
+            </div>
+            <input class="filter-input" type="text" placeholder="e.g. Cosmetics, Fintech, SaaS…" value="Cosmetics" />
+          </div>
+
+          <!-- Roles to meet -->
+          <div class="filter-row">
+            <div class="filter-row-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2l2.4 4.8 5.3.8-3.8 3.7.9 5.3L12 14l-4.8 2.6.9-5.3L4.3 7.6l5.3-.8L12 2z" stroke="var(--slate-400)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Roles to meet
+            </div>
+            <div class="role-chips">
+              <span class="role-chip active">C-Level</span>
+              <span class="role-chip active">Founder / Co-founder</span>
+              <span class="role-chip">CEO / Director</span>
+              <span class="role-chip">Head</span>
+              <span class="role-chip">Specialist</span>
+              <span class="role-chip">Other</span>
+            </div>
+            <div class="role-chip-hint">Select up to 2 roles</div>
+          </div>
+
+          <!-- Location -->
+          <div class="filter-row">
+            <div class="filter-row-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="var(--slate-400)" stroke-width="1.8"/>
+                <circle cx="12" cy="9" r="2.5" stroke="var(--slate-400)" stroke-width="1.8"/>
+              </svg>
+              Location
+            </div>
+            <div class="filter-select-wrap">
+              <select class="filter-select">
+                <option value="">Select location…</option>
+                <option selected>Ho Chi Minh City, Vietnam</option>
+                <option>Hanoi, Vietnam</option>
+                <option>Da Nang, Vietnam</option>
+                <option>Singapore</option>
+                <option>Bangkok, Thailand</option>
+              </select>
+              <div class="filter-select-arrow">
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+                  <path d="M4 6l4 4 4-4" stroke="var(--slate-400)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ② Advanced Matching Filters -->
+      <div class="filter-section">
+        <div class="filter-section-title">Advanced Matching Filters</div>
+
+        <div class="filter-group">
+
+          <!-- Skills -->
+          <div class="filter-row">
+            <div class="filter-row-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                <path d="M9.663 17h4.673M12 3v1M4.222 5.222l.707.707M20.485 5.929l-.707.707M3 12H2M22 12h-1M6.343 17.657l-.707.707M18.364 17.657l.707.707" stroke="var(--slate-400)" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M9 12a3 3 0 106 0 3 3 0 00-6 0z" stroke="var(--slate-400)" stroke-width="1.8"/>
+              </svg>
+              Skills
+            </div>
+            <input class="filter-input" type="text" placeholder="e.g. Marketing, Branding, R&D…" />
+          </div>
+
+          <!-- Years of Experience -->
+          <div class="filter-row">
+            <div class="filter-row-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9" stroke="var(--slate-400)" stroke-width="1.8"/>
+                <path d="M12 7v5l3 3" stroke="var(--slate-400)" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              Years of Experience
+            </div>
+            <div class="exp-row">
+              <button class="exp-minus">−</button>
+              <div class="exp-label">5+ years</div>
+              <button class="exp-plus">+</button>
+            </div>
+          </div>
+
+          <!-- Education -->
+          <div class="filter-row">
+            <div class="filter-row-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z" stroke="var(--slate-400)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5" stroke="var(--slate-400)" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              Education
+            </div>
+            <div class="filter-select-wrap">
+              <select class="filter-select">
+                <option value="">Any education level</option>
+                <option>High School</option>
+                <option>Associate Degree</option>
+                <option selected>Bachelor's Degree</option>
+                <option>Master's Degree</option>
+                <option>PhD / Doctorate</option>
+              </select>
+              <div class="filter-select-arrow">
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+                  <path d="M4 6l4 4 4-4" stroke="var(--slate-400)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Open to Work -->
+          <div class="filter-row">
+            <div class="toggle-row">
+              <div class="filter-row-label" style="margin-bottom:0;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                  <rect x="2" y="7" width="20" height="14" rx="3" stroke="var(--slate-400)" stroke-width="1.8"/>
+                  <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" stroke="var(--slate-400)" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+                Open to Work
+              </div>
+              <div class="toggle-switch on">
+                <div class="toggle-knob"></div>
+              </div>
+            </div>
+            <div style="font-size:11px; color:var(--slate-400); margin-top:5px;">Only show profiles actively open to opportunities</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /sheet-body -->
+
+    <div class="sheet-footer">
+      <button class="apply-btn">Apply Filters</button>
+    </div>
+
+  </div><!-- /filter-sheet -->
+
+</body>
+</html>

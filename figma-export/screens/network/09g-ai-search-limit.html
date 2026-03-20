@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — AI Search Limit</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green:        #009037;
+      --green-light:  #2eb07a;
+      --orange:       #ef5023;
+      --orange-light: #fa987d;
+      --orange-bg:    rgba(239,80,35,0.1);
+      --slate-900:    #0f172a;
+      --slate-600:    #475569;
+      --slate-500:    #64748b;
+      --slate-400:    #94a3b8;
+      --slate-200:    #e2e8f0;
+      --slate-100:    #f1f5f9;
+      --gray-bg:      #f8f6f6;
+      --white:        #ffffff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { scrollbar-width: none; -ms-overflow-style: none; }
+    html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+    body {
+      font-family: 'Public Sans', sans-serif;
+      width: 390px;
+      min-height: 844px;
+      background: var(--gray-bg);
+      position: relative;
+    }
+
+    .bg-screen {
+      position: absolute; inset: 0;
+      background: rgba(15,23,42,0.5);
+      backdrop-filter: blur(3px);
+      z-index: 10;
+    }
+
+    .sheet {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: var(--white);
+      border-radius: 28px 28px 0 0;
+      z-index: 20;
+      padding: 0 20px 44px;
+    }
+    .drag-handle {
+      width: 36px; height: 4px;
+      background: var(--slate-200);
+      border-radius: 9999px;
+      margin: 12px auto 0;
+    }
+
+    /* Icon */
+    .icon-wrap {
+      margin: 28px auto 0;
+      width: 64px; height: 64px; border-radius: 9999px;
+      background: var(--orange-bg);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .icon-inner {
+      width: 44px; height: 44px; border-radius: 9999px;
+      background: linear-gradient(135deg, var(--orange), var(--orange-light));
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Usage bar */
+    .usage-row {
+      margin-top: 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 7px;
+    }
+    .usage-label { font-size: 12px; font-weight: 600; color: var(--slate-500); }
+    .usage-count { font-size: 12px; font-weight: 800; color: var(--orange); }
+    .progress-wrap {
+      background: var(--slate-100); border-radius: 9999px;
+      height: 5px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; width: 100%; border-radius: 9999px;
+      background: linear-gradient(90deg, var(--orange), var(--orange-light));
+    }
+
+    /* Text */
+    .sheet-title {
+      margin-top: 20px;
+      font-size: 20px; font-weight: 800; color: var(--slate-900);
+      text-align: center; letter-spacing: -0.3px;
+    }
+    .sheet-sub {
+      margin-top: 6px;
+      font-size: 13px; font-weight: 400; color: var(--slate-500);
+      text-align: center; line-height: 1.5;
+    }
+
+    /* Buttons */
+    .btn-upgrade {
+      margin-top: 24px;
+      width: 100%; height: 52px; border-radius: 14px;
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      border: none; cursor: pointer;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 15px; font-weight: 800; color: white;
+      box-shadow: 0 4px 16px rgba(0,144,55,0.3);
+    }
+    .btn-later {
+      display: block; width: 100%;
+      margin-top: 10px; padding: 4px 0;
+      background: none; border: none; cursor: pointer;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 13px; font-weight: 600; color: var(--slate-400);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-screen"></div>
+
+  <div class="sheet">
+    <div class="drag-handle"></div>
+
+    <!-- AI icon -->
+    <div class="icon-wrap">
+      <div class="icon-inner">
+        <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
+          <path d="M8 1C8 1 8.6 4.4 9.8 5.8C11 7.2 14 8 14 8C14 8 11 8.8 9.8 10.2C8.6 11.6 8 15 8 15C8 15 7.4 11.6 6.2 10.2C5 8.8 2 8 2 8C2 8 5 7.2 6.2 5.8C7.4 4.4 8 1 8 1Z" fill="white"/>
+          <path d="M13 2C13 2 13.3 3.4 13.9 4C14.5 4.6 16 5 16 5C16 5 14.5 5.4 13.9 6C13.3 6.6 13 8 13 8C13 8 12.7 6.6 12.1 6C11.5 5.4 10 5 10 5C10 5 11.5 4.6 12.1 4C12.7 3.4 13 2 13 2Z" fill="white" opacity="0.7"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Usage -->
+    <div class="usage-row">
+      <span class="usage-label">AI searches used</span>
+      <span class="usage-count">10 / 10</span>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill"></div></div>
+
+    <!-- Text -->
+    <div class="sheet-title">You've hit the limit</div>
+    <div class="sheet-sub">Upgrade to Premium for unlimited<br>AI contact searches.</div>
+
+    <!-- Actions -->
+    <button class="btn-upgrade">Upgrade to Premium</button>
+    <button class="btn-later">Maybe later</button>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Add Portfolio (Video Tab)</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --canvas-bg:     #a49d9d;
+      --shadow-frame:  0 4px 24px rgba(0,0,0,0.28);
+      --green:         #009037;
+      --green-light:   #2eb07a;
+      --orange:        #ef5023;
+      --orange-light:  #fa987d;
+      --orange-bg:     rgba(239,80,35,0.1);
+      --slate-900:     #0f172a;
+      --slate-800:     #1e293b;
+      --slate-700:     #334155;
+      --slate-600:     #475569;
+      --slate-500:     #64748b;
+      --slate-400:     #94a3b8;
+      --slate-200:     #e2e8f0;
+      --gray-bg:       #f8f6f6;
+      --white:         #ffffff;
+      --zinc-100:      #f4f4f5;
+      --zinc-200:      #e4e4e7;
+      --zinc-300:      #d4d4d8;
+      --neutral-50:    #fafafa;
+      --gray-500:      #6b7280;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { scrollbar-width: none; -ms-overflow-style: none; }
+    html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+    body {
+      background: var(--gray-bg);
+      font-family: 'Public Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .screen {
+      width: 390px;
+      background: var(--gray-bg);
+      position: relative;
+    }
+
+    .bg-content { padding: 24px; pointer-events: none; }
+    .bg-profile-card {
+      background: var(--white); border: 1px solid var(--zinc-200); border-radius: 12px; overflow: hidden;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+    }
+    .bg-gradient { background: linear-gradient(90deg, var(--green) 0%, var(--green-light) 100%); height: 64px; }
+    .bg-avatar-row { display: flex; flex-direction: column; align-items: center; margin-top: -40px; padding: 0 24px 16px; }
+    .bg-avatar { width: 96px; height: 96px; border-radius: 50%; border: 4px solid var(--white); overflow: hidden; background: var(--slate-200); }
+    .bg-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .bg-name { font-weight: 700; font-size: 24px; color: var(--slate-900); text-align: center; margin-top: 8px; }
+    .bg-role { font-weight: 400; font-size: 16px; color: var(--slate-500); text-align: center; }
+    .bg-rows { padding: 0 24px 16px; display: flex; flex-direction: column; gap: 12px; }
+    .bg-row { height: 40px; background: var(--zinc-100); border-radius: 8px; }
+
+    .overlay {
+      position: absolute; inset: 0;
+      background: rgba(15,23,42,0.6); backdrop-filter: blur(2px);
+      display: flex; flex-direction: column; justify-content: flex-end;
+    }
+
+    .sheet {
+      background: var(--white); border-top: 1px solid var(--zinc-200);
+      border-radius: 32px 32px 0 0; overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+    }
+    .sheet-handle { height: 24px; display: flex; align-items: center; justify-content: center; }
+    .handle-bar { width: 48px; height: 6px; background: var(--zinc-300); border-radius: 9999px; }
+
+    .sheet-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 24px 17px; border-bottom: 1px solid var(--zinc-100);
+    }
+    .sheet-title { font-weight: 700; font-size: 22px; color: var(--slate-900); }
+    .close-btn {
+      width: 40px; height: 40px; background: var(--zinc-100); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+    }
+
+    .sheet-body { padding: 24px 16px 36px; display: flex; flex-direction: column; gap: 24px; align-items: center; }
+
+    /* Tab nav — Video tab active */
+    .tab-nav {
+      background: var(--zinc-100); border-radius: 12px; padding: 4px;
+      display: flex; width: 342px;
+    }
+    .tab-btn {
+      flex: 1; padding: 8px; border-radius: 8px;
+      font-weight: 600; font-size: 14px; text-align: center; cursor: pointer; color: var(--slate-500);
+    }
+    .tab-btn.active {
+      background: var(--white);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      color: var(--green);
+    }
+    .tab-btn.inactive { color: var(--slate-500); }
+
+    .form-content { width: 100%; padding: 0 8px; display: flex; flex-direction: column; gap: 20px; }
+    .helper-text { font-weight: 400; font-size: 12px; color: var(--slate-400); }
+    .field-group { display: flex; flex-direction: column; gap: 8px; }
+    .field-label { font-weight: 600; font-size: 14px; color: var(--slate-700); }
+
+    .upload-zone {
+      background: var(--neutral-50); border: 2px dashed var(--zinc-200);
+      border-radius: 16px; padding: 34px;
+      display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer;
+    }
+    .upload-icon { color: var(--slate-400); }
+    .upload-text { font-weight: 400; font-size: 14px; color: var(--slate-500); }
+
+    .text-input {
+      background: var(--white); border: 1px solid var(--zinc-200); border-radius: 12px;
+      height: 50px; padding: 0 17px;
+      font-weight: 400; font-size: 16px; color: var(--gray-500);
+      display: flex; align-items: center;
+    }
+    .textarea-input {
+      background: var(--white); border: 1px solid var(--zinc-200); border-radius: 12px;
+      padding: 13px 17px 60px;
+      font-weight: 400; font-size: 16px; color: var(--gray-500); line-height: 1.5;
+    }
+
+    .sheet-footer { padding: 25px 24px 24px; border-top: 1px solid var(--zinc-100); }
+        .btn-submit {
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--white);
+    }
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <!-- Background -->
+    <div class="bg-content">
+      <div class="bg-profile-card">
+        <div class="bg-gradient"></div>
+        <div class="bg-avatar-row">
+          <div class="bg-avatar">
+            <img src="https://www.figma.com/api/mcp/asset/e769c77f-8b80-41c6-83f0-22f2aa81b698" alt="Alex Rivera" />
+          </div>
+          <div class="bg-name">Alex Rivera</div>
+          <div class="bg-role">Digital Product Designer</div>
+        </div>
+        <div class="bg-rows">
+          <div class="bg-row"></div>
+          <div class="bg-row"></div>
+          <div class="bg-row"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overlay + sheet -->
+    <div class="overlay">
+      <div class="sheet">
+        <div class="sheet-handle"><div class="handle-bar"></div></div>
+
+        <!-- Header -->
+        <div class="sheet-header">
+          <div class="sheet-title">Add Portfolio</div>
+          <div class="close-btn">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--slate-400)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="13" y2="13"/><line x1="13" y1="1" x2="1" y2="13"/></svg>
+          </div>
+        </div>
+
+        <!-- Body -->
+        <div class="sheet-body">
+          <!-- Tab nav — Video active -->
+          <div class="tab-nav">
+            <div class="tab-btn active">Video</div>
+            <div class="tab-btn inactive">Images</div>
+          </div>
+
+          <!-- Video tab form content -->
+          <div class="form-content">
+            <div class="helper-text">Max 1 video</div>
+
+            <!-- Video Thumbnail -->
+            <div class="field-group">
+              <div class="field-label">Video Thumbnail</div>
+              <div class="upload-zone">
+                <div class="upload-icon">
+                  <svg width="30" height="32" viewBox="0 0 30 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="26" height="28" rx="3"/><path d="M9 9l12 7-12 7V9z"/></svg>
+                </div>
+                <div class="upload-text">Upload thumbnail image</div>
+              </div>
+            </div>
+
+            <!-- Video URL -->
+            <div class="field-group">
+              <label class="field-label" for="video-url">Video URL</label>
+              <div class="text-input" id="video-url">Paste Youtube or Vimeo link</div>
+            </div>
+
+            <!-- Description -->
+            <div class="field-group">
+              <label class="field-label" for="video-desc">Description</label>
+              <div class="textarea-input" id="video-desc">Briefly describe this video...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="sheet-footer">
+          <div class="btn-submit">Done</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

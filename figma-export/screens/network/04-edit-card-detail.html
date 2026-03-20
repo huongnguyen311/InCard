@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Edit Card</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green:        #009037;
+      --green-light:  #2eb07a;
+      --green-bg:     rgba(0,144,55,0.1);
+      --green-surface:#dcfce7;
+      --slate-900:    #0f172a;
+      --slate-800:    #1e293b;
+      --slate-700:    #334155;
+      --slate-600:    #475569;
+      --slate-500:    #64748b;
+      --slate-400:    #94a3b8;
+      --slate-300:    #cbd5e1;
+      --slate-200:    #e2e8f0;
+      --slate-100:    #f1f5f9;
+      --slate-50:     #f8fafc;
+      --gray-bg:      #f2f3f5;
+      --red-100:      #fee2e2;
+      --red-600:      #dc2626;
+      --blue:         #3b82f6;
+      --blue-bg:      rgba(59,130,246,0.1);
+      --purple:       #8b5cf6;
+      --purple-bg:    rgba(139,92,246,0.1);
+      --orange:       #ef5023;
+      --orange-light: #fa987d;
+      --orange-bg:    rgba(239,80,35,0.1);
+      --white:        #ffffff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { scrollbar-width: none; -ms-overflow-style: none; }
+    html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+    body {
+      background: var(--gray-bg);
+      font-family: 'Public Sans', sans-serif;
+      width: 390px;
+    }
+
+    /* ── Header ── */
+    .header {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-200);
+      padding: 0 16px;
+      height: 56px;
+      display: flex; align-items: center;
+    }
+    .back-btn {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 10px; background: var(--slate-100);
+      flex-shrink: 0; cursor: pointer; border: none;
+    }
+    .header-title {
+      flex: 1; text-align: center;
+      font-size: 16px; font-weight: 700;
+      color: var(--slate-900); letter-spacing: -0.2px;
+    }
+    .header-save {
+      height: 34px; padding: 0 16px;
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      color: white; border: none; border-radius: 10px;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 13px; font-weight: 700; cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,144,55,0.3);
+    }
+
+    /* ── Hero: scanned card ── */
+    .hero {
+      background: #1a1f2e;
+      padding: 12px 16px 16px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+    }
+    .biz-card-wrap { position: relative; padding: 4px 12px 0; }
+    .biz-card-wrap::before {
+      content: '';
+      position: absolute; inset: 12px 20px 0;
+      background: rgba(0,144,55,0.18);
+      filter: blur(14px); border-radius: 12px;
+    }
+    .biz-card {
+      width: 100%; aspect-ratio: 1.74 / 1;
+      border-radius: 14px; position: relative; overflow: hidden;
+      background: #ffffff;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.12), 0 16px 40px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.9) inset;
+    }
+    .biz-card::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 55%, rgba(0,0,0,0.04) 100%);
+      pointer-events: none; z-index: 2;
+    }
+    .biz-card-stripe {
+      position: absolute; left: 0; top: 0; bottom: 0; width: 5px;
+      background: linear-gradient(180deg, var(--green) 0%, var(--green-light) 100%); z-index: 1;
+    }
+    .biz-card-body {
+      padding: 12px 12px 10px 16px; height: 100%;
+      display: flex; flex-direction: column; justify-content: space-between;
+      position: relative; z-index: 1;
+    }
+    .biz-card-name { font-size: 13px; font-weight: 800; color: var(--slate-900); letter-spacing: -0.2px; margin-bottom: 1px; }
+    .biz-card-job  { font-size: 9px; font-weight: 500; color: var(--slate-500); margin-bottom: 4px; }
+    .biz-card-company { font-size: 10.5px; font-weight: 700; color: var(--green); letter-spacing: 0.8px; text-transform: uppercase; }
+    .biz-card-bottom { display: flex; flex-direction: column; gap: 3px; }
+    .biz-card-info { display: flex; align-items: center; gap: 5px; font-size: 9px; color: var(--slate-400); font-weight: 400; }
+
+    /* ── Identity panel — editable ── */
+    .identity-panel {
+      background: var(--white);
+      border-top: 1px solid var(--slate-100);
+      padding: 14px 16px 16px;
+      border-bottom: 6px solid var(--gray-bg);
+    }
+    /* Name input — big, matches id-name */
+    .edit-name {
+      width: 100%;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 20px; font-weight: 800;
+      color: var(--slate-900); letter-spacing: -0.5px;
+      background: transparent; border: none; outline: none;
+      border-bottom: 1.5px dashed var(--slate-300);
+      padding-bottom: 4px; margin-bottom: 8px;
+    }
+    .edit-name:focus { border-bottom-color: var(--green); }
+    /* Role input */
+    .edit-role {
+      width: 100%;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 13px; font-weight: 500; color: var(--slate-500);
+      background: transparent; border: none; outline: none;
+      border-bottom: 1.5px dashed var(--slate-200);
+      padding-bottom: 3px; margin-bottom: 6px;
+    }
+    .edit-role:focus { border-bottom-color: var(--green); color: var(--slate-700); }
+    /* Company input */
+    .edit-company {
+      width: 100%;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 13px; font-weight: 700; color: var(--slate-700);
+      background: transparent; border: none; outline: none;
+      border-bottom: 1.5px dashed var(--slate-200);
+      padding-bottom: 3px;
+    }
+    .edit-company:focus { border-bottom-color: var(--green); }
+    .id-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .id-tag {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: var(--slate-100); border-radius: 9999px;
+      padding: 3px 8px 3px 10px;
+      font-size: 11px; font-weight: 600; color: var(--slate-600);
+    }
+    .tag-remove {
+      width: 14px; height: 14px; border-radius: 9999px;
+      background: var(--slate-300); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .tag-add {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: var(--green-bg); border-radius: 9999px;
+      padding: 3px 10px;
+      font-size: 11px; font-weight: 600; color: var(--green);
+      border: none; cursor: pointer; font-family: 'Public Sans', sans-serif;
+    }
+
+    /* ── Contact rows — editable ── */
+    .contact-section {
+      background: var(--white);
+      overflow: hidden;
+    }
+    .contact-section-header {
+      padding: 10px 16px 6px;
+      font-size: 10px; font-weight: 700; color: var(--slate-400);
+      text-transform: uppercase; letter-spacing: 1px;
+      background: var(--gray-bg);
+    }
+    .contact-row {
+      display: flex; align-items: center;
+      padding: 10px 16px; gap: 12px;
+      border-bottom: 1px solid var(--slate-100);
+      background: var(--white);
+    }
+    .contact-row:last-child { border-bottom: none; }
+    .contact-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .contact-text { flex: 1; min-width: 0; }
+    .contact-type {
+      font-size: 10px; font-weight: 700; color: var(--slate-400);
+      text-transform: uppercase; letter-spacing: 0.7px;
+      margin-bottom: 3px;
+    }
+    /* Editable value — dashed underline, same font as read view */
+    .contact-edit-input {
+      width: 100%;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 14px; font-weight: 500; color: var(--slate-800);
+      background: transparent; border: none; outline: none;
+      border-bottom: 1.5px dashed var(--slate-300);
+      padding-bottom: 2px;
+    }
+    .contact-edit-input:focus {
+      border-bottom-color: var(--green);
+      color: var(--slate-900);
+    }
+    .contact-edit-input::placeholder { color: var(--slate-300); }
+    /* Phone row: value + action icons */
+    .contact-value-row {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .contact-edit-input.flex { flex: 1; min-width: 0; }
+    .contact-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .contact-action-btn {
+      width: 28px; height: 28px; border-radius: 9999px; border: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
+    }
+    .contact-action-btn.call  { background: var(--green-bg); }
+    .contact-action-btn.zalo  { background: #1ba8f5; }
+    .contact-action-btn.msg   { background: rgba(139,92,246,0.10); }
+    .contact-action-btn.email { background: var(--orange-bg); }
+    /* Clear button */
+    .field-clear {
+      width: 20px; height: 20px; border-radius: 9999px;
+      background: var(--slate-200); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    /* Add field row */
+    .add-field-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px;
+      background: var(--white);
+      border-top: 1px solid var(--slate-100);
+      cursor: pointer; border: none; width: 100%;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 13px; font-weight: 600; color: var(--green);
+    }
+    .add-field-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--green-bg);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ── Note ── */
+    .note-section { margin-top: 6px; background: var(--gray-bg); }
+    .note-block { background: var(--white); }
+    .note-inner { padding: 12px 16px; }
+    .note-textarea {
+      width: 100%;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 13px; font-weight: 400; color: var(--slate-600);
+      line-height: 1.6;
+      background: var(--slate-50);
+      border: 1.5px dashed var(--slate-300);
+      border-radius: 10px;
+      padding: 10px 12px; min-height: 68px;
+      resize: none; outline: none;
+    }
+    .note-textarea:focus { border-color: var(--green); border-style: solid; }
+    .note-textarea::placeholder { color: var(--slate-300); font-style: italic; }
+
+    /* ── Meta ── */
+    .meta {
+      display: flex; align-items: center; gap: 6px;
+      padding: 10px 16px 14px;
+    }
+    .meta span { font-size: 11px; font-weight: 500; color: var(--slate-400); }
+
+    /* ── Action Bar ── */
+    .action-bar {
+      position: sticky; bottom: 72px;
+      background: var(--white);
+      border-top: 1px solid var(--slate-200);
+      padding: 12px 16px;
+      display: flex; gap: 8px;
+      z-index: 40;
+    }
+    .btn {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      border: none; border-radius: 12px; cursor: pointer;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 13px; font-weight: 700; height: 46px;
+    }
+    .btn-delete {
+      width: 46px; flex-shrink: 0;
+      background: var(--red-100); color: var(--red-600); border-radius: 12px;
+    }
+    .btn-cancel {
+      flex: 1; background: var(--slate-100); color: var(--slate-600);
+    }
+    .btn-save {
+      flex: 2;
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      color: var(--white);
+    }
+
+    /* ── Bottom Nav ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0;
+      width: 390px;
+      height: 72px;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      padding: 0 4px;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      z-index: 100;
+    }
+    .nav-link {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-end;
+      gap: 3px;
+      cursor: pointer;
+      padding-bottom: 10px;
+      position: relative;
+    }
+    .nav-icon {
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-label {
+      font-size: 10px; font-weight: 600;
+      color: var(--slate-400);
+      line-height: 1;
+      letter-spacing: 0.1px;
+    }
+    .nav-label.active { color: var(--green); }
+    .nav-dot {
+      width: 4px; height: 4px;
+      border-radius: 2px;
+      background: var(--green);
+      opacity: 0;
+    }
+    .nav-link:has(.nav-label.active) .nav-dot { opacity: 1; }
+    .nav-fab-wrap {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding-bottom: 0;
+    }
+    .nav-fab {
+      width: 50px; height: 50px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,144,55,0.40), 0 1px 4px rgba(0,0,0,0.12);
+      margin-top: -12px;
+    }
+    .nav-fab svg { width: 22px; height: 22px; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <button class="back-btn">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M10 12L6 8l4-4" stroke="var(--slate-800)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="header-title">Edit Card</div>
+  </div>
+
+  <!-- Hero: scanned card thumbnail -->
+  <div class="hero">
+    <div class="biz-card-wrap">
+      <div class="biz-card">
+        <div class="biz-card-stripe"></div>
+        <div class="biz-card-body">
+          <div class="biz-card-top">
+            <div class="biz-card-name">Priya Nair</div>
+            <div class="biz-card-job">UX Lead · Product Design</div>
+            <div class="biz-card-company">Design Co. International</div>
+          </div>
+          <div class="biz-card-bottom">
+            <div class="biz-card-info">
+              <svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M13 11.5v2a1.3 1.3 0 01-1.42 1.3A12.86 12.86 0 011.2 4.42 1.3 1.3 0 012.5 3h2a1.3 1.3 0 011.3 1.12c.08.62.23 1.23.45 1.82a1.3 1.3 0 01-.3 1.37L5.96 8.3a10.4 10.4 0 003.9 3.9l1-1.02a1.3 1.3 0 011.37-.3c.59.22 1.2.37 1.82.45A1.3 1.3 0 0114.3 12.5z" stroke="var(--slate-400)" stroke-width="1.3" stroke-linecap="round"/></svg>
+              +84 912 345 678
+            </div>
+            <div class="biz-card-info">
+              <svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M2.67 2.67h10.67c.73 0 1.33.6 1.33 1.33v8c0 .73-.6 1.33-1.33 1.33H2.67c-.73 0-1.33-.6-1.33-1.33V4c0-.73.6-1.33 1.33-1.33z" stroke="var(--slate-400)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.67 4L8 8.67 1.33 4" stroke="var(--slate-400)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              priya@designco.com
+            </div>
+            <div class="biz-card-info">
+              <svg width="9" height="9" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="var(--slate-400)" stroke-width="1.3"/><path d="M2 8h12M8 2a9.2 9.2 0 010 12M8 2a9.2 9.2 0 000 12" stroke="var(--slate-400)" stroke-width="1.3" stroke-linecap="round"/></svg>
+              priya.design
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Identity — inline editable, same visual position as detail view -->
+  <div class="identity-panel">
+    <input class="edit-name" type="text" value="Priya Nair" />
+    <input class="edit-role" type="text" value="UX Lead" />
+    <input class="edit-company" type="text" value="Design Co. International" />
+    <div class="id-tags">
+      <div class="id-tag">UX Design <button class="tag-remove"><svg width="7" height="7" viewBox="0 0 8 8" fill="none"><path d="M1 1l6 6M7 1L1 7" stroke="var(--slate-600)" stroke-width="1.3" stroke-linecap="round"/></svg></button></div>
+      <div class="id-tag">SaigonTech <button class="tag-remove"><svg width="7" height="7" viewBox="0 0 8 8" fill="none"><path d="M1 1l6 6M7 1L1 7" stroke="var(--slate-600)" stroke-width="1.3" stroke-linecap="round"/></svg></button></div>
+      <div class="id-tag">Lead <button class="tag-remove"><svg width="7" height="7" viewBox="0 0 8 8" fill="none"><path d="M1 1l6 6M7 1L1 7" stroke="var(--slate-600)" stroke-width="1.3" stroke-linecap="round"/></svg></button></div>
+      <button class="tag-add">+ Add tag</button>
+    </div>
+  </div>
+
+  <!-- Contact rows — same layout, values are inputs -->
+  <div class="contact-section-header">Contact Info</div>
+  <div class="contact-section">
+
+    <!-- Phone -->
+    <div class="contact-row">
+      <div class="contact-icon" style="background:var(--green-bg);">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="var(--green)">
+          <path d="M5.05 1.73a1.5 1.5 0 00-2.12.01L1.7 3A3 3 0 001 5.12c.14 2.44 1.23 5.28 3.39 7.49C6.59 14.83 9.44 16 11.88 16.2A3 3 0 0014 15.5l1.26-1.26a1.5 1.5 0 000-2.12l-1.7-1.7a1.5 1.5 0 00-2.12 0l-.54.54a.5.5 0 01-.6.08 8.34 8.34 0 01-3.36-3.3.5.5 0 01.07-.6l.53-.54a1.5 1.5 0 000-2.12L5.05 1.73z"/>
+        </svg>
+      </div>
+      <div class="contact-text">
+        <div class="contact-type">Phone</div>
+        <div class="contact-value-row">
+          <input class="contact-edit-input flex" type="tel" value="+84 912 345 678" />
+          <div class="contact-actions">
+            <button class="contact-action-btn call" title="Call">
+              <svg width="13" height="13" viewBox="0 0 20 20" fill="var(--green)"><path d="M5.05 1.73a1.5 1.5 0 00-2.12.01L1.7 3A3 3 0 001 5.12c.14 2.44 1.23 5.28 3.39 7.49C6.59 14.83 9.44 16 11.88 16.2A3 3 0 0014 15.5l1.26-1.26a1.5 1.5 0 000-2.12l-1.7-1.7a1.5 1.5 0 00-2.12 0l-.54.54a.5.5 0 01-.6.08 8.34 8.34 0 01-3.36-3.3.5.5 0 01.07-.6l.53-.54a1.5 1.5 0 000-2.12L5.05 1.73z"/></svg>
+            </button>
+            <button class="contact-action-btn zalo" title="Zalo">
+              <span style="font-size:10px;font-weight:900;color:white;font-family:'Public Sans',sans-serif;line-height:1;">Z</span>
+            </button>
+            <button class="contact-action-btn msg" title="Message">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z" fill="#8b5cf6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="contact-row">
+      <div class="contact-icon" style="background:var(--orange-bg);">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="var(--orange)">
+          <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+          <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+        </svg>
+      </div>
+      <div class="contact-text">
+        <div class="contact-type">Email</div>
+        <div class="contact-value-row">
+          <input class="contact-edit-input flex" type="email" value="priya@designco.com" />
+          <div class="contact-actions">
+            <button class="contact-action-btn email" title="Send Email">
+              <svg width="14" height="14" viewBox="0 0 20 20" fill="var(--orange)"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Address -->
+    <div class="contact-row">
+      <div class="contact-icon" style="background:var(--blue-bg);">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="var(--blue)">
+          <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+        </svg>
+      </div>
+      <div class="contact-text">
+        <div class="contact-type">Address</div>
+        <input class="contact-edit-input" type="text" value="123 Le Loi, District 1, HCMC" />
+      </div>
+      <button class="field-clear">
+        <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2L2 8" stroke="var(--slate-500)" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <!-- Website -->
+    <div class="contact-row">
+      <div class="contact-icon" style="background:var(--purple-bg);">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="var(--purple)">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.33 7h2.08a13.6 13.6 0 00-.26 2H4a6.02 6.02 0 01.33-2zm0 4H4a6.02 6.02 0 00.33 2h2.08a13.6 13.6 0 01-.08-2zm3.85-4h3.64a11.47 11.47 0 01.18 2H8c.02-.68.09-1.36.18-2zm.18 4H8a11.47 11.47 0 00.18 2h3.28a11.47 11.47 0 00.18-2H8.36zm.45-6c.34-.74.72-1.35 1.19-1.76.47.41.85 1.02 1.19 1.76H8.81zm4.66 0h2.08A6.02 6.02 0 0116 7h-2.15c-.06-.68-.18-1.36-.38-2zm.38 6H16a6.02 6.02 0 01-.33 2h-2.08c.2-.64.32-1.32.38-2zM11.19 15H8.81c.34.74.72 1.35 1.19 1.76.47-.41.85-1.02 1.19-1.76z" clip-rule="evenodd"/>
+        </svg>
+      </div>
+      <div class="contact-text">
+        <div class="contact-type">Website</div>
+        <input class="contact-edit-input" type="url" value="priya.design" />
+      </div>
+      <button class="field-clear">
+        <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2L2 8" stroke="var(--slate-500)" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Note — same position as detail view, textarea instead of static text -->
+  <div class="note-section">
+    <div class="contact-section-header">Note</div>
+    <div class="note-block">
+      <div class="note-inner">
+        <textarea class="note-textarea" placeholder="Add a personal note…">Met at SaigonTech Summit 2025. Interested in collaborating on the design system overhaul. Follow up about UX audit proposal next quarter.</textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Meta — same as detail view -->
+  <div class="meta">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="4" width="18" height="18" rx="2" stroke="var(--slate-400)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M16 2v4M8 2v4M3 10h18" stroke="var(--slate-400)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span>Scanned on 15 Mar 2026</span>
+  </div>
+
+  <!-- Action Bar -->
+  <div class="action-bar">
+    <button class="btn btn-delete" title="Delete">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path d="M3 6h18M8 6V4h8v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" stroke="var(--red-600)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M10 11v6M14 11v6" stroke="var(--red-600)" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <button class="btn btn-cancel">Cancel</button>
+    <button class="btn btn-save">
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+        <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill="white"/>
+      </svg>
+      Save Changes
+    </button>
+  </div>
+
+  <!-- Bottom Nav -->
+    <div class="bottom-nav">
+      <div class="nav-link">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 21v-8h6v8" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="nav-label">Home</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-link">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="2.5" fill="var(--green)"/><circle cx="19" cy="7" r="2.5" fill="var(--green)"/><circle cx="19" cy="17" r="2.5" fill="var(--green)"/><path d="M7.5 12h5.5M13 12l3.5-4M13 12l3.5 4" stroke="var(--green)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="nav-label active">Network</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-fab-wrap">
+        <div class="nav-fab">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="14" y="18" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="18" width="3" height="3" rx="0.5" fill="white"/></svg>
+        </div>
+      </div>
+      <div class="nav-link">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M16.5 7.5l-3 6-5.5 2.5 3-6 5.5-2.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="1" fill="var(--slate-400)"/></svg>
+        </div>
+        <span class="nav-label">Explore</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-link">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round"/></svg>
+        </div>
+        <span class="nav-label">Profile</span>
+        <span class="nav-dot"></span>
+      </div>
+    </div>
+
+</body>
+</html>

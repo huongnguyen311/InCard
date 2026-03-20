@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Home &amp; Account</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #a49d9d; font-family: 'Public Sans', sans-serif; min-height: 100vh; padding: 48px 40px 80px; }
+    .back { display: inline-flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.75); font-size: 12px; font-weight: 600; text-decoration: none; letter-spacing: 0.5px; margin-bottom: 32px; }
+    .back:hover { color: #fff; }
+    .flow-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.75); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 24px; }
+    .flow-screens { display: flex; flex-direction: row; gap: 24px; align-items: flex-start; }
+    .screen { display: flex; flex-direction: column; align-items: center; gap: 10px; flex-shrink: 0; }
+    .phone-frame { width: 390px; border-radius: 44px; overflow: hidden; background: #fff; box-shadow: 0 8px 40px rgba(0,0,0,0.32), 0 2px 8px rgba(0,0,0,0.16); }
+    .phone-frame iframe { width: 390px; height: 844px; border: none; display: block; }
+    .screen-name { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.75); text-align: center; letter-spacing: 0.3px; }
+  </style>
+  <script>
+    function autoResize(iframe) {
+      try {
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        iframe.style.height = doc.documentElement.scrollHeight + 'px';
+      } catch(e) {}
+    }
+  </script>
+  <link rel="stylesheet" href="button-system.css" />
+  <link rel="stylesheet" href="design-system.css" />
+</head>
+<body>
+
+  <a class="back" href="index.html">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7l4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    All Flows
+  </a>
+
+  <div class="flow-label">InCard Home &amp; Account</div>
+
+  <div class="flow-screens">
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/01-home-dashboard.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Home</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/02-account-details.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Account Details</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/03-account-details-edit.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Account Details (Edit)</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/04-potential-connections.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Potential Connections</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/05-syncing-database.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Syncing Database</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/06-connection-limit-reached.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Connection Limit</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/07-recent-connections.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Recent Connections</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/08-connection-sent.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Request Sent</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/09-inka-assistant.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Inka Assistant — Chat</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/10-inka-chat-history.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Inka — Chat History</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/11-inka-edit-title.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Inka — Edit Title</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/12-inka-new-chat.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Inka — New Chat</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/13-top-performers.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Top Performers</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/14-your-points.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Your Points</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/15-discover.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Discover</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/16-post-detail.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Post Detail</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/17-my-feeds-empty.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">My Feeds (Empty)</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/18-ai-search-profile.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">AI Search Profile</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/19-ai-search-filters.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">AI Search — Filters</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/20-settings.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Settings</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/21-my-cards.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">My Cards</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/22-my-member.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">My Member</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/23-my-groups.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">My Groups</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/24-change-password.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Change Password</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/25-language.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Language</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/26-manage-google.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Manage Google Account</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/27-calendar.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Calendar — Monthly</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/28-calendar-daily.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Calendar — Daily</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/29-calendar-settings.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Calendar Settings</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/30-my-tasks.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">My Tasks — Weekly</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/31-my-tasks-monthly.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">My Tasks — Monthly</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/home/32-referral-history.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Referral History</div>
+    </div>
+
+  </div>
+</body>
+</html>

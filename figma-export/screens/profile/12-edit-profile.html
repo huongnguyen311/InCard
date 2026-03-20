@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Edit Profile</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green:         #009037;
+      --green-dark:    #007a2f;
+      --green-light:   #2eb07a;
+      --green-bg:      rgba(0,144,55,0.1);
+      --green-surface: #dcfce7;
+      --emerald:       #10b981;
+      --emerald-bg:    #ecfdf5;
+      --slate-900:     #0f172a;
+      --slate-800:     #1e293b;
+      --slate-700:     #334155;
+      --slate-600:     #475569;
+      --slate-500:     #64748b;
+      --slate-400:     #94a3b8;
+      --slate-300:     #cbd5e1;
+      --slate-200:     #e2e8f0;
+      --slate-100:     #f1f5f9;
+      --slate-50:      #f8fafc;
+      --white:         #ffffff;
+      --border-light:  #f3f4f6;
+      --red-100:       #fee2e2;
+      --red-500:       #ef4444;
+      --red-600:       #dc2626;
+      --orange:        #ef5023;
+      --orange-light:  #fa987d;
+      --orange-bg:     rgba(239,80,35,0.1);
+      --whatsapp:      #10b981;
+      --zalo:          #2563eb;
+      --x-dark:        #1e293b;
+      --facebook:      #3b82f6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { scrollbar-width: none; -ms-overflow-style: none; }
+    html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+    body {
+      background: var(--white);
+      font-family: 'Public Sans', sans-serif;
+      margin: 0; padding: 0;
+    }
+    .screen {
+      width: 390px;
+      background: var(--white);
+      padding-bottom: 100px;
+    }
+
+    /* ── TOP NAV ── */
+    .top-nav {
+      position: sticky; top: 0; z-index: 20;
+      background: var(--white);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .top-nav .nav-btn {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    .top-nav .title {
+      font-weight: 700; font-size: 18px; color: var(--slate-800);
+    }
+    .save-btn {
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      color: white;
+      font-weight: 700; font-size: 13px;
+      padding: 7px 16px;
+      border-radius: 10px;
+      border: none; cursor: pointer;
+      font-family: 'Public Sans', sans-serif;
+    }
+
+    /* ── COVER + AVATAR ── */
+    .profile-header-section { position: relative; }
+    .green-band {
+      height: 160px; position: relative; overflow: hidden;
+      background: var(--green-surface);
+    }
+    .green-band img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .cover-edit-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.35);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    .cover-edit-pill {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 999px; padding: 7px 14px;
+      font-weight: 600; font-size: 12px; color: var(--slate-700);
+    }
+
+    .header-content {
+      padding: 0 24px;
+      margin-top: -56px;
+      display: flex; flex-direction: column; gap: 16px;
+      position: relative; z-index: 2;
+    }
+    .avatar-row { display: flex; align-items: flex-end; justify-content: space-between; }
+    .avatar-wrap { position: relative; width: 112px; height: 112px; flex-shrink: 0; }
+    .avatar {
+      width: 112px; height: 112px; border-radius: 50%;
+      border: 4px solid var(--white); overflow: hidden;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+      background: var(--slate-200);
+    }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .avatar-edit-btn {
+      position: absolute; bottom: 4px; right: 4px;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--green);
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid white; cursor: pointer;
+    }
+
+    .name-edit-block {
+      display: flex; flex-direction: column; gap: 6px;
+      align-items: center; padding-bottom: 16px;
+    }
+    .field-inline {
+      width: 100%;
+      border: none; outline: none;
+      font-family: 'Public Sans', sans-serif;
+      background: transparent;
+      text-align: center;
+      border-bottom: 1.5px dashed var(--slate-300);
+      padding-bottom: 3px;
+    }
+    .field-inline:focus { border-bottom-color: var(--green); }
+    .field-name { font-weight: 700; font-size: 22px; color: var(--slate-900); letter-spacing: -0.55px; }
+    .field-subtitle { font-weight: 400; font-size: 14px; color: var(--slate-500); }
+
+    /* ── SECTION DIVIDER ── */
+    .section-divider {
+      height: 8px; background: var(--slate-50);
+      border-top: 1px solid var(--border-light);
+      border-bottom: 1px solid var(--border-light);
+      margin: 8px 0;
+    }
+
+    /* ── EDIT SECTION ── */
+    .edit-section { padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; }
+    .edit-section-title {
+      font-weight: 700; font-size: 11px; color: var(--slate-400);
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+
+    /* Textarea */
+    .field-textarea {
+      width: 100%;
+      background: var(--slate-50);
+      border: 1.5px solid var(--slate-200);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 14px; font-weight: 400; color: var(--slate-800);
+      outline: none; resize: none; line-height: 1.6;
+    }
+    .field-textarea:focus { border-color: var(--green); background: white; }
+
+    /* ── TAGS ── */
+    .tags-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .tag {
+      background: var(--slate-100); border-radius: 9999px;
+      padding: 5px 10px 5px 12px;
+      font-weight: 500; font-size: 12px; color: var(--slate-600);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .tag-remove {
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--slate-300);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
+    }
+    .tag-add-btn {
+      display: flex; align-items: center; gap: 4px;
+      background: transparent;
+      border: 1.5px dashed var(--slate-300);
+      border-radius: 9999px;
+      padding: 5px 12px;
+      font-weight: 600; font-size: 12px; color: var(--slate-400);
+      cursor: pointer; font-family: 'Public Sans', sans-serif;
+    }
+
+    /* ── STRENGTH / SERVICE LIST ── */
+    .item-list { display: flex; flex-direction: column; gap: 10px; }
+    .item-row { display: flex; align-items: center; gap: 10px; }
+    .item-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green); flex-shrink: 0;
+    }
+    .item-input {
+      flex: 1; height: 40px;
+      background: var(--slate-50);
+      border: 1.5px solid var(--slate-200);
+      border-radius: 10px;
+      padding: 0 12px;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 13px; font-weight: 500; color: var(--slate-700);
+      outline: none;
+    }
+    .item-input:focus { border-color: var(--green); background: white; }
+    .item-remove {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--red-100);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
+    }
+    .add-item-btn {
+      display: flex; align-items: center; gap: 6px;
+      background: transparent; border: none;
+      color: var(--green); font-weight: 600; font-size: 13px;
+      cursor: pointer; font-family: 'Public Sans', sans-serif;
+      padding: 4px 0;
+    }
+
+    /* ── SOCIAL LINKS ── */
+    .social-list { display: flex; flex-direction: column; gap: 10px; }
+    .social-card {
+      background: var(--slate-50);
+      border: 1.5px solid var(--slate-200);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex; align-items: center; gap: 12px;
+      position: relative;
+    }
+    .social-card-remove {
+      position: absolute;
+      top: -7px; right: -7px;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--red-500);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
+      border: 2px solid white;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    }
+    .social-card-icon {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .social-card-info { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .social-card-name { font-weight: 600; font-size: 12px; color: var(--slate-500); }
+    .social-card-input {
+      width: 100%; border: none; outline: none;
+      background: transparent;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 14px; font-weight: 500; color: var(--slate-800);
+      padding: 0;
+    }
+    .social-card-input::placeholder { color: var(--slate-300); }
+
+
+    /* ── PRODUCTS ── */
+    .products-list { display: flex; flex-direction: column; gap: 10px; }
+    .product-edit-card {
+      border: 1.5px solid var(--slate-200);
+      border-radius: 14px; overflow: hidden;
+      background: var(--white);
+      display: flex; flex-direction: row; align-items: stretch;
+    }
+    /* Thumbnail on the left */
+    .product-thumb-wrap {
+      width: 88px; flex-shrink: 0; position: relative; cursor: pointer;
+    }
+    .product-thumb-img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      background: var(--slate-100); min-height: 88px;
+    }
+    .product-thumb-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.38);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 3px;
+    }
+    .product-thumb-label { font-size: 9px; font-weight: 700; color: white; letter-spacing: 0.3px; }
+    /* Right side inputs */
+    .product-edit-right {
+      flex: 1; padding: 10px 12px 10px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .product-edit-input {
+      width: 100%; border: none; outline: none;
+      background: transparent;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 14px; font-weight: 700; color: var(--slate-800);
+      padding: 0; line-height: 1.4;
+      border-bottom: 1.5px dashed var(--slate-200);
+      padding-bottom: 4px;
+    }
+    .product-edit-input:focus { border-bottom-color: var(--green); }
+    .product-edit-desc {
+      width: 100%; border: none; outline: none;
+      background: transparent;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 12px; font-weight: 400; color: var(--slate-500);
+      padding: 0; resize: none; line-height: 1.5;
+      border-bottom: 1.5px dashed var(--slate-200);
+      padding-bottom: 4px;
+    }
+    .product-edit-desc:focus { border-bottom-color: var(--green); }
+    .product-edit-actions {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 2px;
+    }
+    .product-delete-btn {
+      display: flex; align-items: center; gap: 4px;
+      color: var(--red-500); font-size: 11px; font-weight: 600;
+      background: none; border: none; cursor: pointer;
+      font-family: 'Public Sans', sans-serif;
+    }
+    .drag-handle { color: var(--slate-300); cursor: grab; display: flex; align-items: center; }
+
+    /* ── PORTFOLIO ── */
+    .portfolio-list { display: flex; flex-direction: column; gap: 0; }
+    .portfolio-list-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .portfolio-list-item:last-of-type { border-bottom: none; }
+    .portfolio-thumb {
+      width: 64px; height: 64px; border-radius: 10px; overflow: hidden;
+      flex-shrink: 0; position: relative; cursor: pointer;
+      background: var(--slate-100);
+    }
+    .portfolio-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .portfolio-thumb-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 10px;
+    }
+    .portfolio-thumb-data { background: #1c4e58; }
+    .portfolio-item-info { flex: 1; display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+    .portfolio-type-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: var(--slate-100); border-radius: 999px;
+      padding: 2px 8px;
+      font-weight: 600; font-size: 10px; color: var(--slate-500);
+      width: fit-content;
+    }
+    .portfolio-title-input {
+      width: 100%; border: none; outline: none;
+      background: transparent;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 14px; font-weight: 600; color: var(--slate-800);
+      padding: 0;
+      border-bottom: 1.5px dashed var(--slate-200);
+      padding-bottom: 2px;
+    }
+    .portfolio-title-input:focus { border-bottom-color: var(--green); }
+    .portfolio-item-remove {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--red-100);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
+    }
+    .portfolio-add-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 0 4px;
+    }
+    .portfolio-add-thumb {
+      width: 64px; height: 64px; border-radius: 10px;
+      border: 2px dashed var(--slate-300);
+      background: var(--slate-50);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; cursor: pointer;
+    }
+
+    /* ── SAVE FOOTER ── */
+    .save-footer {
+      position: fixed; bottom: 0; left: 0; width: 390px;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid var(--slate-200);
+      padding: 14px 24px 28px;
+      display: flex; flex-direction: column; gap: 8px;
+      z-index: 100;
+    }
+        .btn-submit {
+      font-weight: 700;
+      font-size: 16px;
+      color: white;
+      font-family: 'Public Sans', sans-serif;
+    }
+    .btn-discard {
+      width: 100%; height: 40px;
+      background: transparent; border: none; cursor: pointer;
+      font-family: 'Public Sans', sans-serif;
+      font-weight: 600; font-size: 14px; color: var(--slate-400);
+    }
+  </style>
+</head>
+<body>
+  <div class="screen">
+
+    <!-- Top Nav -->
+    <div class="top-nav">
+      <div class="nav-btn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--slate-800)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </div>
+      <span class="title">Edit Profile</span>
+      <button class="save-btn">Save</button>
+    </div>
+
+    <!-- Cover + Avatar (WYSIWYG header) -->
+    <div class="profile-header-section">
+      <div class="green-band">
+        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80" alt="Cover" />
+        <div class="cover-edit-overlay">
+          <div class="cover-edit-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--slate-700)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Change Cover
+          </div>
+        </div>
+      </div>
+      <div class="header-content">
+        <div class="avatar-row">
+          <div class="avatar-wrap">
+            <div class="avatar">
+              <img src="https://www.figma.com/api/mcp/asset/c6279a20-7551-4819-ba2d-70137c4d1149" alt="Alex Rivera" />
+            </div>
+            <div class="avatar-edit-btn">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+          </div>
+          <div style="display:flex;gap:0;padding-bottom:8px;">
+            <div style="display:flex;flex-direction:column;gap:2px;border-right:1px solid var(--border-light);padding-right:17px;">
+              <span style="font-weight:700;font-size:10px;letter-spacing:0.9px;text-transform:uppercase;color:var(--slate-400);">VIEWS</span>
+              <span style="font-weight:700;font-size:16px;color:var(--slate-800);">1,248</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:2px;padding-left:16px;">
+              <span style="font-weight:700;font-size:10px;letter-spacing:0.9px;text-transform:uppercase;color:var(--slate-400);">SCANS</span>
+              <span style="font-weight:700;font-size:16px;color:var(--slate-800);">458</span>
+            </div>
+          </div>
+        </div>
+        <!-- Editable name + role — inline, same visual position as profile -->
+        <div class="name-edit-block">
+          <input class="field-inline field-name" type="text" value="Alex Rivera" />
+          <input class="field-inline field-subtitle" type="text" value="Creative Strategist &amp; Design Consultant" />
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ── ABOUT ME ── -->
+    <div class="edit-section">
+      <div class="edit-section-title">About Me</div>
+      <textarea class="field-textarea" rows="4">I bridge the gap between complex business challenges and elegant user experiences. With over 10 years of experience...</textarea>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ── INDUSTRIES ── -->
+    <div class="edit-section">
+      <div class="edit-section-title">Industries</div>
+      <div class="tags-row">
+        <div class="tag">Product Design <div class="tag-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="var(--slate-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div></div>
+        <div class="tag">Strategy <div class="tag-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="var(--slate-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div></div>
+        <div class="tag">FinTech <div class="tag-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="var(--slate-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div></div>
+        <div class="tag">Web3 <div class="tag-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="var(--slate-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div></div>
+        <button class="tag-add-btn">
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+          Add
+        </button>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ── KEY STRENGTHS ── -->
+    <div class="edit-section">
+      <div class="edit-section-title">Key Strengths</div>
+      <div class="item-list">
+        <div class="item-row">
+          <div class="item-dot"></div>
+          <input class="item-input" type="text" value="Strategic Brand Development" />
+          <div class="item-remove"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg></div>
+        </div>
+        <div class="item-row">
+          <div class="item-dot"></div>
+          <input class="item-input" type="text" value="Cross-functional Team Leadership" />
+          <div class="item-remove"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg></div>
+        </div>
+        <div class="item-row">
+          <div class="item-dot"></div>
+          <input class="item-input" type="text" value="User-Centric Product Design" />
+          <div class="item-remove"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg></div>
+        </div>
+        <div class="item-row">
+          <div class="item-dot"></div>
+          <input class="item-input" type="text" value="Data-Driven Decision Making" />
+          <div class="item-remove"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg></div>
+        </div>
+        <button class="add-item-btn">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="var(--green)" stroke-width="1.5"/><line x1="8" y1="5" x2="8" y2="11" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/><line x1="5" y1="8" x2="11" y2="8" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Add Strength
+        </button>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ── MAIN SERVICES ── -->
+    <div class="edit-section">
+      <div class="edit-section-title">Main Services</div>
+      <div class="item-list">
+        <div class="item-row">
+          <div class="item-dot" style="background:var(--emerald)"></div>
+          <input class="item-input" type="text" value="Brand Strategy Consulting" />
+          <div class="item-remove"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg></div>
+        </div>
+        <div class="item-row">
+          <div class="item-dot" style="background:var(--emerald)"></div>
+          <input class="item-input" type="text" value="UX / Product Design" />
+          <div class="item-remove"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg></div>
+        </div>
+        <button class="add-item-btn">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="var(--green)" stroke-width="1.5"/><line x1="8" y1="5" x2="8" y2="11" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/><line x1="5" y1="8" x2="11" y2="8" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Add Service
+        </button>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ── LOOKING FOR ── -->
+    <div class="edit-section">
+      <div class="edit-section-title">Looking For</div>
+      <div class="tags-row">
+        <div class="tag">Investors <div class="tag-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="var(--slate-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div></div>
+        <div class="tag">Collaborators <div class="tag-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="var(--slate-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div></div>
+        <button class="tag-add-btn">
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+          Add
+        </button>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ── COLLABORATION ── -->
+    <div class="edit-section">
+      <div class="edit-section-title">Collaboration</div>
+      <textarea class="field-textarea" rows="3">Open to remote consulting, co-founding opportunities, and strategic advisory roles.</textarea>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ── SOCIAL LINKS ── -->
+    <div class="edit-section">
+      <div class="edit-section-title">Connect With Me</div>
+      <div class="social-list">
+
+        <!-- WhatsApp -->
+        <div class="social-card">
+          <div class="social-card-icon" style="background:var(--whatsapp)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.477 2 2 6.484 2 12.017c0 1.99.525 3.853 1.44 5.461L2.05 22l4.635-1.21A9.954 9.954 0 0012 22c5.523 0 10-4.484 10-10.017C22 6.484 17.522 2 12 2z"/></svg>
+          </div>
+          <div class="social-card-info">
+            <div class="social-card-name">WhatsApp</div>
+            <input class="social-card-input" type="text" value="+1 234 567 8900" />
+          </div>
+          <div class="social-card-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div>
+        </div>
+
+        <!-- Zalo -->
+        <div class="social-card">
+          <div class="social-card-icon" style="background:var(--zalo)">
+            <span style="color:white;font-weight:800;font-size:17px;font-family:'Public Sans',sans-serif;line-height:1;">Z</span>
+          </div>
+          <div class="social-card-info">
+            <div class="social-card-name">Zalo</div>
+            <input class="social-card-input" type="text" value="0912 345 678" />
+          </div>
+          <div class="social-card-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div>
+        </div>
+
+        <!-- X / Twitter -->
+        <div class="social-card">
+          <div class="social-card-icon" style="background:var(--x-dark)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.254 5.622L18.245 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
+          </div>
+          <div class="social-card-info">
+            <div class="social-card-name">X (Twitter)</div>
+            <input class="social-card-input" type="text" value="@alexrivera" />
+          </div>
+          <div class="social-card-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div>
+        </div>
+
+        <!-- Facebook -->
+        <div class="social-card">
+          <div class="social-card-icon" style="background:var(--facebook)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </div>
+          <div class="social-card-info">
+            <div class="social-card-name">Facebook</div>
+            <input class="social-card-input" type="text" value="facebook.com/alexrivera" />
+          </div>
+          <div class="social-card-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div>
+        </div>
+
+        <!-- LinkedIn -->
+        <div class="social-card">
+          <div class="social-card-icon" style="background:#0a66c2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z"/></svg>
+          </div>
+          <div class="social-card-info">
+            <div class="social-card-name">LinkedIn</div>
+            <input class="social-card-input" type="url" placeholder="linkedin.com/in/yourprofile" value="linkedin.com/in/alexrivera" />
+          </div>
+          <div class="social-card-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div>
+        </div>
+
+        <!-- YouTube (off) -->
+        <div class="social-card" style="opacity:0.6;">
+          <div class="social-card-icon" style="background:var(--red-600)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </div>
+          <div class="social-card-info">
+            <div class="social-card-name">YouTube</div>
+            <input class="social-card-input" type="text" placeholder="youtube.com/@yourhandle" value="youtube.com/@alexrivera" />
+          </div>
+          <div class="social-card-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div>
+        </div>
+
+        <!-- Add link -->
+        <button class="add-item-btn" style="padding-left:2px;">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="var(--green)" stroke-width="1.5"/><line x1="8" y1="5" x2="8" y2="11" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/><line x1="5" y1="8" x2="11" y2="8" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Add Social Link
+        </button>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ── SIGNATURE PRODUCTS ── -->
+    <div class="edit-section">
+      <div class="edit-section-title">Signature Products</div>
+      <div class="products-list">
+
+        <!-- Product 1 -->
+        <div class="product-edit-card">
+          <div class="product-thumb-wrap">
+            <img class="product-thumb-img" src="https://www.figma.com/api/mcp/asset/1857c14d-7b6a-4289-97f1-418cf7066f95" alt="Brand Strategy Workshop" />
+            <div class="product-thumb-overlay">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <span class="product-thumb-label">CHANGE</span>
+            </div>
+          </div>
+          <div class="product-edit-right">
+            <input class="product-edit-input" type="text" value="Brand Strategy Workshop" />
+            <textarea class="product-edit-desc" rows="2">Transform your visual identity in 4 weeks</textarea>
+            <div class="product-edit-actions">
+              <button class="product-delete-btn">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+                Remove
+              </button>
+              <div class="drag-handle">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="15" x2="16" y2="15"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="product-edit-card">
+          <div class="product-thumb-wrap">
+            <img class="product-thumb-img" src="https://www.figma.com/api/mcp/asset/0a506524-f5c9-4d98-b485-a11c5ee4db79" alt="UX Audit" />
+            <div class="product-thumb-overlay">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <span class="product-thumb-label">CHANGE</span>
+            </div>
+          </div>
+          <div class="product-edit-right">
+            <input class="product-edit-input" type="text" value="UX Audit" />
+            <textarea class="product-edit-desc" rows="2">Deep dive analysis of your product</textarea>
+            <div class="product-edit-actions">
+              <button class="product-delete-btn">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+                Remove
+              </button>
+              <div class="drag-handle">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="15" x2="16" y2="15"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add product -->
+        <button class="add-item-btn">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="var(--green)" stroke-width="1.5"/><line x1="8" y1="5" x2="8" y2="11" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/><line x1="5" y1="8" x2="11" y2="8" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Add Product
+        </button>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ── PORTFOLIO ── -->
+    <div class="edit-section">
+      <div class="edit-section-title">Portfolio Highlights</div>
+      <div class="portfolio-list">
+
+        <!-- Featured video -->
+        <div class="portfolio-list-item">
+          <div class="portfolio-thumb" style="cursor:pointer;">
+            <img src="https://www.figma.com/api/mcp/asset/ae9468a9-b3d6-46ce-b459-921f422a63aa" alt="Featured" />
+            <div class="portfolio-thumb-overlay">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+          </div>
+          <div class="portfolio-item-info">
+            <div class="portfolio-type-badge">
+              <svg width="9" height="9" viewBox="0 0 10 10" fill="none"><polygon points="2 1 9 5 2 9 2 1" fill="var(--slate-500)"/></svg>
+              Featured Video
+            </div>
+            <input class="portfolio-title-input" type="text" value="Brand Strategy Overview" />
+          </div>
+          <div class="portfolio-item-remove">
+            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg>
+          </div>
+        </div>
+
+        <!-- Image 1 -->
+        <div class="portfolio-list-item">
+          <div class="portfolio-thumb">
+            <img src="https://www.figma.com/api/mcp/asset/583ba358-f2d9-4988-b7cd-477d393dca00" alt="UI Design System" />
+            <div class="portfolio-thumb-overlay">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+          </div>
+          <div class="portfolio-item-info">
+            <div class="portfolio-type-badge">
+              <svg width="9" height="9" viewBox="0 0 10 10" fill="none"><rect x="1" y="1" width="8" height="8" rx="1" stroke="var(--slate-500)" stroke-width="1.2"/><path d="M1 7l2.5-2.5 2 2 1.5-1.5 2 2" stroke="var(--slate-500)" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Image
+            </div>
+            <input class="portfolio-title-input" type="text" value="UI Design System" />
+          </div>
+          <div class="portfolio-item-remove">
+            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg>
+          </div>
+        </div>
+
+        <!-- Data / custom item -->
+        <div class="portfolio-list-item">
+          <div class="portfolio-thumb portfolio-thumb-data">
+            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:10px;">
+              <div style="width:100%;display:flex;gap:3px;height:32px;align-items:flex-end;">
+                <div style="flex:1;height:40%;background:rgba(255,255,255,0.7);border-radius:1px;"></div>
+                <div style="flex:1;height:70%;background:rgba(255,255,255,0.7);border-radius:1px;"></div>
+                <div style="flex:1;height:55%;background:rgba(255,255,255,0.7);border-radius:1px;"></div>
+                <div style="flex:1;height:90%;background:white;border-radius:1px;"></div>
+                <div style="flex:1;height:50%;background:rgba(255,255,255,0.7);border-radius:1px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="portfolio-item-info">
+            <div class="portfolio-type-badge">
+              <svg width="9" height="9" viewBox="0 0 10 10" fill="none"><rect x="1" y="4" width="2" height="5" fill="var(--slate-500)"/><rect x="4" y="2" width="2" height="7" fill="var(--slate-500)"/><rect x="7" y="1" width="2" height="8" fill="var(--slate-500)"/></svg>
+              Data
+            </div>
+            <input class="portfolio-title-input" type="text" value="User Research" />
+          </div>
+          <div class="portfolio-item-remove">
+            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg>
+          </div>
+        </div>
+
+        <!-- Image 2 -->
+        <div class="portfolio-list-item">
+          <div class="portfolio-thumb">
+            <img src="https://www.figma.com/api/mcp/asset/b284b0d6-60bc-4f76-bc87-74ccc589939b" alt="FinTech App" />
+            <div class="portfolio-thumb-overlay">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+          </div>
+          <div class="portfolio-item-info">
+            <div class="portfolio-type-badge">
+              <svg width="9" height="9" viewBox="0 0 10 10" fill="none"><rect x="1" y="1" width="8" height="8" rx="1" stroke="var(--slate-500)" stroke-width="1.2"/><path d="M1 7l2.5-2.5 2 2 1.5-1.5 2 2" stroke="var(--slate-500)" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Image
+            </div>
+            <input class="portfolio-title-input" type="text" value="FinTech App" />
+          </div>
+          <div class="portfolio-item-remove">
+            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg>
+          </div>
+        </div>
+
+        <!-- Add row -->
+        <div class="portfolio-add-row">
+          <div class="portfolio-add-thumb">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--slate-300)" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+          <button class="add-item-btn" style="font-size:14px;">Add Portfolio Item</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Fixed Save Footer -->
+    <div class="save-footer">
+      <button class="btn-submit">Save Changes</button>
+      <button class="btn-discard">Discard Changes</button>
+    </div>
+
+  </div>
+</body>
+</html>

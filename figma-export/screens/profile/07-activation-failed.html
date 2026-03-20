@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Activation Failed — InCard</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green: #009037;
+      --green-dark: #007a2f;
+      --green-light: #2eb07a;
+      --green-bg: rgba(0,144,55,0.08);
+      --green-surface: #dcfce7;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-400: #94a3b8;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --white: #ffffff;
+      --red-500: #ef4444;
+      --red-50: #fef2f2;
+      --red-100: #fee2e2;
+      --orange:        #ef5023;
+      --orange-light:  #fa987d;
+      --orange-bg:     rgba(239,80,35,0.1);
+    }
+
+    html, body {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    html::-webkit-scrollbar, body::-webkit-scrollbar {
+      display: none;
+    }
+
+    body {
+      background: #0f172a;
+      font-family: 'Public Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .screen {
+      width: 390px;
+      min-height: 844px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .bg-layer {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, #0f4c29 0%, #0a2e1a 60%, #071a0f 100%);
+    }
+
+    .bg-cover {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 220px;
+      background: url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80') center / cover;
+      opacity: 0.18;
+    }
+
+    .bg-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(3px);
+    }
+
+    .sheet {
+      background: white;
+      border-radius: 28px 28px 0 0;
+      box-shadow: 0 -8px 40px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 10;
+    }
+
+    .handle-wrap {
+      padding: 14px 0 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .handle {
+      width: 40px;
+      height: 4px;
+      background: var(--slate-200);
+      border-radius: 9999px;
+    }
+
+    .sheet-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px 4px;
+    }
+
+    .sheet-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sheet-title {
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--slate-900);
+      letter-spacing: -0.5px;
+    }
+
+    .sheet-subtitle {
+      font-size: 13px;
+      color: var(--slate-500);
+      font-weight: 400;
+    }
+
+    .close-btn {
+      width: 32px;
+      height: 32px;
+      background: var(--slate-100);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .icon-area {
+      display: flex;
+      justify-content: center;
+      padding: 32px 24px 16px;
+    }
+
+    .icon-outer-ring {
+      width: 100px;
+      height: 100px;
+      border: 2px solid rgba(239,68,68,0.2);
+      border-radius: 50%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-inner-circle {
+      width: 76px;
+      height: 76px;
+      background: var(--red-50);
+      border: 1.5px solid var(--red-100);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .error-title {
+      text-align: center;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--slate-900);
+      padding: 0 32px;
+      margin: 0;
+    }
+
+    .error-body {
+      text-align: center;
+      font-size: 14px;
+      color: var(--slate-500);
+      line-height: 1.6;
+      padding: 8px 32px 24px;
+      margin: 0;
+    }
+
+    .tips-card {
+      margin: 0 24px 24px;
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .tip-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .tip-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+
+    .tip-text {
+      font-size: 13px;
+      color: var(--slate-600);
+      line-height: 1.5;
+    }
+
+    .footer {
+      padding: 0 24px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+        .btn-primary {
+      font-weight: 700;
+      font-size: 16px;
+      color: white;
+      font-family: 'Public Sans', sans-serif;
+    }
+
+    .btn-secondary {
+      height: 44px;
+      background: transparent;
+      color: var(--slate-500);
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+      font-family: 'Public Sans', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <div class="bg-layer"></div>
+    <div class="bg-cover"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="sheet">
+      <div class="handle-wrap">
+        <div class="handle"></div>
+      </div>
+
+      <div class="sheet-header">
+        <div class="sheet-header-left">
+          <div class="sheet-title">Activation Failed</div>
+          <div class="sheet-subtitle">Couldn't detect your NFC card</div>
+        </div>
+        <button class="close-btn" aria-label="Close">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M1 1l12 12M13 1L1 13" stroke="#64748b" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="icon-area">
+        <div class="icon-outer-ring">
+          <div class="icon-inner-circle">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M8 8l16 16" stroke="var(--red-500)" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M24 8L8 24" stroke="var(--red-500)" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <p class="error-title">NFC Not Detected</p>
+      <p class="error-body">Make sure NFC is enabled on your phone and hold your device flat against the card.</p>
+
+      <div class="tips-card">
+        <div class="tip-row">
+          <div class="tip-dot"></div>
+          <span class="tip-text">Enable NFC in your phone settings</span>
+        </div>
+        <div class="tip-row">
+          <div class="tip-dot"></div>
+          <span class="tip-text">Remove phone case if using one</span>
+        </div>
+        <div class="tip-row">
+          <div class="tip-dot"></div>
+          <span class="tip-text">Hold still for 3–5 seconds</span>
+        </div>
+      </div>
+
+      <div class="footer">
+        <button class="btn-primary">Try Again</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

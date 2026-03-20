@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Top Performers</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green:          #009037;
+      --green-dark:     #007a2f;
+      --green-light:    #2eb07a;
+      --green-bg:       rgba(0,144,55,0.1);
+      --slate-900:      #0f172a;
+      --slate-800:      #1e293b;
+      --slate-700:      #334155;
+      --slate-600:      #475569;
+      --slate-500:      #64748b;
+      --slate-400:      #94a3b8;
+      --slate-300:      #cbd5e1;
+      --slate-200:      #e2e8f0;
+      --slate-100:      #f1f5f9;
+      --gray-bg:        #f8f6f6;
+      --white:          #ffffff;
+      --gold:           #d4af37;
+      --gold-light:     #f0c040;
+      --silver:         #c0c0c0;
+      --bronze:         #cd7f32;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; scrollbar-width: none; }
+    body::-webkit-scrollbar { display: none; }
+
+    body {
+      font-family: 'Public Sans', sans-serif;
+      width: 390px; height: 844px;
+      background: var(--gray-bg);
+      display: flex; flex-direction: column;
+      overflow: hidden; position: relative;
+    }
+
+    /* ── Header ── */
+    .header {
+      flex-shrink: 0;
+      padding: 20px 20px 16px;
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(248,246,246,0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--slate-200);
+      position: relative; z-index: 2;
+    }
+    .back-btn {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--white); border: 1px solid var(--slate-200);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
+    }
+    .header-title {
+      flex: 1;
+      font-size: 16px; font-weight: 700; color: var(--slate-900);
+    }
+    .header-share {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--slate-500);
+    }
+
+    /* ── Tabs ── */
+    .tabs-bar {
+      flex-shrink: 0;
+      padding: 12px 20px 0;
+      background: var(--gray-bg);
+      position: relative; z-index: 1;
+    }
+    .tabs {
+      display: flex;
+      background: var(--slate-100);
+      border-radius: 12px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .tab {
+      flex: 1; text-align: center;
+      padding: 8px 4px;
+      border-radius: 10px;
+      font-size: 13px; font-weight: 600;
+      color: var(--slate-500);
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .tab.active {
+      background: var(--white);
+      color: var(--slate-900);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+
+    /* ── Scroll body ── */
+    .body {
+      flex: 1; overflow-y: auto;
+      padding: 16px 20px 24px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .body::-webkit-scrollbar { display: none; }
+
+    /* ── Podium ── */
+    .podium {
+      display: flex; align-items: flex-end; justify-content: center;
+      gap: 8px;
+      padding: 8px 0 4px;
+    }
+    .podium-slot {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 6px;
+    }
+    .podium-slot.first { order: 2; }
+    .podium-slot.second { order: 1; }
+    .podium-slot.third  { order: 3; }
+
+    .podium-crown {
+      font-size: 18px; line-height: 1;
+      margin-bottom: -2px;
+    }
+    .podium-avatar-wrap {
+      position: relative;
+    }
+    .podium-avatar {
+      border-radius: 9999px;
+      object-fit: cover;
+      display: block;
+      border: 3px solid var(--white);
+    }
+    .podium-slot.first  .podium-avatar { width: 68px; height: 68px; border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold), 0 6px 20px rgba(212,175,55,0.4); }
+    .podium-slot.second .podium-avatar { width: 54px; height: 54px; border-color: var(--silver); box-shadow: 0 0 0 2px var(--silver); }
+    .podium-slot.third  .podium-avatar { width: 54px; height: 54px; border-color: var(--bronze); box-shadow: 0 0 0 2px var(--bronze); }
+
+    .podium-rank-badge {
+      position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%);
+      width: 20px; height: 20px; border-radius: 9999px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 800; color: #fff;
+      border: 2px solid var(--white);
+    }
+    .podium-slot.first  .podium-rank-badge { background: var(--gold); }
+    .podium-slot.second .podium-rank-badge { background: var(--silver); }
+    .podium-slot.third  .podium-rank-badge { background: var(--bronze); }
+
+    .podium-name {
+      font-size: 12px; font-weight: 700; color: var(--slate-900);
+      text-align: center; white-space: nowrap;
+      margin-top: 6px;
+    }
+    .podium-score {
+      font-size: 11px; font-weight: 500; color: var(--slate-500);
+      text-align: center;
+    }
+
+    .podium-block {
+      border-radius: 10px 10px 0 0;
+      width: 88px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .podium-slot.first  .podium-block { height: 52px; background: linear-gradient(180deg, rgba(212,175,55,0.2) 0%, rgba(212,175,55,0.06) 100%); border: 1px solid rgba(212,175,55,0.3); border-bottom: none; }
+    .podium-slot.second .podium-block { height: 36px; background: linear-gradient(180deg, rgba(192,192,192,0.15) 0%, rgba(192,192,192,0.04) 100%); border: 1px solid rgba(192,192,192,0.25); border-bottom: none; }
+    .podium-slot.third  .podium-block { height: 28px; background: linear-gradient(180deg, rgba(205,127,50,0.15) 0%, rgba(205,127,50,0.04) 100%); border: 1px solid rgba(205,127,50,0.2); border-bottom: none; }
+
+    .podium-block-label {
+      font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.6);
+    }
+
+    /* ── Leaderboard list ── */
+    .list-section-label {
+      font-size: 11px; font-weight: 700; color: var(--slate-400);
+      letter-spacing: 0.6px; text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .lb-list { display: flex; flex-direction: column; gap: 8px; }
+    .lb-row {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: 14px;
+      padding: 12px 14px;
+    }
+    .lb-row.you {
+      background: linear-gradient(135deg, rgba(0,144,55,0.05) 0%, rgba(0,144,55,0.04) 100%);
+      border-color: rgba(0,144,55,0.3);
+    }
+    .lb-rank-num {
+      width: 24px; text-align: center;
+      font-size: 13px; font-weight: 700; color: var(--slate-400);
+      flex-shrink: 0;
+    }
+    .lb-rank-num.top { color: var(--slate-700); }
+    .lb-avatar-wrap {
+      width: 40px; height: 40px; border-radius: 9999px;
+      overflow: hidden; flex-shrink: 0;
+      border: 2px solid var(--slate-200);
+    }
+    .lb-row.you .lb-avatar-wrap { border-color: rgba(0,144,55,0.3); }
+    .lb-avatar-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .lb-avatar-placeholder {
+      width: 100%; height: 100%;
+      background: var(--slate-200);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: var(--slate-500);
+    }
+    .lb-info { flex: 1; min-width: 0; }
+    .lb-name-row { display: flex; align-items: center; gap: 6px; }
+    .lb-name { font-size: 14px; font-weight: 600; color: var(--slate-900); line-height: 1.3; }
+    .you-badge {
+      font-size: 10px; font-weight: 700; color: var(--green);
+      background: var(--green-bg);
+      padding: 2px 7px; border-radius: 9999px;
+    }
+    .lb-sub { font-size: 12px; color: var(--slate-500); margin-top: 1px; }
+    .lb-score-col { text-align: right; flex-shrink: 0; }
+    .lb-score-num {
+      font-size: 11px; font-weight: 600; color: var(--slate-500);
+      line-height: 1.3;
+    }
+    .lb-score-label { font-size: 11px; color: var(--slate-400); }
+    .lb-trend {
+      display: flex; align-items: center; gap: 3px;
+      font-size: 11px; font-weight: 600;
+      justify-content: flex-end;
+      margin-top: 1px;
+    }
+    .lb-trend.up   { color: var(--green); }
+    .lb-trend.down { color: #ef4444; }
+    .lb-trend.same { color: var(--slate-400); }
+
+    /* ── Your Rank card ── */
+    .your-rank-card {
+      background: linear-gradient(135deg, #009037 0%, #2eb07a 100%);
+      border-radius: 18px;
+      padding: 18px 20px;
+      display: flex; align-items: center; gap: 16px;
+      box-shadow: 0 6px 24px rgba(0,144,55,0.35);
+      position: relative; overflow: hidden;
+      flex-shrink: 0;
+    }
+    .your-rank-card::before {
+      content: '';
+      position: absolute; top: -30px; right: -30px;
+      width: 120px; height: 120px; border-radius: 9999px;
+      background: rgba(255,255,255,0.07);
+    }
+    .your-rank-card::after {
+      content: '';
+      position: absolute; bottom: -20px; left: 40px;
+      width: 80px; height: 80px; border-radius: 9999px;
+      background: rgba(255,255,255,0.05);
+    }
+    .your-rank-avatar-wrap {
+      width: 52px; height: 52px; border-radius: 9999px;
+      border: 3px solid rgba(255,255,255,0.4);
+      overflow: hidden; flex-shrink: 0;
+      position: relative; z-index: 1;
+    }
+    .your-rank-avatar-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .your-rank-info { flex: 1; min-width: 0; position: relative; z-index: 1; }
+    .your-rank-label {
+      font-size: 11px; font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase; letter-spacing: 0.8px;
+    }
+    .your-rank-name {
+      font-size: 15px; font-weight: 700; color: #fff;
+      margin-top: 2px;
+    }
+    .your-rank-sub {
+      font-size: 12px; color: rgba(255,255,255,0.7);
+      margin-top: 1px;
+    }
+    .your-rank-num-col {
+      text-align: center; flex-shrink: 0;
+      position: relative; z-index: 1;
+    }
+    .your-rank-big {
+      font-size: 34px; font-weight: 800; color: #fff;
+      line-height: 1;
+    }
+    .your-rank-big-label {
+      font-size: 11px; font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      margin-top: 2px;
+    }
+    .your-rank-stats {
+      display: flex; gap: 8px; margin-top: 8px;
+    }
+    .your-rank-stat {
+      background: rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 5px 10px;
+      text-align: center;
+    }
+    .your-rank-stat-val {
+      font-size: 13px; font-weight: 700; color: #fff;
+    }
+    .your-rank-stat-lbl {
+      font-size: 10px; color: rgba(255,255,255,0.7);
+    }
+
+    /* ── Your Rank — multi-profile ── */
+    .your-rank-profiles { display: flex; flex-direction: column; gap: 10px; }
+
+    .profile-rank-card {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: 16px;
+      padding: 14px 16px;
+      display: flex; align-items: center; gap: 12px;
+      position: relative; overflow: hidden;
+    }
+    .profile-rank-card.primary {
+      background: linear-gradient(135deg, #009037 0%, #2eb07a 100%);
+      border-color: transparent;
+      box-shadow: 0 4px 18px rgba(0,144,55,0.3);
+    }
+    .profile-rank-card::before {
+      content: '';
+      position: absolute; top: -20px; right: -20px;
+      width: 80px; height: 80px; border-radius: 9999px;
+      background: rgba(255,255,255,0.06);
+      pointer-events: none;
+    }
+
+    .prc-avatar {
+      width: 44px; height: 44px; border-radius: 9999px;
+      overflow: hidden; flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,0.35);
+      position: relative; z-index: 1;
+    }
+    .profile-rank-card:not(.primary) .prc-avatar { border-color: var(--slate-200); }
+    .prc-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .prc-avatar-placeholder {
+      width: 100%; height: 100%;
+      background: var(--slate-100);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: var(--slate-500);
+    }
+
+    .prc-info { flex: 1; min-width: 0; position: relative; z-index: 1; }
+    .prc-profile-tag {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.6px; text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+    .profile-rank-card.primary  .prc-profile-tag { color: rgba(255,255,255,0.65); }
+    .profile-rank-card:not(.primary) .prc-profile-tag { color: var(--slate-400); }
+
+    .prc-name {
+      font-size: 14px; font-weight: 700; line-height: 1.3;
+    }
+    .profile-rank-card.primary  .prc-name { color: #fff; }
+    .profile-rank-card:not(.primary) .prc-name { color: var(--slate-900); }
+
+    .prc-role {
+      font-size: 12px; line-height: 1.4;
+    }
+    .profile-rank-card.primary  .prc-role { color: rgba(255,255,255,0.7); }
+    .profile-rank-card:not(.primary) .prc-role { color: var(--slate-500); }
+
+    .prc-stats {
+      display: flex; gap: 6px; margin-top: 6px;
+    }
+    .prc-stat {
+      border-radius: 7px;
+      padding: 4px 8px;
+      text-align: center;
+    }
+    .profile-rank-card.primary  .prc-stat { background: rgba(255,255,255,0.15); }
+    .profile-rank-card:not(.primary) .prc-stat { background: var(--slate-100); }
+
+    .prc-stat-val {
+      font-size: 12px; font-weight: 700; line-height: 1.2;
+    }
+    .profile-rank-card.primary  .prc-stat-val { color: #fff; }
+    .profile-rank-card:not(.primary) .prc-stat-val { color: var(--slate-900); }
+
+    .prc-stat-lbl {
+      font-size: 10px; line-height: 1.2;
+    }
+    .profile-rank-card.primary  .prc-stat-lbl { color: rgba(255,255,255,0.65); }
+    .profile-rank-card:not(.primary) .prc-stat-lbl { color: var(--slate-400); }
+
+    .prc-rank-col {
+      text-align: center; flex-shrink: 0;
+      position: relative; z-index: 1;
+    }
+    .prc-rank-big {
+      font-size: 20px; font-weight: 700; line-height: 1;
+    }
+    .profile-rank-card.primary  .prc-rank-big { color: #fff; }
+    .profile-rank-card:not(.primary) .prc-rank-big { color: var(--slate-900); }
+
+    .prc-rank-lbl {
+      font-size: 10px; font-weight: 600; margin-top: 2px;
+    }
+    .profile-rank-card.primary  .prc-rank-lbl { color: rgba(255,255,255,0.65); }
+    .profile-rank-card:not(.primary) .prc-rank-lbl { color: var(--slate-400); }
+
+    .prc-trend {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 11px; font-weight: 600; margin-top: 4px;
+    }
+    .profile-rank-card.primary  .prc-trend { color: rgba(255,255,255,0.85); }
+    .profile-rank-card:not(.primary) .prc-trend.up   { color: var(--green); }
+    .profile-rank-card:not(.primary) .prc-trend.down { color: #ef4444; }
+
+    /* ── Home indicator ── */
+    .home-indicator {
+      height: 28px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .home-bar {
+      width: 110px; height: 4px; border-radius: 9999px;
+      background: rgba(0,0,0,0.15);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <button class="back-btn">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M10 12L6 8l4-4" stroke="var(--slate-600)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="header-title">Top Performers</div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs-bar">
+    <div class="tabs">
+      <div class="tab active">Week</div>
+      <div class="tab">Month</div>
+      <div class="tab">All Time</div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="body">
+
+    <!-- Podium top 3 -->
+    <div class="podium">
+      <!-- 2nd -->
+      <div class="podium-slot second">
+        <div class="podium-avatar-wrap">
+          <img class="podium-avatar" src="https://www.figma.com/api/mcp/asset/c765f7ef-3465-47bd-abc2-70a733cfde27" alt="Marcus Day" />
+          <div class="podium-rank-badge">2</div>
+        </div>
+        <div class="podium-name">Marcus Day</div>
+        <div class="podium-score">1,184 pts</div>
+        <div class="podium-block"></div>
+      </div>
+      <!-- 1st -->
+      <div class="podium-slot first">
+        <div class="podium-crown">👑</div>
+        <div class="podium-avatar-wrap">
+          <img class="podium-avatar" src="https://www.figma.com/api/mcp/asset/982c54bf-f358-4815-b6c0-c09a0e011915" alt="Sarah Chen" />
+          <div class="podium-rank-badge">1</div>
+        </div>
+        <div class="podium-name">Sarah Chen</div>
+        <div class="podium-score">1,420 pts</div>
+        <div class="podium-block"></div>
+      </div>
+      <!-- 3rd -->
+      <div class="podium-slot third">
+        <div class="podium-avatar-wrap">
+          <img class="podium-avatar" src="https://www.figma.com/api/mcp/asset/0079de44-b2ee-4a6b-9863-eec087d00a79" alt="Elena Ruiz" />
+          <div class="podium-rank-badge">3</div>
+        </div>
+        <div class="podium-name">Elena Ruiz</div>
+        <div class="podium-score">970 pts</div>
+        <div class="podium-block"></div>
+      </div>
+    </div>
+
+    <!-- Rankings 4–8 -->
+    <div>
+      <div class="list-section-label">Rankings</div>
+      <div class="lb-list">
+
+        <div class="lb-row">
+          <div class="lb-rank-num top">4</div>
+          <div class="lb-avatar-wrap">
+            <img src="https://www.figma.com/api/mcp/asset/11549e71-ce4a-4e13-9519-2df009a28cf6" alt="David Miller" />
+          </div>
+          <div class="lb-info">
+            <div class="lb-name-row"><span class="lb-name">David Miller</span></div>
+            <div class="lb-sub">Product Manager · Stripe</div>
+          </div>
+          <div class="lb-score-col">
+            <div class="lb-score-num">890 pts</div>
+          </div>
+        </div>
+
+        <div class="lb-row">
+          <div class="lb-rank-num top">5</div>
+          <div class="lb-avatar-wrap">
+            <img src="https://www.figma.com/api/mcp/asset/e05bc7d7-3240-4b0c-9614-1acaa68df1b4" alt="Julia Song" />
+          </div>
+          <div class="lb-info">
+            <div class="lb-name-row"><span class="lb-name">Julia Song</span></div>
+            <div class="lb-sub">UX Lead · Airbnb</div>
+          </div>
+          <div class="lb-score-col">
+            <div class="lb-score-num">760 pts</div>
+          </div>
+        </div>
+
+        <div class="lb-row">
+          <div class="lb-rank-num top">6</div>
+          <div class="lb-avatar-wrap">
+            <div class="lb-avatar-placeholder">MR</div>
+          </div>
+          <div class="lb-info">
+            <div class="lb-name-row"><span class="lb-name">Michael Ross</span></div>
+            <div class="lb-sub">Founder · BuildStack</div>
+          </div>
+          <div class="lb-score-col">
+            <div class="lb-score-num">640 pts</div>
+          </div>
+        </div>
+
+        <div class="lb-row">
+          <div class="lb-rank-num top">7</div>
+          <div class="lb-avatar-wrap">
+            <div class="lb-avatar-placeholder">LP</div>
+          </div>
+          <div class="lb-info">
+            <div class="lb-name-row"><span class="lb-name">Lisa Park</span></div>
+            <div class="lb-sub">VP Sales · Notion</div>
+          </div>
+          <div class="lb-score-col">
+            <div class="lb-score-num">580 pts</div>
+          </div>
+        </div>
+
+        <!-- You — rank 8 -->
+        <div class="lb-row you">
+          <div class="lb-rank-num top" style="color:var(--green)">8</div>
+          <div class="lb-avatar-wrap">
+            <img src="https://www.figma.com/api/mcp/asset/7f0a3d58-f11d-4bee-b0f6-683c3bc7c81a" alt="Alex Rivera" />
+          </div>
+          <div class="lb-info">
+            <div class="lb-name-row">
+              <span class="lb-name">Alex Rivera</span>
+              <span class="you-badge">You</span>
+            </div>
+            <div class="lb-sub">Sr. Product Designer</div>
+          </div>
+          <div class="lb-score-col">
+            <div class="lb-score-num" style="color:var(--green)">470 pts</div>
+          </div>
+        </div>
+
+        <div class="lb-row">
+          <div class="lb-rank-num">9</div>
+          <div class="lb-avatar-wrap">
+            <div class="lb-avatar-placeholder">TK</div>
+          </div>
+          <div class="lb-info">
+            <div class="lb-name-row"><span class="lb-name">Tom Klein</span></div>
+            <div class="lb-sub">Engineer · Figma</div>
+          </div>
+          <div class="lb-score-col">
+            <div class="lb-score-num">410 pts</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Your Rank — per profile -->
+    <div>
+      <div class="list-section-label">Your Rank</div>
+      <div class="your-rank-profiles">
+
+        <!-- Profile 1 — Work -->
+        <div class="profile-rank-card primary">
+          <div class="prc-avatar">
+            <img src="https://www.figma.com/api/mcp/asset/7f0a3d58-f11d-4bee-b0f6-683c3bc7c81a" alt="Alex Rivera" />
+          </div>
+          <div class="prc-info">
+            <div class="prc-name">Alex Rivera</div>
+            <div class="prc-role">Sr. Product Designer · Design Solutions Inc.</div>
+            <div style="margin-top:6px; font-size:13px; font-weight:700; color:rgba(255,255,255,0.9);">470 pts</div>
+          </div>
+          <div class="prc-rank-col">
+            <div class="prc-rank-big">#8</div>
+            <div class="prc-rank-lbl">Rank</div>
+          </div>
+        </div>
+
+        <!-- Profile 2 — Personal -->
+        <div class="profile-rank-card">
+          <div class="prc-avatar">
+            <img src="https://www.figma.com/api/mcp/asset/4f58f727-9beb-4364-af7c-197f459157e4" alt="Alex Rivera" />
+          </div>
+          <div class="prc-info">
+            <div class="prc-name">Alex Rivera</div>
+            <div class="prc-role">Freelance Consultant · Rivera Designs</div>
+            <div style="margin-top:6px; font-size:13px; font-weight:700; color:var(--green);">230 pts</div>
+          </div>
+          <div class="prc-rank-col">
+            <div class="prc-rank-big">#19</div>
+            <div class="prc-rank-lbl">Rank</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /body -->
+
+  <div class="home-indicator"><div class="home-bar"></div></div>
+
+</body>
+</html>

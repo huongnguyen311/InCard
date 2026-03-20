@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — My Tasks</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green:         #009037;
+      --green-dark:    #007a2f;
+      --green-light:   #2eb07a;
+      --green-bg:      rgba(0,144,55,0.08);
+      --green-border:  rgba(0,144,55,0.18);
+      --green-surface: #dcfce7;
+      --slate-900:     #0f172a;
+      --slate-800:     #1e293b;
+      --slate-700:     #334155;
+      --slate-600:     #475569;
+      --slate-500:     #64748b;
+      --slate-400:     #94a3b8;
+      --slate-300:     #cbd5e1;
+      --slate-200:     #e2e8f0;
+      --slate-100:     #f1f5f9;
+      --slate-50:      #f8fafc;
+      --gray-bg:       #f4f4f5;
+      --blue-bg:       #eff6ff;
+      --blue:          #3b82f6;
+      --amber-bg:      #fffbeb;
+      --amber:         #f59e0b;
+      --rose-bg:       #fff1f2;
+      --rose:          #f43f5e;
+      --purple-bg:     #f5f3ff;
+      --purple:        #7c3aed;
+      --white:         #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { scrollbar-width: none; -ms-overflow-style: none; }
+    html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+
+    body {
+      background: var(--gray-bg);
+      font-family: 'Public Sans', sans-serif;
+      width: 390px;
+      min-height: 100vh;
+      padding-bottom: 160px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--slate-200);
+      padding: 14px 20px 12px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .back-btn {
+      width: 36px; height: 36px; border-radius: 12px;
+      background: var(--slate-100);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; cursor: pointer; transition: background 0.15s;
+    }
+    .back-btn:hover { background: var(--slate-200); }
+    .header-title {
+      flex: 1; font-size: 18px; font-weight: 700;
+      color: var(--slate-900); letter-spacing: -0.3px;
+    }
+    .header-count {
+      font-size: 12px; font-weight: 700;
+      color: var(--white); background: var(--green);
+      border-radius: 20px; padding: 3px 10px; flex-shrink: 0;
+    }
+    .settings-btn {
+      width: 42px; height: 42px; border-radius: 13px;
+      background: var(--slate-100);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; cursor: pointer; transition: background 0.15s;
+    }
+    .settings-btn:hover { background: var(--slate-200); }
+
+    /* ── VIEW TOGGLE ── */
+    .view-toggle {
+      display: flex; flex: 1;
+      background: var(--slate-100); border-radius: 14px;
+      padding: 4px; gap: 2px;
+    }
+    .toggle-btn {
+      flex: 1; height: 34px; border-radius: 11px; border: none;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 13px; font-weight: 700; cursor: pointer;
+      background: transparent; color: var(--slate-500);
+      transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+    }
+    .toggle-btn.active {
+      background: var(--white); color: var(--slate-900);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+    }
+
+    /* Add task button inline */
+    .add-task-inline {
+      height: 42px; padding: 0 14px; border-radius: 13px;
+      border: none; cursor: pointer; flex-shrink: 0;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 13px; font-weight: 700; color: var(--white);
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      box-shadow: 0 3px 10px rgba(0,144,55,0.28);
+      display: flex; align-items: center; gap: 6px;
+      transition: box-shadow 0.15s, transform 0.1s;
+    }
+    .add-task-inline:hover { box-shadow: 0 5px 16px rgba(0,144,55,0.36); }
+    .add-task-inline:active { transform: scale(0.96); }
+
+    /* ── WEEK STRIP ── */
+    .week-strip {
+      display: flex; gap: 6px;
+      padding: 16px 20px 0;
+    }
+    .day-chip {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; gap: 5px; cursor: pointer;
+    }
+    .day-chip-label {
+      font-size: 10px; font-weight: 700;
+      color: var(--slate-400); letter-spacing: 0.3px; text-transform: uppercase;
+    }
+    .day-chip-num {
+      font-size: 14px; font-weight: 700; color: var(--slate-700);
+      transition: color 0.15s;
+    }
+    .day-chip.active .day-chip-label { color: var(--green); }
+    .day-chip.active .day-chip-num { color: var(--green); }
+    .day-chip-dot {
+      width: 4px; height: 4px; border-radius: 9999px;
+      background: var(--green); opacity: 0;
+    }
+    .day-chip.has-tasks .day-chip-dot { opacity: 1; }
+
+    /* ── TASK LIST ── */
+    .task-list {
+      padding: 16px 20px 0;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+
+    /* ── TASK ITEM ── */
+    .task-item {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: 18px;
+      padding: 14px 14px 14px 16px;
+      display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      transition: box-shadow 0.15s, border-color 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+    .task-item::before {
+      content: '';
+      position: absolute; left: 0; top: 14px; bottom: 14px;
+      width: 3px; border-radius: 0 2px 2px 0;
+    }
+    .task-item.priority-high::before   { background: var(--rose); }
+    .task-item.priority-medium::before { background: var(--amber); }
+    .task-item.priority-low::before    { background: var(--blue); }
+    .task-item.priority-done::before   { background: var(--green); }
+    .task-item:hover { border-color: var(--slate-300); box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    .task-item.completed { opacity: 0.55; }
+
+    /* Complete checkbox */
+    .task-check {
+      width: 24px; height: 24px; border-radius: 9999px;
+      border: 2px solid var(--slate-300);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      background: transparent;
+    }
+    .task-check:hover { border-color: var(--green); }
+    .task-item.completed .task-check {
+      background: var(--green); border-color: var(--green);
+    }
+
+    /* Task info */
+    .task-info { flex: 1; min-width: 0; }
+    .task-name {
+      font-size: 14px; font-weight: 700;
+      color: var(--slate-900); letter-spacing: -0.2px; line-height: 1.4;
+    }
+    .task-item.completed .task-name {
+      text-decoration: line-through; color: var(--slate-400);
+    }
+    .task-meta {
+      display: flex; align-items: center; gap: 6px; margin-top: 4px;
+    }
+    .task-date {
+      font-size: 11px; font-weight: 600; color: var(--slate-500);
+      display: flex; align-items: center; gap: 4px;
+    }
+    .task-badge {
+      font-size: 10px; font-weight: 700;
+      padding: 2px 7px; border-radius: 20px; line-height: 1.5;
+    }
+    .badge-high   { background: var(--rose-bg);   color: var(--rose); }
+    .badge-medium { background: var(--amber-bg);  color: var(--amber); }
+    .badge-low    { background: var(--blue-bg);   color: var(--blue); }
+    .badge-done   { background: var(--green-bg);  color: var(--green); }
+
+    /* Actions */
+    .task-actions {
+      display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+    }
+    .act-icon-btn {
+      width: 32px; height: 32px; border-radius: 10px;
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .act-icon-btn:active { transform: scale(0.94); }
+    .btn-edit {
+      background: var(--slate-100); color: var(--slate-600);
+    }
+    .btn-edit:hover { background: var(--slate-200); }
+    .btn-complete {
+      background: var(--green-bg); color: var(--green);
+    }
+    .btn-complete:hover { background: rgba(0,144,55,0.14); }
+    .task-item.completed .btn-complete { background: var(--green-bg); }
+
+    /* ── SECTION DATE LABEL ── */
+    .date-label {
+      font-size: 11px; font-weight: 700;
+      color: var(--slate-400); letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 16px 20px 4px;
+    }
+
+
+    /* ── BOTTOM ACTION BAR ── */
+    .bottom-actions {
+      position: fixed; bottom: 72px; left: 0;
+      width: 390px;
+      padding: 10px 20px 12px;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--slate-200);
+      display: flex; gap: 10px; align-items: center;
+      z-index: 90;
+    }
+    .bottom-settings-btn {
+      width: 48px; height: 48px; border-radius: 13px; flex-shrink: 0;
+      background: var(--slate-100); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+    }
+    .bottom-settings-btn:hover { background: var(--slate-200); }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0;
+      width: 390px; height: 72px;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid #e2e8f0;
+      display: flex; align-items: stretch; justify-content: space-between;
+      padding: 0 4px; padding-bottom: env(safe-area-inset-bottom, 0px);
+      z-index: 100;
+    }
+    .nav-link {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-end;
+      gap: 3px; cursor: pointer; padding-bottom: 10px;
+    }
+    .nav-icon { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; }
+    .nav-label { font-size: 10px; font-weight: 600; color: var(--slate-400); line-height: 1; letter-spacing: 0.1px; }
+    .nav-label.active { color: var(--green); }
+    .nav-dot { width: 4px; height: 4px; border-radius: 2px; background: var(--green); opacity: 0; }
+    .nav-link:has(.nav-label.active) .nav-dot { opacity: 1; }
+    .nav-fab-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding-bottom: 0; }
+    .nav-fab {
+      width: 50px; height: 50px; border-radius: 15px;
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,144,55,0.40), 0 1px 4px rgba(0,0,0,0.12);
+      margin-top: -12px;
+    }
+    .nav-fab svg { width: 22px; height: 22px; }
+
+    /* ── TASK DETAIL MODAL ── */
+    .sheet-scrim {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(15,23,42,0.45);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      display: flex; align-items: flex-end;
+    }
+    .sheet-scrim.hidden { display: none; }
+
+    .task-sheet {
+      width: 390px;
+      background: var(--white);
+      border-radius: 28px 28px 0 0;
+      padding: 0 0 36px;
+      box-shadow: 0 -8px 40px rgba(0,0,0,0.18);
+    }
+
+    .sheet-handle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 20px 0;
+    }
+    .sheet-drag {
+      width: 36px; height: 4px; border-radius: 9999px;
+      background: var(--slate-200);
+      margin: 0 auto;
+      position: absolute; left: 50%; transform: translateX(-50%);
+      top: 14px;
+    }
+    .sheet-title {
+      font-size: 16px; font-weight: 700;
+      color: var(--slate-900); letter-spacing: -0.2px;
+      padding: 20px 20px 0;
+    }
+    .sheet-close {
+      width: 32px; height: 32px; border-radius: 10px;
+      background: var(--slate-100); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+      position: absolute; right: 20px; top: 12px;
+    }
+    .sheet-close:hover { background: var(--slate-200); }
+
+    /* Fields */
+    .sheet-body {
+      padding: 16px 20px 0;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+
+    .field-label {
+      font-size: 11px; font-weight: 700;
+      color: var(--slate-500); letter-spacing: 0.6px;
+      text-transform: uppercase; margin-bottom: 6px;
+    }
+
+    .field-input {
+      width: 100%; height: 48px;
+      background: var(--slate-50); border: 1.5px solid var(--slate-200);
+      border-radius: 12px; padding: 0 14px;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 14px; font-weight: 600; color: var(--slate-900);
+      outline: none; transition: border-color 0.15s;
+    }
+    .field-input:focus { border-color: var(--green); }
+
+    .field-textarea {
+      width: 100%; min-height: 88px;
+      background: var(--slate-50); border: 1.5px solid var(--slate-200);
+      border-radius: 12px; padding: 12px 14px;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 14px; font-weight: 400; color: var(--slate-900);
+      outline: none; resize: none; transition: border-color 0.15s; line-height: 1.55;
+    }
+    .field-textarea:focus { border-color: var(--green); }
+    .field-textarea::placeholder { color: var(--slate-400); }
+
+    /* Status pills */
+    .status-row {
+      display: flex; gap: 8px;
+    }
+    .status-pill {
+      flex: 1; height: 40px; border-radius: 10px;
+      border: 1.5px solid var(--slate-200);
+      background: var(--white); cursor: pointer;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 13px; font-weight: 700;
+      color: var(--slate-500);
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: all 0.15s;
+    }
+    .status-pill.active-progress {
+      background: var(--amber-bg); border-color: var(--amber);
+      color: var(--amber);
+    }
+    .status-pill.active-done {
+      background: var(--green-bg); border-color: var(--green);
+      color: var(--green);
+    }
+
+    /* Date select */
+    .field-select {
+      width: 100%; height: 48px;
+      background: var(--slate-50); border: 1.5px solid var(--slate-200);
+      border-radius: 12px; padding: 0 14px;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 14px; font-weight: 600; color: var(--slate-900);
+      outline: none; appearance: none; cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9l6 6 6-6' stroke='%2394a3b8' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      transition: border-color 0.15s;
+    }
+    .field-select:focus { border-color: var(--green); }
+
+    /* Action buttons */
+    .sheet-actions {
+      display: flex; gap: 10px;
+      padding: 20px 20px 0;
+    }
+    .btn-delete {
+      height: 48px; padding: 0 20px; border-radius: 12px;
+      border: 1.5px solid #fecdd3;
+      background: var(--rose-bg); cursor: pointer; flex-shrink: 0;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 13px; font-weight: 700; color: var(--rose);
+      display: flex; align-items: center; gap: 6px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .btn-delete:hover { background: #ffe4e6; border-color: var(--rose); }
+
+    .btn-update {
+      flex: 1; height: 48px; border-radius: 12px; border: none;
+      cursor: pointer;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 14px; font-weight: 700; color: var(--white);
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      box-shadow: 0 4px 14px rgba(0,144,55,0.28);
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      transition: box-shadow 0.15s, transform 0.1s;
+    }
+    .btn-update:hover { box-shadow: 0 6px 20px rgba(0,144,55,0.36); }
+    .btn-update:active { transform: scale(0.985); }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="back-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path d="M15 19l-7-7 7-7" stroke="var(--slate-700)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="header-title">My Tasks</div>
+  </div>
+
+  <!-- Toggle only -->
+  <div style="padding:14px 20px 0;">
+    <div class="view-toggle">
+      <button class="toggle-btn active">Weekly</button>
+      <button class="toggle-btn">Monthly</button>
+    </div>
+  </div>
+
+  <!-- Week Strip -->
+  <div class="week-strip">
+    <div class="day-chip">
+      <div class="day-chip-label">Mon</div>
+      <div class="day-chip-num">16</div>
+      <div class="day-chip-dot"></div>
+    </div>
+    <div class="day-chip">
+      <div class="day-chip-label">Tue</div>
+      <div class="day-chip-num">17</div>
+      <div class="day-chip-dot"></div>
+    </div>
+    <div class="day-chip">
+      <div class="day-chip-label">Wed</div>
+      <div class="day-chip-num">18</div>
+      <div class="day-chip-dot"></div>
+    </div>
+    <div class="day-chip has-tasks">
+      <div class="day-chip-label">Thu</div>
+      <div class="day-chip-num">19</div>
+      <div class="day-chip-dot"></div>
+    </div>
+    <div class="day-chip has-tasks active">
+      <div class="day-chip-label">Fri</div>
+      <div class="day-chip-num">20</div>
+      <div class="day-chip-dot"></div>
+    </div>
+    <div class="day-chip has-tasks">
+      <div class="day-chip-label">Sat</div>
+      <div class="day-chip-num">21</div>
+      <div class="day-chip-dot"></div>
+    </div>
+    <div class="day-chip">
+      <div class="day-chip-label">Sun</div>
+      <div class="day-chip-num">22</div>
+      <div class="day-chip-dot"></div>
+    </div>
+  </div>
+
+  <!-- Task List -->
+  <div class="date-label">Today — Fri, Mar 20</div>
+  <div class="task-list">
+
+    <div class="task-item priority-high">
+      <div class="task-info">
+        <div class="task-name">Finalize pitch deck slides</div>
+        <div class="task-meta">
+          <span class="task-date">Prepare slides for investor meeting on Friday</span>
+        </div>
+      </div>
+      <div class="task-actions">
+        <button class="act-icon-btn btn-edit" onclick="openSheet(this.closest('.task-item').querySelector('.task-name').textContent)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="var(--slate-600)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="var(--slate-600)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button class="act-icon-btn btn-complete">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M20 6L9 17l-5-5" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="task-item priority-medium">
+      <div class="task-info">
+        <div class="task-name">Reply to Minh Tran's email</div>
+        <div class="task-meta">
+          <span class="task-date">Re: partnership proposal follow-up</span>
+        </div>
+      </div>
+      <div class="task-actions">
+        <button class="act-icon-btn btn-edit" onclick="openSheet(this.closest('.task-item').querySelector('.task-name').textContent)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="var(--slate-600)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="var(--slate-600)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button class="act-icon-btn btn-complete">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M20 6L9 17l-5-5" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="task-item priority-done completed">
+      <div class="task-info">
+        <div class="task-name">Update LinkedIn profile</div>
+        <div class="task-meta">
+          <span class="task-date">Add new role and update summary section</span>
+        </div>
+      </div>
+      <div class="task-actions">
+        <button class="act-icon-btn btn-edit" onclick="openSheet(this.closest('.task-item').querySelector('.task-name').textContent)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="var(--slate-600)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="var(--slate-600)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button class="act-icon-btn btn-complete">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M20 6L9 17l-5-5" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="date-label">Tomorrow — Sat, Mar 21</div>
+  <div class="task-list">
+
+    <div class="task-item priority-low">
+      <div class="task-info">
+        <div class="task-name">Review CLB Doanh Nhân agenda</div>
+        <div class="task-meta">
+          <span class="task-date">Check agenda items before Saturday meeting</span>
+        </div>
+      </div>
+      <div class="task-actions">
+        <button class="act-icon-btn btn-edit" onclick="openSheet(this.closest('.task-item').querySelector('.task-name').textContent)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="var(--slate-600)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="var(--slate-600)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button class="act-icon-btn btn-complete">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M20 6L9 17l-5-5" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="task-item priority-high">
+      <div class="task-info">
+        <div class="task-name">Send NFC card samples to client</div>
+        <div class="task-meta">
+          <span class="task-date">Ship 3 black card samples to Nguyen Corp</span>
+        </div>
+      </div>
+      <div class="task-actions">
+        <button class="act-icon-btn btn-edit" onclick="openSheet(this.closest('.task-item').querySelector('.task-name').textContent)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="var(--slate-600)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="var(--slate-600)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button class="act-icon-btn btn-complete">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M20 6L9 17l-5-5" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Action Bar -->
+  <div class="bottom-actions">
+    <button class="bottom-settings-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="3" stroke="var(--slate-600)" stroke-width="1.75"/>
+        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" stroke="var(--slate-600)" stroke-width="1.75"/>
+      </svg>
+    </button>
+    <button class="add-task-inline" style="flex:1; justify-content:center;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+        <path d="M12 5v14M5 12h14" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      Add Task
+    </button>
+  </div>
+
+  <!-- Bottom Nav — Home active -->
+  <div class="bottom-nav">
+    <div class="nav-link">
+      <div class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1h-4v-7H8v7H5a1 1 0 01-1-1V9.5z" fill="var(--green)"/></svg></div>
+      <span class="nav-label active">Home</span><span class="nav-dot"></span>
+    </div>
+    <div class="nav-link">
+      <div class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="7" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="17" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M7.5 12h5.5M13 12l3.5-4M13 12l3.5 4" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="nav-label">Network</span><span class="nav-dot"></span>
+    </div>
+    <div class="nav-fab-wrap">
+      <div class="nav-fab"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="14" y="18" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="18" width="3" height="3" rx="0.5" fill="white"/></svg></div>
+    </div>
+    <div class="nav-link">
+      <div class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M16.5 7.5l-3 6-5.5 2.5 3-6 5.5-2.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="1" fill="var(--slate-400)"/></svg></div>
+      <span class="nav-label">Explore</span><span class="nav-dot"></span>
+    </div>
+    <div class="nav-link">
+      <div class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round"/></svg></div>
+      <span class="nav-label">Profile</span><span class="nav-dot"></span>
+    </div>
+  </div>
+
+  <!-- Task Detail Modal -->
+  <div class="sheet-scrim hidden" id="taskSheet" onclick="closeSheet(event)">
+    <div class="task-sheet">
+      <div style="position:relative; height:44px;">
+        <div class="sheet-drag"></div>
+        <button class="sheet-close" onclick="closeSheetDirect()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M18 6L6 18M6 6l12 12" stroke="var(--slate-600)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="sheet-title">Task Details</div>
+
+      <div class="sheet-body">
+
+        <!-- Task name -->
+        <div>
+          <div class="field-label">Task Name</div>
+          <input type="text" class="field-input" id="sheet-name" value="Finalize pitch deck slides" />
+        </div>
+
+        <!-- Status -->
+        <div>
+          <div class="field-label">Status</div>
+          <div class="status-row">
+            <button class="status-pill active-progress" id="pill-progress" onclick="setStatus('progress')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.75"/>
+                <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+              </svg>
+              In Progress
+            </button>
+            <button class="status-pill" id="pill-done" onclick="setStatus('done')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Completed
+            </button>
+          </div>
+        </div>
+
+        <!-- Date -->
+        <div>
+          <div class="field-label">Due Date</div>
+          <select class="field-select">
+            <option>Today — Fri, Mar 20</option>
+            <option>Tomorrow — Sat, Mar 21</option>
+            <option>Sun, Mar 22</option>
+            <option>Mon, Mar 23</option>
+            <option>Tue, Mar 24</option>
+            <option>Wed, Mar 25</option>
+            <option>Thu, Mar 26</option>
+            <option>Fri, Mar 27</option>
+          </select>
+        </div>
+
+        <!-- Note -->
+        <div>
+          <div class="field-label">Note</div>
+          <textarea class="field-textarea" placeholder="Add a note…"></textarea>
+        </div>
+
+      </div>
+
+      <!-- Actions -->
+      <div class="sheet-actions">
+        <button class="btn-delete">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Delete
+        </button>
+        <button class="btn-update">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M20 6L9 17l-5-5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Update Task
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openSheet(name) {
+      document.getElementById('sheet-name').value = name;
+      document.getElementById('taskSheet').classList.remove('hidden');
+    }
+    function closeSheetDirect() {
+      document.getElementById('taskSheet').classList.add('hidden');
+    }
+    function closeSheet(e) {
+      if (e.target === document.getElementById('taskSheet')) closeSheetDirect();
+    }
+    function setStatus(s) {
+      document.getElementById('pill-progress').className = 'status-pill' + (s === 'progress' ? ' active-progress' : '');
+      document.getElementById('pill-done').className = 'status-pill' + (s === 'done' ? ' active-done' : '');
+    }
+  </script>
+
+</body>
+</html>

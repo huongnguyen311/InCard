@@ -1,0 +1,258 @@
+/*
+ * InCard — Button System
+ * Primary gradient: #2EB07A → #009037  (135deg, emerald → deep green)
+ * All screens should <link rel="stylesheet" href="../../button-system.css" />
+ */
+
+/* ── PRIMARY BUTTON ── */
+.btn-primary,
+.btn-submit,
+.btn-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  height: 56px;
+  padding: 0 24px;
+  width: 100%;
+
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+
+  font-family: 'Public Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.1px;
+  text-decoration: none;
+
+  background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+  box-shadow: 0 4px 14px rgba(0, 144, 55, 0.35);
+
+  transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.1s ease, opacity 0.18s ease;
+
+  outline: none;
+}
+
+.btn-primary:hover,
+.btn-submit:hover,
+.btn-cta:hover {
+  background: linear-gradient(135deg, #35c287 0%, #00a840 100%);
+  box-shadow: 0 6px 20px rgba(0, 144, 55, 0.45);
+}
+
+.btn-primary:active,
+.btn-submit:active,
+.btn-cta:active {
+  background: linear-gradient(135deg, #259966 0%, #007a2f 100%);
+  box-shadow: 0 2px 8px rgba(0, 144, 55, 0.25);
+  transform: scale(0.985);
+}
+
+.btn-primary:focus-visible,
+.btn-submit:focus-visible,
+.btn-cta:focus-visible {
+  outline: 3px solid rgba(0, 144, 55, 0.4);
+  outline-offset: 2px;
+}
+
+.btn-primary:disabled,
+.btn-submit:disabled,
+.btn-cta:disabled,
+.btn-primary.disabled,
+.btn-submit.disabled,
+.btn-cta.disabled {
+  opacity: 0.4;
+  box-shadow: none;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── PRIMARY COMPACT (48px) ── */
+.btn-primary-sm,
+.btn-cta-sm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 20px;
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: 'Public Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  text-decoration: none;
+  background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+  box-shadow: 0 3px 10px rgba(0, 144, 55, 0.30);
+  transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.1s ease;
+  outline: none;
+}
+
+.btn-primary-sm:hover,
+.btn-cta-sm:hover {
+  background: linear-gradient(135deg, #35c287 0%, #00a840 100%);
+  box-shadow: 0 5px 14px rgba(0, 144, 55, 0.40);
+}
+
+.btn-primary-sm:active,
+.btn-cta-sm:active {
+  background: linear-gradient(135deg, #259966 0%, #007a2f 100%);
+  box-shadow: 0 2px 6px rgba(0, 144, 55, 0.20);
+  transform: scale(0.985);
+}
+
+.btn-primary-sm:focus-visible,
+.btn-cta-sm:focus-visible {
+  outline: 3px solid rgba(0, 144, 55, 0.4);
+  outline-offset: 2px;
+}
+
+.btn-primary-sm:disabled,
+.btn-cta-sm:disabled,
+.btn-primary-sm.disabled,
+.btn-cta-sm.disabled {
+  opacity: 0.4;
+  box-shadow: none;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── GHOST / SECONDARY ── */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  height: 56px;
+  padding: 0 24px;
+  width: 100%;
+
+  border: 1.5px solid #009037;
+  border-radius: 14px;
+  cursor: pointer;
+
+  font-family: 'Public Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #009037;
+  background: transparent;
+
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  outline: none;
+}
+
+.btn-ghost:hover {
+  background: rgba(0, 144, 55, 0.06);
+  border-color: #2eb07a;
+  box-shadow: 0 2px 8px rgba(0, 144, 55, 0.12);
+}
+
+.btn-ghost:active {
+  background: rgba(0, 144, 55, 0.12);
+}
+
+.btn-ghost:focus-visible {
+  outline: 3px solid rgba(0, 144, 55, 0.4);
+  outline-offset: 2px;
+}
+
+.btn-ghost:disabled,
+.btn-ghost.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── EXTENDED ALIASES — covers custom button classes used across screens ── */
+
+/* Save / Confirm / Import — primary action (56px) */
+.btn-save,
+.btn-confirm,
+.btn-import {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 56px;
+  padding: 0 24px;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-family: 'Public Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  text-decoration: none;
+  background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+  box-shadow: 0 4px 14px rgba(0, 144, 55, 0.35);
+  transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.1s ease, opacity 0.18s ease;
+  outline: none;
+}
+
+.btn-save:hover,
+.btn-confirm:hover,
+.btn-import:hover {
+  background: linear-gradient(135deg, #35c287 0%, #00a840 100%);
+  box-shadow: 0 6px 20px rgba(0, 144, 55, 0.45);
+}
+
+.btn-save:active,
+.btn-confirm:active,
+.btn-import:active {
+  background: linear-gradient(135deg, #259966 0%, #007a2f 100%);
+  box-shadow: 0 2px 8px rgba(0, 144, 55, 0.25);
+  transform: scale(0.985);
+}
+
+.btn-save:disabled,
+.btn-confirm:disabled,
+.btn-import:disabled,
+.btn-save.disabled,
+.btn-confirm.disabled,
+.btn-import.disabled {
+  opacity: 0.4;
+  box-shadow: none;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Scan / Upload — compact action pill */
+.btn-scan-card,
+.btn-upload {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'Public Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+  box-shadow: 0 2px 8px rgba(0, 144, 55, 0.28);
+  transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.1s ease;
+  outline: none;
+}
+
+.btn-scan-card:hover,
+.btn-upload:hover {
+  background: linear-gradient(135deg, #35c287 0%, #00a840 100%);
+  box-shadow: 0 4px 12px rgba(0, 144, 55, 0.38);
+}
+
+.btn-scan-card:active,
+.btn-upload:active {
+  background: linear-gradient(135deg, #259966 0%, #007a2f 100%);
+  transform: scale(0.985);
+}

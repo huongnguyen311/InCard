@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NFC Tap Card — InCard</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green: #009037;
+      --green-dark: #007a2f;
+      --green-light: #2eb07a;
+      --green-bg: rgba(0,144,55,0.08);
+      --green-surface: #dcfce7;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-400: #94a3b8;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --white: #ffffff;
+      --red-500: #ef4444;
+      --red-50: #fef2f2;
+      --red-100: #fee2e2;
+      --orange:        #ef5023;
+      --orange-light:  #fa987d;
+      --orange-bg:     rgba(239,80,35,0.1);
+    }
+
+    html, body {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    html::-webkit-scrollbar, body::-webkit-scrollbar {
+      display: none;
+    }
+
+    body {
+      background: #0f172a;
+      font-family: 'Public Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .screen {
+      width: 390px;
+      min-height: 844px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .bg-layer {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, #0f4c29 0%, #0a2e1a 60%, #071a0f 100%);
+    }
+
+    .bg-cover {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 220px;
+      background: url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80') center / cover;
+      opacity: 0.18;
+    }
+
+    .bg-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(3px);
+    }
+
+    .sheet {
+      background: white;
+      border-radius: 28px 28px 0 0;
+      box-shadow: 0 -8px 40px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 10;
+    }
+
+    .handle-wrap {
+      padding: 14px 0 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .handle {
+      width: 40px;
+      height: 4px;
+      background: var(--slate-200);
+      border-radius: 9999px;
+    }
+
+    .sheet-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px 4px;
+    }
+
+    .sheet-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sheet-title {
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--slate-900);
+      letter-spacing: -0.5px;
+    }
+
+    .sheet-subtitle {
+      font-size: 13px;
+      color: var(--slate-500);
+      font-weight: 400;
+    }
+
+    .close-btn {
+      width: 32px;
+      height: 32px;
+      background: var(--slate-100);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 24px 0;
+    }
+
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .step-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .step-circle.inactive {
+      border: 2px solid var(--slate-400);
+      color: var(--slate-400);
+      background: transparent;
+    }
+
+    .step-circle.active {
+      background: var(--green);
+      color: white;
+      border: 2px solid var(--green);
+    }
+
+    .step-label {
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .step-label.inactive { color: var(--slate-400); }
+    .step-label.active   { color: var(--green); }
+
+    .step-connector {
+      width: 60px;
+      height: 2px;
+      background: var(--slate-200);
+      margin: 0 6px 16px;
+    }
+
+    .illustration-area {
+      background: linear-gradient(160deg, #f0fdf4 0%, var(--slate-50) 100%);
+      border-radius: 24px;
+      margin: 16px 24px;
+      padding: 28px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      position: relative;
+      overflow: hidden;
+      min-height: 230px;
+    }
+
+    /* Subtle bg glow */
+    .illus-glow {
+      position: absolute;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(0,144,55,0.08) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    /* Phone — landscape orientation, held flat */
+    .phone-wrap {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .phone-body {
+      width: 140px;
+      height: 68px;
+      background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+      border-radius: 14px;
+      border: 3px solid #334155;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25), 0 2px 6px rgba(0,0,0,0.15);
+    }
+    /* Camera notch on left side */
+    .phone-body::before {
+      content: '';
+      position: absolute;
+      left: 8px; top: 50%;
+      transform: translateY(-50%);
+      width: 6px; height: 6px;
+      background: #475569;
+      border-radius: 50%;
+    }
+    /* Screen content inside phone */
+    .phone-screen {
+      width: 110px; height: 46px;
+      background: #020617;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* NFC signal arcs between phone and card */
+    .nfc-arcs {
+      position: relative;
+      z-index: 2;
+      margin: 6px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+    .nfc-arc {
+      border-radius: 0 0 50px 50px;
+      border: 2px solid transparent;
+      border-bottom-color: var(--green);
+      width: 40px; height: 20px;
+      opacity: 0.9;
+    }
+    .nfc-arc:nth-child(2) { width: 60px; height: 26px; opacity: 0.55; }
+    .nfc-arc:nth-child(3) { width: 80px; height: 32px; opacity: 0.25; }
+
+    /* Physical card — flat, horizontal */
+    .physical-card {
+      position: relative;
+      z-index: 3;
+      width: 200px;
+      height: 126px;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      border-radius: 14px;
+      padding: 14px 16px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.2), 0 4px 8px rgba(0,0,0,0.12);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+    /* Card shimmer */
+    .physical-card::after {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 100px; height: 100px;
+      background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .card-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-logo {
+      color: white;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: -0.3px;
+    }
+    /* NFC chip icon top-right */
+    .card-nfc-icon {
+      opacity: 0.6;
+    }
+    /* Gold chip */
+    .card-chip {
+      width: 28px; height: 20px;
+      background: linear-gradient(135deg, #fef08a, rgba(234,179,8,0.6));
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .card-bottom-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+    .card-holder-name {
+      color: white;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.3px;
+    }
+    .card-holder-title {
+      color: rgba(255,255,255,0.55);
+      font-size: 8px;
+      margin-top: 2px;
+    }
+    .card-tap-indicator {
+      width: 24px; height: 24px;
+      background: rgba(0,144,55,0.25);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      border: 1.5px solid rgba(0,144,55,0.5);
+    }
+
+    /* Scanning badge */
+    .scanning-badge {
+      margin-top: 18px;
+      background: white;
+      border: 1px solid var(--slate-200);
+      border-radius: 999px;
+      padding: 9px 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      position: relative;
+      z-index: 4;
+    }
+    .scanning-text {
+      color: var(--slate-700);
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .spinner { animation: spin 1s linear infinite; }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    .footer {
+      padding: 20px 24px 44px;
+    }
+
+    .btn-primary {
+      font-weight: 700;
+      font-size: 16px;
+      color: white;
+      font-family: 'Public Sans', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <div class="bg-layer"></div>
+    <div class="bg-cover"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="sheet">
+      <div class="handle-wrap">
+        <div class="handle"></div>
+      </div>
+
+      <div class="sheet-header">
+        <div class="sheet-header-left">
+          <div class="sheet-title">Tap Your Card</div>
+          <div class="sheet-subtitle">Hold the top of your phone against the InCard</div>
+        </div>
+        <button class="close-btn" aria-label="Close">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M1 1l12 12M13 1L1 13" stroke="#64748b" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="illustration-area">
+        <div class="illus-glow"></div>
+
+        <div class="phone-wrap">
+          <div class="phone-body">
+            <div class="phone-screen">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="color:var(--green)">
+                <rect x="2" y="7" width="12" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M17 9c1 1 1 5 0 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M20 7c2 2 2 8 0 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="nfc-arcs">
+          <div class="nfc-arc"></div>
+          <div class="nfc-arc"></div>
+          <div class="nfc-arc"></div>
+        </div>
+
+        <div class="physical-card">
+          <div class="card-top-row">
+            <div class="card-logo">InCard</div>
+            <div class="card-nfc-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+                <path d="M8 12c0-2.21 1.79-4 4-4" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M5 12c0-3.87 3.13-7 7-7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+          <div class="card-bottom-row">
+            <div>
+              <div class="card-holder-name">Alex Rivera</div>
+              <div class="card-holder-title">Creative Strategist</div>
+            </div>
+            <div class="card-chip"></div>
+          </div>
+        </div>
+
+        <div class="scanning-badge">
+          <svg class="spinner" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="6" stroke="var(--slate-200)" stroke-width="2"/>
+            <path d="M8 2a6 6 0 0 1 6 6" stroke="var(--green)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span class="scanning-text">Scanning...</span>
+        </div>
+      </div>
+
+      <div class="footer">
+        <button class="btn-primary">Done</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

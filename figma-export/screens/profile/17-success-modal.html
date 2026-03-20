@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Product Saved</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green:         #009037;
+      --green-dark:    #007a2f;
+      --green-light:   #2eb07a;
+      --green-bg:      rgba(0,144,55,0.1);
+      --green-surface: #dcfce7;
+      --slate-900:     #0f172a;
+      --slate-800:     #1e293b;
+      --slate-700:     #334155;
+      --slate-600:     #475569;
+      --slate-500:     #64748b;
+      --slate-400:     #94a3b8;
+      --slate-200:     #e2e8f0;
+      --slate-100:     #f1f5f9;
+      --slate-50:      #f8fafc;
+      --white:         #ffffff;
+      --orange:        #ef5023;
+      --orange-light:  #fa987d;
+      --orange-bg:     rgba(239,80,35,0.1);
+    }
+
+    html, body { scrollbar-width: none; -ms-overflow-style: none; }
+    html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+
+    body {
+      background: #0f172a;
+      font-family: 'Public Sans', sans-serif;
+      margin: 0; padding: 0;
+    }
+
+    .screen {
+      width: 390px;
+      min-height: 844px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .bg-layer {
+      position: absolute; inset: 0;
+      background: linear-gradient(160deg, #0f4c29 0%, #0a2e1a 60%, #071a0f 100%);
+    }
+    .bg-cover {
+      position: absolute; top: 0; left: 0; right: 0; height: 220px;
+      background: url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80') center / cover;
+      opacity: 0.18;
+    }
+    .bg-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(3px);
+    }
+
+    .sheet {
+      background: white;
+      border-radius: 28px 28px 0 0;
+      box-shadow: 0 -8px 40px rgba(0,0,0,0.3);
+      position: relative; z-index: 10;
+      display: flex; flex-direction: column;
+    }
+
+    .handle-wrap {
+      padding: 14px 0 0;
+      display: flex; justify-content: center;
+    }
+    .handle {
+      width: 40px; height: 4px;
+      background: var(--slate-200); border-radius: 9999px;
+    }
+
+    .sheet-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px 4px;
+    }
+    .sheet-title {
+      font-weight: 700; font-size: 20px;
+      color: var(--slate-900); letter-spacing: -0.5px;
+    }
+    .close-btn {
+      width: 32px; height: 32px;
+      background: var(--slate-100); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      border: none; cursor: pointer; flex-shrink: 0;
+    }
+
+    /* Success content */
+    .success-body {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 32px 32px 24px;
+      text-align: center;
+    }
+
+    .icon-area { margin-bottom: 24px; position: relative; }
+
+    .icon-outer-glow {
+      width: 110px; height: 110px;
+      border: 2px solid rgba(0,144,55,0.15);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .icon-middle-ring {
+      width: 88px; height: 88px;
+      background: var(--green-surface);
+      border-radius: 50%;
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .icon-inner-circle {
+      width: 68px; height: 68px;
+      background: var(--green);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 24px rgba(0,144,55,0.35);
+      position: relative; z-index: 1;
+    }
+
+    .confetti-dot { position: absolute; border-radius: 50%; }
+
+    .success-title {
+      font-weight: 800; font-size: 24px; color: var(--slate-900);
+      letter-spacing: -0.6px; margin-bottom: 10px;
+    }
+    .success-subtitle {
+      font-size: 14px; color: var(--slate-500);
+      line-height: 1.65; max-width: 280px;
+    }
+
+    .sheet-footer {
+      padding: 8px 24px 40px;
+    }
+    .btn-primary {
+      font-family: 'Public Sans', sans-serif;
+      font-weight: 700; font-size: 15px; color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <div class="bg-layer"></div>
+    <div class="bg-cover"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="sheet">
+      <div class="handle-wrap"><div class="handle"></div></div>
+
+      <div class="sheet-header">
+        <div class="sheet-title">Product Saved</div>
+        <button class="close-btn" aria-label="Close">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M1 1l12 12M13 1L1 13" stroke="#64748b" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="success-body">
+        <div class="icon-area">
+          <!-- Confetti dots -->
+          <div class="confetti-dot" style="width:8px;height:8px;background:#fbbf24;top:-16px;left:10px;"></div>
+          <div class="confetti-dot" style="width:6px;height:6px;background:var(--green-light);top:-4px;left:42px;"></div>
+          <div class="confetti-dot" style="width:9px;height:9px;background:#ef5023;top:-20px;right:14px;"></div>
+          <div class="confetti-dot" style="width:7px;height:7px;background:#fa987d;top:4px;right:6px;"></div>
+          <div class="confetti-dot" style="width:10px;height:10px;background:#ef5023;top:-10px;left:50%;transform:translateX(-50%);"></div>
+
+          <div class="icon-outer-glow">
+            <div class="icon-middle-ring"></div>
+            <div class="icon-inner-circle">
+              <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+                <path d="M7 15.5l5.5 5.5L23 10" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <p class="success-title">Product Saved!</p>
+        <p class="success-subtitle">Your service has been added to your profile and is now visible to clients.</p>
+      </div>
+
+      <div class="sheet-footer">
+        <button class="btn-primary">View Profile</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

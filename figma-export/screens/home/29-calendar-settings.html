@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Calendar Settings</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green:         #009037;
+      --green-dark:    #007a2f;
+      --green-light:   #2eb07a;
+      --green-bg:      rgba(0,144,55,0.08);
+      --green-border:  rgba(0,144,55,0.18);
+      --slate-900:     #0f172a;
+      --slate-800:     #1e293b;
+      --slate-700:     #334155;
+      --slate-600:     #475569;
+      --slate-500:     #64748b;
+      --slate-400:     #94a3b8;
+      --slate-300:     #cbd5e1;
+      --slate-200:     #e2e8f0;
+      --slate-100:     #f1f5f9;
+      --slate-50:      #f8fafc;
+      --gray-bg:       #f4f4f5;
+      --red-50:        #fef2f2;
+      --red-100:       #fee2e2;
+      --red-600:       #dc2626;
+      --white:         #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { scrollbar-width: none; -ms-overflow-style: none; }
+    html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+
+    body {
+      background: var(--gray-bg);
+      font-family: 'Public Sans', sans-serif;
+      width: 390px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    /* ── SCRIM ── */
+    .scrim {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.45);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      z-index: 10;
+    }
+
+    /* ── CALENDAR BG (dimmed) ── */
+    .cal-bg {
+      flex: 1;
+      padding: 20px;
+      opacity: 0.3;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .cal-bg-bar { height: 12px; background: var(--slate-200); border-radius: 6px; }
+    .cal-bg-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-top: 8px;
+    }
+    .cal-bg-cell {
+      aspect-ratio: 1;
+      background: var(--white);
+      border-radius: 8px;
+    }
+    .cal-bg-cell.has { background: var(--green-bg); }
+
+    /* ── BOTTOM SHEET ── */
+    .sheet {
+      position: relative;
+      z-index: 20;
+      background: var(--white);
+      border-radius: 28px 28px 0 0;
+      padding: 0 0 40px;
+      box-shadow: 0 -8px 40px rgba(0,0,0,0.16), 0 -2px 8px rgba(0,0,0,0.08);
+    }
+
+    /* drag handle */
+    .sheet-handle {
+      width: 36px; height: 4px;
+      border-radius: 9999px;
+      background: var(--slate-200);
+      margin: 14px auto 0;
+    }
+
+    /* sheet header */
+    .sheet-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px 12px;
+      border-bottom: 1px solid var(--slate-100);
+    }
+    .sheet-title {
+      font-size: 16px; font-weight: 800;
+      color: var(--slate-900);
+      letter-spacing: -0.3px;
+    }
+    .sheet-close {
+      width: 32px; height: 32px;
+      border-radius: 10px;
+      background: var(--slate-100);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+    }
+    .sheet-close:hover { background: var(--slate-200); }
+
+    /* ── SECTION ── */
+    .section {
+      padding: 20px 24px 0;
+    }
+    .section-label {
+      font-size: 11px; font-weight: 700;
+      color: var(--slate-400);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    /* ── SETTING CARD ── */
+    .setting-card {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    /* ── ROW ── */
+    .setting-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+    }
+    .setting-row + .setting-row {
+      border-top: 1px solid var(--slate-200);
+    }
+    .row-icon {
+      width: 36px; height: 36px;
+      border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .row-icon.green  { background: var(--green-bg); }
+    .row-icon.blue   { background: #eff6ff; }
+    .row-icon.sync   { background: #f0fdf4; }
+    .row-icon.red    { background: var(--red-50); }
+    .row-info { flex: 1; min-width: 0; }
+    .row-title {
+      font-size: 14px; font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.1px;
+    }
+    .row-sub {
+      font-size: 11px; color: var(--slate-500);
+      margin-top: 2px; line-height: 1.4;
+    }
+
+    /* ── TOGGLE SWITCH ── */
+    .toggle-wrap {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toggle-label {
+      font-size: 12px; font-weight: 700;
+      color: var(--slate-500);
+    }
+    .toggle {
+      width: 44px; height: 26px;
+      border-radius: 13px;
+      background: var(--slate-200);
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+    .toggle.on { background: var(--green); }
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 20px; height: 20px;
+      border-radius: 9999px;
+      background: var(--white);
+      top: 3px; left: 3px;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+    }
+    .toggle.on::after { transform: translateX(18px); }
+
+    /* ── SYNC BUTTON ── */
+    .sync-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 32px;
+      padding: 0 12px;
+      border-radius: 10px;
+      border: 1.5px solid var(--green-border);
+      background: var(--green-bg);
+      color: var(--green);
+      font-family: 'Public Sans', sans-serif;
+      font-size: 12px; font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .sync-btn:hover { background: rgba(0,144,55,0.14); }
+    .sync-btn:active { transform: scale(0.96); }
+    .sync-icon { animation: none; }
+    .sync-btn:active .sync-icon { animation: spin 0.5s linear; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── GOOGLE EMAIL ROW ── */
+    .email-display {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1; min-width: 0;
+    }
+    .email-text {
+      font-size: 13px; font-weight: 600;
+      color: var(--slate-700);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .connected-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px; font-weight: 700;
+      color: var(--green);
+      background: var(--green-bg);
+      border-radius: 20px;
+      padding: 3px 8px;
+      flex-shrink: 0;
+    }
+    .connected-dot {
+      width: 5px; height: 5px;
+      border-radius: 9999px;
+      background: var(--green);
+    }
+    .edit-btn {
+      width: 32px; height: 32px;
+      border-radius: 10px;
+      background: var(--slate-100);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    .edit-btn:hover { background: var(--slate-200); }
+
+    /* ── LOGOUT ROW ── */
+    .logout-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: var(--red-50);
+      border: 1px solid var(--red-100);
+      border-radius: 16px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .logout-row:hover { background: var(--red-100); }
+    .logout-title {
+      font-size: 14px; font-weight: 700;
+      color: var(--red-600);
+      flex: 1;
+    }
+    .logout-sub {
+      font-size: 11px;
+      color: #f87171;
+      margin-top: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Scrim -->
+  <div class="scrim"></div>
+
+  <!-- Dimmed calendar behind -->
+  <div class="cal-bg">
+    <div class="cal-bg-bar" style="width:60%"></div>
+    <div class="cal-bg-bar" style="width:40%; margin-top:4px; height:8px; opacity:0.5;"></div>
+    <div class="cal-bg-grid">
+      <div class="cal-bg-cell"></div><div class="cal-bg-cell has"></div><div class="cal-bg-cell"></div>
+      <div class="cal-bg-cell has"></div><div class="cal-bg-cell"></div><div class="cal-bg-cell has"></div><div class="cal-bg-cell"></div>
+      <div class="cal-bg-cell"></div><div class="cal-bg-cell"></div><div class="cal-bg-cell has"></div>
+      <div class="cal-bg-cell"></div><div class="cal-bg-cell has"></div><div class="cal-bg-cell"></div><div class="cal-bg-cell"></div>
+      <div class="cal-bg-cell has"></div><div class="cal-bg-cell"></div><div class="cal-bg-cell"></div>
+      <div class="cal-bg-cell has"></div><div class="cal-bg-cell"></div><div class="cal-bg-cell has"></div><div class="cal-bg-cell"></div>
+    </div>
+  </div>
+
+  <!-- Bottom Sheet -->
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+
+    <!-- Sheet Header -->
+    <div class="sheet-header">
+      <div class="sheet-title">Calendar Settings</div>
+      <button class="sheet-close">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18M6 6l12 12" stroke="var(--slate-600)" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Sync Section -->
+    <div class="section">
+      <div class="section-label">Sync</div>
+      <div class="setting-card">
+
+        <!-- Sync to Device Calendar -->
+        <div class="setting-row">
+          <div class="row-icon green">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="4" width="18" height="18" rx="3" stroke="var(--green)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M16 2v4M8 2v4M3 10h18" stroke="var(--green)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01" stroke="var(--green)" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="row-info">
+            <div class="row-title">Sync to Device Calendar</div>
+            <div class="row-sub">Appointments appear in your phone calendar</div>
+          </div>
+          <div class="toggle-wrap">
+            <div class="toggle on" id="sync-toggle" onclick="toggleSync()"></div>
+          </div>
+        </div>
+
+        <!-- Manual Sync -->
+        <div class="setting-row">
+          <div class="row-icon sync">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M23 4v6h-6" stroke="#16a34a" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M1 20v-6h6" stroke="#16a34a" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" stroke="#16a34a" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="row-info">
+            <div class="row-title">Manual Sync</div>
+            <div class="row-sub">Last synced: Today, 09:14 AM</div>
+          </div>
+          <button class="sync-btn" onclick="triggerSync(this)">
+            <svg class="sync-icon" width="13" height="13" viewBox="0 0 24 24" fill="none">
+              <path d="M23 4v6h-6" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M1 20v-6h6" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Sync Now
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Google Calendar Section -->
+    <div class="section" style="margin-top: 20px;">
+      <div class="section-label">Google Calendar</div>
+      <div class="setting-card">
+
+        <!-- Google Account -->
+        <div class="setting-row">
+          <div class="row-icon blue">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+          </div>
+          <div class="row-info">
+            <div class="email-display">
+              <span class="email-text">alex.rivera@gmail.com</span>
+              <span class="connected-pill"><span class="connected-dot"></span>Connected</span>
+            </div>
+            <div class="row-sub" style="margin-top: 3px;">Google Calendar account</div>
+          </div>
+          <button class="edit-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="var(--slate-600)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="var(--slate-600)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Logout Section -->
+    <div class="section" style="margin-top: 20px;">
+      <div class="section-label">Account</div>
+      <div class="logout-row">
+        <div class="row-icon red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" stroke="var(--red-600)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            <polyline points="16 17 21 12 16 7" stroke="var(--red-600)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="21" y1="12" x2="9" y2="12" stroke="var(--red-600)" stroke-width="1.75" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="row-info">
+          <div class="logout-title">Log Out</div>
+          <div class="logout-sub">Sign out of your InCard account</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M9 18l6-6-6-6" stroke="var(--red-600)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+  </div><!-- /sheet -->
+
+  <script>
+    function toggleSync() {
+      document.getElementById('sync-toggle').classList.toggle('on');
+    }
+
+    function triggerSync(btn) {
+      const icon = btn.querySelector('.sync-icon');
+      icon.style.transition = 'transform 0.6s linear';
+      icon.style.transform = 'rotate(360deg)';
+      btn.disabled = true;
+      setTimeout(() => {
+        icon.style.transition = '';
+        icon.style.transform = '';
+        btn.disabled = false;
+        btn.closest('.setting-row').querySelector('.row-sub').textContent = 'Last synced: Just now';
+      }, 650);
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Post Detail</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --ink:       #0d1117;
+      --ink-mid:   #1e2530;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-400: #94a3b8;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --white:     #ffffff;
+      --bg:        #f9f8f7;
+      --green:     #009037;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { overflow-x: hidden; }
+    body {
+      font-family: 'Public Sans', sans-serif;
+      width: 390px; height: 844px;
+      background: var(--bg);
+      display: flex; flex-direction: column;
+      overflow: hidden; position: relative;
+    }
+
+    /* ── Drag handle (bottom sheet feel) ── */
+    .handle-bar {
+      width: 36px; height: 4px; border-radius: 9999px;
+      background: var(--slate-200);
+      margin: 10px auto 0;
+      flex-shrink: 0;
+    }
+
+    /* ── Top action bar ── */
+    .action-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 18px 10px;
+      flex-shrink: 0;
+    }
+    .close-btn {
+      width: 34px; height: 34px; border-radius: 9999px;
+      background: var(--slate-100);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .like-row {
+      display: flex; align-items: center; gap: 6px;
+    }
+    .like-count {
+      font-size: 15px; font-weight: 600; color: var(--slate-600);
+    }
+    .like-btn {
+      background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      padding: 2px;
+    }
+
+    /* ── Scrollable body ── */
+    .scroll-body {
+      flex: 1; overflow-y: auto;
+      padding: 0 18px 24px;
+    }
+    .scroll-body::-webkit-scrollbar { display: none; }
+
+    /* title */
+    .post-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px; font-weight: 400; line-height: 1.35;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+
+    /* author row */
+    .author-row {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 16px;
+    }
+    .author-avatar {
+      width: 38px; height: 38px; border-radius: 9999px;
+      overflow: hidden; flex-shrink: 0;
+      border: 1.5px solid var(--slate-200);
+      background: var(--slate-100);
+    }
+    .author-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .author-info { flex: 1; }
+    .author-name {
+      font-size: 14px; font-weight: 700; color: var(--ink);
+      line-height: 1.3;
+    }
+    .author-company {
+      font-size: 12px; color: var(--slate-500); line-height: 1.3;
+    }
+    .post-date {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 12px; color: var(--slate-400);
+      flex-shrink: 0;
+    }
+
+    /* post image */
+    .post-img {
+      width: 100%; border-radius: 14px;
+      object-fit: cover; display: block;
+      margin-bottom: 20px;
+      background: var(--slate-100);
+    }
+
+    /* article body */
+    .post-body { display: flex; flex-direction: column; gap: 14px; }
+
+    .post-subtitle {
+      font-size: 15px; font-weight: 700; color: var(--ink);
+      line-height: 1.45;
+    }
+    .post-para {
+      font-size: 14px; font-weight: 400; color: var(--slate-700);
+      line-height: 1.7;
+    }
+
+    /* ── Input bar ── */
+    .input-bar {
+      flex-shrink: 0;
+      padding: 10px 16px 18px;
+      background: var(--white);
+      border-top: 1px solid var(--slate-200);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .input-field {
+      flex: 1;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 14px; color: var(--ink);
+      background: none; border: none; outline: none;
+    }
+    .input-field::placeholder { color: var(--slate-400); }
+    .send-btn {
+      background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--slate-400);
+      flex-shrink: 0;
+    }
+
+    /* ── Share FAB ── */
+    .share-fab {
+      position: absolute;
+      bottom: 80px; right: 18px;
+      width: 48px; height: 48px; border-radius: 9999px;
+      background: #4a90d9;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(74,144,217,0.45);
+      cursor: pointer; z-index: 10;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Handle -->
+  <div class="handle-bar"></div>
+
+  <!-- Action bar -->
+  <div class="action-bar">
+    <button class="close-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M1 1l12 12M13 1L1 13" stroke="var(--slate-600)" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div class="like-row">
+      <span class="like-count">3</span>
+      <button class="like-btn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke="var(--slate-400)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Scrollable content -->
+  <div class="scroll-body">
+
+    <!-- Title -->
+    <div class="post-title">Làm sao để kết nối giao thương hiệu quả nhất trong các sự kiện?</div>
+
+    <!-- Author -->
+    <div class="author-row">
+      <div class="author-avatar">
+        <img src="https://www.figma.com/api/mcp/asset/7f0a3d58-f11d-4bee-b0f6-683c3bc7c81a" alt="Hồ Tâm" />
+      </div>
+      <div class="author-info">
+        <div class="author-name">Hồ Tâm</div>
+        <div class="author-company">InCard Inc.</div>
+      </div>
+      <div class="post-date">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="9" stroke="var(--slate-400)" stroke-width="1.7"/>
+          <path d="M12 7v5l3 3" stroke="var(--slate-400)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        October 18 2025
+      </div>
+    </div>
+
+    <!-- Image -->
+    <img class="post-img"
+      src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80"
+      alt="Networking at Events"
+      onerror="this.style.minHeight='180px';this.style.background='var(--slate-100)';this.removeAttribute('src')" />
+
+    <!-- Article body -->
+    <div class="post-body">
+
+      <div class="post-subtitle">Làm thế nào để kết nối giao thương hiệu quả nhất tại các sự kiện?</div>
+
+      <div class="post-para">Tham gia các sự kiện giao thương là cơ hội quý giá để mở rộng mạng lưới và tìm kiếm đối tác mới. Tuy nhiên, việc trao đổi danh thiếp truyền thống đôi khi gây nhiều hạn chế về tốc độ và tính linh hoạt. Để kết nối hiệu quả hơn, mình đã chuyển sang sử dụng giải pháp số như QR code, NFC Digital contact hay digital proposal. Những công nghệ này không chỉ giúp chia sẻ thông tin nhanh chóng mà còn lưu trữ và quản lý dữ liệu dễ dàng, tránh thất lạc giấy tờ.</div>
+
+      <div class="post-para">Theo nghiên cứu, việc sử dụng các công cụ kỹ thuật số trong giao thương giúp tăng 40% cơ hội tiếp cận và duy trì liên lạc so với phương pháp truyền thống. Đặc biệt, QR và NFC còn giúp thiếu năng nhận thông tin tức thì, không phụ thuộc vào kết nối internet hay ứng dụng cài sẵn.</div>
+
+      <div class="post-para">Nếu bạn chưa thử, hãy bắt đầu bằng cách tạo một digital card đơn giản với đầy đủ thông tin liên lạc, portfolio và social links. Điều này không chỉ tạo ấn tượng chuyên nghiệp mà còn giúp bạn nổi bật trong mắt đối tác tiềm năng.</div>
+
+    </div>
+
+    <!-- Comments section -->
+    <div style="margin-top: 28px;">
+
+      <!-- Section header -->
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+        <div style="font-size:15px; font-weight:700; color:var(--ink);">Comments <span style="font-size:13px; font-weight:500; color:var(--slate-400);">3</span></div>
+      </div>
+
+      <!-- Comment 1 -->
+      <div style="display:flex; gap:10px; margin-bottom:16px;">
+        <div style="width:34px; height:34px; border-radius:9999px; overflow:hidden; flex-shrink:0; border:1.5px solid var(--slate-200);">
+          <img src="https://www.figma.com/api/mcp/asset/982c54bf-f358-4815-b6c0-c09a0e011915" style="width:100%;height:100%;object-fit:cover;" />
+        </div>
+        <div style="flex:1; min-width:0;">
+          <div style="background:var(--slate-100); border-radius:4px 14px 14px 14px; padding:10px 13px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+              <span style="font-size:13px; font-weight:700; color:var(--ink);">Sarah Chen</span>
+              <span style="font-size:11px; color:var(--slate-400);">2h ago</span>
+            </div>
+            <div style="font-size:13px; color:var(--slate-700); line-height:1.55;">Rất hay! Mình cũng đang dùng NFC card cho các sự kiện, hiệu quả hơn hẳn danh thiếp giấy.</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:14px; margin-top:6px; padding-left:4px;">
+            <span style="font-size:11px; font-weight:600; color:var(--slate-400); cursor:pointer;">Like</span>
+            <span style="font-size:11px; font-weight:600; color:var(--slate-400); cursor:pointer;">Reply</span>
+            <div style="display:flex; align-items:center; gap:4px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="var(--green)" stroke="var(--green)" stroke-width="1.5"/></svg>
+              <span style="font-size:11px; color:var(--slate-400);">5</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comment 2 -->
+      <div style="display:flex; gap:10px; margin-bottom:16px;">
+        <div style="width:34px; height:34px; border-radius:9999px; overflow:hidden; flex-shrink:0; border:1.5px solid var(--slate-200);">
+          <img src="https://www.figma.com/api/mcp/asset/c765f7ef-3465-47bd-abc2-70a733cfde27" style="width:100%;height:100%;object-fit:cover;" />
+        </div>
+        <div style="flex:1; min-width:0;">
+          <div style="background:var(--slate-100); border-radius:4px 14px 14px 14px; padding:10px 13px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+              <span style="font-size:13px; font-weight:700; color:var(--ink);">Marcus Day</span>
+              <span style="font-size:11px; color:var(--slate-400);">5h ago</span>
+            </div>
+            <div style="font-size:13px; color:var(--slate-700); line-height:1.55;">Digital proposal thực sự là game changer. Cảm ơn bạn đã chia sẻ bài viết rất bổ ích!</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:14px; margin-top:6px; padding-left:4px;">
+            <span style="font-size:11px; font-weight:600; color:var(--slate-400); cursor:pointer;">Like</span>
+            <span style="font-size:11px; font-weight:600; color:var(--slate-400); cursor:pointer;">Reply</span>
+            <div style="display:flex; align-items:center; gap:4px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke="var(--slate-400)" stroke-width="1.5"/></svg>
+              <span style="font-size:11px; color:var(--slate-400);">2</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comment 3 -->
+      <div style="display:flex; gap:10px; margin-bottom:8px;">
+        <div style="width:34px; height:34px; border-radius:9999px; overflow:hidden; flex-shrink:0; border:1.5px solid var(--slate-200);">
+          <img src="https://www.figma.com/api/mcp/asset/11549e71-ce4a-4e13-9519-2df009a28cf6" style="width:100%;height:100%;object-fit:cover;" />
+        </div>
+        <div style="flex:1; min-width:0;">
+          <div style="background:var(--slate-100); border-radius:4px 14px 14px 14px; padding:10px 13px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+              <span style="font-size:13px; font-weight:700; color:var(--ink);">David Miller</span>
+              <span style="font-size:11px; color:var(--slate-400);">Yesterday</span>
+            </div>
+            <div style="font-size:13px; color:var(--slate-700); line-height:1.55;">Bài viết rất thực tế. Mình đã thử QR code tại hội nghị tuần trước, khách hàng phản hồi rất tốt.</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:14px; margin-top:6px; padding-left:4px;">
+            <span style="font-size:11px; font-weight:600; color:var(--slate-400); cursor:pointer;">Like</span>
+            <span style="font-size:11px; font-weight:600; color:var(--slate-400); cursor:pointer;">Reply</span>
+            <div style="display:flex; align-items:center; gap:4px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke="var(--slate-400)" stroke-width="1.5"/></svg>
+              <span style="font-size:11px; color:var(--slate-400);">1</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Share button (inline, above input bar) -->
+  <div style="
+    padding: 0 18px 10px;
+    flex-shrink: 0;
+    display: flex; justify-content: flex-end;
+  ">
+    <button style="
+      display: flex; align-items: center; gap: 7px;
+      background: var(--ink);
+      border: none; border-radius: 22px;
+      padding: 10px 18px;
+      cursor: pointer;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.18);
+    ">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+        <circle cx="18" cy="5" r="3" stroke="white" stroke-width="1.9"/>
+        <circle cx="6" cy="12" r="3" stroke="white" stroke-width="1.9"/>
+        <circle cx="18" cy="19" r="3" stroke="white" stroke-width="1.9"/>
+        <path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98" stroke="white" stroke-width="1.9" stroke-linecap="round"/>
+      </svg>
+      <span style="font-family:'Public Sans',sans-serif; font-size:13px; font-weight:700; color:#fff;">Share</span>
+    </button>
+  </div>
+
+  <!-- Input bar -->
+  <div class="input-bar">
+    <input class="input-field" type="text" placeholder="Type..." />
+    <button class="send-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M22 2L11 13" stroke="var(--slate-400)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="var(--slate-400)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+
+</body>
+</html>

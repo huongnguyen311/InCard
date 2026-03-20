@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Delete Contact Success</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green:       #009037;
+      --green-light: #2eb07a;
+      --green-bg:    rgba(0,144,55,0.1);
+      --slate-900:   #0f172a;
+      --slate-700:   #334155;
+      --slate-600:   #475569;
+      --slate-500:   #64748b;
+      --slate-400:   #94a3b8;
+      --slate-200:   #e2e8f0;
+      --slate-100:   #f1f5f9;
+      --gray-bg:     #f8f6f6;
+      --white:       #ffffff;
+      --red-50:      #fff1f2;
+      --red-100:     #fee2e2;
+      --red-500:     #ef4444;
+      --red-600:     #dc2626;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { scrollbar-width: none; -ms-overflow-style: none; }
+    html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+    body {
+      background: var(--gray-bg);
+      font-family: 'Public Sans', sans-serif;
+      width: 390px;
+      min-height: 844px;
+      position: relative;
+    }
+
+    /* Dimmed bg */
+    .bg-screen {
+      position: absolute; inset: 0;
+      background: rgba(15,23,42,0.5);
+      backdrop-filter: blur(2px);
+      z-index: 10;
+    }
+
+    /* Bottom sheet */
+    .sheet {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: var(--white);
+      border-radius: 28px 28px 0 0;
+      z-index: 20;
+      padding: 0 24px 48px;
+      box-shadow: 0 -8px 40px rgba(0,0,0,0.16);
+    }
+    .drag-handle {
+      width: 36px; height: 4px;
+      background: var(--slate-200);
+      border-radius: 9999px;
+      margin: 12px auto 0;
+    }
+
+    /* Icon */
+    .icon-wrap {
+      margin: 28px auto 0;
+      width: 72px; height: 72px;
+      border-radius: 9999px;
+      background: var(--red-100);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .icon-inner {
+      width: 48px; height: 48px;
+      border-radius: 9999px;
+      background: var(--red-500);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Text */
+    .sheet-title {
+      margin-top: 20px;
+      font-size: 20px; font-weight: 800;
+      color: var(--slate-900); text-align: center;
+      letter-spacing: -0.3px;
+    }
+    .sheet-sub {
+      margin-top: 8px;
+      font-size: 14px; font-weight: 400;
+      color: var(--slate-500); text-align: center;
+      line-height: 1.5;
+    }
+    .sheet-sub strong {
+      font-weight: 700; color: var(--slate-700);
+    }
+
+    /* Contact preview */
+    .contact-preview {
+      margin: 20px auto 0;
+      display: flex; align-items: center; gap: 12px;
+      background: var(--slate-100);
+      border-radius: 14px;
+      padding: 12px 16px;
+      width: 100%;
+    }
+    .avatar {
+      width: 42px; height: 42px; border-radius: 9999px;
+      background: rgba(99,102,241,0.15);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .avatar span { font-size: 15px; font-weight: 700; color: #6366f1; }
+    .contact-info { flex: 1; min-width: 0; }
+    .contact-name {
+      font-size: 14px; font-weight: 700; color: var(--slate-900);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .contact-role {
+      font-size: 12px; color: var(--slate-500);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      margin-top: 1px;
+    }
+    .deleted-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: var(--red-100); border-radius: 9999px;
+      padding: 3px 9px;
+      font-size: 11px; font-weight: 700; color: var(--red-600);
+      flex-shrink: 0;
+    }
+
+    /* Divider */
+    .divider {
+      height: 1px; background: var(--slate-200);
+      margin: 24px 0;
+    }
+
+    /* Button */
+        .btn-submit {
+      font-weight: 700;
+      font-size: 15px;
+      color: white;
+      font-family: 'Public Sans', sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Dimmed bg -->
+  <div class="bg-screen"></div>
+
+  <!-- Bottom sheet -->
+  <div class="sheet">
+    <div class="drag-handle"></div>
+
+    <!-- Icon -->
+    <div class="icon-wrap">
+      <div class="icon-inner">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M10 11v4M14 11v4" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Title & subtitle -->
+    <div class="sheet-title">Contact Deleted</div>
+    <div class="sheet-sub">
+      <strong>James Okafor</strong> has been permanently<br>removed from your contacts.
+    </div>
+
+    <!-- Contact preview (greyed out) -->
+    <div class="contact-preview">
+      <div class="avatar"><span>JO</span></div>
+      <div class="contact-info">
+        <div class="contact-name" style="opacity:0.45;">James Okafor</div>
+        <div class="contact-role" style="opacity:0.45;">Founder @ BuildFast</div>
+      </div>
+      <div class="deleted-badge">
+        <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
+          <path d="M2 2l6 6M8 2l-6 6" stroke="var(--red-600)" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        Deleted
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Done button -->
+    <button class="btn-submit">Done</button>
+  </div>
+
+</body>
+</html>

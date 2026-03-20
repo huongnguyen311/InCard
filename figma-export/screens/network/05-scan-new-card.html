@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Scan Card</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green:       #009037;
+      --green-light: #2eb07a;
+      --white:       #ffffff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { scrollbar-width: none; -ms-overflow-style: none; }
+    html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+    body {
+      font-family: 'Public Sans', sans-serif;
+      width: 390px;
+      height: 844px;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Status bar ── */
+    .status-bar {
+      height: 50px;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      flex-shrink: 0;
+    }
+    .status-time { font-size: 15px; font-weight: 700; color: white; letter-spacing: -0.3px; }
+    .status-icons { display: flex; align-items: center; gap: 6px; }
+
+    /* ── Header ── */
+    .header {
+      height: 52px;
+      background: #000;
+      display: flex; align-items: center;
+      padding: 0 20px;
+      flex-shrink: 0;
+    }
+    .back-btn {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.1); border-radius: 10px; border: none; cursor: pointer;
+    }
+    .header-title {
+      flex: 1; text-align: center;
+      font-size: 17px; font-weight: 700; color: white;
+      letter-spacing: -0.2px;
+    }
+    .help-btn {
+      width: 36px; height: 36px;
+      border-radius: 10px; border: 1.5px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.1); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 14px; font-weight: 700;
+    }
+
+    /* ── Camera viewfinder — fills remaining space ── */
+    .viewfinder {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background: #111;
+    }
+    .camera-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 40%, #252525 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 60%, #1e1e1e 0%, transparent 50%),
+        #111;
+    }
+    .camera-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+      opacity: 0.4;
+    }
+
+    /* Card placement guide */
+    .card-guide {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -54%);
+      width: 300px;
+      aspect-ratio: 1.74 / 1;
+    }
+    .corner {
+      position: absolute;
+      width: 26px; height: 26px;
+      border-color: var(--green);
+      border-style: solid;
+    }
+    .corner.tl { top: 0; left: 0;  border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
+    .corner.tr { top: 0; right: 0; border-width: 3px 3px 0 0; border-radius: 0 4px 0 0; }
+    .corner.bl { bottom: 0; left: 0;  border-width: 0 0 3px 3px; border-radius: 0 0 0 4px; }
+    .corner.br { bottom: 0; right: 0; border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
+
+    /* Scan line */
+    .scan-line {
+      position: absolute;
+      left: 4px; right: 4px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+      border-radius: 9999px;
+      animation: scan 2s ease-in-out infinite;
+      box-shadow: 0 0 8px rgba(0,144,55,0.8);
+    }
+    @keyframes scan {
+      0%   { top: 8px; opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { top: calc(100% - 8px); opacity: 0; }
+    }
+
+    /* Tip */
+    .view-tip {
+      position: absolute;
+      bottom: 20px; left: 0; right: 0;
+      text-align: center;
+      font-size: 13px; font-weight: 500;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* ── Bottom controls ── */
+    .controls {
+      background: #000;
+      padding: 18px 24px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      flex-shrink: 0;
+    }
+
+    /* Toggle */
+    .toggle-wrap {
+      background: rgba(255,255,255,0.1);
+      border-radius: 9999px;
+      padding: 3px;
+      display: inline-flex;
+    }
+    .toggle-btn {
+      height: 34px;
+      padding: 0 26px;
+      border-radius: 9999px;
+      border: none;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 14px; font-weight: 600;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s;
+    }
+    .toggle-btn.inactive { background: transparent; color: rgba(255,255,255,0.5); }
+    .toggle-btn.active   { background: linear-gradient(135deg, #2eb07a 0%, #009037 100%); color: white; box-shadow: 0 2px 10px rgba(0,144,55,0.5); }
+
+    /* Shutter */
+    .shutter-wrap { display: flex; align-items: center; justify-content: center; }
+    .shutter {
+      width: 68px; height: 68px; border-radius: 9999px;
+      background: rgba(255,255,255,0.15);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .shutter-inner {
+      width: 54px; height: 54px; border-radius: 9999px;
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      box-shadow: 0 0 0 3px rgba(0,144,55,0.3), 0 4px 16px rgba(0,144,55,0.5);
+    }
+
+    /* ── Tab bar ── */
+    .tab-bar {
+      background: #0a0a0a;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      height: 76px;
+      flex-shrink: 0;
+      padding: 0 4px;
+    }
+    .tab-item {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 5px; padding-bottom: 6px;
+      cursor: pointer;
+    }
+    .tab-item-icon {
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+    .tab-item.active .tab-item-icon {
+      background: rgba(0,144,55,0.18);
+    }
+    .tab-item-label {
+      font-size: 10px; font-weight: 600;
+      color: rgba(255,255,255,0.35);
+      text-align: center; line-height: 1.2;
+    }
+    .tab-item.active .tab-item-label { color: var(--green); }
+  </style>
+</head>
+<body>
+
+  <!-- Status bar -->
+  <div class="status-bar">
+    <div class="status-time">9:57</div>
+    <div class="status-icons">
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+        <rect x="0" y="4" width="3" height="8" rx="1" fill="white" opacity="0.4"/>
+        <rect x="4.5" y="2.5" width="3" height="9.5" rx="1" fill="white" opacity="0.6"/>
+        <rect x="9" y="1" width="3" height="11" rx="1" fill="white" opacity="0.8"/>
+        <rect x="13.5" y="0" width="2.5" height="12" rx="1" fill="white"/>
+      </svg>
+      <svg width="16" height="12" viewBox="0 0 18 14" fill="none">
+        <path d="M9 3.5C11.6 3.5 14 4.6 15.7 6.4L17.3 4.7C15.1 2.4 12.2 1 9 1C5.8 1 2.9 2.4.7 4.7L2.3 6.4C4 4.6 6.4 3.5 9 3.5Z" fill="white" opacity="0.5"/>
+        <path d="M9 7C10.7 7 12.2 7.7 13.3 8.8L14.9 7.1C13.4 5.8 11.8 5 9 5C6.2 5 4.6 5.8 3.1 7.1L4.7 8.8C5.8 7.7 7.3 7 9 7Z" fill="white" opacity="0.75"/>
+        <circle cx="9" cy="12" r="2" fill="white"/>
+      </svg>
+      <svg width="26" height="13" viewBox="0 0 26 13" fill="none">
+        <rect x="0.5" y="0.5" width="22" height="12" rx="3.5" stroke="white" stroke-opacity="0.35"/>
+        <rect x="2" y="2" width="14" height="9" rx="2" fill="white" opacity="0.9"/>
+        <path d="M24 4.5v4a2 2 0 000-4z" fill="white" opacity="0.4"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <div class="header">
+    <button class="back-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path d="M15 18L9 12l6-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="header-title">Scan Card</div>
+    <button class="help-btn">?</button>
+  </div>
+
+  <!-- Camera viewfinder — fills all space between header and controls -->
+  <div class="viewfinder">
+    <div class="camera-bg"></div>
+    <div class="card-guide">
+      <div class="corner tl"></div>
+      <div class="corner tr"></div>
+      <div class="corner bl"></div>
+      <div class="corner br"></div>
+      <div class="scan-line"></div>
+    </div>
+    <div class="view-tip">Align card within the frame</div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="toggle-wrap">
+      <button class="toggle-btn active"   onclick="setMode(this,'one')">One</button>
+      <button class="toggle-btn inactive" onclick="setMode(this,'multiple')">Multiple</button>
+    </div>
+    <div class="shutter-wrap">
+      <button class="shutter">
+        <div class="shutter-inner"></div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Tab bar — always at bottom -->
+  <div class="tab-bar">
+
+    <!-- Business Card (active) -->
+    <div class="tab-item active">
+      <div class="tab-item-icon">
+        <svg width="22" height="18" viewBox="0 0 22 18" fill="none">
+          <rect x="0.9" y="0.9" width="20.2" height="16.2" rx="2.5" stroke="var(--green)" stroke-width="1.6"/>
+          <rect x="0.9" y="0.9" width="4" height="16.2" rx="2" fill="var(--green)" opacity="0.9"/>
+          <path d="M8 5.5h7M8 9h5M8 12.5h6" stroke="var(--green)" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="tab-item-label">Business<br>Card</div>
+    </div>
+
+    <!-- Scan QR -->
+    <div class="tab-item">
+      <div class="tab-item-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <rect x="1" y="1" width="7" height="7" rx="1.5" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+          <rect x="3" y="3" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.4)"/>
+          <rect x="14" y="1" width="7" height="7" rx="1.5" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+          <rect x="16" y="3" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.4)"/>
+          <rect x="1" y="14" width="7" height="7" rx="1.5" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+          <rect x="3" y="16" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.4)"/>
+          <path d="M14 14h2v2h-2zM18 14v3M14 18h3M18 20v-1" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="tab-item-label">Scan QR</div>
+    </div>
+
+    <!-- Personal QR -->
+    <div class="tab-item">
+      <div class="tab-item-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <!-- QR base -->
+          <rect x="1" y="1" width="7" height="7" rx="1.5" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+          <rect x="3" y="3" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.4)"/>
+          <rect x="14" y="1" width="7" height="7" rx="1.5" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+          <rect x="16" y="3" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.4)"/>
+          <rect x="1" y="14" width="7" height="7" rx="1.5" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+          <rect x="3" y="16" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.4)"/>
+          <path d="M14 14h2v2h-2zM18 14v3M14 18h3M18 20v-1" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- Person badge -->
+          <circle cx="19" cy="4" r="3.5" fill="rgba(255,255,255,0.5)"/>
+          <circle cx="19" cy="3.2" r="1.1" fill="#0a0a0a"/>
+          <path d="M16.8 6c.3-.7 1.1-1.2 2.2-1.2s1.9.5 2.2 1.2" stroke="#0a0a0a" stroke-width="0.9" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="tab-item-label">Personal<br>QR</div>
+    </div>
+
+    <!-- QR Offline -->
+    <div class="tab-item">
+      <div class="tab-item-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <!-- File shape -->
+          <path d="M4 2h9l5 5v13a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M13 2v5h5" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Small QR hint -->
+          <rect x="6" y="11" width="3.5" height="3.5" rx="0.8" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
+          <rect x="12.5" y="11" width="3.5" height="3.5" rx="0.8" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
+          <rect x="6" y="16" width="3.5" height="2.5" rx="0.8" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
+          <path d="M12.5 16h1.5M15.5 16v1.5M12.5 18.5h3" stroke="rgba(255,255,255,0.4)" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="tab-item-label">QR Offline</div>
+    </div>
+
+  </div>
+
+  <script>
+    function setMode(btn, mode) {
+      document.querySelectorAll('.toggle-btn').forEach(b => { b.className = 'toggle-btn inactive'; });
+      btn.className = 'toggle-btn active';
+    }
+  </script>
+
+</body>
+</html>

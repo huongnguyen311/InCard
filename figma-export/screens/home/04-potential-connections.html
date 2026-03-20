@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Potential Connections</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green:         #009037;
+      --green-bg:      rgba(0,144,55,0.1);
+      --slate-900:     #0f172a;
+      --slate-700:     #334155;
+      --slate-600:     #475569;
+      --slate-400:     #94a3b8;
+      --slate-200:     #e2e8f0;
+      --slate-100:     #f1f5f9;
+      --slate-50:      #f8fafc;
+      --gray-bg:       #f8f6f6;
+      --white:         #ffffff;
+      --orange:        #ef5023;
+      --orange-light:  #fa987d;
+      --orange-bg:     rgba(239,80,35,0.1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow: hidden; }
+    body {
+      background: var(--gray-bg);
+      font-family: 'Public Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .screen {
+      width: 390px;
+      background: var(--gray-bg);
+      min-height: 844px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 140px;
+    }
+
+    /* Header */
+    .header {
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--slate-200);
+      padding-bottom: 17px;
+      position: sticky; top: 0; z-index: 2;
+    }
+    .header-top {
+      display: flex; align-items: center; gap: 16px; padding: 16px 16px 0;
+      border-bottom: 1px solid var(--slate-200);
+      padding-bottom: 16px;
+      margin-bottom: 0;
+    }
+    .back-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+    .back-btn svg { width: 16px; height: 16px; }
+    .header-title { flex: 1; font-size: 22px; font-weight: 700; color: var(--slate-900); letter-spacing: -0.5px; }
+    .more-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+    .more-btn svg { width: 4px; height: 16px; }
+    .search-bar { margin: 0 16px; margin-top: 8px; position: relative; }
+    .search-bar input {
+      width: 100%; background: var(--slate-100); border: none; border-radius: 12px;
+      padding: 14px 16px 14px 48px;
+      font-family: 'Public Sans', sans-serif; font-size: 14px; color: var(--slate-700);
+      outline: none;
+    }
+    .search-bar input::placeholder { color: var(--slate-400); }
+    .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); }
+    .search-icon svg { width: 18px; height: 18px; }
+
+    /* Limit bar */
+    .limit-bar {
+      background: var(--slate-50); border-bottom: 1px solid var(--slate-100);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px 13px;
+    }
+    .limit-label { font-size: 14px; font-weight: 600; color: var(--slate-700); }
+    .limit-value { font-size: 14px; font-weight: 700; color: var(--green); }
+
+    /* Connection list */
+    .connections { flex: 1; }
+    .conn-row {
+      display: flex; align-items: center; gap: 16px;
+      padding: 17px 16px 16px;
+      border-top: 1px solid var(--slate-100);
+    }
+    .conn-avatar {
+      width: 64px; height: 64px; border-radius: 9999px;
+      border: 2px solid var(--white);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      overflow: hidden; flex-shrink: 0;
+    }
+    .conn-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .conn-info { flex: 1; overflow: hidden; }
+    .conn-name { font-size: 16px; font-weight: 700; color: var(--slate-900); line-height: 1.5; }
+    .conn-role { font-size: 14px; color: var(--slate-600); line-height: 1.43; }
+    .conn-company { font-size: 12px; font-weight: 500; color: var(--green); line-height: 1.33; }
+    .connect-btn {
+      background: var(--green-bg); color: var(--green);
+      font-size: 14px; font-weight: 700;
+      padding: 8px 16px; border-radius: 8px; white-space: nowrap;
+    }
+
+    /* Get more connection */
+    .get-more-wrap {
+      position: fixed;
+      bottom: 72px; left: 0;
+      width: 390px;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--slate-200);
+      z-index: 99;
+    }
+    .get-more-btn {
+      width: 100%; background: linear-gradient(135deg, #2eb07a 0%, #009037 100%); color: var(--white);
+      font-size: 15px; font-weight: 700; letter-spacing: -0.3px;
+      padding: 14px 20px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      cursor: pointer;
+    }
+    .get-more-btn svg { width: 20px; height: 20px; }
+
+    /* Bottom Nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0;
+      width: 390px;
+      height: 72px;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      padding: 0 4px;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      z-index: 100;
+    }
+    .nav-link {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-end;
+      gap: 3px;
+      cursor: pointer;
+      padding-bottom: 10px;
+      position: relative;
+    }
+    .nav-icon {
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-label {
+      font-size: 10px; font-weight: 600;
+      color: var(--slate-400);
+      line-height: 1;
+      letter-spacing: 0.1px;
+    }
+    .nav-label.active { color: var(--green); }
+    .nav-dot {
+      width: 4px; height: 4px;
+      border-radius: 2px;
+      background: var(--green);
+      opacity: 0;
+    }
+    .nav-link:has(.nav-label.active) .nav-dot { opacity: 1; }
+    .nav-fab-wrap {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding-bottom: 0;
+    }
+    .nav-fab {
+      width: 50px; height: 50px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,144,55,0.40), 0 1px 4px rgba(0,0,0,0.12);
+      margin-top: -12px;
+    }
+    .nav-fab svg { width: 22px; height: 22px; }
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-top">
+        <div class="back-btn">
+          <svg viewBox="0 0 16 16" fill="none">
+            <path d="M10 12L6 8l4-4" stroke="var(--slate-900)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="header-title">Potential Connections</div>
+      </div>
+      <div class="search-bar">
+        <span class="search-icon">
+          <svg viewBox="0 0 18 18" fill="none">
+            <circle cx="8" cy="8" r="6.5" stroke="var(--slate-400)" stroke-width="1.5"/>
+            <path d="M13.5 13.5L17 17" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <input type="text" placeholder="Search by name, role or company" aria-label="Search" />
+      </div>
+    </div>
+
+    <!-- List -->
+    <div class="connections">
+      <div class="conn-row">
+        <div class="conn-avatar">
+          <img src="https://www.figma.com/api/mcp/asset/5e81e1e9-2ab6-4482-9206-0f5f4cb25677" alt="Marcus Sterling" />
+        </div>
+        <div class="conn-info">
+          <div class="conn-name">Marcus Sterling</div>
+          <div class="conn-role">VP of Engineering</div>
+          <div class="conn-company">TechFlow Solutions</div>
+        </div>
+        <div class="connect-btn">Connect</div>
+      </div>
+      <div class="conn-row">
+        <div class="conn-avatar">
+          <img src="https://www.figma.com/api/mcp/asset/2be71d93-409f-4737-a6e7-590f73a6ca92" alt="Sarah Chen" />
+        </div>
+        <div class="conn-info">
+          <div class="conn-name">Sarah Chen</div>
+          <div class="conn-role">Product Designer</div>
+          <div class="conn-company">Invision Co.</div>
+        </div>
+        <div class="connect-btn">Connect</div>
+      </div>
+      <div class="conn-row">
+        <div class="conn-avatar">
+          <img src="https://www.figma.com/api/mcp/asset/d7e0e847-b1ea-4028-bb10-6b7d988858bd" alt="David Miller" />
+        </div>
+        <div class="conn-info">
+          <div class="conn-name">David Miller</div>
+          <div class="conn-role">Strategic Consultant</div>
+          <div class="conn-company">Global Insights Group</div>
+        </div>
+        <div class="connect-btn">Connect</div>
+      </div>
+      <div class="conn-row">
+        <div class="conn-avatar">
+          <img src="https://www.figma.com/api/mcp/asset/9a054a69-8b7b-4d22-8729-c30fc8a222e4" alt="Elena Rodriguez" />
+        </div>
+        <div class="conn-info">
+          <div class="conn-name">Elena Rodriguez</div>
+          <div class="conn-role">Marketing Manager</div>
+          <div class="conn-company">FinLeap Ventures</div>
+        </div>
+        <div class="connect-btn">Connect</div>
+      </div>
+      <div class="conn-row">
+        <div class="conn-avatar">
+          <img src="https://www.figma.com/api/mcp/asset/516d0917-e504-48bb-981c-f5a692c0daec" alt="Jameson Kwok" />
+        </div>
+        <div class="conn-info">
+          <div class="conn-name">Jameson Kwok</div>
+          <div class="conn-role">Chief Financial Officer</div>
+          <div class="conn-company">Zenith Bank</div>
+        </div>
+        <div class="connect-btn">Connect</div>
+      </div>
+    </div>
+
+    <!-- Get More -->
+    <div class="get-more-wrap">
+      <div class="get-more-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <circle cx="9" cy="7" r="4" stroke="white" stroke-width="1.8"/>
+          <path d="M1 21v-1a7 7 0 0114 0v1" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M19 8v6M22 11h-6" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        Get More Connections
+      </div>
+    </div>
+
+<!-- Bottom Nav -->
+<div class="bottom-nav">
+  <div class="nav-link">
+    <div class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1h-4v-7H8v7H5a1 1 0 01-1-1V9.5z" fill="var(--green)"/></svg>
+    </div>
+    <span class="nav-label active">Home</span>
+    <span class="nav-dot"></span>
+  </div>
+  <div class="nav-link">
+    <div class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="7" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="17" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M7.5 12h5.5M13 12l3.5-4M13 12l3.5 4" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <span class="nav-label">Network</span>
+    <span class="nav-dot"></span>
+  </div>
+  <div class="nav-fab-wrap">
+    <div class="nav-fab">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="14" y="18" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="18" width="3" height="3" rx="0.5" fill="white"/></svg>
+    </div>
+  </div>
+  <div class="nav-link">
+    <div class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M16.5 7.5l-3 6-5.5 2.5 3-6 5.5-2.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="1" fill="var(--slate-400)"/></svg>
+    </div>
+    <span class="nav-label">Explore</span>
+    <span class="nav-dot"></span>
+  </div>
+  <div class="nav-link">
+    <div class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round"/></svg>
+    </div>
+    <span class="nav-label">Profile</span>
+    <span class="nav-dot"></span>
+  </div>
+</div>
+  </div>
+</body>
+</html>

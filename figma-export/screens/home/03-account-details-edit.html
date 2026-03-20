@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Edit Account</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green:         #009037;
+      --green-dark:    #007a2f;
+      --green-light:   #2eb07a;
+      --green-bg:      rgba(0,144,55,0.1);
+      --green-surface: #dcfce7;
+      --slate-900:     #0f172a;
+      --slate-800:     #1e293b;
+      --slate-700:     #334155;
+      --slate-600:     #475569;
+      --slate-500:     #64748b;
+      --slate-400:     #94a3b8;
+      --slate-200:     #e2e8f0;
+      --slate-100:     #f1f5f9;
+      --slate-50:      #f8fafc;
+      --gray-bg:       #f8f6f6;
+      --red-100:       #fee2e2;
+      --red-600:       #dc2626;
+      --white:         #ffffff;
+      --orange:        #ef5023;
+      --orange-light:  #fa987d;
+      --orange-bg:     rgba(239,80,35,0.1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow: hidden; }
+    body {
+      background: var(--gray-bg);
+      font-family: 'Public Sans', sans-serif;
+      margin: 0; padding: 0;
+    }
+    .screen {
+      width: 390px;
+      background: var(--gray-bg);
+      padding-bottom: 72px;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-200);
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      position: relative;
+    }
+    .back-btn {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 9999px;
+      background: var(--slate-100);
+      flex-shrink: 0;
+    }
+    .header-title {
+      flex: 1; text-align: center;
+      font-size: 20px; font-weight: 700; color: var(--slate-900);
+      letter-spacing: -0.3px;
+    }
+    .save-btn {
+      font-size: 13px; font-weight: 700;
+      color: var(--white);
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      border: none; border-radius: 9999px;
+      padding: 7px 16px; cursor: pointer;
+      flex-shrink: 0;
+      box-shadow: 0 4px 14px rgba(0, 144, 55, 0.35);
+    }
+
+    /* ── Profile Hero ── */
+    .profile-hero {
+      background: var(--white);
+      padding: 28px 24px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      border-bottom: 1px solid var(--slate-200);
+    }
+    .avatar-wrap {
+      position: relative;
+      width: 100px; height: 100px;
+      margin-bottom: 14px;
+    }
+    .avatar-wrap img {
+      width: 100px; height: 100px;
+      border-radius: 9999px;
+      object-fit: cover;
+      display: block;
+      box-shadow: 0 0 0 3px rgba(0,144,55,0.35), 0 12px 24px rgba(0,0,0,0.18);
+    }
+    .avatar-camera {
+      position: absolute;
+      bottom: 2px; right: 2px;
+      width: 28px; height: 28px;
+      border-radius: 9999px;
+      background: var(--green);
+      border: 2.5px solid var(--white);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .avatar-camera svg { width: 14px; height: 14px; }
+    .profile-name-wrap, .profile-meta-wrap {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .profile-name-wrap { margin-bottom: 8px; }
+    .profile-meta-wrap { margin-bottom: 16px; }
+    .profile-name-input {
+      font-size: 22px; font-weight: 700;
+      color: var(--slate-900);
+      font-family: 'Public Sans', sans-serif;
+      background: transparent; border: none; outline: none;
+      text-align: center;
+    }
+    .profile-meta-input {
+      font-size: 13px; font-weight: 500;
+      color: var(--slate-500);
+      font-family: 'Public Sans', sans-serif;
+      background: transparent; border: none; outline: none;
+      text-align: center;
+    }
+    .inline-edit-icon { display: flex; align-items: center; flex-shrink: 0; }
+    .inline-edit-icon svg { width: 13px; height: 13px; }
+    .profile-actions { display: flex; gap: 10px; }
+    .badge-pro {
+      background: var(--white);
+      border: 1.5px solid var(--slate-200);
+      color: var(--green);
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.8px;
+      padding: 8px 14px;
+      border-radius: 9999px;
+    }
+
+    /* ── Sections ── */
+    .section { padding: 0 16px; margin-bottom: 16px; }
+    .section-label {
+      font-size: 11px; font-weight: 700;
+      color: var(--slate-400);
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      padding: 0 4px;
+      margin-bottom: 8px;
+    }
+    .settings-card {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .settings-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--slate-100);
+    }
+    .settings-row:last-child { border-bottom: none; }
+    .row-icon {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .row-icon.green  { background: var(--green-bg); }
+    .row-icon.gray   { background: var(--slate-100); }
+    .row-icon.amber  { background: rgba(245,158,11,0.1); }
+    .row-icon.red    { background: var(--red-100); }
+    .row-icon svg    { width: 18px; height: 18px; }
+    .row-content { flex: 1; min-width: 0; }
+    .row-label { font-size: 11px; font-weight: 500; color: var(--slate-400); margin-bottom: 2px; }
+    .row-value {
+      font-size: 15px; font-weight: 500;
+      color: var(--slate-900);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .row-value.single { font-size: 15px; font-weight: 600; color: var(--slate-800); }
+    .row-value.destructive { color: var(--red-600); font-weight: 600; }
+    /* editable input — same visual as row-value */
+    .row-input {
+      font-size: 15px; font-weight: 500;
+      color: var(--slate-900);
+      font-family: 'Public Sans', sans-serif;
+      background: transparent; border: none; outline: none;
+      width: 100%; padding: 0;
+    }
+    .row-input::placeholder { color: var(--slate-300); }
+    .row-label-above { font-size: 11px; font-weight: 500; color: var(--slate-400); margin-bottom: 2px; }
+    .row-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .badge-pill {
+      font-size: 11px; font-weight: 700;
+      padding: 3px 10px; border-radius: 9999px;
+    }
+    .badge-pill.green { background: var(--green-bg); color: var(--green); }
+    .chevron svg { width: 7px; height: 11px; }
+    .edit-icon svg { width: 14px; height: 14px; }
+    .copy-btn { padding: 6px; }
+    .copy-btn svg { width: 16px; height: 16px; }
+
+    /* ── Invite Banner ── */
+    .invite-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a2f 60%, #009037 140%);
+      border-radius: 14px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    }
+    .invite-icon-wrap {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .invite-icon-wrap svg { width: 22px; height: 22px; }
+    .invite-text { flex: 1; }
+    .invite-title { font-size: 14px; font-weight: 700; color: var(--white); }
+    .invite-sub { font-size: 12px; font-weight: 400; color: rgba(255,255,255,0.78); margin-top: 2px; }
+    .invite-arrow {
+      width: 32px; height: 32px;
+      border-radius: 9999px;
+      background: rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .invite-arrow svg { width: 16px; height: 16px; }
+
+    /* ── Log Out ── */
+    .logout-section { padding: 0 16px 24px; }
+    .logout-btn {
+      width: 100%;
+      background: var(--white);
+      border: 1.5px solid var(--slate-200);
+      border-radius: 14px;
+      padding: 16px 20px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      cursor: pointer;
+    }
+    .logout-btn svg { width: 18px; height: 18px; }
+    .logout-btn-text { font-size: 15px; font-weight: 700; color: var(--slate-800); }
+    .version-text { text-align: center; font-size: 11px; color: var(--slate-400); padding: 12px 0 0; }
+
+    /* ── Bottom Nav ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0;
+      width: 390px;
+      height: 72px;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      padding: 0 4px;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      z-index: 100;
+    }
+    .nav-link {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-end;
+      gap: 3px;
+      cursor: pointer;
+      padding-bottom: 10px;
+      position: relative;
+    }
+    .nav-icon { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; }
+    .nav-label {
+      font-size: 10px; font-weight: 600;
+      color: var(--slate-400);
+      line-height: 1;
+      letter-spacing: 0.1px;
+    }
+    .nav-label.active { color: var(--green); }
+    .nav-dot {
+      width: 4px; height: 4px;
+      border-radius: 2px;
+      background: var(--green);
+      opacity: 0;
+    }
+    .nav-link:has(.nav-label.active) .nav-dot { opacity: 1; }
+    .nav-fab-wrap {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding-bottom: 0;
+    }
+    .nav-fab {
+      width: 50px; height: 50px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,144,55,0.40), 0 1px 4px rgba(0,0,0,0.12);
+      margin-top: -12px;
+    }
+    .nav-fab svg { width: 22px; height: 22px; }
+  </style>
+</head>
+<body>
+  <div class="screen">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="back-btn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M10 12L6 8l4-4" stroke="var(--slate-900)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="header-title">Edit Account</div>
+      <div class="save-btn">Save</div>
+    </div>
+
+    <!-- Profile Hero -->
+    <div class="profile-hero">
+      <div class="avatar-wrap">
+        <img src="https://www.figma.com/api/mcp/asset/f3ea797f-300b-4753-8c96-c6014ab5299f" alt="Alex Rivera" />
+        <div class="avatar-camera">
+          <svg viewBox="0 0 14 14" fill="none">
+            <path d="M13 11a1 1 0 01-1 1H2a1 1 0 01-1-1V5a1 1 0 011-1h1.5L4.5 2.5h5L10.5 4H12a1 1 0 011 1v6z" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="7" cy="7.5" r="2" stroke="white" stroke-width="1.2"/>
+          </svg>
+        </div>
+      </div>
+      <div class="profile-name-wrap">
+        <input class="profile-name-input" type="text" value="Alex Rivera" />
+        <div class="inline-edit-icon">
+          <svg viewBox="0 0 14 14" fill="none">
+            <path d="M1 13h12M9.5 1.5l2 2L4 11H2v-2L9.5 1.5z" stroke="var(--slate-400)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="profile-meta-wrap">
+        <input class="profile-meta-input" type="text" value="Senior Product Designer · San Francisco" />
+        <div class="inline-edit-icon">
+          <svg viewBox="0 0 14 14" fill="none">
+            <path d="M1 13h12M9.5 1.5l2 2L4 11H2v-2L9.5 1.5z" stroke="var(--slate-400)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="profile-actions">
+        <div class="badge-pro">PRO</div>
+      </div>
+    </div>
+
+    <!-- Personal Information -->
+    <div class="section" style="margin-top:20px;">
+      <div class="section-label">Personal Information</div>
+      <div class="settings-card">
+        <!-- Email -->
+        <div class="settings-row">
+          <div class="row-icon green">
+            <svg viewBox="0 0 20 16" fill="none">
+              <rect x="1" y="1" width="18" height="14" rx="2" stroke="var(--green)" stroke-width="1.5"/>
+              <path d="M1 5l9 5 9-5" stroke="var(--green)" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <div class="row-content">
+            <div class="row-label-above">Email Address</div>
+            <input class="row-input" type="email" value="alex.rivera@example.com" />
+          </div>
+          <div class="row-right">
+            <div class="edit-icon">
+              <svg viewBox="0 0 14 14" fill="none">
+                <path d="M1 13h12M9.5 1.5l2 2L4 11H2v-2L9.5 1.5z" stroke="var(--slate-300)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <!-- Phone -->
+        <div class="settings-row">
+          <div class="row-icon green">
+            <svg viewBox="0 0 18 18" fill="none">
+              <path d="M17 12.9c0 .3-.07.6-.21.89-.14.28-.33.55-.58.79-.42.39-.88.57-1.36.57-.35 0-.73-.08-1.14-.26l-1.62-.66c-.41-.17-.82-.35-1.21-.54-.41-.19-.75-.38-1.01-.57-1.09-.73-2.06-1.64-2.9-2.71-.42-.53-.77-1.07-1.04-1.61-.27-.54-.46-1.07-.58-1.58-.06-.26-.09-.51-.09-.75 0-.33.06-.64.19-.91.13-.28.32-.53.58-.74L7.2 4.3c.24-.17.5-.26.74-.26.3 0 .57.09.81.27.24.18.46.42.65.72L10.7 7.1c.19.3.29.58.29.84 0 .32-.1.62-.28.9-.19.28-.41.54-.68.77.07.14.17.27.28.39.11.12.24.24.38.34.36.26.73.48 1.12.65.39.17.81.3 1.26.37.18-.32.43-.58.73-.77.3-.19.62-.28.97-.28.24 0 .5.07.77.22l2.1 1.21c.31.18.53.41.65.69.12.28.19.57.19.87z" stroke="var(--green)" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <div class="row-content">
+            <div class="row-label-above">Phone Number</div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <input class="row-input" type="tel" value="+1 234 567 890" style="flex:1;" />
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M1 13h12M9.5 1.5l2 2L4 11H2v-2L9.5 1.5z" stroke="var(--slate-400)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+          <div class="row-right"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Referral -->
+    <div class="section">
+      <div class="section-label">Referral</div>
+      <div class="settings-card">
+        <!-- Referral Link — not editable, keep copy icon -->
+        <div class="settings-row">
+          <div class="row-icon green">
+            <svg viewBox="0 0 20 20" fill="none">
+              <path d="M8.5 11.5a4.5 4.5 0 006.364 0l2.121-2.121a4.5 4.5 0 00-6.364-6.364L9.5 4.136" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M11.5 8.5a4.5 4.5 0 00-6.364 0L3.015 10.621a4.5 4.5 0 006.364 6.364l1.121-1.121" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="row-content">
+            <div class="row-label">Referral Link</div>
+            <div class="row-value">incard.app/ref/alex</div>
+          </div>
+          <div class="row-right">
+            <div class="copy-btn">
+              <svg viewBox="0 0 17 20" fill="none">
+                <rect x="5" y="5" width="11" height="14" rx="2" stroke="var(--green)" stroke-width="1.5"/>
+                <path d="M3 15H2a1 1 0 01-1-1V2a1 1 0 011-1h10a1 1 0 011 1v2" stroke="var(--green)" stroke-width="1.5"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <!-- Referral History — not editable -->
+        <div class="settings-row">
+          <div class="row-icon green">
+            <svg viewBox="0 0 18 18" fill="none">
+              <circle cx="9" cy="9" r="8" stroke="var(--green)" stroke-width="1.5"/>
+              <path d="M9 5v4l3 3" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="row-content">
+            <div class="row-value single">Referral History</div>
+          </div>
+          <div class="row-right">
+            <div class="chevron">
+              <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="var(--slate-300)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Invite Banner -->
+      <div style="margin-top: 12px;">
+        <div class="invite-banner">
+          <div class="invite-icon-wrap">
+            <svg viewBox="0 0 24 20" fill="none">
+              <path d="M16 19v-1.5a3.5 3.5 0 00-3.5-3.5h-7A3.5 3.5 0 002 17.5V19M18 7v6M21 10h-6M9 10a3.5 3.5 0 100-7 3.5 3.5 0 000 7z" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="invite-text">
+            <div class="invite-title">Invite Friends</div>
+            <div class="invite-sub">Earn rewards for each referral</div>
+          </div>
+          <div class="invite-arrow">
+            <svg viewBox="0 0 16 16" fill="none">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security -->
+    <div class="section">
+      <div class="section-label">Security</div>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div class="row-icon gray">
+            <svg viewBox="0 0 16 21" fill="none">
+              <rect x="1" y="9" width="14" height="11" rx="2" stroke="var(--slate-500)" stroke-width="1.5"/>
+              <path d="M4 9V6a4 4 0 018 0v3" stroke="var(--slate-500)" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="8" cy="14" r="1.5" fill="var(--slate-500)"/>
+            </svg>
+          </div>
+          <div class="row-content">
+            <div class="row-value single">Reset Password</div>
+            <div class="row-label" style="margin-top:3px;">Send reset link to your email</div>
+          </div>
+          <div class="row-right">
+            <div class="chevron">
+              <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="var(--slate-300)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Management -->
+    <div class="section">
+      <div class="section-label">Account Management</div>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div class="row-icon amber">
+            <svg viewBox="0 0 20 19" fill="none">
+              <path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.44.91-5.32L2.27 6.62l5.34-.78L10 1z" stroke="#d97706" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="row-content">
+            <div class="row-value single">Subscription Plan</div>
+          </div>
+          <div class="row-right">
+            <div class="badge-pill green">Pro</div>
+            <div class="chevron">
+              <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="var(--slate-300)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div class="row-icon red">
+            <svg viewBox="0 0 16 18" fill="none">
+              <path d="M1 4h14M6 4V2h4v2M14 4l-1 12H3L2 4" stroke="var(--red-600)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="row-content">
+            <div class="row-value destructive">Delete Account</div>
+          </div>
+          <div class="row-right">
+            <div class="chevron">
+              <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="var(--red-600)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Log Out -->
+    <div class="logout-section">
+      <div class="logout-btn">
+        <svg viewBox="0 0 18 18" fill="none">
+          <path d="M7 17H3a2 2 0 01-2-2V3a2 2 0 012-2h4M13 13l4-4-4-4M17 9H7" stroke="var(--slate-800)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="logout-btn-text">Log Out</span>
+      </div>
+      <div class="version-text">InCard App v2.4.1 (Build 108)</div>
+    </div>
+
+<!-- Bottom Nav -->
+<div class="bottom-nav">
+  <div class="nav-link">
+    <div class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 21v-8h6v8" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <span class="nav-label">Home</span>
+    <span class="nav-dot"></span>
+  </div>
+  <div class="nav-link">
+    <div class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="7" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="17" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M7.5 12h5.5M13 12l3.5-4M13 12l3.5 4" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <span class="nav-label">Network</span>
+    <span class="nav-dot"></span>
+  </div>
+  <div class="nav-fab-wrap">
+    <div class="nav-fab">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="14" y="18" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="18" width="3" height="3" rx="0.5" fill="white"/></svg>
+    </div>
+  </div>
+  <div class="nav-link">
+    <div class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M16.5 7.5l-3 6-5.5 2.5 3-6 5.5-2.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="1" fill="var(--slate-400)"/></svg>
+    </div>
+    <span class="nav-label">Explore</span>
+    <span class="nav-dot"></span>
+  </div>
+  <div class="nav-link">
+    <div class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" fill="var(--green)"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="var(--green)" stroke-width="2" stroke-linecap="round"/></svg>
+    </div>
+    <span class="nav-label active">Profile</span>
+    <span class="nav-dot"></span>
+  </div>
+</div>
+
+  </div>
+</body>
+</html>

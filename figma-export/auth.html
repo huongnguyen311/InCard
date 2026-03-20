@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Auth Flow</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --orange:        #ef5023;
+      --orange-light:  #fa987d;
+      --orange-bg:     rgba(239,80,35,0.1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #a49d9d; font-family: 'Public Sans', sans-serif; min-height: 100vh; padding: 48px 40px 80px; }
+    .back { display: inline-flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.75); font-size: 12px; font-weight: 600; text-decoration: none; letter-spacing: 0.5px; margin-bottom: 32px; }
+    .back:hover { color: #fff; }
+    .flow-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.75); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 24px; }
+    .flow-screens { display: flex; flex-direction: row; gap: 24px; align-items: flex-start; }
+    .screen { display: flex; flex-direction: column; align-items: center; gap: 10px; flex-shrink: 0; }
+    .phone-frame { width: 390px; border-radius: 44px; overflow: hidden; background: #fff; box-shadow: 0 8px 40px rgba(0,0,0,0.32), 0 2px 8px rgba(0,0,0,0.16); }
+    .phone-frame iframe { width: 390px; height: 844px; border: none; display: block; }
+    .screen-name { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.75); text-align: center; letter-spacing: 0.3px; }
+  </style>
+  <script>
+    function autoResize(iframe) {
+      try {
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        iframe.style.height = doc.documentElement.scrollHeight + 'px';
+      } catch(e) {}
+    }
+  </script>
+  <link rel="stylesheet" href="button-system.css" />
+  <link rel="stylesheet" href="design-system.css" />
+</head>
+<body>
+
+  <a class="back" href="index.html">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7l4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    All Flows
+  </a>
+
+  <div class="flow-label">InCard Auth Flow</div>
+
+  <div class="flow-screens">
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/auth/00-splash.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Splash</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/auth/01-sign-up.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Sign Up</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/auth/02-sign-in.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Sign In</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/auth/03-create-profile.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Create Profile</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/auth/03b-create-profile-linkedin.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Create Profile: Import Options</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/profile/18-import-linkedin.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Import from LinkedIn</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/profile/20-extracting-linkedin.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Extracting LinkedIn Data</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/auth/tour-01-photo.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Tour: Photo</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/auth/tour-02-basic-info.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Tour: Basic Info</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/auth/tour-03-complete.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Tour: Complete</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/auth/tour-04-professional.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Tour: Professional</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/auth/04-professional-details.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Professional Details</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/auth/05-connect-with-me.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Connect With Me</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/auth/06-add-portfolio-video.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Add Portfolio (Video)</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/auth/07-add-portfolio-image.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Add Portfolio (Image)</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/auth/08-add-service-product.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Add Service / Product</div>
+    </div>
+
+    <div class="screen">
+      <div class="phone-frame"><iframe src="screens/auth/09-success-modal.html" onload="autoResize(this)"></iframe></div>
+      <div class="screen-name">Product Saved</div>
+    </div>
+
+  </div>
+</body>
+</html>

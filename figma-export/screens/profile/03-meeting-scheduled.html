@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Meeting Scheduled</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../button-system.css" />
+  <link rel="stylesheet" href="../../design-system.css" />
+  <style>
+    :root {
+      --green:         #009037;
+      --green-light:   #2eb07a;
+      --green-bg:      rgba(0,144,55,0.08);
+      --green-surface: #dcfce7;
+      --slate-900:     #0f172a;
+      --slate-800:     #1e293b;
+      --slate-700:     #334155;
+      --slate-600:     #475569;
+      --slate-500:     #64748b;
+      --slate-400:     #94a3b8;
+      --slate-200:     #e2e8f0;
+      --slate-100:     #f1f5f9;
+      --slate-50:      #f8fafc;
+      --white:         #ffffff;
+      --orange:        #ef5023;
+      --orange-light:  #fa987d;
+      --orange-bg:     rgba(239,80,35,0.1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { scrollbar-width: none; -ms-overflow-style: none; }
+    html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+    body {
+      font-family: 'Public Sans', sans-serif;
+      background: #0f172a;
+      margin: 0; padding: 0;
+    }
+
+    .screen {
+      width: 390px;
+      min-height: 844px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    /* Background */
+    .bg-layer {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, #0f4c29 0%, #0a2e1a 60%, #071a0f 100%);
+    }
+    .bg-cover {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 220px;
+      background: url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80') center/cover;
+      opacity: 0.18;
+    }
+    .bg-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(3px);
+    }
+
+    /* Profile peek */
+    .profile-peek {
+      position: absolute;
+      top: 48px;
+      left: 0; right: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      pointer-events: none;
+    }
+    .peek-avatar {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.25);
+      overflow: hidden;
+      background: #1e293b;
+    }
+    .peek-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .peek-name {
+      font-weight: 700; font-size: 18px;
+      color: rgba(255,255,255,0.9);
+      letter-spacing: -0.4px;
+    }
+    .peek-role {
+      font-weight: 400; font-size: 13px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* Bottom sheet */
+    .sheet {
+      position: relative;
+      z-index: 10;
+      background: var(--white);
+      border-radius: 28px 28px 0 0;
+      padding: 0 0 48px;
+      box-shadow: 0 -8px 40px rgba(0,0,0,0.3);
+    }
+
+    /* Handle */
+    .handle {
+      display: flex; justify-content: center;
+      padding: 14px 0 0;
+    }
+    .handle-bar {
+      width: 40px; height: 4px;
+      background: var(--slate-200);
+      border-radius: 9999px;
+    }
+
+    /* Success icon */
+    .success-wrap {
+      display: flex; justify-content: center;
+      padding: 32px 0 24px;
+    }
+    .success-ring {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: var(--green-surface);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .success-ring::before {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 2px solid rgba(0,144,55,0.15);
+    }
+
+    /* Text */
+    .sheet-title {
+      text-align: center;
+      font-weight: 800; font-size: 22px;
+      color: var(--slate-900);
+      letter-spacing: -0.5px;
+      padding: 0 32px;
+      line-height: 1.25;
+    }
+    .sheet-sub {
+      text-align: center;
+      font-weight: 400; font-size: 14px;
+      color: var(--slate-500);
+      line-height: 1.6;
+      padding: 10px 40px 0;
+    }
+
+    /* Meeting detail card */
+    .detail-card {
+      margin: 28px 24px 0;
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .detail-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+    }
+    .detail-row + .detail-row {
+      border-top: 1px solid var(--slate-100);
+    }
+    .detail-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: var(--green-bg);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .detail-info { flex: 1; }
+    .detail-label {
+      font-size: 11px; font-weight: 600;
+      color: var(--slate-400);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+    .detail-value {
+      font-size: 14px; font-weight: 600;
+      color: var(--slate-800);
+      line-height: 1.4;
+    }
+
+    /* Buttons */
+    .btn-wrap {
+      padding: 28px 24px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .btn-primary {
+      font-weight: 700; font-size: 16px;
+      color: var(--white);
+      letter-spacing: -0.3px;
+    }
+    .btn-secondary {
+      width: 100%; height: 48px;
+      background: transparent;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      font-weight: 600; font-size: 14px;
+      color: var(--slate-500);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <div class="bg-layer"></div>
+    <div class="bg-cover"></div>
+    <div class="bg-overlay"></div>
+
+    <!-- Profile peek -->
+    <div class="profile-peek">
+      <div class="peek-avatar">
+        <img src="https://www.figma.com/api/mcp/asset/357b4e45-6b51-48db-b433-4bee87603cbb" alt="Alex Rivera" />
+      </div>
+      <div class="peek-name">Alex Rivera</div>
+      <div class="peek-role">Creative Strategist & Design Consultant</div>
+    </div>
+
+    <!-- Bottom Sheet -->
+    <div class="sheet">
+      <div class="handle"><div class="handle-bar"></div></div>
+
+      <!-- Success icon -->
+      <div class="success-wrap">
+        <div class="success-ring">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+      </div>
+
+      <!-- Text -->
+      <div class="sheet-title">Meeting Confirmed!</div>
+      <div class="sheet-sub">Your meeting with Alex Rivera has been successfully booked. A confirmation has been sent to your email.</div>
+
+      <!-- Detail card -->
+      <div class="detail-card">
+        <div class="detail-row">
+          <div class="detail-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div class="detail-info">
+            <div class="detail-label">Date</div>
+            <div class="detail-value">Wednesday, March 19, 2026</div>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="detail-info">
+            <div class="detail-label">Time</div>
+            <div class="detail-value">10:30 AM · 30 min</div>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="detail-info">
+            <div class="detail-label">With</div>
+            <div class="detail-value">Alex Rivera</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="btn-wrap">
+        <div class="btn-primary">
+          Back to Profile
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
