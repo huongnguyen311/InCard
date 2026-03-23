@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=390, initial-scale=1.0, viewport-fit=cover" />
   <title>InCard — Splash</title>
-  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -12,45 +11,32 @@
   <link rel="stylesheet" href="../../design-system.css" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; overflow: hidden; }
-    body {
-      font-family: 'Public Sans', sans-serif;
+    body { font-family: 'Public Sans', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    .screen {
       width: 390px;
       height: 844px;
-      background: transparent;
+      background: var(--white);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 28px;
+    
+      border-radius: 44px;
+      overflow: hidden;
     }
-
-    .logo {
-      width: 120px;
-      height: auto;
-    }
-
-    .welcome-text {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-    .welcome-line {
-      font-size: 15px;
-      font-weight: 500;
-      color: #64748b;
-      letter-spacing: 0.3px;
-    }
+    .logo { width: 120px; height: auto; }
+    .welcome-text { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .welcome-line { font-size: 15px; font-weight: 500; color: #64748b; letter-spacing: 0.3px; }
   </style>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
 </head>
 <body>
-
+<div class="screen">
   <img class="logo" src="../../logo.png" alt="InCard" />
-
   <div class="welcome-text">
     <div class="welcome-line">Welcome to InCard</div>
   </div>
-
+</div>
 </body>
 </html>

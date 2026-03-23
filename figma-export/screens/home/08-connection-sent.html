@@ -2,35 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=390, initial-scale=1.0, viewport-fit=cover" />
   <title>InCard — Connection Request Sent</title>
-  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../../button-system.css" />
   <link rel="stylesheet" href="../../design-system.css" />
   <style>
-    :root {
-      --green:          #009037;
-      --green-bg:       rgba(0,144,55,0.1);
-      --slate-900:      #0f172a;
-      --slate-800:      #1e293b;
-      --slate-500:      #64748b;
-      --slate-200:      #e2e8f0;
-      --slate-100:      #f1f5f9;
-      --gray-bg:        #f8f6f6;
-      --white:          #ffffff;
-      --overlay-bg:     rgba(15,23,42,0.4);
-      --orange:         #ef5023;
-      --orange-light:   #fa987d;
-      --orange-bg:      rgba(239,80,35,0.1);
+* { box-sizing: border-box; margin: 0; padding: 0; }
+    html { width: 390px; overflow-x: hidden; overflow-y: auto; }
+    body { overflow: visible; 
+      width: 390px;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { overflow: hidden; }
     body {
       background: var(--slate-200);
       font-family: 'Public Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       margin: 0;
       padding: 0;
     }
@@ -39,6 +28,9 @@
       background: var(--slate-200);
       min-height: 844px;
       position: relative;
+    
+      border-radius: 44px;
+      overflow: hidden;
     }
 
     /* Background content (blurred, represents previous screen) */
@@ -130,6 +122,7 @@
       border-radius: 0;
     }
   </style>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
 </head>
 <body>
   <div class="screen">

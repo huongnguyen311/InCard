@@ -2,61 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=390, initial-scale=1.0, viewport-fit=cover" />
   <title>InCard — Home Dashboard</title>
-  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../../button-system.css" />
   <link rel="stylesheet" href="../../design-system.css" />
   <style>
-    :root {
-      --green:            #009037;
-      --green-dark:       #007a2f;
-      --green-light:      #2eb07a;
-      --green-bg:         rgba(0,144,55,0.1);
-      --green-surface:    #dcfce7;
-      --emerald:          #10b981;
-      --emerald-bg:       #ecfdf5;
-      --slate-900:        #0f172a;
-      --slate-800:        #1e293b;
-      --slate-700:        #334155;
-      --slate-600:        #475569;
-      --slate-500:        #64748b;
-      --slate-400:        #94a3b8;
-      --slate-300:        #cbd5e1;
-      --slate-200:        #e2e8f0;
-      --slate-100:        #f1f5f9;
-      --slate-50:         #f8fafc;
-      --gray-bg:          #f8f6f6;
-      --red-100:          #fee2e2;
-      --red-600:          #dc2626;
-      --white:            #ffffff;
-      --orange:           #ef5023;
-      --orange-light:     #fa987d;
-      --orange-bg:        rgba(239,80,35,0.1);
-      --gold:             #d4af37;
-      --gold-dark:        #c0c0c0;
-      --bronze:           #cd7f32;
-      --amber:            #f59e0b;
-      --amber-bg:         #fffbeb;
-      --amber-border:     #fef3c7;
-      --card-dark-1:      #1b2a41;
-      --card-dark-2:      #1e293b;
-      --upgrade-bg:       #f9f1e1;
-      --upgrade-border:   #e8dcc4;
-      --upgrade-text:     #7d6b1d;
-      --upgrade-sub:      #7a7a7a;
-      --upgrade-btn:      #d4af37;
-      --upgrade-btn-txt:  #3d3d00;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+    html { width: 390px; overflow-x: hidden; overflow-y: auto; }
+    body { overflow: visible; 
+      width: 390px;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { overflow-x: hidden; overflow-y: auto; }
-    body { overflow: visible; }
     body {
       background: var(--gray-bg);
       font-family: 'Public Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       margin: 0;
       padding: 0;
     }
@@ -65,46 +28,162 @@
       background: var(--gray-bg);
       position: relative;
       padding-bottom: 72px;
+    
+      border-radius: 44px;
+      overflow: hidden;
     }
 
     /* ── HEADER ── */
     .header {
       position: sticky;
       top: 0;
-      z-index: 2;
-      background: rgba(248,250,252,0.9);
-      backdrop-filter: blur(6px);
-      border-bottom: 1px solid var(--slate-200);
-      padding: 12px 16px 13px;
+      z-index: 10;
+      background: var(--white);
+      padding: 0;
     }
-    .header-inner {
+
+    /* Top row: avatar + greeting + action icons */
+    .header-top {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 4px;
+      gap: 12px;
+      padding: 16px 20px 12px;
     }
-    .header-user {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+
+    /* Avatar with online indicator */
     .header-avatar-wrap {
-      width: 40px; height: 40px;
+      width: 48px; height: 48px;
       border-radius: 9999px;
-      border: 2px solid rgba(0,144,55,0.2);
-      background: var(--slate-200);
+      background: linear-gradient(135deg, rgba(46,176,122,0.2), rgba(0,144,55,0.15));
+      padding: 2.5px;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .header-avatar-wrap img {
+      width: 100%; height: 100%;
+      border-radius: 9999px;
+      object-fit: cover;
+      display: block;
+    }
+    .header-avatar-online {
+      position: absolute;
+      bottom: 1px; right: 1px;
+      width: 12px; height: 12px;
+      border-radius: 9999px;
+      background: var(--green);
+      border: 2.5px solid var(--white);
+    }
+
+    /* Greeting text */
+    .header-greeting { flex: 1; min-width: 0; }
+    .header-greeting-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--slate-500);
+      line-height: 1.3;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .header-greeting-label .wave { font-size: 15px; }
+    .header-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--slate-900);
+      line-height: 1.35;
+      letter-spacing: -0.3px;
+      white-space: nowrap;
       overflow: hidden;
-      padding: 2px;
+      text-overflow: ellipsis;
     }
-    .header-avatar-wrap img { width: 100%; height: 100%; border-radius: 9999px; object-fit: cover; }
-    .header-name { font-size: 14px; font-weight: 500; color: var(--slate-900); }
-    .header-bell {
-      width: 40px; height: 40px;
-      border-radius: 9999px;
+
+    /* Action buttons row */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .header-action-btn {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: var(--slate-50);
+      border: 1px solid var(--slate-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .header-action-btn:hover {
       background: var(--slate-100);
-      display: flex; align-items: center; justify-content: center;
+      border-color: var(--slate-200);
     }
-    .header-bell svg { width: 16px; height: 20px; }
+    .header-action-btn svg {
+      width: 20px; height: 20px;
+      color: var(--slate-600);
+    }
+    /* Notification badge */
+    .header-badge {
+      position: absolute;
+      top: 8px; right: 8px;
+      min-width: 16px; height: 16px;
+      padding: 0 4px;
+      border-radius: 9999px;
+      background: var(--red-600);
+      color: var(--white);
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 16px;
+      text-align: center;
+      border: 2px solid var(--white);
+    }
+
+    /* Search bar row */
+    .header-search {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 20px 14px;
+      padding: 0 14px;
+      height: 44px;
+      background: var(--slate-50);
+      border: 1px solid var(--slate-100);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .header-search:hover {
+      border-color: var(--slate-200);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .header-search svg {
+      width: 18px; height: 18px;
+      color: var(--slate-400);
+      flex-shrink: 0;
+    }
+    .header-search-text {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--slate-400);
+      line-height: 1;
+    }
+    .header-search-shortcut {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .header-search-shortcut .ai-tag {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--green-light), var(--green));
+      padding: 2px 7px;
+      border-radius: 6px;
+      letter-spacing: 0.3px;
+    }
 
     /* ── MAIN SCROLL ── */
     .main { display: flex; flex-direction: column; gap: 32px; padding: 12px 16px 0; }
@@ -610,22 +689,52 @@
       box-shadow: 0 2px 6px rgba(239,80,35,0.4);
     }
   </style>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
 </head>
 <body>
   <div class="screen">
     <!-- Header -->
     <div class="header">
-      <div class="header-inner">
-        <div class="header-user">
-          <div class="header-avatar-wrap">
-            <img src="https://www.figma.com/api/mcp/asset/7f0a3d58-f11d-4bee-b0f6-683c3bc7c81a" alt="Alex Rivera" />
-          </div>
-          <span class="header-name">Alex Rivera</span>
+      <!-- Top row: avatar + greeting + actions -->
+      <div class="header-top">
+        <div class="header-avatar-wrap">
+          <img src="https://www.figma.com/api/mcp/asset/7f0a3d58-f11d-4bee-b0f6-683c3bc7c81a" alt="Alex Rivera" />
+          <div class="header-avatar-online"></div>
         </div>
-        <div class="header-bell">
-          <svg viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 20c1.1 0 2-.9 2-2H6c0 1.1.9 2 2 2zm6-6V9c0-3.07-1.64-5.64-4.5-6.32V2C9.5 1.17 8.83.5 8 .5S6.5 1.17 6.5 2v.68C3.63 3.36 2 5.92 2 9v5l-2 2v1h16v-1l-2-2z" fill="var(--slate-500)"/>
-          </svg>
+
+        <div class="header-greeting">
+          <div class="header-greeting-label">Good morning <span class="wave">&#x1F44B;</span></div>
+          <div class="header-name">Alex Rivera</div>
+        </div>
+
+        <div class="header-actions">
+          <!-- Notification bell -->
+          <div class="header-action-btn" role="button" aria-label="Notifications">
+            <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.5 17.5a3.5 3.5 0 0 1-7 0"/>
+              <path d="M5.5 9.5a5.5 5.5 0 0 1 11 0c0 3.2.8 5.1 1.6 6.2a.7.7 0 0 1-.6 1.1H4.5a.7.7 0 0 1-.6-1.1c.8-1.1 1.6-3 1.6-6.2z"/>
+            </svg>
+            <span class="header-badge">3</span>
+          </div>
+          <!-- Settings -->
+          <div class="header-action-btn" role="button" aria-label="Settings">
+            <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="3"/>
+              <path d="M18.4 13.6a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V20a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H2a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1.08 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.08a1.65 1.65 0 0 0 1-1.51V2a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.08a1.65 1.65 0 0 0 1.51 1H20a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search bar -->
+      <div class="header-search" role="button" aria-label="Search profiles and connections">
+        <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="10" cy="10" r="7"/>
+          <path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <span class="header-search-text">Search profiles, connections...</span>
+        <div class="header-search-shortcut">
+          <span class="ai-tag">AI</span>
         </div>
       </div>
     </div>

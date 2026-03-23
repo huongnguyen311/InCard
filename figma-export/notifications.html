@@ -2,33 +2,767 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=390, initial-scale=1.0, viewport-fit=cover" />
   <title>InCard — Notifications Flow</title>
   <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #a49d9d; font-family: 'Public Sans', sans-serif; min-height: 100vh; padding: 48px 40px 80px; }
+    html { width: 390px; overflow: hidden; }
+    body { background: #a49d9d; font-family: 'Public Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale; min-height: 100vh; padding: 48px 40px 80px; 
+      width: 390px;
+    }
     .back { display: inline-flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.75); font-size: 12px; font-weight: 600; text-decoration: none; letter-spacing: 0.5px; margin-bottom: 32px; }
     .back:hover { color: #fff; }
     .flow-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.75); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 24px; }
     .flow-screens { display: flex; flex-direction: row; gap: 24px; align-items: flex-start; }
-    .screen { display: flex; flex-direction: column; align-items: center; gap: 10px; flex-shrink: 0; }
-    .phone-frame { width: 390px; border-radius: 44px; overflow: hidden; background: #fff; box-shadow: 0 8px 40px rgba(0,0,0,0.32), 0 2px 8px rgba(0,0,0,0.16); }
-    .phone-frame iframe { width: 390px; height: 844px; border: none; display: block; }
+    .screen { display: flex; flex-direction: column; align-items: center; gap: 10px; flex-shrink: 0; 
+      border-radius: 44px;
+      overflow: hidden;
+    }
+    .phone-frame { width: 390px; border-radius: 44px; overflow-x: hidden; overflow-y: visible; background: #fff; box-shadow: 0 8px 40px rgba(0,0,0,0.32), 0 2px 8px rgba(0,0,0,0.16); }
     .screen-name { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.75); text-align: center; letter-spacing: 0.3px; }
   </style>
-  <script>
-    function autoResize(iframe) {
-      try {
-        const doc = iframe.contentDocument || iframe.contentWindow.document;
-        iframe.style.height = doc.documentElement.scrollHeight + 'px';
-      } catch(e) {}
-    }
-  </script>
   <link rel="stylesheet" href="button-system.css" />
   <link rel="stylesheet" href="design-system.css" />
+  <style>
+    .screen-content { width: 390px; min-height: 844px; display: block; font-family: 'Public Sans', sans-serif; background: #fff; position: relative; }
+
+/* ── screens/notifications/01-news.html ── */
+
+    .s-notifications-1 {
+      --green:         #009037;
+      --green-dark:    #007a2f;
+      --green-light:   #2eb07a;
+      --green-bg:      rgba(0,144,55,0.1);
+      --green-surface: #dcfce7;
+      --slate-900:     #0f172a;
+      --slate-800:     #1e293b;
+      --slate-700:     #334155;
+      --slate-600:     #475569;
+      --slate-500:     #64748b;
+      --slate-400:     #94a3b8;
+      --slate-300:     #cbd5e1;
+      --slate-200:     #e2e8f0;
+      --slate-100:     #f1f5f9;
+      --slate-50:      #f8fafc;
+      --gray-bg:       #f8f6f6;
+      --red-100:       #fee2e2;
+      --red-600:       #dc2626;
+      --amber:         #f59e0b;
+      --amber-bg:      #fffbeb;
+      --white:         #ffffff;
+    }
+    .s-notifications-1 * { box-sizing: border-box; margin: 0; padding: 0; }
+    .s-notifications-1, .s-notifications-1 {  scrollbar-width: none; }
+    .s-notifications-1::-webkit-scrollbar { display: none; }
+    .s-notifications-1 {
+      font-family: 'Public Sans', sans-serif;
+      width: 390px;
+      height: 844px;
+      background: var(--gray-bg);
+      display: flex;
+      flex-direction: column;
+      
+    }
+
+    /* ── HEADER ── */
+    .s-notifications-1 .header {
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-200);
+      padding: 0 16px;
+      height: 56px;
+      display: flex; align-items: center; gap: 8px;
+      flex-shrink: 0;
+    }
+    .s-notifications-1 .back-btn {
+      width: 44px; height: 44px; border-radius: 9px;
+      background: var(--slate-100); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .s-notifications-1 .header-title {
+      font-size: 15px; font-weight: 700; color: var(--slate-900); letter-spacing: -0.2px;
+    }
+
+    /* ── SEGMENT TABS ── */
+    .s-notifications-1 .tabs {
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-200);
+      display: flex;
+      padding: 0 20px;
+      gap: 0;
+      flex-shrink: 0;
+    }
+    .s-notifications-1 .tab {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      padding: 12px 4px 0;
+      gap: 10px;
+      cursor: pointer;
+      position: relative;
+    }
+    .s-notifications-1 .tab-label {
+      font-size: 13px; font-weight: 600; color: var(--slate-400);
+      display: flex; align-items: center; gap: 5px;
+      padding-bottom: 11px;
+    }
+    .s-notifications-1 .tab.active .tab-label { color: var(--green); }
+    .s-notifications-1 .tab-underline {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 2px; border-radius: 9999px;
+      background: transparent;
+    }
+    .s-notifications-1 .tab.active .tab-underline { background: var(--green); }
+    .s-notifications-1 .tab-badge {
+      min-width: 18px; height: 18px; border-radius: 9999px;
+      background: var(--green); color: white;
+      font-size: 10px; font-weight: 700;
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0 4px;
+    }
+    .s-notifications-1 .tab-badge.orange { background: #ef5023; }
+    .s-notifications-1 .tab-badge.slate { background: var(--slate-400); }
+
+    /* ── SCROLL AREA ── */
+    .s-notifications-1 .scroll-area {
+      flex: 1; overflow-y: auto;
+      padding: 16px 0 88px;
+      display: flex; flex-direction: column;
+    }
+    .s-notifications-1 .scroll-area::-webkit-scrollbar { display: none; }
+
+    /* Section label */
+    .s-notifications-1 .section-label {
+      font-size: 11px; font-weight: 700; color: var(--slate-400);
+      letter-spacing: 0.8px; text-transform: uppercase;
+      padding: 0 20px 8px;
+    }
+
+    /* ── NOTIFICATION ITEM ── */
+    .s-notifications-1 .notif-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 20px;
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-100);
+      position: relative;
+      cursor: pointer;
+    }
+    .s-notifications-1 .notif-item.unread { background: rgba(0,144,55,0.03); }
+    .s-notifications-1 .unread-dot {
+      position: absolute; left: 8px; top: 50%;
+      transform: translateY(-50%);
+      width: 6px; height: 6px; border-radius: 9999px;
+      background: var(--green);
+    }
+    .s-notifications-1 .notif-icon-wrap {
+      width: 44px; height: 44px; border-radius: 13px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .s-notifications-1 .notif-icon-wrap.green { background: var(--green-bg); }
+    .s-notifications-1 .notif-icon-wrap.amber { background: var(--amber-bg); }
+    .s-notifications-1 .notif-icon-wrap.blue { background: rgba(99,102,241,0.10); }
+    .s-notifications-1 .notif-icon-wrap.red { background: var(--red-100); }
+
+    /* Avatar-based icon */
+    .s-notifications-1 .notif-avatar {
+      width: 44px; height: 44px; border-radius: 9999px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 15px; font-weight: 700; color: white;
+    }
+
+    .s-notifications-1 .notif-body { flex: 1; min-width: 0; }
+    .s-notifications-1 .notif-text {
+      font-size: 13px; font-weight: 400; color: var(--slate-700);
+      line-height: 1.5; margin-bottom: 4px;
+    }
+    .s-notifications-1 .notif-text strong { font-weight: 700; color: var(--slate-900); }
+    .s-notifications-1 .notif-meta {
+      font-size: 11px; font-weight: 500; color: var(--slate-400);
+    }
+    .s-notifications-1 .notif-time { color: var(--slate-400); }
+
+    /* Inline action buttons */
+    .s-notifications-1 .notif-actions { display: flex; gap: 8px; margin-top: 8px; }
+    .s-notifications-1 .notif-action-btn {
+      height: 30px; border-radius: 8px;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 12px; font-weight: 700;
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 12px;
+    }
+    .s-notifications-1 .notif-action-btn.primary { background: linear-gradient(135deg, #2eb07a 0%, #009037 100%); color: white; }
+    .s-notifications-1 .notif-action-btn.ghost {
+      background: var(--slate-100); color: var(--slate-600);
+    }
+
+    /* ── Bottom Nav ── */
+    .s-notifications-1 .bottom-nav {
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 390px;
+      height: 72px;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      padding: 0 4px;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      z-index: 100;
+    }
+    .s-notifications-1 .nav-link {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-end;
+      gap: 3px;
+      cursor: pointer;
+      padding-bottom: 10px;
+      position: relative;
+    }
+    .s-notifications-1 .nav-icon {
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .s-notifications-1 .nav-label {
+      font-size: 10px; font-weight: 600;
+      color: var(--slate-400);
+      line-height: 1;
+      letter-spacing: 0.1px;
+    }
+    .s-notifications-1 .nav-label.active { color: var(--green); }
+    .s-notifications-1 .nav-dot {
+      width: 4px; height: 4px;
+      border-radius: 2px;
+      background: var(--green);
+      opacity: 0;
+    }
+    .s-notifications-1 .nav-link:has(.nav-label.active) .nav-dot { opacity: 1; }
+    .s-notifications-1 .nav-fab-wrap {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding-bottom: 0;
+    }
+    .s-notifications-1 .nav-fab {
+      width: 50px; height: 50px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,144,55,0.40), 0 1px 4px rgba(0,0,0,0.12);
+      margin-top: -12px;
+    }
+    .s-notifications-1 .nav-fab svg { width: 22px; height: 22px; }
+    /* notification badge on nav icon */
+    .s-notifications-1 .nav-badge {
+      position: absolute; top: 6px; right: 12px;
+      width: 8px; height: 8px; border-radius: 9999px;
+      background: #ef5023;
+      border: 2px solid white;
+    }
+  
+
+/* ── screens/notifications/02-requested-contact.html ── */
+
+    .s-notifications-2 {
+      --green:         #009037;
+      --green-dark:    #007a2f;
+      --green-light:   #2eb07a;
+      --green-bg:      rgba(0,144,55,0.1);
+      --green-surface: #dcfce7;
+      --slate-900:     #0f172a;
+      --slate-800:     #1e293b;
+      --slate-700:     #334155;
+      --slate-600:     #475569;
+      --slate-500:     #64748b;
+      --slate-400:     #94a3b8;
+      --slate-300:     #cbd5e1;
+      --slate-200:     #e2e8f0;
+      --slate-100:     #f1f5f9;
+      --slate-50:      #f8fafc;
+      --gray-bg:       #f8f6f6;
+      --red-100:       #fee2e2;
+      --red-600:       #dc2626;
+      --amber:         #f59e0b;
+      --amber-bg:      #fffbeb;
+      --white:         #ffffff;
+    }
+    .s-notifications-2 * { box-sizing: border-box; margin: 0; padding: 0; }
+    .s-notifications-2, .s-notifications-2 {  scrollbar-width: none; }
+    .s-notifications-2::-webkit-scrollbar { display: none; }
+    .s-notifications-2 {
+      font-family: 'Public Sans', sans-serif;
+      width: 390px;
+      height: 844px;
+      background: var(--gray-bg);
+      display: flex;
+      flex-direction: column;
+      
+    }
+
+    /* ── HEADER ── */
+    .s-notifications-2 .header {
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-200);
+      padding: 0 16px;
+      height: 56px;
+      display: flex; align-items: center; gap: 8px;
+      flex-shrink: 0;
+    }
+    .s-notifications-2 .back-btn {
+      width: 44px; height: 44px; border-radius: 9px;
+      background: var(--slate-100); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .s-notifications-2 .header-title {
+      font-size: 15px; font-weight: 700; color: var(--slate-900); letter-spacing: -0.2px;
+    }
+
+    /* ── SEGMENT TABS ── */
+    .s-notifications-2 .tabs {
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-200);
+      display: flex; padding: 0 20px; gap: 0; flex-shrink: 0;
+    }
+    .s-notifications-2 .tab {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      padding: 12px 4px 0; gap: 10px; cursor: pointer; position: relative;
+    }
+    .s-notifications-2 .tab-label {
+      font-size: 13px; font-weight: 600; color: var(--slate-400);
+      display: flex; align-items: center; gap: 5px; padding-bottom: 11px;
+    }
+    .s-notifications-2 .tab.active .tab-label { color: var(--green); }
+    .s-notifications-2 .tab-underline {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 2px; border-radius: 9999px; background: transparent;
+    }
+    .s-notifications-2 .tab.active .tab-underline { background: var(--green); }
+    .s-notifications-2 .tab-badge {
+      min-width: 18px; height: 18px; border-radius: 9999px;
+      background: var(--green); color: white;
+      font-size: 10px; font-weight: 700;
+      display: inline-flex; align-items: center; justify-content: center; padding: 0 4px;
+    }
+    .s-notifications-2 .tab-badge.orange { background: #ef5023; }
+    .s-notifications-2 .tab-badge.slate { background: var(--slate-400); }
+
+    /* ── SCROLL AREA ── */
+    .s-notifications-2 .scroll-area {
+      flex: 1; overflow-y: auto; padding: 16px 0 88px;
+      display: flex; flex-direction: column;
+    }
+    .s-notifications-2 .scroll-area::-webkit-scrollbar { display: none; }
+
+    .s-notifications-2 .section-label {
+      font-size: 11px; font-weight: 700; color: var(--slate-400);
+      letter-spacing: 0.8px; text-transform: uppercase;
+      padding: 0 20px 8px;
+    }
+
+    /* ── REQUEST CARD ── */
+    .s-notifications-2 .request-card {
+      background: var(--white);
+      margin: 0 16px 12px;
+      border-radius: 16px;
+      border: 1px solid var(--slate-200);
+      overflow: hidden;
+      position: relative;
+    }
+    .s-notifications-2 .request-card.unread { border-color: rgba(0,144,55,0.25); }
+    .s-notifications-2 .unread-strip {
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px; background: var(--green); border-radius: 9999px 0 0 9999px;
+    }
+
+    .s-notifications-2 .request-top {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 16px 12px;
+    }
+    .s-notifications-2 .req-avatar {
+      width: 48px; height: 48px; border-radius: 9999px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; font-weight: 700; color: white; flex-shrink: 0;
+    }
+    .s-notifications-2 .req-info { flex: 1; min-width: 0; }
+    .s-notifications-2 .req-name {
+      font-size: 15px; font-weight: 700; color: var(--slate-900);
+      margin-bottom: 2px;
+    }
+    .s-notifications-2 .req-role {
+      font-size: 12px; color: var(--slate-500);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .s-notifications-2 .req-time {
+      font-size: 11px; font-weight: 500; color: var(--slate-400);
+      flex-shrink: 0;
+    }
+
+    /* Mutual connections */
+    .s-notifications-2 .req-mutual {
+      display: flex; align-items: center; gap: 6px;
+      padding: 0 16px 12px;
+    }
+    .s-notifications-2 .mutual-avatars { display: flex; }
+    .s-notifications-2 .mutual-avatar {
+      width: 20px; height: 20px; border-radius: 9999px;
+      border: 2px solid white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 8px; font-weight: 700; color: white;
+      margin-left: -6px;
+    }
+    .s-notifications-2 .mutual-avatar:first-child { margin-left: 0; }
+    .s-notifications-2 .mutual-text { font-size: 11px; color: var(--slate-500); }
+    .s-notifications-2 .mutual-text strong { font-weight: 700; color: var(--slate-700); }
+
+    /* Message preview */
+    .s-notifications-2 .req-message {
+      margin: 0 16px 12px;
+      background: var(--slate-50);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 13px; color: var(--slate-600);
+      line-height: 1.5;
+      font-style: italic;
+      border-left: 3px solid var(--slate-200);
+    }
+
+    /* Action buttons */
+    .s-notifications-2 .req-actions {
+      display: flex; gap: 8px;
+      padding: 0 16px 14px;
+    }
+    .s-notifications-2 .req-btn {
+      flex: 1; height: 38px; border-radius: 10px;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 13px; font-weight: 700;
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .s-notifications-2 .req-btn.accept { background: linear-gradient(135deg, #2eb07a 0%, #009037 100%); color: white; }
+    .s-notifications-2 .req-btn.decline { background: var(--red-100); color: var(--red-600); }
+
+    /* Empty state */
+    .s-notifications-2 .empty-state {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 40px 32px;
+    }
+    .s-notifications-2 .empty-icon {
+      width: 64px; height: 64px; border-radius: 18px;
+      background: var(--slate-100);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .s-notifications-2 .empty-title { font-size: 16px; font-weight: 700; color: var(--slate-900); margin-bottom: 6px; text-align: center; }
+    .s-notifications-2 .empty-sub { font-size: 13px; color: var(--slate-400); text-align: center; line-height: 1.5; }
+
+    /* ── Bottom Nav ── */
+    .s-notifications-2 .bottom-nav {
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 390px;
+      height: 72px;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      padding: 0 4px;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      z-index: 100;
+    }
+    .s-notifications-2 .nav-link {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-end;
+      gap: 3px;
+      cursor: pointer;
+      padding-bottom: 10px;
+      position: relative;
+    }
+    .s-notifications-2 .nav-icon {
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .s-notifications-2 .nav-label {
+      font-size: 10px; font-weight: 600;
+      color: var(--slate-400);
+      line-height: 1;
+      letter-spacing: 0.1px;
+    }
+    .s-notifications-2 .nav-label.active { color: var(--green); }
+    .s-notifications-2 .nav-dot {
+      width: 4px; height: 4px;
+      border-radius: 2px;
+      background: var(--green);
+      opacity: 0;
+    }
+    .s-notifications-2 .nav-link:has(.nav-label.active) .nav-dot { opacity: 1; }
+    .s-notifications-2 .nav-fab-wrap {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding-bottom: 0;
+    }
+    .s-notifications-2 .nav-fab {
+      width: 50px; height: 50px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,144,55,0.40), 0 1px 4px rgba(0,0,0,0.12);
+      margin-top: -12px;
+    }
+    .s-notifications-2 .nav-fab svg { width: 22px; height: 22px; }
+    .s-notifications-2 .nav-badge { position: absolute; top: 6px; right: 12px; width: 8px; height: 8px; border-radius: 9999px; background: #ef5023; border: 2px solid white; }
+  
+
+/* ── screens/notifications/03-others.html ── */
+
+    .s-notifications-3 {
+      --green:         #009037;
+      --green-dark:    #007a2f;
+      --green-light:   #2eb07a;
+      --green-bg:      rgba(0,144,55,0.1);
+      --green-surface: #dcfce7;
+      --slate-900:     #0f172a;
+      --slate-800:     #1e293b;
+      --slate-700:     #334155;
+      --slate-600:     #475569;
+      --slate-500:     #64748b;
+      --slate-400:     #94a3b8;
+      --slate-300:     #cbd5e1;
+      --slate-200:     #e2e8f0;
+      --slate-100:     #f1f5f9;
+      --slate-50:      #f8fafc;
+      --gray-bg:       #f8f6f6;
+      --red-100:       #fee2e2;
+      --red-600:       #dc2626;
+      --amber:         #f59e0b;
+      --amber-bg:      #fffbeb;
+      --white:         #ffffff;
+    }
+    .s-notifications-3 * { box-sizing: border-box; margin: 0; padding: 0; }
+    .s-notifications-3, .s-notifications-3 {  scrollbar-width: none; }
+    .s-notifications-3::-webkit-scrollbar { display: none; }
+    .s-notifications-3 {
+      font-family: 'Public Sans', sans-serif;
+      width: 390px;
+      height: 844px;
+      background: var(--gray-bg);
+      display: flex;
+      flex-direction: column;
+      
+    }
+
+    /* ── HEADER ── */
+    .s-notifications-3 .header {
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-200);
+      padding: 0 16px;
+      height: 56px;
+      display: flex; align-items: center; gap: 8px;
+      flex-shrink: 0;
+    }
+    .s-notifications-3 .back-btn {
+      width: 44px; height: 44px; border-radius: 9px;
+      background: var(--slate-100); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .s-notifications-3 .header-title {
+      font-size: 15px; font-weight: 700; color: var(--slate-900); letter-spacing: -0.2px;
+    }
+    .s-notifications-3 .icon-btn {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--slate-100); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── SEGMENT TABS ── */
+    .s-notifications-3 .tabs {
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-200);
+      display: flex; padding: 0 20px; gap: 0; flex-shrink: 0;
+    }
+    .s-notifications-3 .tab {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      padding: 12px 4px 0; gap: 10px; cursor: pointer; position: relative;
+    }
+    .s-notifications-3 .tab-label {
+      font-size: 13px; font-weight: 600; color: var(--slate-400);
+      display: flex; align-items: center; gap: 5px; padding-bottom: 11px;
+    }
+    .s-notifications-3 .tab.active .tab-label { color: var(--green); }
+    .s-notifications-3 .tab-underline {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 2px; border-radius: 9999px; background: transparent;
+    }
+    .s-notifications-3 .tab.active .tab-underline { background: var(--green); }
+    .s-notifications-3 .tab-badge {
+      min-width: 18px; height: 18px; border-radius: 9999px;
+      background: var(--green); color: white;
+      font-size: 10px; font-weight: 700;
+      display: inline-flex; align-items: center; justify-content: center; padding: 0 4px;
+    }
+    .s-notifications-3 .tab-badge.orange { background: #ef5023; }
+    .s-notifications-3 .tab-badge.slate { background: var(--slate-400); }
+
+    /* ── SCROLL AREA ── */
+    .s-notifications-3 .scroll-area {
+      flex: 1; overflow-y: auto; padding: 16px 0 88px;
+      display: flex; flex-direction: column;
+    }
+    .s-notifications-3 .scroll-area::-webkit-scrollbar { display: none; }
+
+    .s-notifications-3 .section-label {
+      font-size: 11px; font-weight: 700; color: var(--slate-400);
+      letter-spacing: 0.8px; text-transform: uppercase;
+      padding: 0 20px 8px;
+    }
+
+    /* ── NOTIFICATION ITEM ── */
+    .s-notifications-3 .notif-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 20px;
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-100);
+      position: relative; cursor: pointer;
+    }
+    .s-notifications-3 .notif-item.unread { background: rgba(0,144,55,0.03); }
+    .s-notifications-3 .unread-dot {
+      position: absolute; left: 8px; top: 50%;
+      transform: translateY(-50%);
+      width: 6px; height: 6px; border-radius: 9999px;
+      background: var(--green);
+    }
+    .s-notifications-3 .notif-icon-wrap {
+      width: 44px; height: 44px; border-radius: 13px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .s-notifications-3 .notif-icon-wrap.green { background: var(--green-bg); }
+    .s-notifications-3 .notif-icon-wrap.amber { background: var(--amber-bg); }
+    .s-notifications-3 .notif-icon-wrap.blue { background: rgba(99,102,241,0.10); }
+    .s-notifications-3 .notif-icon-wrap.red { background: var(--red-100); }
+    .s-notifications-3 .notif-icon-wrap.purple { background: rgba(139,92,246,0.10); }
+    .s-notifications-3 .notif-icon-wrap.gold { background: rgba(212,175,55,0.12); }
+
+    .s-notifications-3 .notif-avatar {
+      width: 48px; height: 48px; border-radius: 9999px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 700; color: white; flex-shrink: 0;
+    }
+    .s-notifications-3 .notif-body { flex: 1; min-width: 0; }
+    .s-notifications-3 .notif-text {
+      font-size: 13px; font-weight: 400; color: var(--slate-700);
+      line-height: 1.5; margin-bottom: 4px;
+    }
+    .s-notifications-3 .notif-text strong { font-weight: 700; color: var(--slate-900); }
+    .s-notifications-3 .notif-meta { font-size: 11px; font-weight: 500; color: var(--slate-400); }
+
+    /* Upgrade CTA card */
+    .s-notifications-3 .upgrade-card {
+      margin: 0 16px 16px;
+      background: linear-gradient(135deg, #1b2a41 0%, #1e293b 100%);
+      border-radius: 16px;
+      padding: 18px;
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+    .s-notifications-3 .upgrade-icon {
+      width: 44px; height: 44px; border-radius: 13px;
+      background: rgba(212,175,55,0.18);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .s-notifications-3 .upgrade-body { flex: 1; min-width: 0; }
+    .s-notifications-3 .upgrade-title { font-size: 14px; font-weight: 800; color: white; margin-bottom: 4px; }
+    .s-notifications-3 .upgrade-desc { font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.5; margin-bottom: 12px; }
+    .s-notifications-3 .upgrade-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      height: 34px; border-radius: 9px;
+      background: #d4af37; border: none; cursor: pointer;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 12px; font-weight: 700; color: #3d3d00;
+      padding: 0 14px;
+    }
+
+    /* Inline action */
+    .s-notifications-3 .notif-actions { display: flex; gap: 8px; margin-top: 8px; }
+    .s-notifications-3 .notif-action-btn {
+      height: 30px; border-radius: 8px;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 12px; font-weight: 700;
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; padding: 0 12px;
+    }
+    .s-notifications-3 .notif-action-btn.primary { background: linear-gradient(135deg, #2eb07a 0%, #009037 100%); color: white; }
+    .s-notifications-3 .notif-action-btn.ghost { background: var(--slate-100); color: var(--slate-600); }
+
+    /* ── Bottom Nav ── */
+    .s-notifications-3 .bottom-nav {
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 390px;
+      height: 72px;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      padding: 0 4px;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      z-index: 100;
+    }
+    .s-notifications-3 .nav-link {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-end;
+      gap: 3px;
+      cursor: pointer;
+      padding-bottom: 10px;
+      position: relative;
+    }
+    .s-notifications-3 .nav-icon {
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .s-notifications-3 .nav-label {
+      font-size: 10px; font-weight: 600;
+      color: var(--slate-400);
+      line-height: 1;
+      letter-spacing: 0.1px;
+    }
+    .s-notifications-3 .nav-label.active { color: var(--green); }
+    .s-notifications-3 .nav-dot {
+      width: 4px; height: 4px;
+      border-radius: 2px;
+      background: var(--green);
+      opacity: 0;
+    }
+    .s-notifications-3 .nav-link:has(.nav-label.active) .nav-dot { opacity: 1; }
+    .s-notifications-3 .nav-fab-wrap {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding-bottom: 0;
+    }
+    .s-notifications-3 .nav-fab {
+      width: 50px; height: 50px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,144,55,0.40), 0 1px 4px rgba(0,0,0,0.12);
+      margin-top: -12px;
+    }
+    .s-notifications-3 .nav-fab svg { width: 22px; height: 22px; }
+    .s-notifications-3 .nav-badge { position: absolute; top: 6px; right: 12px; width: 8px; height: 8px; border-radius: 9999px; background: #ef5023; border: 2px solid white; }
+  
+  </style>
 </head>
 <body>
 
@@ -42,17 +776,451 @@
   <div class="flow-screens">
 
     <div class="screen">
-      <div class="phone-frame"><iframe src="screens/notifications/01-news.html" onload="autoResize(this)"></iframe></div>
+      <div class="phone-frame"><div class="screen-content s-notifications-1"><!-- Header -->
+  <div class="header">
+    <button class="back-btn" aria-label="Back">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M10 12L6 8l4-4" stroke="var(--slate-900)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="header-title">Notifications</div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active">
+      <div class="tab-label">
+        News
+        <span class="tab-badge">5</span>
+      </div>
+      <div class="tab-underline"></div>
+    </div>
+    <div class="tab">
+      <div class="tab-label">
+        Requests
+        <span class="tab-badge orange">3</span>
+      </div>
+      <div class="tab-underline"></div>
+    </div>
+    <div class="tab">
+      <div class="tab-label">
+        Others
+        <span class="tab-badge slate">4</span>
+      </div>
+      <div class="tab-underline"></div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="scroll-area">
+
+    <div style="height:8px;"></div>
+
+    <!-- Admin post 1 (unread) -->
+    <div class="notif-item unread">
+      <div class="unread-dot"></div>
+      <div class="notif-icon-wrap green">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="3" width="18" height="18" rx="4" stroke="var(--green)" stroke-width="1.7"/>
+          <path d="M7 8h10M7 12h7M7 16h5" stroke="var(--green)" stroke-width="1.7" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="notif-body">
+        <div class="notif-text"><strong>InCard Team</strong> · OpenAI từng cấm sử dụng trong quân sự</div>
+        <div class="notif-meta notif-time">2 min ago · From Admin</div>
+        <div class="notif-actions">
+          <button class="notif-action-btn primary">Read Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Connection post (unread) -->
+    <div class="notif-item unread">
+      <div class="unread-dot"></div>
+      <div class="notif-avatar" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">AK</div>
+      <div class="notif-body">
+        <div class="notif-text"><strong>Anna Kim</strong> · Làn sóng huy động vốn chính trị</div>
+        <div class="notif-meta notif-time">18 min ago · Product Designer at Grab</div>
+        <div class="notif-actions">
+          <button class="notif-action-btn primary">Read Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin post 2 (unread) -->
+    <div class="notif-item unread">
+      <div class="unread-dot"></div>
+      <div class="notif-icon-wrap green">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="3" width="18" height="18" rx="4" stroke="var(--green)" stroke-width="1.7"/>
+          <path d="M7 8h10M7 12h7M7 16h5" stroke="var(--green)" stroke-width="1.7" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="notif-body">
+        <div class="notif-text"><strong>InCard Team</strong> · 5 tips to maximise your networking with NFC cards</div>
+        <div class="notif-meta notif-time">1 hr ago · From Admin</div>
+        <div class="notif-actions">
+          <button class="notif-action-btn primary">Read Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Connection post (unread) -->
+    <div class="notif-item unread">
+      <div class="unread-dot"></div>
+      <div class="notif-avatar" style="background: linear-gradient(135deg, #f59e0b, #ef5023);">JW</div>
+      <div class="notif-body">
+        <div class="notif-text"><strong>James Wong</strong> · How Southeast Asia's B2B market is changing in 2025</div>
+        <div class="notif-meta notif-time">3 hr ago · Founder at TechSEA</div>
+        <div class="notif-actions">
+          <button class="notif-action-btn primary">Read Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Connection post (read) -->
+    <div class="notif-item">
+      <div class="notif-avatar" style="background: linear-gradient(135deg, #059669, #10b981);">MR</div>
+      <div class="notif-body">
+        <div class="notif-text"><strong>Marco Rossi</strong> · Why every founder needs a digital business card in 2025</div>
+        <div class="notif-meta notif-time">5 hr ago · VP Sales at Finova Group</div>
+        <div class="notif-actions">
+          <button class="notif-action-btn ghost">Read Now</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Nav -->
+    <div class="bottom-nav">
+      <div class="nav-link">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 21v-8h6v8" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="nav-label">Home</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-link">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="7" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="17" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M7.5 12h5.5M13 12l3.5-4M13 12l3.5 4" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="nav-label">Network</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-fab-wrap">
+        <div class="nav-fab">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="14" y="18" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="18" width="3" height="3" rx="0.5" fill="white"/></svg>
+        </div>
+      </div>
+      <div class="nav-link">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="var(--green)" fill-opacity="0.12" stroke="var(--green)" stroke-width="1.75"/><path d="M16.5 7.5l-3 6-5.5 2.5 3-6 5.5-2.5z" fill="var(--green)" stroke="var(--green)" stroke-width="0.5" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="nav-label active">Explore</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-link">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round"/></svg>
+        </div>
+        <span class="nav-label">Profile</span>
+        <span class="nav-dot"></span>
+      </div>
+    </div></div></div>
       <div class="screen-name">Notifications — News</div>
     </div>
 
     <div class="screen">
-      <div class="phone-frame"><iframe src="screens/notifications/02-requested-contact.html" onload="autoResize(this)"></iframe></div>
+      <div class="phone-frame"><div class="screen-content s-notifications-2"><!-- Header -->
+  <div class="header">
+    <button class="back-btn" aria-label="Back">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M10 12L6 8l4-4" stroke="var(--slate-900)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="header-title">Notifications</div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab">
+      <div class="tab-label">
+        News
+        <span class="tab-badge">5</span>
+      </div>
+      <div class="tab-underline"></div>
+    </div>
+    <div class="tab active">
+      <div class="tab-label">
+        Requests
+        <span class="tab-badge orange">3</span>
+      </div>
+      <div class="tab-underline"></div>
+    </div>
+    <div class="tab">
+      <div class="tab-label">
+        Others
+        <span class="tab-badge slate">4</span>
+      </div>
+      <div class="tab-underline"></div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="scroll-area">
+
+    <div style="height:8px;"></div>
+
+    <!-- Request 1 — Anna Kim -->
+    <div class="request-card unread">
+      <div class="unread-strip"></div>
+      <div class="request-top">
+        <div class="req-avatar" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">AK</div>
+        <div class="req-info">
+          <div class="req-name">Anna Kim</div>
+          <div class="req-role">Product Designer · Grab</div>
+        </div>
+      </div>
+      <div class="req-actions">
+        <button class="req-btn accept">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M2 8l4 4 8-8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Accept
+        </button>
+        <button class="req-btn decline">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M4 4l8 8M12 4L4 12" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Decline
+        </button>
+      </div>
+    </div>
+
+    <!-- Request 2 — Marco Rossi -->
+    <div class="request-card unread">
+      <div class="unread-strip"></div>
+      <div class="request-top">
+        <div class="req-avatar" style="background: linear-gradient(135deg, #f59e0b, #ef5023);">MR</div>
+        <div class="req-info">
+          <div class="req-name">Marco Rossi</div>
+          <div class="req-role">VP Sales · Finova Group</div>
+        </div>
+      </div>
+      <div class="req-actions">
+        <button class="req-btn accept">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M2 8l4 4 8-8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Accept
+        </button>
+        <button class="req-btn decline">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M4 4l8 8M12 4L4 12" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Decline
+        </button>
+      </div>
+    </div>
+
+    <!-- Request 3 — Sara Nguyen -->
+    <div class="request-card unread">
+      <div class="unread-strip"></div>
+      <div class="request-top">
+        <div class="req-avatar" style="background: linear-gradient(135deg, #0ea5e9, #6366f1);">SN</div>
+        <div class="req-info">
+          <div class="req-name">Sara Nguyen</div>
+          <div class="req-role">Founder · SeedBridge Capital</div>
+        </div>
+      </div>
+      <div class="req-actions">
+        <button class="req-btn accept">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M2 8l4 4 8-8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Accept
+        </button>
+        <button class="req-btn decline">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M4 4l8 8M12 4L4 12" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Decline
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Nav -->
+    <div class="bottom-nav">
+      <div class="nav-link">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 21v-8h6v8" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="nav-label">Home</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-link">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="7" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="17" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M7.5 12h5.5M13 12l3.5-4M13 12l3.5 4" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="nav-label">Network</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-fab-wrap">
+        <div class="nav-fab">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="14" y="18" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="18" width="3" height="3" rx="0.5" fill="white"/></svg>
+        </div>
+      </div>
+      <div class="nav-link">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="var(--green)" fill-opacity="0.12" stroke="var(--green)" stroke-width="1.75"/><path d="M16.5 7.5l-3 6-5.5 2.5 3-6 5.5-2.5z" fill="var(--green)" stroke="var(--green)" stroke-width="0.5" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="nav-label active">Explore</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-link">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round"/></svg>
+        </div>
+        <span class="nav-label">Profile</span>
+        <span class="nav-dot"></span>
+      </div>
+    </div></div></div>
       <div class="screen-name">Notifications — Requests</div>
     </div>
 
     <div class="screen">
-      <div class="phone-frame"><iframe src="screens/notifications/03-others.html" onload="autoResize(this)"></iframe></div>
+      <div class="phone-frame"><div class="screen-content s-notifications-3"><!-- Header -->
+  <div class="header">
+    <button class="back-btn" aria-label="Back">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M10 12L6 8l4-4" stroke="var(--slate-900)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="header-title">Notifications</div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab">
+      <div class="tab-label">
+        News
+        <span class="tab-badge">5</span>
+      </div>
+      <div class="tab-underline"></div>
+    </div>
+    <div class="tab">
+      <div class="tab-label">
+        Requests
+        <span class="tab-badge orange">3</span>
+      </div>
+      <div class="tab-underline"></div>
+    </div>
+    <div class="tab active">
+      <div class="tab-label">
+        Others
+        <span class="tab-badge slate">4</span>
+      </div>
+      <div class="tab-underline"></div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="scroll-area">
+
+    <div style="height:8px;"></div>
+
+    <!-- Message 1 — unread -->
+    <div class="notif-item unread">
+      <div class="unread-dot"></div>
+      <div class="notif-avatar" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">AK</div>
+      <div class="notif-body">
+        <div class="notif-text"><strong>Anna Kim</strong> · "Hey! Loved your InCard profile. Would love to connect…"</div>
+        <div class="notif-meta notif-time">2 min ago</div>
+        <div class="notif-actions">
+          <button class="notif-action-btn primary">Reply</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message 2 — unread -->
+    <div class="notif-item unread">
+      <div class="unread-dot"></div>
+      <div class="notif-avatar" style="background: linear-gradient(135deg, #059669, #10b981);">MR</div>
+      <div class="notif-body">
+        <div class="notif-text"><strong>Marco Rossi</strong> · "Thanks for accepting! Are you free for a quick call this week?"</div>
+        <div class="notif-meta notif-time">18 min ago</div>
+        <div class="notif-actions">
+          <button class="notif-action-btn primary">Reply</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message 3 — unread -->
+    <div class="notif-item unread">
+      <div class="unread-dot"></div>
+      <div class="notif-avatar" style="background: linear-gradient(135deg, #0ea5e9, #6366f1);">SN</div>
+      <div class="notif-body">
+        <div class="notif-text"><strong>Sara Nguyen</strong> · "Hi! I saw you scanned my card at the event — great to meet you!"</div>
+        <div class="notif-meta notif-time">1 hr ago</div>
+        <div class="notif-actions">
+          <button class="notif-action-btn primary">Reply</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message 4 — read -->
+    <div class="notif-item">
+      <div class="notif-avatar" style="background: linear-gradient(135deg, #f59e0b, #ef5023);">JW</div>
+      <div class="notif-body">
+        <div class="notif-text"><strong>James Wong</strong> · "Interesting — let's schedule a call to discuss further."</div>
+        <div class="notif-meta notif-time">3 hr ago</div>
+        <div class="notif-actions">
+          <button class="notif-action-btn ghost">Reply</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Nav -->
+    <div class="bottom-nav">
+      <div class="nav-link">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 21v-8h6v8" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="nav-label">Home</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-link">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="7" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="17" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M7.5 12h5.5M13 12l3.5-4M13 12l3.5 4" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="nav-label">Network</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-fab-wrap">
+        <div class="nav-fab">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="14" y="18" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="18" width="3" height="3" rx="0.5" fill="white"/></svg>
+        </div>
+      </div>
+      <div class="nav-link">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="var(--green)" fill-opacity="0.12" stroke="var(--green)" stroke-width="1.75"/><path d="M16.5 7.5l-3 6-5.5 2.5 3-6 5.5-2.5z" fill="var(--green)" stroke="var(--green)" stroke-width="0.5" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="nav-label active">Explore</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-link">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round"/></svg>
+        </div>
+        <span class="nav-label">Profile</span>
+        <span class="nav-dot"></span>
+      </div>
+    </div></div></div>
       <div class="screen-name">Notifications — Others</div>
     </div>
 

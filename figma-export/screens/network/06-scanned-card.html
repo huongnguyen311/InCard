@@ -2,48 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=390, initial-scale=1.0, viewport-fit=cover" />
   <title>InCard — Edit Card</title>
-  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../../button-system.css" />
   <link rel="stylesheet" href="../../design-system.css" />
   <style>
-    :root {
-      --green:        #009037;
-      --green-light:  #2eb07a;
-      --green-bg:     rgba(0,144,55,0.1);
-      --green-surface:#dcfce7;
-      --slate-900:    #0f172a;
-      --slate-800:    #1e293b;
-      --slate-700:    #334155;
-      --slate-600:    #475569;
-      --slate-500:    #64748b;
-      --slate-400:    #94a3b8;
-      --slate-300:    #cbd5e1;
-      --slate-200:    #e2e8f0;
-      --slate-100:    #f1f5f9;
-      --slate-50:     #f8fafc;
-      --gray-bg:      #f2f3f5;
-      --red-100:      #fee2e2;
-      --red-600:      #dc2626;
-      --blue:         #3b82f6;
-      --blue-bg:      rgba(59,130,246,0.1);
-      --purple:       #8b5cf6;
-      --purple-bg:    rgba(139,92,246,0.1);
-      --orange:       #ef5023;
-      --orange-light: #fa987d;
-      --orange-bg:    rgba(239,80,35,0.1);
-      --white:        #ffffff;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { scrollbar-width: none; -ms-overflow-style: none; }
-    html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
-    body {
+* { box-sizing: border-box; margin: 0; padding: 0; }
+    html { width: 390px; overflow: hidden; }
+body {
       background: var(--gray-bg);
       font-family: 'Public Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       width: 390px;
     }
 
@@ -57,7 +30,7 @@
       display: flex; align-items: center;
     }
     .back-btn {
-      width: 36px; height: 36px;
+      width: 44px; height: 44px;
       display: flex; align-items: center; justify-content: center;
       border-radius: 10px; background: var(--slate-100);
       flex-shrink: 0; cursor: pointer; border: none;
@@ -376,6 +349,7 @@
     }
     .nav-fab svg { width: 22px; height: 22px; }
   </style>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
 </head>
 <body>
 

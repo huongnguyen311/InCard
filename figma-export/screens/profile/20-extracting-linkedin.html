@@ -2,43 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=390, initial-scale=1.0, viewport-fit=cover" />
   <title>InCard — Extracting LinkedIn Data</title>
-  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../../button-system.css" />
   <link rel="stylesheet" href="../../design-system.css" />
   <style>
-    :root {
-      --green:         #009037;
-      --green-light:   #2eb07a;
-      --green-bg:      rgba(0,144,55,0.1);
-      --green-surface: #dcfce7;
-      --slate-900:     #0f172a;
-      --slate-800:     #1e293b;
-      --slate-500:     #64748b;
-      --slate-400:     #94a3b8;
-      --slate-200:     #e2e8f0;
-      --slate-100:     #f1f5f9;
-      --slate-50:      #f8fafc;
-      --white:         #ffffff;
-      --border-light:  #f3f4f6;
-      --linkedin:      #0a66c2;
-      --linkedin-bg:   #eef3fb;
-      --orange:        #ef5023;
-      --orange-light:  #fa987d;
-      --orange-bg:     rgba(239,80,35,0.1);
+body { background: #0f172a; font-family: 'Public Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale; margin: 0; padding: 0; 
+      width: 390px;
     }
-    html, body { scrollbar-width: none; -ms-overflow-style: none; }
-    html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
-    body { background: #0f172a; font-family: 'Public Sans', sans-serif; margin: 0; padding: 0; }
 
     .screen {
       width: 390px; min-height: 844px;
       position: relative; overflow: hidden;
       display: flex; flex-direction: column; justify-content: flex-end;
+    
+      border-radius: 44px;
+      overflow: hidden;
     }
     .bg-layer {
       position: absolute; inset: 0;
@@ -138,6 +122,7 @@
     .spinner { animation: spin 0.9s linear infinite; }
     @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
   </style>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
 </head>
 <body>
   <div class="screen">
