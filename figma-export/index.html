@@ -2,144 +2,185 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=390, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>InCard — Screen Flows</title>
   <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { width: 390px; overflow: hidden; }
+    html, body { min-height: 100vh; }
 
     body {
-      background: #a49d9d;
+      background: #0f172a;
       font-family: 'Public Sans', sans-serif;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      position: fixed; top: 0; left: 0; bottom: 0;
+      width: 260px;
+      background: #1e293b;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      display: flex; flex-direction: column;
+      padding: 0 0 24px;
+      z-index: 10;
+    }
+
+    .sidebar-logo {
+      display: flex; align-items: center; gap: 12px;
+      padding: 28px 24px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .sidebar-logo img { width: 36px; height: 36px; border-radius: 9px; object-fit: contain; }
+    .sidebar-logo-text { display: flex; flex-direction: column; gap: 1px; }
+    .sidebar-logo-name { font-weight: 800; font-size: 16px; color: #fff; letter-spacing: -0.3px; }
+    .sidebar-logo-sub  { font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.4); letter-spacing: 0.3px; }
+
+    .sidebar-section-label {
+      font-size: 9px; font-weight: 700;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 1.6px; text-transform: uppercase;
+      padding: 20px 24px 8px;
+    }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 24px; text-decoration: none;
+      border-radius: 0; cursor: pointer;
+      transition: background 0.15s;
+      border-left: 3px solid transparent;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.05); }
+    .nav-item.active {
+      background: rgba(0,144,55,0.12);
+      border-left-color: #009037;
+    }
+    .nav-item-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .nav-item-text { display: flex; flex-direction: column; gap: 1px; }
+    .nav-item-title { font-size: 13px; font-weight: 600; color: #fff; }
+    .nav-item-sub   { font-size: 10px; font-weight: 400; color: rgba(255,255,255,0.4); }
+    .nav-badge {
+      margin-left: auto; font-size: 9px; font-weight: 700;
+      color: rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.08);
+      border-radius: 9999px; padding: 2px 7px;
+    }
+
+    .sidebar-footer {
+      margin-top: auto; padding: 16px 24px 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .sidebar-footer-text {
+      font-size: 10px; color: rgba(255,255,255,0.25);
+      line-height: 1.6;
+    }
+    .sidebar-footer-text a { color: rgba(0,144,55,0.8); text-decoration: none; }
+
+    /* ── Main content ── */
+    .main {
+      margin-left: 260px;
+      padding: 40px 40px 80px;
       min-height: 100vh;
-      padding: 56px 40px 80px;
-    
-      width: 390px;
     }
 
-    .title {
-      font-size: 10px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.6);
-      letter-spacing: 1.8px;
-      text-transform: uppercase;
-      margin-bottom: 32px;
+    .main-header {
+      margin-bottom: 36px;
+    }
+    .main-header-label {
+      font-size: 10px; font-weight: 700;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 1.8px; text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .main-header-title {
+      font-size: 28px; font-weight: 800;
+      color: #fff; letter-spacing: -0.5px;
+    }
+    .main-header-sub {
+      font-size: 14px; color: rgba(255,255,255,0.45);
+      margin-top: 6px;
     }
 
-    .grid {
+    .section-title {
+      font-size: 11px; font-weight: 700;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 1.4px; text-transform: uppercase;
+      margin-bottom: 16px; margin-top: 36px;
+    }
+    .section-title:first-of-type { margin-top: 0; }
+
+    /* ── Flow cards ── */
+    .flow-grid {
       display: grid;
-      grid-template-columns: repeat(4, 240px);
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      max-width: 1100px;
     }
 
     .flow-card {
       text-decoration: none;
-      display: flex;
-      flex-direction: column;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 20px;
-      overflow: hidden;
-      transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
+      display: flex; align-items: center; gap: 16px;
+      background: #1e293b;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 20px;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
       cursor: pointer;
     }
-
     .flow-card:hover {
-      transform: translateY(-5px);
-      background: rgba(255,255,255,0.18);
-      box-shadow: 0 16px 48px rgba(0,0,0,0.22);
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.14);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
     }
-
-    /* Preview strip — 3 mini phone thumbnails */
-    .preview {
-      height: 200px;
-      background: rgba(0,0,0,0.08);
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      gap: 8px;
-      padding: 0 12px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .preview-phone {
-      width: 68px;
-      height: 148px;
-      border-radius: 10px;
-      overflow: hidden;
-      background: #fff;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    .flow-card-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
-      position: relative;
     }
-
-    .preview-phone iframe {
-      width: 390px;
-      height: 844px;
-      border: none;
-      transform: scale(0.174);
-      transform-origin: top left;
-      pointer-events: none;
+    .flow-card-body { flex: 1; min-width: 0; }
+    .flow-card-title {
+      font-size: 15px; font-weight: 700; color: #fff;
+      margin-bottom: 4px; line-height: 1.3;
     }
-
-    /* Staggered heights for visual depth */
-    .preview-phone:nth-child(1) { height: 120px; margin-bottom: 8px; }
-    .preview-phone:nth-child(2) { height: 148px; }
-    .preview-phone:nth-child(3) { height: 132px; margin-bottom: 4px; }
-
-    .card-body {
-      padding: 18px 20px 20px;
+    .flow-card-desc {
+      font-size: 12px; color: rgba(255,255,255,0.45);
+      line-height: 1.5;
     }
-
-    .card-label {
-      font-size: 10px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.5);
-      letter-spacing: 1.4px;
-      text-transform: uppercase;
-      margin-bottom: 6px;
+    .flow-card-meta {
+      display: flex; align-items: center; gap: 8px; margin-top: 10px;
     }
-
-    .card-title {
-      font-size: 16px;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 10px;
-      line-height: 1.2;
+    .flow-card-badge {
+      font-size: 10px; font-weight: 600;
+      border-radius: 9999px; padding: 2px 8px;
     }
-
-    .card-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .flow-card-screens {
+      font-size: 10px; color: rgba(255,255,255,0.3); font-weight: 500;
     }
-
-    .screen-count {
-      font-size: 10px;
-      font-weight: 500;
-      color: rgba(255,255,255,0.55);
-    }
-
-    .arrow {
-      width: 28px;
-      height: 28px;
-      background: rgba(255,255,255,0.15);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .flow-card-arrow {
+      width: 32px; height: 32px; flex-shrink: 0;
+      background: rgba(255,255,255,0.06); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
       transition: background 0.15s;
     }
+    .flow-card:hover .flow-card-arrow { background: rgba(255,255,255,0.12); }
 
-    .flow-card:hover .arrow {
-      background: rgba(255,255,255,0.28);
+    /* ── Special: UI for Web card (featured) ── */
+    .flow-card.featured {
+      background: linear-gradient(135deg, #0f2a1a 0%, #1a3a26 100%);
+      border-color: rgba(0,144,55,0.3);
+      grid-column: 1 / -1;
+      max-width: 100%;
     }
+    .flow-card.featured:hover { border-color: rgba(0,144,55,0.5); }
+    .flow-card.featured .flow-card-title { font-size: 17px; }
+    .flow-card.featured .flow-card-desc { color: rgba(255,255,255,0.55); }
   </style>
   <link rel="stylesheet" href="button-system.css" />
   <link rel="stylesheet" href="design-system.css" />
@@ -4273,2807 +4314,159 @@
 </head>
 <body>
 
-  <div class="title">InCard — Screen Flows</div>
-
-  <div class="grid">
-
-    <!-- Auth Flow -->
-    <a class="flow-card" href="auth.html">
-      <div class="preview">
-        <div class="preview-phone"><div class="screen-content s-index-1" style="width:390px;height:844px;transform:scale(0.174);transform-origin:top left;pointer-events:none;overflow:hidden;"><div class="screen">
-    <div class="main-content">
-
-      <!-- Logo -->
-      <div class="logo-section">
-        <img class="logo-img" src="logo.png" alt="InCard" />
-      </div>
-
-      <!-- Header -->
-      <div class="header-section">
-        <h1 class="heading-display">Get started with InCard</h1>
-        <p class="heading-sub">Join now to manage your professional profile and expand your networking opportunities.</p>
-      </div>
-
-      <!-- Form -->
-      <div class="login-form">
-
-        <!-- Email -->
-        <div class="field-group">
-          <label class="field-label" for="email">Email*</label>
-          <div class="input-wrapper">
-            <div class="input-icon-left">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M2.5 5.833A1.667 1.667 0 0 1 4.167 4.167h11.666A1.667 1.667 0 0 1 17.5 5.833v8.334a1.667 1.667 0 0 1-1.667 1.666H4.167A1.667 1.667 0 0 1 2.5 14.167V5.833z" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M2.5 6.667l7.5 5 7.5-5" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <input type="email" id="email" placeholder="Enter your email" />
-          </div>
-        </div>
-
-        <!-- Password -->
-        <div class="field-group">
-          <label class="field-label" for="password">Password*</label>
-          <div class="input-wrapper">
-            <div class="input-icon-left">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5.833 9.167V6.667a4.167 4.167 0 1 1 8.334 0v2.5" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <rect x="2.5" y="9.167" width="15" height="9.166" rx="2" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="10" cy="13.75" r="1.25" fill="var(--slate-400)"/>
-              </svg>
-            </div>
-            <input type="password" id="password" placeholder="Enter your password" />
-            <div class="input-icon-right">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M2.5 10s2.917-5.833 7.5-5.833S17.5 10 17.5 10s-2.917 5.833-7.5 5.833S2.5 10 2.5 10z" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="10" cy="10" r="2.083" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        <!-- Referral Code -->
-        <div class="field-group">
-          <label class="field-label" for="referral">Referral Code</label>
-          <div class="input-wrapper">
-            <div class="input-icon-left">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10 2.5a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15z" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M10 13.333V10M10 6.667h.008" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <input type="text" id="referral" placeholder="Enter referral code (optional)" />
-          </div>
-        </div>
-
-        <!-- Terms -->
-        <div class="terms-wrap">
-          <div class="terms-inner">
-            <div class="checkbox-row">
-              <div class="checkbox-col">
-                <input type="checkbox" class="checkbox" id="terms-checkbox" />
-              </div>
-              <label for="terms-checkbox" class="checkbox-label">
-                I agree to InCard <a href="#">terms of service.</a>
-              </label>
-            </div>
-            <div class="terms-note">
-              <p>By clicking Sign up, I agree that I have read and accepted the <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Submit -->
-        <button class="btn-submit" type="button">
-          <span>Create your account</span>
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4.167 10h11.666M10.833 5l5 5-5 5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-      </div>
-
-      <!-- Separator -->
-      <div class="separator">
-        <div class="separator-line"></div>
-        <span class="separator-text">Or Register With</span>
-        <div class="separator-line"></div>
-      </div>
-
-      <!-- Social -->
-      <div class="social-login-section">
-        <button class="btn-social" type="button">
-          <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19.6 10.23c0-.68-.06-1.36-.18-2H10v3.79h5.39a4.6 4.6 0 0 1-2 3.02v2.52h3.24c1.9-1.75 3-4.32 3-7.33z" fill="#4285F4"/>
-            <path d="M10 20c2.7 0 4.97-.9 6.62-2.44l-3.24-2.52a6.01 6.01 0 0 1-3.38.93c-2.6 0-4.8-1.75-5.59-4.1H1.07v2.6A10 10 0 0 0 10 20z" fill="#34A853"/>
-            <path d="M4.41 11.87A5.99 5.99 0 0 1 4.1 10c0-.65.11-1.28.31-1.87V5.53H1.07A10 10 0 0 0 0 10c0 1.61.39 3.14 1.07 4.47l3.34-2.6z" fill="#FBBC05"/>
-            <path d="M10 3.96c1.47 0 2.79.5 3.83 1.5l2.87-2.87C14.97 1 12.7 0 10 0A10 10 0 0 0 1.07 5.53l3.34 2.6C5.2 5.71 7.4 3.96 10 3.96z" fill="#EA4335"/>
-          </svg>
-          <span>Register with Google</span>
-        </button>
-        <button class="btn-social" type="button">
-          <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path d="M14.05 0c.08 1.09-.32 2.18-.96 2.97-.64.8-1.67 1.41-2.71 1.33-.1-1.06.38-2.17 1-2.93C11.98.57 13.06.02 14.05 0zm3.63 14.54c-.44 1.25-.98 2.35-1.71 3.22-.67.8-1.5 1.24-2.43 1.24-.72 0-1.43-.22-2.1-.44-.61-.2-1.19-.39-1.79-.39-.63 0-1.23.19-1.86.4-.67.22-1.37.44-2.11.45-.97.01-1.87-.47-2.58-1.32C.64 16.46-.05 13.96 0 11.56c.04-2.1.66-4.14 1.99-5.65.88-1.01 2.14-1.66 3.49-1.67.8-.01 1.57.26 2.26.5.59.2 1.12.39 1.57.39.42 0 .94-.18 1.53-.38.77-.26 1.64-.55 2.55-.48 1.04.08 2.04.47 2.8 1.18.24.22.45.47.63.74-.32.19-2.24 1.2-2.22 3.56.02 2.79 2.49 3.71 2.58 3.79z" fill="#000000"/>
-          </svg>
-          <span>Register with Apple</span>
-        </button>
-        <button class="btn-social" type="button" style="background:#eef3fb;border:1.5px solid #c8d9f0;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="#0a66c2" xmlns="http://www.w3.org/2000/svg">
-            <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z"/>
-          </svg>
-          <span style="color:#0a66c2;font-weight:600;">Register with LinkedIn</span>
-        </button>
-      </div>
-
-      <!-- Footer -->
-      <div class="signup-link">
-        <span class="muted">Already have an account? </span>
-        <a href="#">Sign In Now</a>
-      </div>
-
-    </div>
-  </div></div></div>
-        <div class="preview-phone"><div class="screen-content s-index-2" style="width:390px;height:844px;transform:scale(0.174);transform-origin:top left;pointer-events:none;overflow:hidden;"><div class="screen">
-
-    <!-- Header -->
-    <div class="header">
-      <div class="header-back">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M10 12L6 8l4-4" stroke="var(--slate-900)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <div class="header-title">Create Profile</div>
-    </div>
-
-    <!-- Content -->
-    <div class="content">
-
-      <!-- Profile Photo -->
-      <div class="photo-section">
-        <div class="avatar-wrapper">
-          <div class="avatar-bg">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-              <circle cx="16" cy="13" r="6" stroke="var(--slate-400)" stroke-width="2"/>
-              <path d="M5 27c0-5.523 4.477-10 11-10s11 4.477 11 10" stroke="var(--slate-400)" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <div class="avatar-btn">
-            <svg width="16" height="15" viewBox="0 0 16 15" fill="none">
-              <path d="M5.5 2.5h-2A1.5 1.5 0 0 0 2 4v7.5A1.5 1.5 0 0 0 3.5 13h9A1.5 1.5 0 0 0 14 11.5V4a1.5 1.5 0 0 0-1.5-1.5h-2l-1-1.5h-3l-1 1.5z" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="8" cy="7.5" r="2" stroke="white" stroke-width="1.3"/>
-            </svg>
-          </div>
-        </div>
-        <div class="photo-text">
-          <div class="photo-title">Add Profile Photo</div>
-          <div class="photo-sub">Professional headshots work best</div>
-        </div>
-      </div>
-
-      <!-- LinkedIn Import Banner -->
-      <div class="linkedin-import-banner" onclick="window.top.location.href='03b-create-profile-linkedin.html'">
-        <div class="linkedin-icon-wrap">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z"/></svg>
-        </div>
-        <div class="linkedin-import-body">
-          <span class="linkedin-import-title">Import from LinkedIn</span>
-          <span class="linkedin-import-badge">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
-            AI-powered · Fast
-          </span>
-        </div>
-        <div class="linkedin-import-arrow">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0a66c2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-        </div>
-      </div>
-
-      <!-- Basic Info -->
-      <div class="basic-info-section">
-        <div class="section-heading">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <circle cx="10" cy="7" r="4" stroke="var(--green)" stroke-width="1.5"/>
-            <path d="M2 19c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-          <h3>Basic Info</h3>
-        </div>
-
-        <!-- Name Row -->
-        <div class="name-row">
-          <div class="field-group">
-            <label class="field-label" for="first-name">First Name</label>
-            <div class="input-wrapper">
-              <div class="input-icon-left">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <circle cx="10" cy="7" r="4" stroke="var(--slate-400)" stroke-width="1.5"/>
-                  <path d="M2 19c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-              </div>
-              <input type="text" id="first-name" placeholder="John" value="John" />
-            </div>
-          </div>
-          <div class="field-group">
-            <label class="field-label" for="last-name">Last Name</label>
-            <div class="input-wrapper">
-              <div class="input-icon-left">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <circle cx="10" cy="7" r="4" stroke="var(--slate-400)" stroke-width="1.5"/>
-                  <path d="M2 19c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-              </div>
-              <input type="text" id="last-name" placeholder="Doe" value="Doe" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Phone -->
-        <div class="field-group full">
-          <label class="field-label" for="phone">Phone Number <span class="required">*</span></label>
-          <div class="input-wrapper">
-            <div class="input-icon-left">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M3.5 3h3l1.5 3.5-1.75 1.75a11 11 0 0 0 5 5L13 11.5l3.5 1.5V16a1.5 1.5 0 0 1-1.5 1.5A14.5 14.5 0 0 1 2 3.5 1.5 1.5 0 0 1 3.5 2v1z" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <input type="tel" id="phone" placeholder="+1 (555) 000-0000" value="+1 (555) 000-0000" />
-          </div>
-        </div>
-
-        <!-- Email -->
-        <div class="field-group full">
-          <label class="field-label" for="email">Email <span class="required">*</span></label>
-          <div class="input-wrapper">
-            <div class="input-icon-left">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M2.5 5.833A1.667 1.667 0 0 1 4.167 4.167h11.666A1.667 1.667 0 0 1 17.5 5.833v8.334a1.667 1.667 0 0 1-1.667 1.666H4.167A1.667 1.667 0 0 1 2.5 14.167V5.833z" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M2.5 6.667l7.5 5 7.5-5" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <input type="email" id="email" placeholder="john@example.com" value="john@example.com" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Professional Details (Collapsed) -->
-      <div class="pro-details-card">
-        <div class="pro-details-header">
-          <div class="pro-details-title">
-            <svg width="20" height="19" viewBox="0 0 20 19" fill="none">
-              <rect x="1" y="5" width="18" height="13" rx="2" stroke="var(--green)" stroke-width="1.5"/>
-              <path d="M7 5V3.5A1.5 1.5 0 0 1 8.5 2h3A1.5 1.5 0 0 1 13 3.5V5" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/>
-              <path d="M1 10h18" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-            <h3>Professional Details</h3>
-          </div>
-          <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-            <path d="M1 1.5l5 5 5-5" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Bottom Button -->
-    <div class="bottom-btn">
-      <button class="btn-submit" type="button">
-        Complete Profile
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M4.167 10h11.666M10.833 5l5 5-5 5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-    </div>
-
-  </div></div></div>
-        <div class="preview-phone"><div class="screen-content s-index-3" style="width:390px;height:844px;transform:scale(0.174);transform-origin:top left;pointer-events:none;overflow:hidden;"><div class="screen">
-
-    <!-- Header -->
-    <div class="header">
-      <div class="header-back">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M10 12L6 8l4-4" stroke="var(--slate-900)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <div class="header-title">Connect with Me</div>
-    </div>
-
-    <!-- Content -->
-    <div class="content">
-      <div class="section-label">Social Media</div>
-
-      <button class="platform-btn" type="button">
-        <div class="platform-icon" style="background:var(--fb-blue);">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" fill="white"/>
-          </svg>
-        </div>
-        <span class="platform-name">Facebook</span>
-        <svg width="8" height="12" viewBox="0 0 8 12" fill="none">
-          <path d="M1.5 1l5 5-5 5" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-
-      <button class="platform-btn" type="button">
-        <div class="platform-icon ig-gradient">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <rect x="2" y="2" width="20" height="20" rx="5" stroke="white" stroke-width="1.8"/>
-            <circle cx="12" cy="12" r="4.5" stroke="white" stroke-width="1.8"/>
-            <circle cx="17.5" cy="6.5" r="1" fill="white"/>
-          </svg>
-        </div>
-        <span class="platform-name">Instagram</span>
-        <svg width="8" height="12" viewBox="0 0 8 12" fill="none">
-          <path d="M1.5 1l5 5-5 5" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-
-      <button class="platform-btn" type="button">
-        <div class="platform-icon" style="background:var(--linkedin-blue);">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" fill="white"/>
-            <rect x="2" y="9" width="4" height="12" fill="white"/>
-            <circle cx="4" cy="4" r="2" fill="white"/>
-          </svg>
-        </div>
-        <span class="platform-name">LinkedIn</span>
-        <svg width="8" height="12" viewBox="0 0 8 12" fill="none">
-          <path d="M1.5 1l5 5-5 5" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-
-      <button class="platform-btn" type="button">
-        <div class="platform-icon" style="background:#000;">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M15.75 2h-2.6L10 7.5 6.65 2H2l5.6 8.2L2.3 18H4.9l3.35-5.7L11.6 18H16.3l-5.85-8.55L15.75 2z" fill="white"/>
-          </svg>
-        </div>
-        <span class="platform-name">Twitter (X)</span>
-        <svg width="8" height="12" viewBox="0 0 8 12" fill="none">
-          <path d="M1.5 1l5 5-5 5" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-
-      <button class="platform-btn" type="button">
-        <div class="platform-icon" style="background:var(--youtube-red);">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.97C18.88 4 12 4 12 4s-6.88 0-8.59.45A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.97C5.12 20 12 20 12 20s6.88 0 8.59-.45a2.78 2.78 0 0 0 1.95-1.97A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" fill="white" fill-opacity=".3"/>
-            <path d="M10 15.5l5.5-3.5L10 8.5v7z" fill="white"/>
-          </svg>
-        </div>
-        <span class="platform-name">YouTube</span>
-        <svg width="8" height="12" viewBox="0 0 8 12" fill="none">
-          <path d="M1.5 1l5 5-5 5" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-
-      <button class="platform-btn" type="button">
-        <div class="platform-icon" style="background:#000;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M9 12a3 3 0 1 0 6 0 3 3 0 0 0-6 0z" fill="white"/>
-            <path d="M16.5 5.5c-1.5-1.5-3.5-2-5.5-1.5S7.5 6.5 7.5 8.5H5C5 5 7.5 2 11 2s7 3 7 7v1h-2v-1c0-1-.5-2.5-1.5-3.5zM7.5 18.5c1.5 1.5 3.5 2 5.5 1.5s3.5-2.5 3.5-4.5H19c0 3.5-2.5 6.5-6 6.5S7 19 7 16v-1h2v1c0 1 .5 2.5 1.5 3.5z" fill="white" fill-opacity=".7"/>
-          </svg>
-        </div>
-        <span class="platform-name">TikTok</span>
-        <svg width="8" height="12" viewBox="0 0 8 12" fill="none">
-          <path d="M1.5 1l5 5-5 5" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-
-      <button class="platform-btn" type="button">
-        <div class="platform-icon" style="background:var(--figma-orange);">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M8 2h4a4 4 0 0 1 0 8H8V2z" fill="white" fill-opacity=".5"/>
-            <path d="M8 10h4a4 4 0 0 1 0 8H8v-8z" fill="white" fill-opacity=".7"/>
-            <circle cx="16" cy="14" r="4" fill="white" fill-opacity=".9"/>
-            <path d="M8 18a4 4 0 0 0 4 4v-8H8v4z" fill="white"/>
-            <path d="M8 2H4a4 4 0 0 0 0 8h4V2z" fill="white" fill-opacity=".7"/>
-          </svg>
-        </div>
-        <span class="platform-name">Figma</span>
-        <svg width="8" height="12" viewBox="0 0 8 12" fill="none">
-          <path d="M1.5 1l5 5-5 5" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-
-    </div>
-
-    <!-- Bottom Button -->
-    <div class="bottom-btn">
-      <button class="btn-submit" type="button">
-        Done
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M4.167 10h11.666M10.833 5l5 5-5 5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-    </div>
-
-  </div></div></div>
-      </div>
-      <div class="card-body">
-        <div class="card-label">Flow 01</div>
-        <div class="card-title">InCard Auth Flow</div>
-        <div class="card-meta">
-          <span class="screen-count">9 screens</span>
-          <span class="arrow">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6h7M6 2.5L9.5 6 6 9.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
-        </div>
-      </div>
-    </a>
-
-    <!-- Home & Account -->
-    <a class="flow-card" href="home.html">
-      <div class="preview">
-        <div class="preview-phone"><div class="screen-content s-index-4" style="width:390px;height:844px;transform:scale(0.174);transform-origin:top left;pointer-events:none;overflow:hidden;"><div class="screen">
-    <!-- Header -->
-    <div class="header">
-      <div class="header-inner">
-        <div class="header-user">
-          <div class="header-avatar-wrap">
-            <img src="https://www.figma.com/api/mcp/asset/7f0a3d58-f11d-4bee-b0f6-683c3bc7c81a" alt="Alex Rivera" />
-          </div>
-          <span class="header-name">Alex Rivera</span>
-        </div>
-        <div class="header-bell">
-          <svg viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 20c1.1 0 2-.9 2-2H6c0 1.1.9 2 2 2zm6-6V9c0-3.07-1.64-5.64-4.5-6.32V2C9.5 1.17 8.83.5 8 .5S6.5 1.17 6.5 2v.68C3.63 3.36 2 5.92 2 9v5l-2 2v1h16v-1l-2-2z" fill="var(--slate-500)"/>
-          </svg>
-        </div>
-      </div>
-    </div>
-
-    <!-- Main content -->
-    <div class="main">
-
-      <!-- My Digital Cards -->
-      <div>
-        <div class="section-header" style="margin-bottom:16px">
-          <span class="section-title">My Digital Cards</span>
-          <span class="see-all">See All</span>
-        </div>
-        <div class="cards-scroll">
-          <!-- Primary Card -->
-          <div class="digital-card primary">
-            <div class="card-top">
-              <div class="card-avatar-wrap">
-                <img src="https://www.figma.com/api/mcp/asset/4f58f727-9beb-4364-af7c-197f459157e4" alt="Alex Rivera" />
-              </div>
-              <div class="card-meta">
-                <div class="card-name">Alex Rivera</div>
-                <div class="card-role">Senior Product Designer</div>
-              </div>
-              <div class="card-chip"></div>
-            </div>
-            <div class="card-bottom">
-              <div>
-                <div class="card-company-label">Company</div>
-                <div class="card-company-name">Design Solutions Inc.</div>
-              </div>
-              <div class="card-qr">
-                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="1" y="1" width="7" height="7" rx="1" stroke="white" stroke-width="1.5"/>
-                  <rect x="2.5" y="2.5" width="4" height="4" fill="white"/>
-                  <rect x="12" y="1" width="7" height="7" rx="1" stroke="white" stroke-width="1.5"/>
-                  <rect x="13.5" y="2.5" width="4" height="4" fill="white"/>
-                  <rect x="1" y="12" width="7" height="7" rx="1" stroke="white" stroke-width="1.5"/>
-                  <rect x="2.5" y="13.5" width="4" height="4" fill="white"/>
-                  <rect x="12" y="12" width="2" height="2" fill="white"/>
-                  <rect x="15" y="12" width="2" height="2" fill="white"/>
-                  <rect x="18" y="12" width="2" height="2" fill="white"/>
-                  <rect x="12" y="15" width="2" height="2" fill="white"/>
-                  <rect x="15" y="15" width="2" height="2" fill="white"/>
-                  <rect x="18" y="18" width="2" height="2" fill="white"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-          <!-- Secondary Card (peeking) -->
-          <div class="digital-card secondary">
-            <div class="card-top">
-              <div class="card-avatar-wrap">
-                <div class="card-avatar-placeholder"></div>
-              </div>
-              <div class="card-meta">
-                <div class="card-name">Alex Rivera</div>
-                <div class="card-role">Freelance Consultant</div>
-              </div>
-              <div class="card-chip"></div>
-            </div>
-            <div class="card-bottom">
-              <div>
-                <div class="card-company-label">Personal</div>
-                <div class="card-company-name">Rivera Designs</div>
-              </div>
-              <div class="card-qr">
-                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="1" y="1" width="7" height="7" rx="1" stroke="white" stroke-width="1.5"/>
-                  <rect x="2.5" y="2.5" width="4" height="4" fill="white"/>
-                  <rect x="12" y="1" width="7" height="7" rx="1" stroke="white" stroke-width="1.5"/>
-                  <rect x="13.5" y="2.5" width="4" height="4" fill="white"/>
-                  <rect x="1" y="12" width="7" height="7" rx="1" stroke="white" stroke-width="1.5"/>
-                  <rect x="2.5" y="13.5" width="4" height="4" fill="white"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Dots indicator -->
-        <div class="card-dots">
-          <div class="card-dot active"></div>
-          <div class="card-dot"></div>
-        </div>
-      </div>
-
-      <!-- Upgrade Banner -->
-      <div class="upgrade-banner">
-        <div class="upgrade-icon-wrap">
-          <svg viewBox="0 0 14 14" fill="none">
-            <path d="M7 1L1 6h3v7h6V6h3L7 1z" fill="#2a1f00"/>
-          </svg>
-        </div>
-        <div class="upgrade-text">
-          <div class="upgrade-title">Upgrade to Pro</div>
-          <div class="upgrade-sub">Unlock analytics &amp; custom branding</div>
-        </div>
-        <div class="upgrade-btn">Upgrade</div>
-      </div>
-
-      <!-- Potential Connections -->
-      <div>
-        <div class="section-header" style="margin-bottom:16px">
-          <span class="section-title">Potential Connections</span>
-          <span class="see-all">See All</span>
-        </div>
-        <div class="potential-scroll">
-          <div class="potential-cards">
-            <!-- Card 1 -->
-            <div class="potential-card">
-              <div class="potential-avatar-wrap">
-                <img src="https://www.figma.com/api/mcp/asset/36fc47dc-108d-4888-a37d-7a9578fb5bad" alt="Sarah Chen" />
-              </div>
-              <div class="potential-name">Sarah Chen</div>
-              <div class="potential-role">Product at TechFl…</div>
-              <div class="potential-btn">Connect</div>
-            </div>
-            <!-- Card 2 -->
-            <div class="potential-card">
-              <div class="potential-avatar-wrap">
-                <img src="https://www.figma.com/api/mcp/asset/6bab0c06-cfc1-44d9-a475-945bdd93c069" alt="Marcus Day" />
-              </div>
-              <div class="potential-name">Marcus Day</div>
-              <div class="potential-role">Venture Partner</div>
-              <div class="potential-btn">Connect</div>
-            </div>
-            <!-- Card 3 -->
-            <div class="potential-card">
-              <div class="potential-avatar-wrap">
-                <img src="https://www.figma.com/api/mcp/asset/ab25bedc-ae1e-4efc-9ed1-e3845ed91427" alt="Elena Ruiz" />
-              </div>
-              <div class="potential-name">Elena Ruiz</div>
-              <div class="potential-role">Sales Director</div>
-              <div class="potential-btn">Connect</div>
-            </div>
-            <!-- Card 4 (partially off screen) -->
-            <div class="potential-card">
-              <div class="potential-avatar-wrap" style="background:var(--slate-200)"></div>
-              <div class="potential-name">Elena Rossi</div>
-              <div class="potential-role">UX Strategist at…</div>
-              <div class="potential-btn">Connect</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Leaderboard -->
-      <div class="leaderboard">
-        <div class="leaderboard-heading">
-          <div class="leaderboard-heading-left">
-            <span class="trophy-icon">🏆</span>
-            <span class="leaderboard-title">Top Performers</span>
-          </div>
-          <span class="leaderboard-sub">Weekly rank</span>
-        </div>
-        <div class="leaderboard-rows">
-          <!-- 1st -->
-          <div class="leaderboard-row rank-1">
-            <span class="lb-rank gold">1</span>
-            <div class="lb-avatar gold">
-              <img src="https://www.figma.com/api/mcp/asset/982c54bf-f358-4815-b6c0-c09a0e011915" alt="1st" />
-            </div>
-            <div class="lb-info">
-              <div class="lb-name">Sarah Chen</div>
-              <div class="lb-score">142 connections</div>
-            </div>
-            <span class="lb-badge gold">🥇 1st</span>
-          </div>
-          <!-- 2nd -->
-          <div class="leaderboard-row">
-            <span class="lb-rank silver">2</span>
-            <div class="lb-avatar">
-              <img src="https://www.figma.com/api/mcp/asset/c765f7ef-3465-47bd-abc2-70a733cfde27" alt="2nd" />
-            </div>
-            <div class="lb-info">
-              <div class="lb-name">Marcus Day</div>
-              <div class="lb-score">118 connections</div>
-            </div>
-            <span class="lb-badge silver">🥈 2nd</span>
-          </div>
-          <!-- 3rd -->
-          <div class="leaderboard-row">
-            <span class="lb-rank bronze">3</span>
-            <div class="lb-avatar">
-              <img src="https://www.figma.com/api/mcp/asset/0079de44-b2ee-4a6b-9863-eec087d00a79" alt="3rd" />
-            </div>
-            <div class="lb-info">
-              <div class="lb-name">Elena Ruiz</div>
-              <div class="lb-score">97 connections</div>
-            </div>
-            <span class="lb-badge bronze">🥉 3rd</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Recent Connections -->
-      <div>
-        <div class="recent-header">
-          <span class="section-title">Recent Connections</span>
-          <span class="see-all">See All</span>
-        </div>
-        <div class="recent-divider"></div>
-        <div class="conn-search">
-          <svg viewBox="0 0 24 24" fill="none">
-            <circle cx="11" cy="11" r="7" stroke="var(--slate-400)" stroke-width="1.8"/>
-            <path d="M16.5 16.5L21 21" stroke="var(--slate-400)" stroke-width="1.8" stroke-linecap="round"/>
-          </svg>
-          <input type="text" placeholder="Search connections…" />
-        </div>
-        <div class="connection-list">
-          <!-- Card 1 -->
-          <div class="connection-card">
-            <div class="conn-avatar-wrap">
-              <img src="https://www.figma.com/api/mcp/asset/11549e71-ce4a-4e13-9519-2df009a28cf6" alt="David Miller" />
-            </div>
-            <div class="conn-info">
-              <div class="conn-name">David Miller</div>
-              <div class="conn-role">Product Manager · Stripe</div>
-              <div class="conn-source">
-                <svg viewBox="0 0 10 10" fill="none">
-                  <circle cx="5" cy="5" r="4" stroke="var(--green)" stroke-width="1.2"/>
-                  <path d="M3 5l1.5 1.5L7 3.5" stroke="var(--green)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                Web Summit
-              </div>
-            </div>
-          </div>
-          <!-- Card 2 -->
-          <div class="connection-card">
-            <div class="conn-avatar-wrap">
-              <img src="https://www.figma.com/api/mcp/asset/e05bc7d7-3240-4b0c-9614-1acaa68df1b4" alt="Julia Song" />
-            </div>
-            <div class="conn-info">
-              <div class="conn-name">Julia Song</div>
-              <div class="conn-role">UX Lead · Airbnb</div>
-              <div class="conn-source">
-                <svg viewBox="0 0 10 10" fill="none">
-                  <rect x="1" y="2.5" width="8" height="6" rx="1" stroke="var(--green)" stroke-width="1.2"/>
-                  <path d="M1 4.5h8" stroke="var(--green)" stroke-width="1.2"/>
-                  <path d="M3.5 1v2M6.5 1v2" stroke="var(--green)" stroke-width="1.2" stroke-linecap="round"/>
-                </svg>
-                Scanned Work Card
-              </div>
-            </div>
-          </div>
-          <!-- Card 3 -->
-          <div class="connection-card">
-            <div class="conn-avatar-wrap">
-              <img src="https://www.figma.com/api/mcp/asset/982c54bf-f358-4815-b6c0-c09a0e011915" alt="Marcus Chen" />
-            </div>
-            <div class="conn-info">
-              <div class="conn-name">Marcus Chen</div>
-              <div class="conn-role">Senior Software Engineer</div>
-              <div class="conn-source" style="color:var(--slate-500)">
-                <svg viewBox="0 0 10 10" fill="none">
-                  <circle cx="3" cy="5" r="1.5" stroke="var(--slate-400)" stroke-width="1.2"/>
-                  <circle cx="7" cy="2.5" r="1.5" stroke="var(--slate-400)" stroke-width="1.2"/>
-                  <circle cx="7" cy="7.5" r="1.5" stroke="var(--slate-400)" stroke-width="1.2"/>
-                  <path d="M4.5 5l1-.8M4.5 5l1 .8" stroke="var(--slate-400)" stroke-width="1.2" stroke-linecap="round"/>
-                </svg>
-                <span style="color:var(--slate-400)">CloudScale Systems</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /main -->
-
-  </div><!-- /screen -->
-
-  <!-- Search Profile Floating Button -->
-  <div class="search-fab">
-    <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <filter id="lens-shadow" x="-30%" y="-30%" width="160%" height="160%">
-          <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#BF360C" flood-opacity="0.28"/>
-        </filter>
-        <clipPath id="lens-clip">
-          <circle cx="24" cy="24" r="20"/>
-        </clipPath>
-        <!-- Lens bg: warm white to light gray radial -->
-        <radialGradient id="lens-bg" cx="38%" cy="35%" r="65%">
-          <stop offset="0%" stop-color="#FFFFFF"/>
-          <stop offset="100%" stop-color="#F5F5F5"/>
-        </radialGradient>
-        <!-- Profile: orange to dark-orange -->
-        <radialGradient id="face-grad" cx="35%" cy="30%" r="65%">
-          <stop offset="0%" stop-color="#FF8F00"/>
-          <stop offset="100%" stop-color="#BF360C"/>
-        </radialGradient>
-        <!-- Handle: multi-color orange-to-red -->
-        <linearGradient id="handle-grad" x1="41" y1="41" x2="50" y2="50" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#FFD54F"/>
-          <stop offset="40%" stop-color="#FF6F00"/>
-          <stop offset="100%" stop-color="#BF360C"/>
-        </linearGradient>
-        <!-- Shoulder fill: warm orange -->
-        <linearGradient id="shoulder-grad" x1="8" y1="28" x2="40" y2="46" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#FF6F00"/>
-          <stop offset="100%" stop-color="#E65100"/>
-        </linearGradient>
-      </defs>
-
-      <!-- ── Handle shadow ── -->
-      <line x1="43" y1="43" x2="52" y2="52"
-            stroke="#BF360C" stroke-opacity="0.25" stroke-width="6" stroke-linecap="round"/>
-
-      <!-- ── Handle joint glow ── -->
-      <circle cx="42" cy="42" r="6" fill="rgba(255,213,79,0.35)"/>
-
-      <!-- ── Handle — short, colorful gradient ── -->
-      <line x1="41" y1="41" x2="50" y2="50"
-            stroke="url(#handle-grad)" stroke-width="5.5" stroke-linecap="round"/>
-
-      <!-- ── Lens — drop shadow + gradient fill ── -->
-      <g filter="url(#lens-shadow)">
-        <circle cx="24" cy="24" r="20" fill="url(#lens-bg)"/>
-        <!-- Outer border: bright orange -->
-        <circle cx="24" cy="24" r="20" stroke="#FF6F00" stroke-width="3" fill="none"/>
-        <!-- Inner accent ring: yellow tint -->
-        <circle cx="24" cy="24" r="16.5" stroke="#FFD54F" stroke-width="0.8" fill="none" opacity="0.35"/>
-      </g>
-
-      <!-- ── Profile silhouette (clipped) ── -->
-      <g clip-path="url(#lens-clip)">
-        <!-- Shoulders -->
-        <path d="M4 40 C4 30, 44 30, 44 40 L44 48 L4 48 Z" fill="url(#shoulder-grad)"/>
-        <!-- Shoulder top highlight -->
-        <path d="M4 40 C4 30, 44 30, 44 40" fill="none" stroke="#FFD54F" stroke-width="0.8" opacity="0.4"/>
-        <!-- Head -->
-        <circle cx="24" cy="20" r="8" fill="url(#face-grad)"/>
-        <!-- Head depth shadow -->
-        <circle cx="26" cy="22" r="8" fill="#BF360C" opacity="0.18"/>
-        <!-- White facial highlight -->
-        <ellipse cx="21.5" cy="17.5" rx="2.8" ry="1.8" fill="white" fill-opacity="0.35"/>
-
-        <!-- ── AI chip — bottom-right, blends into profile ── -->
-        <!-- Chip glow base -->
-        <circle cx="34" cy="35" r="5" fill="rgba(255,213,79,0.18)"/>
-        <!-- Trace lines -->
-        <line x1="32" y1="33" x2="29" y2="27" stroke="#FFD54F" stroke-width="1.1" stroke-linecap="round"/>
-        <line x1="34" y1="32" x2="34" y2="26" stroke="#FFD54F" stroke-width="1.1" stroke-linecap="round"/>
-        <line x1="36" y1="33" x2="39" y2="27" stroke="#FFD54F" stroke-width="1.1" stroke-linecap="round"/>
-        <!-- Trace dots -->
-        <circle cx="29" cy="27" r="1.4" fill="#FFD54F"/>
-        <circle cx="34" cy="26" r="1.4" fill="white"/>
-        <circle cx="39" cy="27" r="1.4" fill="#FFD54F"/>
-        <!-- Chip body -->
-        <rect x="30" y="33" width="8" height="6" rx="1.8" fill="#FF6F00" stroke="#FFD54F" stroke-width="1"/>
-        <!-- Chip center dot -->
-        <circle cx="34" cy="36" r="1.2" fill="#FFD54F"/>
-      </g>
-    </svg>
-  </div>
-
-  <!-- Inka AI Floating Button -->
-  <div class="inka-fab">
-    <div class="inka-fab-img-wrap">
-      <div class="inka-fab-speech">
-        <div class="inka-fab-speech-dot"></div>
-        <div class="inka-fab-speech-dot"></div>
-        <div class="inka-fab-speech-dot"></div>
-      </div>
-      <img class="inka-fab-img" src="AI Inka.png" alt="Inka AI" />
-    </div>
-    <div class="inka-fab-label">Inka AI</div>
-  </div>
-
-<!-- Bottom Nav -->
-<div class="bottom-nav">
-  <div class="nav-link">
-    <div class="nav-icon">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1h-4v-7H8v7H5a1 1 0 01-1-1V9.5z" fill="var(--green)"/></svg>
-    </div>
-    <span class="nav-label active">Home</span>
-    <span class="nav-dot"></span>
-  </div>
-  <div class="nav-link">
-    <div class="nav-icon">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="7" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="17" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M7.5 12h5.5M13 12l3.5-4M13 12l3.5 4" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
-    <span class="nav-label">Network</span>
-    <span class="nav-dot"></span>
-  </div>
-  <div class="nav-fab-wrap">
-    <div class="nav-fab">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="14" y="18" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="18" width="3" height="3" rx="0.5" fill="white"/></svg>
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <img src="logo.png" alt="InCard" />
+    <div class="sidebar-logo-text">
+      <span class="sidebar-logo-name">InCard</span>
+      <span class="sidebar-logo-sub">Design System</span>
     </div>
   </div>
-  <div class="nav-link">
-    <div class="nav-icon">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M16.5 7.5l-3 6-5.5 2.5 3-6 5.5-2.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="1" fill="var(--slate-400)"/></svg>
-    </div>
-    <span class="nav-label">Explore</span>
-    <span class="nav-dot"></span>
-  </div>
-  <div class="nav-link">
-    <div class="nav-icon">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round"/></svg>
-    </div>
-    <span class="nav-label">Profile</span>
-    <span class="nav-dot"></span>
-  </div>
-</div></div></div>
-        <div class="preview-phone"><div class="screen-content s-index-5" style="width:390px;height:844px;transform:scale(0.174);transform-origin:top left;pointer-events:none;overflow:hidden;"><div class="screen">
 
-    <!-- Header -->
-    <div class="header">
-      <div class="back-btn">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M10 12L6 8l4-4" stroke="var(--slate-900)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <div class="header-title">Account Details</div>
-    </div>
+  <div class="sidebar-section-label">Overview</div>
+  <a class="nav-item active" href="index.html">
+    <div class="nav-item-icon" style="background:rgba(0,144,55,0.15);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#009037" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+    <div class="nav-item-text"><span class="nav-item-title">All Flows</span><span class="nav-item-sub">Overview</span></div>
+  </a>
 
-    <!-- Profile Hero -->
-    <div class="profile-hero">
-      <div class="avatar-ring">
-        <img src="https://www.figma.com/api/mcp/asset/f3ea797f-300b-4753-8c96-c6014ab5299f" alt="Alex Rivera" />
-      </div>
-      <div class="profile-name">Alex Rivera</div>
-      <div class="profile-meta">Senior Product Designer · San Francisco</div>
-      <div class="profile-actions">
-        <div class="btn-edit-profile">
-          <svg viewBox="0 0 14 14" fill="none">
-            <path d="M1 13h12M9.5 1.5l2 2L4 11H2v-2L9.5 1.5z" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Edit Profile
-        </div>
-        <div class="badge-pro">PRO</div>
-      </div>
-    </div>
+  <div class="sidebar-section-label">Authentication</div>
+    <a class="nav-item" href="auth.html">
+    <div class="nav-item-icon" style="background:rgba(59,130,246,0.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg></div>
+    <div class="nav-item-text"><span class="nav-item-title">Auth Flow</span><span class="nav-item-sub">Sign up &amp; Sign in</span></div>
+    <span class="nav-badge">9</span>
+  </a>
 
-    <!-- Personal Information -->
-    <div class="section" style="margin-top:20px;">
-      <div class="section-label">Personal Information</div>
-      <div class="settings-card">
-        <div class="settings-row">
-          <div class="row-icon green">
-            <svg viewBox="0 0 20 16" fill="none">
-              <rect x="1" y="1" width="18" height="14" rx="2" stroke="var(--green)" stroke-width="1.5"/>
-              <path d="M1 5l9 5 9-5" stroke="var(--green)" stroke-width="1.5"/>
-            </svg>
-          </div>
-          <div class="row-content">
-            <div class="row-label">Email Address</div>
-            <div class="row-value">alex.rivera@example.com</div>
-          </div>
-          <div class="row-right">
-            <div class="chevron">
-              <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="var(--slate-300)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-          </div>
-        </div>
-        <div class="settings-row">
-          <div class="row-icon green">
-            <svg viewBox="0 0 18 18" fill="none">
-              <path d="M17 12.9c0 .3-.07.6-.21.89-.14.28-.33.55-.58.79-.42.39-.88.57-1.36.57-.35 0-.73-.08-1.14-.26l-1.62-.66c-.41-.17-.82-.35-1.21-.54-.41-.19-.75-.38-1.01-.57-1.09-.73-2.06-1.64-2.9-2.71-.42-.53-.77-1.07-1.04-1.61-.27-.54-.46-1.07-.58-1.58-.06-.26-.09-.51-.09-.75 0-.33.06-.64.19-.91.13-.28.32-.53.58-.74L7.2 4.3c.24-.17.5-.26.74-.26.3 0 .57.09.81.27.24.18.46.42.65.72L10.7 7.1c.19.3.29.58.29.84 0 .32-.1.62-.28.9-.19.28-.41.54-.68.77.07.14.17.27.28.39.11.12.24.24.38.34.36.26.73.48 1.12.65.39.17.81.3 1.26.37.18-.32.43-.58.73-.77.3-.19.62-.28.97-.28.24 0 .5.07.77.22l2.1 1.21c.31.18.53.41.65.69.12.28.19.57.19.87z" stroke="var(--green)" stroke-width="1.5"/>
-            </svg>
-          </div>
-          <div class="row-content">
-            <div class="row-label">Phone Number</div>
-            <div class="row-value">+1 234 567 890</div>
-          </div>
-          <div class="row-right">
-            <div class="chevron">
-              <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="var(--slate-300)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="sidebar-section-label">Core App</div>
+    <a class="nav-item" href="home.html">
+    <div class="nav-item-icon" style="background:rgba(234,179,8,0.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21v-8h6v8"/></svg></div>
+    <div class="nav-item-text"><span class="nav-item-title">Home &amp; Account</span><span class="nav-item-sub">Dashboard, settings</span></div>
+    <span class="nav-badge">8</span>
+  </a>
+    <a class="nav-item" href="network.html">
+    <div class="nav-item-icon" style="background:rgba(168,85,247,0.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="7" r="2.5"/><circle cx="19" cy="17" r="2.5"/><path d="M7.5 12h5.5M13 12l3.5-4M13 12l3.5 4"/></svg></div>
+    <div class="nav-item-text"><span class="nav-item-title">Network</span><span class="nav-item-sub">Connections</span></div>
+    <span class="nav-badge">1</span>
+  </a>
+    <a class="nav-item" href="notifications.html">
+    <div class="nav-item-icon" style="background:rgba(239,80,35,0.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fa987d" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg></div>
+    <div class="nav-item-text"><span class="nav-item-title">Notifications</span><span class="nav-item-sub">Activity feed</span></div>
+    <span class="nav-badge">3</span>
+  </a>
 
-    <!-- Referral -->
-    <div class="section">
-      <div class="section-label">Referral</div>
-      <div class="settings-card">
-        <div class="settings-row">
-          <div class="row-icon green">
-            <svg viewBox="0 0 20 20" fill="none">
-              <path d="M8.5 11.5a4.5 4.5 0 006.364 0l2.121-2.121a4.5 4.5 0 00-6.364-6.364L9.5 4.136" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M11.5 8.5a4.5 4.5 0 00-6.364 0L3.015 10.621a4.5 4.5 0 006.364 6.364l1.121-1.121" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="row-content">
-            <div class="row-label">Referral Link</div>
-            <div class="row-value">incard.app/ref/alex</div>
-          </div>
-          <div class="row-right">
-            <div class="copy-btn">
-              <svg viewBox="0 0 17 20" fill="none">
-                <rect x="5" y="5" width="11" height="14" rx="2" stroke="var(--green)" stroke-width="1.5"/>
-                <path d="M3 15H2a1 1 0 01-1-1V2a1 1 0 011-1h10a1 1 0 011 1v2" stroke="var(--green)" stroke-width="1.5"/>
-              </svg>
-            </div>
-          </div>
-        </div>
-        <div class="settings-row">
-          <div class="row-icon green">
-            <svg viewBox="0 0 18 18" fill="none">
-              <circle cx="9" cy="9" r="8" stroke="var(--green)" stroke-width="1.5"/>
-              <path d="M9 5v4l3 3" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <div class="row-content">
-            <div class="row-value single">Referral History</div>
-          </div>
-          <div class="row-right">
-            <div class="chevron">
-              <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="var(--slate-300)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-          </div>
-        </div>
-      </div>
+  <div class="sidebar-section-label">Profile</div>
+    <a class="nav-item" href="profile.html">
+    <div class="nav-item-icon" style="background:rgba(0,144,55,0.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7"/></svg></div>
+    <div class="nav-item-text"><span class="nav-item-title">Profile Flow</span><span class="nav-item-sub">Digital card, portfolio</span></div>
+    <span class="nav-badge">17</span>
+  </a>
 
-      <!-- Invite Banner -->
-      <div style="margin-top: 12px;">
-        <div class="invite-banner">
-          <div class="invite-icon-wrap">
-            <svg viewBox="0 0 24 20" fill="none">
-              <path d="M16 19v-1.5a3.5 3.5 0 00-3.5-3.5h-7A3.5 3.5 0 002 17.5V19M18 7v6M21 10h-6M9 10a3.5 3.5 0 100-7 3.5 3.5 0 000 7z" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="invite-text">
-            <div class="invite-title">Invite Friends</div>
-            <div class="invite-sub">Earn rewards for each referral</div>
-          </div>
-          <div class="invite-arrow">
-            <svg viewBox="0 0 16 16" fill="none">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="sidebar-section-label">Web</div>
+    <a class="nav-item" href="ui-for-web.html">
+    <div class="nav-item-icon" style="background:rgba(239,80,35,0.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EF5023" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></div>
+    <div class="nav-item-text"><span class="nav-item-title">UI for Web</span><span class="nav-item-sub">Browser layout</span></div>
+    <span class="nav-badge">4</span>
+  </a>
 
-    <!-- Security -->
-    <div class="section">
-      <div class="section-label">Security</div>
-      <div class="settings-card">
-        <div class="settings-row">
-          <div class="row-icon gray">
-            <svg viewBox="0 0 16 21" fill="none">
-              <rect x="1" y="9" width="14" height="11" rx="2" stroke="var(--slate-500)" stroke-width="1.5"/>
-              <path d="M4 9V6a4 4 0 018 0v3" stroke="var(--slate-500)" stroke-width="1.5" stroke-linecap="round"/>
-              <circle cx="8" cy="14" r="1.5" fill="var(--slate-500)"/>
-            </svg>
-          </div>
-          <div class="row-content">
-            <div class="row-value single">Reset Password</div>
-            <div class="row-label" style="margin-top:3px;">Send reset link to your email</div>
-          </div>
-          <div class="row-right">
-            <div class="chevron">
-              <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="var(--slate-300)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Account Management -->
-    <div class="section">
-      <div class="section-label">Account Management</div>
-      <div class="settings-card">
-        <div class="settings-row">
-          <div class="row-icon amber">
-            <svg viewBox="0 0 20 19" fill="none">
-              <path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.44.91-5.32L2.27 6.62l5.34-.78L10 1z" stroke="#d97706" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="row-content">
-            <div class="row-value single">Subscription Plan</div>
-          </div>
-          <div class="row-right">
-            <div class="badge-pill green">Pro</div>
-            <div class="chevron">
-              <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="var(--slate-300)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-          </div>
-        </div>
-        <div class="settings-row">
-          <div class="row-icon red">
-            <svg viewBox="0 0 16 18" fill="none">
-              <path d="M1 4h14M6 4V2h4v2M14 4l-1 12H3L2 4" stroke="var(--red-600)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="row-content">
-            <div class="row-value destructive">Delete Account</div>
-          </div>
-          <div class="row-right">
-            <div class="chevron">
-              <svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="var(--red-600)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Log Out -->
-    <div class="logout-section">
-      <div class="logout-btn">
-        <svg viewBox="0 0 18 18" fill="none">
-          <path d="M7 17H3a2 2 0 01-2-2V3a2 2 0 012-2h4M13 13l4-4-4-4M17 9H7" stroke="var(--slate-800)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span class="logout-btn-text">Log Out</span>
-      </div>
-      <div class="version-text">InCard App v2.4.1 (Build 108)</div>
-    </div>
-
-<!-- Bottom Nav -->
-<div class="bottom-nav">
-  <div class="nav-link">
-    <div class="nav-icon">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 21v-8h6v8" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
-    <span class="nav-label">Home</span>
-    <span class="nav-dot"></span>
-  </div>
-  <div class="nav-link">
-    <div class="nav-icon">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="7" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="17" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M7.5 12h5.5M13 12l3.5-4M13 12l3.5 4" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
-    <span class="nav-label">Network</span>
-    <span class="nav-dot"></span>
-  </div>
-  <div class="nav-fab-wrap">
-    <div class="nav-fab">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="14" y="18" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="18" width="3" height="3" rx="0.5" fill="white"/></svg>
-    </div>
-  </div>
-  <div class="nav-link">
-    <div class="nav-icon">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M16.5 7.5l-3 6-5.5 2.5 3-6 5.5-2.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="1" fill="var(--slate-400)"/></svg>
-    </div>
-    <span class="nav-label">Explore</span>
-    <span class="nav-dot"></span>
-  </div>
-  <div class="nav-link">
-    <div class="nav-icon">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" fill="var(--green)"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="var(--green)" stroke-width="2" stroke-linecap="round"/></svg>
-    </div>
-    <span class="nav-label active">Profile</span>
-    <span class="nav-dot"></span>
+  <div class="sidebar-footer">
+    <div class="sidebar-footer-text">InCard Design System</div>
   </div>
 </div>
 
-  </div></div></div>
-        <div class="preview-phone"><div class="screen-content s-index-6" style="width:390px;height:844px;transform:scale(0.174);transform-origin:top left;pointer-events:none;overflow:hidden;"><div class="screen">
-    <!-- Header -->
-    <div class="header">
-      <div class="header-top">
-        <div class="back-btn">
-          <svg viewBox="0 0 16 16" fill="none">
-            <path d="M10 12L6 8l4-4" stroke="var(--slate-900)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <div class="header-title">Potential Connections</div>
-      </div>
-      <div class="search-bar">
-        <span class="search-icon">
-          <svg viewBox="0 0 18 18" fill="none">
-            <circle cx="8" cy="8" r="6.5" stroke="var(--slate-400)" stroke-width="1.5"/>
-            <path d="M13.5 13.5L17 17" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-        </span>
-        <input type="text" placeholder="Search by name, role or company" aria-label="Search" />
-      </div>
-    </div>
+<div class="main">
+  <div class="main-header">
+    <div class="main-header-label">InCard — Design System</div>
+    <div class="main-header-title">Screen Flows</div>
+    <div class="main-header-sub">Click any flow to open and explore screens</div>
+  </div>
 
-    <!-- List -->
-    <div class="connections">
-      <div class="conn-row">
-        <div class="conn-avatar">
-          <img src="https://www.figma.com/api/mcp/asset/5e81e1e9-2ab6-4482-9206-0f5f4cb25677" alt="Marcus Sterling" />
+  <div class="section-title">Authentication</div>
+  <div class="flow-grid">
+        <a class="flow-card" href="auth.html">
+      <div class="flow-card-icon" style="background:rgba(59,130,246,0.12);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg></div>
+      <div class="flow-card-body">
+        <div class="flow-card-title">Auth Flow</div>
+        <div class="flow-card-desc">Sign up, sign in with email, Google, Apple and LinkedIn</div>
+        <div class="flow-card-meta">
+          <span class="flow-card-badge" style="background:rgba(59,130,246,0.12);color:#60a5fa;">Auth</span>
+          <span class="flow-card-screens">9 screens</span>
         </div>
-        <div class="conn-info">
-          <div class="conn-name">Marcus Sterling</div>
-          <div class="conn-role">VP of Engineering</div>
-          <div class="conn-company">TechFlow Solutions</div>
-        </div>
-        <div class="connect-btn">Connect</div>
       </div>
-      <div class="conn-row">
-        <div class="conn-avatar">
-          <img src="https://www.figma.com/api/mcp/asset/2be71d93-409f-4737-a6e7-590f73a6ca92" alt="Sarah Chen" />
-        </div>
-        <div class="conn-info">
-          <div class="conn-name">Sarah Chen</div>
-          <div class="conn-role">Product Designer</div>
-          <div class="conn-company">Invision Co.</div>
-        </div>
-        <div class="connect-btn">Connect</div>
-      </div>
-      <div class="conn-row">
-        <div class="conn-avatar">
-          <img src="https://www.figma.com/api/mcp/asset/d7e0e847-b1ea-4028-bb10-6b7d988858bd" alt="David Miller" />
-        </div>
-        <div class="conn-info">
-          <div class="conn-name">David Miller</div>
-          <div class="conn-role">Strategic Consultant</div>
-          <div class="conn-company">Global Insights Group</div>
-        </div>
-        <div class="connect-btn">Connect</div>
-      </div>
-      <div class="conn-row">
-        <div class="conn-avatar">
-          <img src="https://www.figma.com/api/mcp/asset/9a054a69-8b7b-4d22-8729-c30fc8a222e4" alt="Elena Rodriguez" />
-        </div>
-        <div class="conn-info">
-          <div class="conn-name">Elena Rodriguez</div>
-          <div class="conn-role">Marketing Manager</div>
-          <div class="conn-company">FinLeap Ventures</div>
-        </div>
-        <div class="connect-btn">Connect</div>
-      </div>
-      <div class="conn-row">
-        <div class="conn-avatar">
-          <img src="https://www.figma.com/api/mcp/asset/516d0917-e504-48bb-981c-f5a692c0daec" alt="Jameson Kwok" />
-        </div>
-        <div class="conn-info">
-          <div class="conn-name">Jameson Kwok</div>
-          <div class="conn-role">Chief Financial Officer</div>
-          <div class="conn-company">Zenith Bank</div>
-        </div>
-        <div class="connect-btn">Connect</div>
-      </div>
-    </div>
+      <div class="flow-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+    </a>
+  </div>
 
-    <!-- Get More -->
-    <div class="get-more-wrap">
-      <div class="get-more-btn">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <circle cx="9" cy="7" r="4" stroke="white" stroke-width="1.8"/>
-          <path d="M1 21v-1a7 7 0 0114 0v1" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
-          <path d="M19 8v6M22 11h-6" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
-        </svg>
-        Get More Connections
+  <div class="section-title">Core App</div>
+  <div class="flow-grid">
+        <a class="flow-card" href="home.html">
+      <div class="flow-card-icon" style="background:rgba(234,179,8,0.12);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21v-8h6v8"/></svg></div>
+      <div class="flow-card-body">
+        <div class="flow-card-title">Home &amp; Account</div>
+        <div class="flow-card-desc">Dashboard, account details, settings and referral</div>
+        <div class="flow-card-meta">
+          <span class="flow-card-badge" style="background:rgba(234,179,8,0.12);color:#facc15;">Core</span>
+          <span class="flow-card-screens">8 screens</span>
+        </div>
       </div>
-    </div>
+      <div class="flow-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+    </a>
+        <a class="flow-card" href="network.html">
+      <div class="flow-card-icon" style="background:rgba(168,85,247,0.12);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="7" r="2.5"/><circle cx="19" cy="17" r="2.5"/><path d="M7.5 12h5.5M13 12l3.5-4M13 12l3.5 4"/></svg></div>
+      <div class="flow-card-body">
+        <div class="flow-card-title">Network</div>
+        <div class="flow-card-desc">Connections, scanned cards, contacts and leads tabs</div>
+        <div class="flow-card-meta">
+          <span class="flow-card-badge" style="background:rgba(168,85,247,0.12);color:#c084fc;">Core</span>
+          <span class="flow-card-screens">1 screens</span>
+        </div>
+      </div>
+      <div class="flow-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+    </a>
+        <a class="flow-card" href="notifications.html">
+      <div class="flow-card-icon" style="background:rgba(239,80,35,0.12);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fa987d" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg></div>
+      <div class="flow-card-body">
+        <div class="flow-card-title">Notifications</div>
+        <div class="flow-card-desc">Activity feed and notification states</div>
+        <div class="flow-card-meta">
+          <span class="flow-card-badge" style="background:rgba(239,80,35,0.12);color:#fa987d;">Core</span>
+          <span class="flow-card-screens">3 screens</span>
+        </div>
+      </div>
+      <div class="flow-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+    </a>
+  </div>
 
-<!-- Bottom Nav -->
-<div class="bottom-nav">
-  <div class="nav-link">
-    <div class="nav-icon">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1h-4v-7H8v7H5a1 1 0 01-1-1V9.5z" fill="var(--green)"/></svg>
-    </div>
-    <span class="nav-label active">Home</span>
-    <span class="nav-dot"></span>
+  <div class="section-title">Profile</div>
+  <div class="flow-grid">
+        <a class="flow-card" href="profile.html">
+      <div class="flow-card-icon" style="background:rgba(0,144,55,0.12);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7"/></svg></div>
+      <div class="flow-card-body">
+        <div class="flow-card-title">Profile Flow</div>
+        <div class="flow-card-desc">Digital card, portfolio, NFC activation, schedule meeting</div>
+        <div class="flow-card-meta">
+          <span class="flow-card-badge" style="background:rgba(0,144,55,0.12);color:#4ade80;">Profile</span>
+          <span class="flow-card-screens">17 screens</span>
+        </div>
+      </div>
+      <div class="flow-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+    </a>
   </div>
-  <div class="nav-link">
-    <div class="nav-icon">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="7" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="17" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M7.5 12h5.5M13 12l3.5-4M13 12l3.5 4" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
-    <span class="nav-label">Network</span>
-    <span class="nav-dot"></span>
-  </div>
-  <div class="nav-fab-wrap">
-    <div class="nav-fab">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="14" y="18" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="18" width="3" height="3" rx="0.5" fill="white"/></svg>
-    </div>
-  </div>
-  <div class="nav-link">
-    <div class="nav-icon">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M16.5 7.5l-3 6-5.5 2.5 3-6 5.5-2.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="1" fill="var(--slate-400)"/></svg>
-    </div>
-    <span class="nav-label">Explore</span>
-    <span class="nav-dot"></span>
-  </div>
-  <div class="nav-link">
-    <div class="nav-icon">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round"/></svg>
-    </div>
-    <span class="nav-label">Profile</span>
-    <span class="nav-dot"></span>
+
+  <div class="section-title">Web</div>
+  <div class="flow-grid">
+    <a class="flow-card featured" href="ui-for-web.html">
+      <div class="flow-card-icon" style="background:rgba(239,80,35,0.15);width:60px;height:60px;border-radius:16px;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#EF5023" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></div>
+      <div class="flow-card-body">
+        <div class="flow-card-title">UI for Web</div>
+        <div class="flow-card-desc">Browser-optimised profile page with Save &amp; Send contact flow, QR codes, and modal</div>
+        <div class="flow-card-meta">
+          <span class="flow-card-badge" style="background:rgba(239,80,35,0.15);color:#EF5023;">Web</span>
+          <span class="flow-card-screens">4 screens</span>
+        </div>
+      </div>
+      <div class="flow-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+    </a>
   </div>
 </div>
-  </div></div></div>
-      </div>
-      <div class="card-body">
-        <div class="card-label">Flow 02</div>
-        <div class="card-title">InCard Home &amp; Account</div>
-        <div class="card-meta">
-          <span class="screen-count">8 screens</span>
-          <span class="arrow">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6h7M6 2.5L9.5 6 6 9.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
-        </div>
-      </div>
-    </a>
-
-    <!-- Profile Flow -->
-    <a class="flow-card" href="profile.html">
-      <div class="preview">
-        <div class="preview-phone"><div class="screen-content s-index-7" style="width:390px;height:844px;transform:scale(0.174);transform-origin:top left;pointer-events:none;overflow:hidden;"><div class="screen">
-    <!-- Top Nav -->
-    <div class="top-nav">
-      <div class="nav-btn">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-800)"><polyline points="15 18 9 12 15 6"/></svg>
-      </div>
-      <span class="title">Digital Profile</span>
-      <div class="nav-btn">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-800)"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-      </div>
-    </div>
-
-    <div class="scroll-body">
-      <!-- Profile Header -->
-      <div class="profile-header-section">
-        <div class="green-band">
-          <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80" alt="Cover" />
-        </div>
-        <div class="header-content">
-          <div class="avatar-stats-row">
-            <div class="avatar">
-              <img src="https://www.figma.com/api/mcp/asset/357b4e45-6b51-48db-b433-4bee87603cbb" alt="Alex Rivera" />
-            </div>
-            <div class="stats-row">
-              <div class="stat-item divider">
-                <div class="stat-label">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                  VIEWS
-                </div>
-                <div class="stat-value">1,248</div>
-              </div>
-              <div class="stat-item second">
-                <div class="stat-label">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                  SCANS
-                </div>
-                <div class="stat-value">458</div>
-              </div>
-            </div>
-          </div>
-          <div class="name-title">
-            <div class="profile-name">Alex Rivera</div>
-            <div class="profile-subtitle">Creative Strategist &amp; Design Consultant</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="section-actions">
-        <div class="btn-nfc">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <circle cx="9" cy="7" r="4" stroke="white" stroke-width="1.8"/>
-            <path d="M3 21v-1a6 6 0 0 1 6-6h0" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
-            <path d="M16 11v6M19 14h-6" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
-          </svg>
-          Connect
-        </div>
-        <div class="action-row">
-          <div class="action-btn">
-            <svg class="action-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            <span class="action-btn-label">Save contact</span>
-          </div>
-          <div class="action-btn">
-            <svg class="action-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            <span class="action-btn-label">Schedule</span>
-          </div>
-          <div class="action-btn">
-            <svg class="action-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            <span class="action-btn-label">Chat</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Social Connect -->
-      <div class="section-social">
-        <div class="section-label">Connect with me</div>
-        <div class="social-icons">
-          <div class="social-circle" style="background:var(--whatsapp)">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.477 2 2 6.484 2 12.017c0 1.99.525 3.853 1.44 5.461L2.05 22l4.635-1.21A9.954 9.954 0 0012 22c5.523 0 10-4.484 10-10.017C22 6.484 17.522 2 12 2z"/></svg>
-          </div>
-          <div class="social-circle" style="background:var(--zalo)">
-            <span style="color:white;font-weight:700;font-size:18px;font-family:'Public Sans',sans-serif;">Z</span>
-          </div>
-          <div class="social-circle" style="background:var(--x-dark)">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.254 5.622L18.245 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </div>
-          <div class="social-circle" style="background:var(--facebook)">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-          </div>
-          <div class="social-circle" style="background:var(--red-600)">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-          </div>
-        </div>
-      </div>
-
-      <!-- Information Sections -->
-      <div class="section-info">
-        <!-- Industries -->
-        <div class="industries-row">
-          <div class="section-heading">Industries</div>
-          <div class="tags-row">
-            <span class="tag">Product Design</span>
-            <span class="tag">Strategy</span>
-            <span class="tag">FinTech</span>
-            <span class="tag">Web3</span>
-          </div>
-        </div>
-
-        <!-- About Me (expanded) -->
-        <div class="accordion-item">
-          <div class="accordion-header">
-            <div class="section-heading">About Me</div>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><polyline points="18 15 12 9 6 15"/></svg>
-          </div>
-          <div class="accordion-body">I bridge the gap between complex business challenges and elegant user experiences. With over 10 years of experience...</div>
-        </div>
-
-        <!-- Key Strengths (expanded) -->
-        <div class="accordion-item">
-          <div class="accordion-header">
-            <div class="section-heading" style="font-size:13px;">Key Strengths</div>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><polyline points="18 15 12 9 6 15"/></svg>
-          </div>
-          <div class="strength-list">
-            <div class="strength-item">
-              <svg class="strength-dot" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.5" stroke="var(--green)" stroke-width="1"/><path d="M5 8l2 2 4-4" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span class="strength-text">Strategic Brand Development</span>
-            </div>
-            <div class="strength-item">
-              <svg class="strength-dot" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.5" stroke="var(--green)" stroke-width="1"/><path d="M5 8l2 2 4-4" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span class="strength-text">Cross-functional Team Leadership</span>
-            </div>
-            <div class="strength-item">
-              <svg class="strength-dot" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.5" stroke="var(--green)" stroke-width="1"/><path d="M5 8l2 2 4-4" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span class="strength-text">User-Centric Product Design</span>
-            </div>
-            <div class="strength-item">
-              <svg class="strength-dot" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.5" stroke="var(--green)" stroke-width="1"/><path d="M5 8l2 2 4-4" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span class="strength-text">Data-Driven Decision Making</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Collapsed accordion items -->
-        <div class="accordion-collapsed">
-          <span class="accordion-collapsed-label">Main Services</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        </div>
-        <div class="accordion-collapsed">
-          <span class="accordion-collapsed-label">Looking For</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        </div>
-        <div class="accordion-collapsed">
-          <span class="accordion-collapsed-label">Collaboration</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        </div>
-      </div>
-
-      <!-- Signature Products -->
-      <div class="section-products" style="margin-top:24px;">
-        <div class="products-header">
-          <span class="section-heading">Signature Products</span>
-          <div class="products-dots">
-            <span class="dot-active"></span>
-            <span class="dot-inactive"></span>
-            <span class="dot-inactive"></span>
-          </div>
-        </div>
-        <div class="products-carousel">
-          <div class="product-card">
-            <img class="product-img" src="https://www.figma.com/api/mcp/asset/fe3f41f4-5356-42bf-810e-5ce89976afd4" alt="Brand Strategy Workshop" />
-            <div class="product-body">
-              <div class="product-title">Brand Strategy Workshop</div>
-              <div class="product-desc">Transform your visual identity in 4 weeks</div>
-              <div class="product-footer">
-                <span class="product-link">Learn More</span>
-                <div class="product-arrow">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="product-card" style="opacity:0.85;">
-            <img class="product-img" src="https://www.figma.com/api/mcp/asset/ba3b0de2-8d2c-4bfb-9a8d-209fff532cd6" alt="UX Audit" />
-            <div class="product-body">
-              <div class="product-title">UX Audit</div>
-              <div class="product-desc">Deep dive analysis of your product</div>
-              <div class="product-footer">
-                <span class="product-link">Learn More</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Portfolio -->
-      <div class="section-portfolio">
-        <div class="section-heading" style="padding-bottom:8px;">Portfolio Highlights</div>
-        <div class="portfolio-featured">
-          <img class="portfolio-featured-img" src="https://www.figma.com/api/mcp/asset/7dff11ad-0ef7-4bff-b059-f79ea65afdef" alt="Brand Strategy Overview" />
-          <div class="portfolio-overlay">
-            <div><span class="featured-badge">FEATURED</span></div>
-            <div class="play-btn">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            </div>
-            <div class="portfolio-featured-title">Brand Strategy Overview</div>
-          </div>
-        </div>
-        <div class="portfolio-grid">
-          <div class="portfolio-item">
-            <img class="portfolio-item-img" src="https://www.figma.com/api/mcp/asset/94b17baa-46a9-4bb1-b28c-01fa4f5bbb8d" alt="UI Design System" />
-            <div class="portfolio-item-overlay">
-              <span class="portfolio-item-title">UI Design System</span>
-            </div>
-          </div>
-          <div class="portfolio-item portfolio-data-item">
-            <div class="data-graph">
-              <div class="data-graph-inner">
-                <div class="graph-bar-full"></div>
-                <div class="graph-bar-partial"></div>
-                <div class="graph-bars">
-                  <div class="graph-bar" style="height:16px;"></div>
-                  <div class="graph-bar" style="height:32px;"></div>
-                  <div class="graph-bar" style="height:24px;"></div>
-                  <div class="graph-bar tall"></div>
-                  <div class="graph-bar" style="height:20px;"></div>
-                </div>
-              </div>
-            </div>
-            <div class="portfolio-item-overlay">
-              <span class="portfolio-item-title">User Research</span>
-            </div>
-          </div>
-          <div class="portfolio-item">
-            <img class="portfolio-item-img" src="https://www.figma.com/api/mcp/asset/1bbca44c-4a33-4a8a-8ae4-fe33230e8bb9" alt="FinTech App" />
-            <div class="portfolio-item-overlay">
-              <span class="portfolio-item-title">FinTech App</span>
-            </div>
-          </div>
-          <div class="portfolio-item">
-            <img class="portfolio-item-img" src="https://www.figma.com/api/mcp/asset/ff590d26-d536-407d-98ed-90534338ba84" alt="Web Development" />
-            <div class="portfolio-item-overlay">
-              <span class="portfolio-item-title">Web Development</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Bottom Nav -->
-    <div class="bottom-nav">
-      <div class="nav-link">
-        <div class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 21v-8h6v8" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <span class="nav-label">Home</span>
-        <span class="nav-dot"></span>
-      </div>
-      <div class="nav-link">
-        <div class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="7" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="17" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M7.5 12h5.5M13 12l3.5-4M13 12l3.5 4" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <span class="nav-label">Network</span>
-        <span class="nav-dot"></span>
-      </div>
-      <div class="nav-fab-wrap">
-        <div class="nav-fab">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="14" y="18" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="18" width="3" height="3" rx="0.5" fill="white"/></svg>
-        </div>
-      </div>
-      <div class="nav-link">
-        <div class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M16.5 7.5l-3 6-5.5 2.5 3-6 5.5-2.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="1" fill="var(--slate-400)"/></svg>
-        </div>
-        <span class="nav-label">Explore</span>
-        <span class="nav-dot"></span>
-      </div>
-      <div class="nav-link">
-        <div class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" fill="var(--green)"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="var(--green)" stroke-width="2" stroke-linecap="round"/></svg>
-        </div>
-        <span class="nav-label active">Profile</span>
-        <span class="nav-dot"></span>
-      </div>
-    </div>
-  </div></div></div>
-        <div class="preview-phone"><div class="screen-content s-index-8" style="width:390px;height:844px;transform:scale(0.174);transform-origin:top left;pointer-events:none;overflow:hidden;"><div class="screen">
-
-    <!-- Top Nav -->
-    <div class="top-nav">
-      <div class="nav-btn">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--slate-800)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      </div>
-      <span class="title">Edit Profile</span>
-      <button class="save-btn">Save</button>
-    </div>
-
-    <!-- Cover + Avatar (WYSIWYG header) -->
-    <div class="profile-header-section">
-      <div class="green-band">
-        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80" alt="Cover" />
-        <div class="cover-edit-overlay">
-          <div class="cover-edit-pill">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--slate-700)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            Change Cover
-          </div>
-        </div>
-      </div>
-      <div class="header-content">
-        <div class="avatar-row">
-          <div class="avatar-wrap">
-            <div class="avatar">
-              <img src="https://www.figma.com/api/mcp/asset/c6279a20-7551-4819-ba2d-70137c4d1149" alt="Alex Rivera" />
-            </div>
-            <div class="avatar-edit-btn">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            </div>
-          </div>
-          <div style="display:flex;gap:0;padding-bottom:8px;">
-            <div style="display:flex;flex-direction:column;gap:2px;border-right:1px solid var(--border-light);padding-right:17px;">
-              <span style="font-weight:700;font-size:10px;letter-spacing:0.9px;text-transform:uppercase;color:var(--slate-400);">VIEWS</span>
-              <span style="font-weight:700;font-size:16px;color:var(--slate-800);">1,248</span>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:2px;padding-left:16px;">
-              <span style="font-weight:700;font-size:10px;letter-spacing:0.9px;text-transform:uppercase;color:var(--slate-400);">SCANS</span>
-              <span style="font-weight:700;font-size:16px;color:var(--slate-800);">458</span>
-            </div>
-          </div>
-        </div>
-        <!-- Editable name + role — inline, same visual position as profile -->
-        <div class="name-edit-block">
-          <input class="field-inline field-name" type="text" value="Alex Rivera" />
-          <input class="field-inline field-subtitle" type="text" value="Creative Strategist &amp; Design Consultant" />
-        </div>
-      </div>
-    </div>
-
-    <div class="section-divider"></div>
-
-    <!-- ── ABOUT ME ── -->
-    <div class="edit-section">
-      <div class="edit-section-title">About Me</div>
-      <textarea class="field-textarea" rows="4">I bridge the gap between complex business challenges and elegant user experiences. With over 10 years of experience...</textarea>
-    </div>
-
-    <div class="section-divider"></div>
-
-    <!-- ── INDUSTRIES ── -->
-    <div class="edit-section">
-      <div class="edit-section-title">Industries</div>
-      <div class="tags-row">
-        <div class="tag">Product Design <div class="tag-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="var(--slate-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div></div>
-        <div class="tag">Strategy <div class="tag-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="var(--slate-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div></div>
-        <div class="tag">FinTech <div class="tag-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="var(--slate-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div></div>
-        <div class="tag">Web3 <div class="tag-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="var(--slate-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div></div>
-        <button class="tag-add-btn">
-          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
-          Add
-        </button>
-      </div>
-    </div>
-
-    <div class="section-divider"></div>
-
-    <!-- ── KEY STRENGTHS ── -->
-    <div class="edit-section">
-      <div class="edit-section-title">Key Strengths</div>
-      <div class="item-list">
-        <div class="item-row">
-          <div class="item-dot"></div>
-          <input class="item-input" type="text" value="Strategic Brand Development" />
-          <div class="item-remove"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg></div>
-        </div>
-        <div class="item-row">
-          <div class="item-dot"></div>
-          <input class="item-input" type="text" value="Cross-functional Team Leadership" />
-          <div class="item-remove"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg></div>
-        </div>
-        <div class="item-row">
-          <div class="item-dot"></div>
-          <input class="item-input" type="text" value="User-Centric Product Design" />
-          <div class="item-remove"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg></div>
-        </div>
-        <div class="item-row">
-          <div class="item-dot"></div>
-          <input class="item-input" type="text" value="Data-Driven Decision Making" />
-          <div class="item-remove"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg></div>
-        </div>
-        <button class="add-item-btn">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="var(--green)" stroke-width="1.5"/><line x1="8" y1="5" x2="8" y2="11" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/><line x1="5" y1="8" x2="11" y2="8" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/></svg>
-          Add Strength
-        </button>
-      </div>
-    </div>
-
-    <div class="section-divider"></div>
-
-    <!-- ── MAIN SERVICES ── -->
-    <div class="edit-section">
-      <div class="edit-section-title">Main Services</div>
-      <div class="item-list">
-        <div class="item-row">
-          <div class="item-dot" style="background:var(--emerald)"></div>
-          <input class="item-input" type="text" value="Brand Strategy Consulting" />
-          <div class="item-remove"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg></div>
-        </div>
-        <div class="item-row">
-          <div class="item-dot" style="background:var(--emerald)"></div>
-          <input class="item-input" type="text" value="UX / Product Design" />
-          <div class="item-remove"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg></div>
-        </div>
-        <button class="add-item-btn">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="var(--green)" stroke-width="1.5"/><line x1="8" y1="5" x2="8" y2="11" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/><line x1="5" y1="8" x2="11" y2="8" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/></svg>
-          Add Service
-        </button>
-      </div>
-    </div>
-
-    <div class="section-divider"></div>
-
-    <!-- ── LOOKING FOR ── -->
-    <div class="edit-section">
-      <div class="edit-section-title">Looking For</div>
-      <div class="tags-row">
-        <div class="tag">Investors <div class="tag-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="var(--slate-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div></div>
-        <div class="tag">Collaborators <div class="tag-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="var(--slate-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div></div>
-        <button class="tag-add-btn">
-          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
-          Add
-        </button>
-      </div>
-    </div>
-
-    <div class="section-divider"></div>
-
-    <!-- ── COLLABORATION ── -->
-    <div class="edit-section">
-      <div class="edit-section-title">Collaboration</div>
-      <textarea class="field-textarea" rows="3">Open to remote consulting, co-founding opportunities, and strategic advisory roles.</textarea>
-    </div>
-
-    <div class="section-divider"></div>
-
-    <!-- ── SOCIAL LINKS ── -->
-    <div class="edit-section">
-      <div class="edit-section-title">Connect With Me</div>
-      <div class="social-list">
-
-        <!-- WhatsApp -->
-        <div class="social-card">
-          <div class="social-card-icon" style="background:var(--whatsapp)">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.477 2 2 6.484 2 12.017c0 1.99.525 3.853 1.44 5.461L2.05 22l4.635-1.21A9.954 9.954 0 0012 22c5.523 0 10-4.484 10-10.017C22 6.484 17.522 2 12 2z"/></svg>
-          </div>
-          <div class="social-card-info">
-            <div class="social-card-name">WhatsApp</div>
-            <input class="social-card-input" type="text" value="+1 234 567 8900" />
-          </div>
-          <div class="social-card-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div>
-        </div>
-
-        <!-- Zalo -->
-        <div class="social-card">
-          <div class="social-card-icon" style="background:var(--zalo)">
-            <span style="color:white;font-weight:800;font-size:17px;font-family:'Public Sans',sans-serif;line-height:1;">Z</span>
-          </div>
-          <div class="social-card-info">
-            <div class="social-card-name">Zalo</div>
-            <input class="social-card-input" type="text" value="0912 345 678" />
-          </div>
-          <div class="social-card-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div>
-        </div>
-
-        <!-- X / Twitter -->
-        <div class="social-card">
-          <div class="social-card-icon" style="background:var(--x-dark)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.254 5.622L18.245 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </div>
-          <div class="social-card-info">
-            <div class="social-card-name">X (Twitter)</div>
-            <input class="social-card-input" type="text" value="@alexrivera" />
-          </div>
-          <div class="social-card-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div>
-        </div>
-
-        <!-- Facebook -->
-        <div class="social-card">
-          <div class="social-card-icon" style="background:var(--facebook)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-          </div>
-          <div class="social-card-info">
-            <div class="social-card-name">Facebook</div>
-            <input class="social-card-input" type="text" value="facebook.com/alexrivera" />
-          </div>
-          <div class="social-card-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div>
-        </div>
-
-        <!-- LinkedIn -->
-        <div class="social-card">
-          <div class="social-card-icon" style="background:#0a66c2">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z"/></svg>
-          </div>
-          <div class="social-card-info">
-            <div class="social-card-name">LinkedIn</div>
-            <input class="social-card-input" type="url" placeholder="linkedin.com/in/yourprofile" value="linkedin.com/in/alexrivera" />
-          </div>
-          <div class="social-card-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div>
-        </div>
-
-        <!-- YouTube (off) -->
-        <div class="social-card" style="opacity:0.6;">
-          <div class="social-card-icon" style="background:var(--red-600)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-          </div>
-          <div class="social-card-info">
-            <div class="social-card-name">YouTube</div>
-            <input class="social-card-input" type="text" placeholder="youtube.com/@yourhandle" value="youtube.com/@alexrivera" />
-          </div>
-          <div class="social-card-remove"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></div>
-        </div>
-
-        <!-- Add link -->
-        <button class="add-item-btn" style="padding-left:2px;">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="var(--green)" stroke-width="1.5"/><line x1="8" y1="5" x2="8" y2="11" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/><line x1="5" y1="8" x2="11" y2="8" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/></svg>
-          Add Social Link
-        </button>
-      </div>
-    </div>
-
-    <div class="section-divider"></div>
-
-    <!-- ── SIGNATURE PRODUCTS ── -->
-    <div class="edit-section">
-      <div class="edit-section-title">Signature Products</div>
-      <div class="products-list">
-
-        <!-- Product 1 -->
-        <div class="product-edit-card">
-          <div class="product-thumb-wrap">
-            <img class="product-thumb-img" src="https://www.figma.com/api/mcp/asset/1857c14d-7b6a-4289-97f1-418cf7066f95" alt="Brand Strategy Workshop" />
-            <div class="product-thumb-overlay">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-              <span class="product-thumb-label">CHANGE</span>
-            </div>
-          </div>
-          <div class="product-edit-right">
-            <input class="product-edit-input" type="text" value="Brand Strategy Workshop" />
-            <textarea class="product-edit-desc" rows="2">Transform your visual identity in 4 weeks</textarea>
-            <div class="product-edit-actions">
-              <button class="product-delete-btn">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
-                Remove
-              </button>
-              <div class="drag-handle">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="15" x2="16" y2="15"/></svg>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Product 2 -->
-        <div class="product-edit-card">
-          <div class="product-thumb-wrap">
-            <img class="product-thumb-img" src="https://www.figma.com/api/mcp/asset/0a506524-f5c9-4d98-b485-a11c5ee4db79" alt="UX Audit" />
-            <div class="product-thumb-overlay">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-              <span class="product-thumb-label">CHANGE</span>
-            </div>
-          </div>
-          <div class="product-edit-right">
-            <input class="product-edit-input" type="text" value="UX Audit" />
-            <textarea class="product-edit-desc" rows="2">Deep dive analysis of your product</textarea>
-            <div class="product-edit-actions">
-              <button class="product-delete-btn">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
-                Remove
-              </button>
-              <div class="drag-handle">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="15" x2="16" y2="15"/></svg>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Add product -->
-        <button class="add-item-btn">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="var(--green)" stroke-width="1.5"/><line x1="8" y1="5" x2="8" y2="11" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/><line x1="5" y1="8" x2="11" y2="8" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/></svg>
-          Add Product
-        </button>
-      </div>
-    </div>
-
-    <div class="section-divider"></div>
-
-    <!-- ── PORTFOLIO ── -->
-    <div class="edit-section">
-      <div class="edit-section-title">Portfolio Highlights</div>
-      <div class="portfolio-list">
-
-        <!-- Featured video -->
-        <div class="portfolio-list-item">
-          <div class="portfolio-thumb" style="cursor:pointer;">
-            <img src="https://www.figma.com/api/mcp/asset/ae9468a9-b3d6-46ce-b459-921f422a63aa" alt="Featured" />
-            <div class="portfolio-thumb-overlay">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            </div>
-          </div>
-          <div class="portfolio-item-info">
-            <div class="portfolio-type-badge">
-              <svg width="9" height="9" viewBox="0 0 10 10" fill="none"><polygon points="2 1 9 5 2 9 2 1" fill="var(--slate-500)"/></svg>
-              Featured Video
-            </div>
-            <input class="portfolio-title-input" type="text" value="Brand Strategy Overview" />
-          </div>
-          <div class="portfolio-item-remove">
-            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg>
-          </div>
-        </div>
-
-        <!-- Image 1 -->
-        <div class="portfolio-list-item">
-          <div class="portfolio-thumb">
-            <img src="https://www.figma.com/api/mcp/asset/583ba358-f2d9-4988-b7cd-477d393dca00" alt="UI Design System" />
-            <div class="portfolio-thumb-overlay">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            </div>
-          </div>
-          <div class="portfolio-item-info">
-            <div class="portfolio-type-badge">
-              <svg width="9" height="9" viewBox="0 0 10 10" fill="none"><rect x="1" y="1" width="8" height="8" rx="1" stroke="var(--slate-500)" stroke-width="1.2"/><path d="M1 7l2.5-2.5 2 2 1.5-1.5 2 2" stroke="var(--slate-500)" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              Image
-            </div>
-            <input class="portfolio-title-input" type="text" value="UI Design System" />
-          </div>
-          <div class="portfolio-item-remove">
-            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg>
-          </div>
-        </div>
-
-        <!-- Data / custom item -->
-        <div class="portfolio-list-item">
-          <div class="portfolio-thumb portfolio-thumb-data">
-            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:10px;">
-              <div style="width:100%;display:flex;gap:3px;height:32px;align-items:flex-end;">
-                <div style="flex:1;height:40%;background:rgba(255,255,255,0.7);border-radius:1px;"></div>
-                <div style="flex:1;height:70%;background:rgba(255,255,255,0.7);border-radius:1px;"></div>
-                <div style="flex:1;height:55%;background:rgba(255,255,255,0.7);border-radius:1px;"></div>
-                <div style="flex:1;height:90%;background:white;border-radius:1px;"></div>
-                <div style="flex:1;height:50%;background:rgba(255,255,255,0.7);border-radius:1px;"></div>
-              </div>
-            </div>
-          </div>
-          <div class="portfolio-item-info">
-            <div class="portfolio-type-badge">
-              <svg width="9" height="9" viewBox="0 0 10 10" fill="none"><rect x="1" y="4" width="2" height="5" fill="var(--slate-500)"/><rect x="4" y="2" width="2" height="7" fill="var(--slate-500)"/><rect x="7" y="1" width="2" height="8" fill="var(--slate-500)"/></svg>
-              Data
-            </div>
-            <input class="portfolio-title-input" type="text" value="User Research" />
-          </div>
-          <div class="portfolio-item-remove">
-            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg>
-          </div>
-        </div>
-
-        <!-- Image 2 -->
-        <div class="portfolio-list-item">
-          <div class="portfolio-thumb">
-            <img src="https://www.figma.com/api/mcp/asset/b284b0d6-60bc-4f76-bc87-74ccc589939b" alt="FinTech App" />
-            <div class="portfolio-thumb-overlay">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            </div>
-          </div>
-          <div class="portfolio-item-info">
-            <div class="portfolio-type-badge">
-              <svg width="9" height="9" viewBox="0 0 10 10" fill="none"><rect x="1" y="1" width="8" height="8" rx="1" stroke="var(--slate-500)" stroke-width="1.2"/><path d="M1 7l2.5-2.5 2 2 1.5-1.5 2 2" stroke="var(--slate-500)" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              Image
-            </div>
-            <input class="portfolio-title-input" type="text" value="FinTech App" />
-          </div>
-          <div class="portfolio-item-remove">
-            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg>
-          </div>
-        </div>
-
-        <!-- Add row -->
-        <div class="portfolio-add-row">
-          <div class="portfolio-add-thumb">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--slate-300)" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          </div>
-          <button class="add-item-btn" style="font-size:14px;">Add Portfolio Item</button>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Fixed Save Footer -->
-    <div class="save-footer">
-      <button class="btn-submit">Save Changes</button>
-      <button class="btn-discard">Discard Changes</button>
-    </div>
-
-  </div></div></div>
-        <div class="preview-phone"><div class="screen-content s-index-9" style="width:390px;height:844px;transform:scale(0.174);transform-origin:top left;pointer-events:none;overflow:hidden;"><div class="screen">
-    <div class="bg-layer"></div>
-    <div class="bg-cover"></div>
-    <div class="bg-overlay"></div>
-
-    <div class="sheet">
-      <div class="handle-wrap">
-        <div class="handle"></div>
-      </div>
-
-      <!-- Confetti dots scattered near top of sheet -->
-      <div class="confetti-dot" style="width:8px;height:8px;background:#fbbf24;top:28px;left:52px;"></div>
-      <div class="confetti-dot" style="width:6px;height:6px;background:var(--green-light);top:44px;left:88px;"></div>
-      <div class="confetti-dot" style="width:9px;height:9px;background:#ef5023;top:20px;right:80px;"></div>
-      <div class="confetti-dot" style="width:7px;height:7px;background:#fa987d;top:52px;right:52px;"></div>
-      <div class="confetti-dot" style="width:10px;height:10px;background:#ef5023;top:36px;left:160px;"></div>
-      <div class="confetti-dot" style="width:6px;height:6px;background:var(--green);top:60px;right:110px;"></div>
-
-      <div class="icon-area">
-        <div class="icon-outer-glow">
-          <div class="icon-middle-ring"></div>
-          <div class="icon-inner-circle">
-            <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
-              <path d="M7 15.5l5.5 5.5L23 10" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <p class="success-title">Card Activated!</p>
-      <p class="success-subtitle">Your InCard is now live. Start sharing your digital profile with a tap.</p>
-
-      <div class="footer">
-        <button class="btn-primary">View My Profile</button>
-        <button class="btn-ghost">Go to Dashboard</button>
-      </div>
-    </div>
-  </div></div></div>
-      </div>
-      <div class="card-body">
-        <div class="card-label">Flow 03</div>
-        <div class="card-title">InCard Profile Flow</div>
-        <div class="card-meta">
-          <span class="screen-count">17 screens</span>
-          <span class="arrow">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6h7M6 2.5L9.5 6 6 9.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
-        </div>
-      </div>
-    </a>
-
-    <!-- Network Flow -->
-    <a class="flow-card" href="network.html">
-      <div class="preview">
-        <div class="preview-phone"><div class="screen-content s-index-10" style="width:390px;height:844px;transform:scale(0.174);transform-origin:top left;pointer-events:none;overflow:hidden;"><div class="screen">
-
-    <!-- Header -->
-    <div class="header">
-      <div class="header-top">
-        <div class="back-btn">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M10 12L6 8l4-4" stroke="var(--slate-900)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <div class="header-title">Network</div>
-      </div>
-      <div class="search-bar">
-        <div class="search-input-wrap">
-          <svg class="search-icon" width="16" height="16" viewBox="0 0 18 18" fill="none">
-            <circle cx="8" cy="8" r="6" stroke="var(--slate-400)" stroke-width="1.5"/>
-            <path d="M13 13l3 3" stroke="var(--slate-400)" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-          <input class="search-input" type="text" placeholder="Search by name, company or role" />
-          <div class="ai-icon">
-            <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
-              <!-- 4-pointed sparkle star -->
-              <path d="M8 1C8 1 8.6 4.4 9.8 5.8C11 7.2 14 8 14 8C14 8 11 8.8 9.8 10.2C8.6 11.6 8 15 8 15C8 15 7.4 11.6 6.2 10.2C5 8.8 2 8 2 8C2 8 5 7.2 6.2 5.8C7.4 4.4 8 1 8 1Z" fill="white"/>
-              <!-- small secondary sparkle -->
-              <path d="M13 2C13 2 13.3 3.4 13.9 4C14.5 4.6 16 5 16 5C16 5 14.5 5.4 13.9 6C13.3 6.6 13 8 13 8C13 8 12.7 6.6 12.1 6C11.5 5.4 10 5 10 5C10 5 11.5 4.6 12.1 4C12.7 3.4 13 2 13 2Z" fill="white" opacity="0.7"/>
-            </svg>
-            <span class="ai-icon-label">AI</span>
-          </div>
-        </div>
-        <button class="filter-btn" aria-label="Filter">
-          <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
-            <path d="M1 3h13M3 7.5h9M6 12h3" stroke="var(--orange)" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-        </button>
-      </div>
-      <div class="tabs">
-        <div class="tab active" onclick="switchTab('connections')">Connections</div>
-        <div class="tab" onclick="switchTab('scanned')">Scanned Cards</div>
-        <div class="tab" onclick="switchTab('contacts')">Contacts</div>
-        <div class="tab" onclick="switchTab('leads')">Leads</div>
-      </div>
-    </div>
-
-    <!-- ── Connections Tab ── -->
-    <div id="tab-connections">
-
-    <!-- Sync Contacts -->
-    <div class="section" style="margin-top: 20px;">
-      <div class="sync-banner">
-        <div class="sync-icon-wrap">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
-            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
-            <circle cx="9" cy="7" r="4" stroke="white" stroke-width="1.8"/>
-            <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="sync-text">
-          <div class="sync-title">Sync Google Contacts</div>
-          <div class="sync-count">2 / 50 connections synced</div>
-          <div class="sync-progress-track">
-            <div class="sync-progress-fill"></div>
-          </div>
-        </div>
-        <div class="sync-actions">
-          <button class="btn-sync">
-            <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
-              <path d="M11 6A5 5 0 101 6" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/>
-              <path d="M11 3v3H8" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="btn-sync-text">Sync</span>
-          </button>
-          <button class="btn-settings-inline" aria-label="Settings">
-            <svg width="15" height="15" viewBox="0 0 17 17" fill="none">
-              <path d="M8.5 11a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" stroke="white" stroke-width="1.5"/>
-              <path d="M14 8.5a5.5 5.5 0 01-.2 1.4l1.7 1.3-1.5 2.6-2-.7a5.5 5.5 0 01-2.3 1.3l-.3 2.1h-3l-.3-2.1a5.5 5.5 0 01-2.3-1.3l-2 .7-1.5-2.6 1.7-1.3A5.5 5.5 0 012 8.5c0-.5.07-.97.2-1.4L.5 5.8 2 3.2l2 .7a5.5 5.5 0 012.3-1.3L6.6.5h3l.3 2.1a5.5 5.5 0 012.3 1.3l2-.7 1.5 2.6-1.7 1.3c.13.43.2.9.2 1.4z" stroke="white" stroke-width="1.3"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Connections list -->
-    <div class="section">
-      <div class="settings-card">
-
-        <div class="contact-card">
-          <div class="avatar-wrap">
-            <div class="avatar">
-              <svg width="36" height="36" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="14" r="8" fill="#cbd5e1"/><ellipse cx="20" cy="34" rx="14" ry="8" fill="#cbd5e1"/></svg>
-            </div>
-            <div class="sync-badge">
-              <svg width="11" height="11" viewBox="0 0 100 100" fill="white"><path d="M72 10 L60 22 A32 32 0 0 0 18 48 L30 48 A20 20 0 0 1 60 30 L48 42 L80 42 L80 10 Z"/><path d="M28 90 L40 78 A32 32 0 0 0 82 52 L70 52 A20 20 0 0 1 40 70 L52 58 L20 58 L20 90 Z"/></svg>
-            </div>
-          </div>
-          <div class="card-info">
-            <div class="contact-name">Alex Sterling</div>
-            <div class="contact-role">Product Designer @ InCard</div>
-          </div>
-          <div class="card-actions">
-            <button class="action-btn msg" aria-label="Message">
-              <svg width="16" height="16" viewBox="0 0 17 17" fill="none"><path d="M2 2h13a1 1 0 011 1v9a1 1 0 01-1 1H5l-4 3V3a1 1 0 011-1z" stroke="var(--green)" stroke-width="1.4" stroke-linejoin="round"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="contact-card">
-          <div class="avatar-wrap">
-            <div class="avatar">
-              <svg width="36" height="36" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="14" r="8" fill="#e2c4b0"/><ellipse cx="20" cy="34" rx="14" ry="8" fill="#c4a090"/></svg>
-            </div>
-            <div class="sync-badge">
-              <svg width="11" height="11" viewBox="0 0 100 100" fill="white"><path d="M72 10 L60 22 A32 32 0 0 0 18 48 L30 48 A20 20 0 0 1 60 30 L48 42 L80 42 L80 10 Z"/><path d="M28 90 L40 78 A32 32 0 0 0 82 52 L70 52 A20 20 0 0 1 40 70 L52 58 L20 58 L20 90 Z"/></svg>
-            </div>
-          </div>
-          <div class="card-info">
-            <div class="contact-name">Sarah Jenkins</div>
-            <div class="contact-role">Marketing Director @ Nexus</div>
-          </div>
-          <div class="card-actions">
-            <button class="action-btn msg" aria-label="Message">
-              <svg width="16" height="16" viewBox="0 0 17 17" fill="none"><path d="M2 2h13a1 1 0 011 1v9a1 1 0 01-1 1H5l-4 3V3a1 1 0 011-1z" stroke="var(--green)" stroke-width="1.4" stroke-linejoin="round"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="contact-card">
-          <div class="avatar-wrap">
-            <div class="avatar initials">
-              <span>MR</span>
-            </div>
-            <div class="sync-badge">
-              <svg width="11" height="11" viewBox="0 0 100 100" fill="white"><path d="M72 10 L60 22 A32 32 0 0 0 18 48 L30 48 A20 20 0 0 1 60 30 L48 42 L80 42 L80 10 Z"/><path d="M28 90 L40 78 A32 32 0 0 0 82 52 L70 52 A20 20 0 0 1 40 70 L52 58 L20 58 L20 90 Z"/></svg>
-            </div>
-          </div>
-          <div class="card-info">
-            <div class="contact-name">Marcus Rodriguez</div>
-            <div class="contact-role">CTO @ GreenTech Solutions</div>
-          </div>
-          <div class="card-actions">
-            <button class="action-btn msg" aria-label="Message">
-              <svg width="16" height="16" viewBox="0 0 17 17" fill="none"><path d="M2 2h13a1 1 0 011 1v9a1 1 0 01-1 1H5l-4 3V3a1 1 0 011-1z" stroke="var(--green)" stroke-width="1.4" stroke-linejoin="round"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="contact-card">
-          <div class="avatar-wrap">
-            <div class="avatar">
-              <svg width="36" height="36" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="14" r="8" fill="#6b7280"/><ellipse cx="20" cy="34" rx="14" ry="8" fill="#4b5563"/></svg>
-            </div>
-            <div class="sync-badge">
-              <svg width="11" height="11" viewBox="0 0 100 100" fill="white"><path d="M72 10 L60 22 A32 32 0 0 0 18 48 L30 48 A20 20 0 0 1 60 30 L48 42 L80 42 L80 10 Z"/><path d="M28 90 L40 78 A32 32 0 0 0 82 52 L70 52 A20 20 0 0 1 40 70 L52 58 L20 58 L20 90 Z"/></svg>
-            </div>
-          </div>
-          <div class="card-info">
-            <div class="contact-name">Elena Gilbert</div>
-            <div class="contact-role">Sr. HR Specialist @ Meridian</div>
-          </div>
-          <div class="card-actions">
-            <button class="action-btn msg" aria-label="Message">
-              <svg width="16" height="16" viewBox="0 0 17 17" fill="none"><path d="M2 2h13a1 1 0 011 1v9a1 1 0 01-1 1H5l-4 3V3a1 1 0 011-1z" stroke="var(--green)" stroke-width="1.4" stroke-linejoin="round"/></svg>
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    </div><!-- end #tab-connections -->
-
-    <!-- ── Scanned Cards Tab ── -->
-    <div id="tab-scanned" style="display:none;">
-
-    <div class="section" style="margin-top: 20px;">
-      <div class="section-label">Recently Scanned</div>
-      <div class="settings-card">
-
-        <!-- James Okafor — connect -->
-        <div class="contact-card">
-          <div class="avatar-wrap">
-            <div class="avatar initials" style="background:rgba(99,102,241,0.15);">
-              <span style="color:#6366f1;">JO</span>
-            </div>
-          </div>
-          <div class="card-info">
-            <div class="contact-name">James Okafor</div>
-            <div class="contact-role">Founder @ BuildFast</div>
-          </div>
-          <div class="card-actions">
-            <button class="action-btn connect" aria-label="Connect">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M16 19v-1a4 4 0 00-4-4H6a4 4 0 00-4 4v1" stroke="var(--slate-500)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="9" cy="8" r="3" stroke="var(--slate-500)" stroke-width="1.6" stroke-linecap="round"/>
-                <path d="M19 8v6M22 11h-6" stroke="var(--slate-500)" stroke-width="1.6" stroke-linecap="round"/>
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- Priya Nair — chat -->
-        <div class="contact-card">
-          <div class="avatar-wrap">
-            <div class="avatar">
-              <svg width="36" height="36" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="14" r="8" fill="#fca5a5"/><ellipse cx="20" cy="34" rx="14" ry="8" fill="#f87171"/></svg>
-            </div>
-            <div class="sync-badge">
-              <svg width="11" height="11" viewBox="0 0 100 100" fill="white"><path d="M72 10 L60 22 A32 32 0 0 0 18 48 L30 48 A20 20 0 0 1 60 30 L48 42 L80 42 L80 10 Z"/><path d="M28 90 L40 78 A32 32 0 0 0 82 52 L70 52 A20 20 0 0 1 40 70 L52 58 L20 58 L20 90 Z"/></svg>
-            </div>
-          </div>
-          <div class="card-info">
-            <div class="contact-name">Priya Nair</div>
-            <div class="contact-role">UX Lead @ Design Co.</div>
-          </div>
-          <div class="card-actions">
-            <button class="action-btn msg" aria-label="Message">
-              <svg width="16" height="16" viewBox="0 0 17 17" fill="none"><path d="M2 2h13a1 1 0 011 1v9a1 1 0 01-1 1H5l-4 3V3a1 1 0 011-1z" stroke="var(--green)" stroke-width="1.4" stroke-linejoin="round"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- Tom Weller — connect -->
-        <div class="contact-card">
-          <div class="avatar-wrap">
-            <div class="avatar">
-              <svg width="36" height="36" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="14" r="8" fill="#93c5fd"/><ellipse cx="20" cy="34" rx="14" ry="8" fill="#60a5fa"/></svg>
-            </div>
-          </div>
-          <div class="card-info">
-            <div class="contact-name">Tom Weller</div>
-            <div class="contact-role">Sales Director @ Salesforce</div>
-          </div>
-          <div class="card-actions">
-            <button class="action-btn connect" aria-label="Connect">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M16 19v-1a4 4 0 00-4-4H6a4 4 0 00-4 4v1" stroke="var(--slate-500)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="9" cy="8" r="3" stroke="var(--slate-500)" stroke-width="1.6" stroke-linecap="round"/>
-                <path d="M19 8v6M22 11h-6" stroke="var(--slate-500)" stroke-width="1.6" stroke-linecap="round"/>
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- Aisha Kamara — chat -->
-        <div class="contact-card">
-          <div class="avatar-wrap">
-            <div class="avatar initials" style="background:rgba(245,158,11,0.15);">
-              <span style="color:#d97706;">AK</span>
-            </div>
-            <div class="sync-badge">
-              <svg width="11" height="11" viewBox="0 0 100 100" fill="white"><path d="M72 10 L60 22 A32 32 0 0 0 18 48 L30 48 A20 20 0 0 1 60 30 L48 42 L80 42 L80 10 Z"/><path d="M28 90 L40 78 A32 32 0 0 0 82 52 L70 52 A20 20 0 0 1 40 70 L52 58 L20 58 L20 90 Z"/></svg>
-            </div>
-          </div>
-          <div class="card-info">
-            <div class="contact-name">Aisha Kamara</div>
-            <div class="contact-role">Data Scientist @ Meta</div>
-          </div>
-          <div class="card-actions">
-            <button class="action-btn msg" aria-label="Message">
-              <svg width="16" height="16" viewBox="0 0 17 17" fill="none"><path d="M2 2h13a1 1 0 011 1v9a1 1 0 01-1 1H5l-4 3V3a1 1 0 011-1z" stroke="var(--green)" stroke-width="1.4" stroke-linejoin="round"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- Diego Reyes — connect -->
-        <div class="contact-card">
-          <div class="avatar-wrap">
-            <div class="avatar">
-              <svg width="36" height="36" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="14" r="8" fill="#6ee7b7"/><ellipse cx="20" cy="34" rx="14" ry="8" fill="#34d399"/></svg>
-            </div>
-          </div>
-          <div class="card-info">
-            <div class="contact-name">Diego Reyes</div>
-            <div class="contact-role">Product Manager @ Linear</div>
-          </div>
-          <div class="card-actions">
-            <button class="action-btn connect" aria-label="Connect">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M16 19v-1a4 4 0 00-4-4H6a4 4 0 00-4 4v1" stroke="var(--slate-500)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="9" cy="8" r="3" stroke="var(--slate-500)" stroke-width="1.6" stroke-linecap="round"/>
-                <path d="M19 8v6M22 11h-6" stroke="var(--slate-500)" stroke-width="1.6" stroke-linecap="round"/>
-              </svg>
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    </div><!-- end #tab-scanned -->
-
-    <!-- Bottom Nav -->
-    <div class="bottom-nav">
-      <div class="nav-link">
-        <div class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 21v-8h6v8" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <span class="nav-label">Home</span>
-        <span class="nav-dot"></span>
-      </div>
-      <div class="nav-link">
-        <div class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="2.5" fill="var(--green)"/><circle cx="19" cy="7" r="2.5" fill="var(--green)"/><circle cx="19" cy="17" r="2.5" fill="var(--green)"/><path d="M7.5 12h5.5M13 12l3.5-4M13 12l3.5 4" stroke="var(--green)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <span class="nav-label active">Network</span>
-        <span class="nav-dot"></span>
-      </div>
-      <div class="nav-fab-wrap">
-        <div class="nav-fab">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="14" y="18" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="18" width="3" height="3" rx="0.5" fill="white"/></svg>
-        </div>
-      </div>
-      <div class="nav-link">
-        <div class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M16.5 7.5l-3 6-5.5 2.5 3-6 5.5-2.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="1" fill="var(--slate-400)"/></svg>
-        </div>
-        <span class="nav-label">Explore</span>
-        <span class="nav-dot"></span>
-      </div>
-      <div class="nav-link">
-        <div class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round"/></svg>
-        </div>
-        <span class="nav-label">Profile</span>
-        <span class="nav-dot"></span>
-      </div>
-    </div>
-
-  </div>
-  <script>
-    function switchTab(name) {
-      // Update tab labels
-      document.querySelectorAll('.tab').forEach(function(el) {
-        el.classList.remove('active');
-      });
-      event.currentTarget.classList.add('active');
-      // Show/hide panels
-      var panels = ['connections','scanned'];
-      panels.forEach(function(p) {
-        var el = document.getElementById('tab-' + p);
-        if (el) el.style.display = (p === name) ? '' : 'none';
-      });
-    }
-  </script></div></div>
-      </div>
-      <div class="card-body">
-        <div class="card-label">Flow 04</div>
-        <div class="card-title">InCard Network Flow</div>
-        <div class="card-meta">
-          <span class="screen-count">1 screen</span>
-          <span class="arrow">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6h7M6 2.5L9.5 6 6 9.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
-        </div>
-      </div>
-    </a>
-
-    <!-- Notifications Flow -->
-    <a class="flow-card" href="notifications.html">
-      <div class="preview">
-        <div class="preview-phone"><div class="screen-content s-index-11" style="width:390px;height:844px;transform:scale(0.174);transform-origin:top left;pointer-events:none;overflow:hidden;"><!-- Header -->
-  <div class="header">
-    <button class="back-btn" aria-label="Back">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M10 12L6 8l4-4" stroke="var(--slate-900)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </button>
-    <div class="header-title">Notifications</div>
-  </div>
-
-  <!-- Tabs -->
-  <div class="tabs">
-    <div class="tab active">
-      <div class="tab-label">
-        News
-        <span class="tab-badge">5</span>
-      </div>
-      <div class="tab-underline"></div>
-    </div>
-    <div class="tab">
-      <div class="tab-label">
-        Requests
-        <span class="tab-badge orange">3</span>
-      </div>
-      <div class="tab-underline"></div>
-    </div>
-    <div class="tab">
-      <div class="tab-label">
-        Others
-        <span class="tab-badge slate">4</span>
-      </div>
-      <div class="tab-underline"></div>
-    </div>
-  </div>
-
-  <!-- Content -->
-  <div class="scroll-area">
-
-    <div style="height:8px;"></div>
-
-    <!-- Admin post 1 (unread) -->
-    <div class="notif-item unread">
-      <div class="unread-dot"></div>
-      <div class="notif-icon-wrap green">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-          <rect x="3" y="3" width="18" height="18" rx="4" stroke="var(--green)" stroke-width="1.7"/>
-          <path d="M7 8h10M7 12h7M7 16h5" stroke="var(--green)" stroke-width="1.7" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div class="notif-body">
-        <div class="notif-text"><strong>InCard Team</strong> · OpenAI từng cấm sử dụng trong quân sự</div>
-        <div class="notif-meta notif-time">2 min ago · From Admin</div>
-        <div class="notif-actions">
-          <button class="notif-action-btn primary">Read Now</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Connection post (unread) -->
-    <div class="notif-item unread">
-      <div class="unread-dot"></div>
-      <div class="notif-avatar" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">AK</div>
-      <div class="notif-body">
-        <div class="notif-text"><strong>Anna Kim</strong> · Làn sóng huy động vốn chính trị</div>
-        <div class="notif-meta notif-time">18 min ago · Product Designer at Grab</div>
-        <div class="notif-actions">
-          <button class="notif-action-btn primary">Read Now</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Admin post 2 (unread) -->
-    <div class="notif-item unread">
-      <div class="unread-dot"></div>
-      <div class="notif-icon-wrap green">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-          <rect x="3" y="3" width="18" height="18" rx="4" stroke="var(--green)" stroke-width="1.7"/>
-          <path d="M7 8h10M7 12h7M7 16h5" stroke="var(--green)" stroke-width="1.7" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div class="notif-body">
-        <div class="notif-text"><strong>InCard Team</strong> · 5 tips to maximise your networking with NFC cards</div>
-        <div class="notif-meta notif-time">1 hr ago · From Admin</div>
-        <div class="notif-actions">
-          <button class="notif-action-btn primary">Read Now</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Connection post (unread) -->
-    <div class="notif-item unread">
-      <div class="unread-dot"></div>
-      <div class="notif-avatar" style="background: linear-gradient(135deg, #f59e0b, #ef5023);">JW</div>
-      <div class="notif-body">
-        <div class="notif-text"><strong>James Wong</strong> · How Southeast Asia's B2B market is changing in 2025</div>
-        <div class="notif-meta notif-time">3 hr ago · Founder at TechSEA</div>
-        <div class="notif-actions">
-          <button class="notif-action-btn primary">Read Now</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Connection post (read) -->
-    <div class="notif-item">
-      <div class="notif-avatar" style="background: linear-gradient(135deg, #059669, #10b981);">MR</div>
-      <div class="notif-body">
-        <div class="notif-text"><strong>Marco Rossi</strong> · Why every founder needs a digital business card in 2025</div>
-        <div class="notif-meta notif-time">5 hr ago · VP Sales at Finova Group</div>
-        <div class="notif-actions">
-          <button class="notif-action-btn ghost">Read Now</button>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Bottom Nav -->
-    <div class="bottom-nav">
-      <div class="nav-link">
-        <div class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 21v-8h6v8" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <span class="nav-label">Home</span>
-        <span class="nav-dot"></span>
-      </div>
-      <div class="nav-link">
-        <div class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="7" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="17" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M7.5 12h5.5M13 12l3.5-4M13 12l3.5 4" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <span class="nav-label">Network</span>
-        <span class="nav-dot"></span>
-      </div>
-      <div class="nav-fab-wrap">
-        <div class="nav-fab">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="14" y="18" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="18" width="3" height="3" rx="0.5" fill="white"/></svg>
-        </div>
-      </div>
-      <div class="nav-link">
-        <div class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="var(--green)" fill-opacity="0.12" stroke="var(--green)" stroke-width="1.75"/><path d="M16.5 7.5l-3 6-5.5 2.5 3-6 5.5-2.5z" fill="var(--green)" stroke="var(--green)" stroke-width="0.5" stroke-linejoin="round"/></svg>
-        </div>
-        <span class="nav-label active">Explore</span>
-        <span class="nav-dot"></span>
-      </div>
-      <div class="nav-link">
-        <div class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round"/></svg>
-        </div>
-        <span class="nav-label">Profile</span>
-        <span class="nav-dot"></span>
-      </div>
-    </div></div></div>
-        <div class="preview-phone"><div class="screen-content s-index-12" style="width:390px;height:844px;transform:scale(0.174);transform-origin:top left;pointer-events:none;overflow:hidden;"><!-- Header -->
-  <div class="header">
-    <button class="back-btn" aria-label="Back">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M10 12L6 8l4-4" stroke="var(--slate-900)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </button>
-    <div class="header-title">Notifications</div>
-  </div>
-
-  <!-- Tabs -->
-  <div class="tabs">
-    <div class="tab">
-      <div class="tab-label">
-        News
-        <span class="tab-badge">5</span>
-      </div>
-      <div class="tab-underline"></div>
-    </div>
-    <div class="tab active">
-      <div class="tab-label">
-        Requests
-        <span class="tab-badge orange">3</span>
-      </div>
-      <div class="tab-underline"></div>
-    </div>
-    <div class="tab">
-      <div class="tab-label">
-        Others
-        <span class="tab-badge slate">4</span>
-      </div>
-      <div class="tab-underline"></div>
-    </div>
-  </div>
-
-  <!-- Content -->
-  <div class="scroll-area">
-
-    <div style="height:8px;"></div>
-
-    <!-- Request 1 — Anna Kim -->
-    <div class="request-card unread">
-      <div class="unread-strip"></div>
-      <div class="request-top">
-        <div class="req-avatar" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">AK</div>
-        <div class="req-info">
-          <div class="req-name">Anna Kim</div>
-          <div class="req-role">Product Designer · Grab</div>
-        </div>
-      </div>
-      <div class="req-actions">
-        <button class="req-btn accept">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-            <path d="M2 8l4 4 8-8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Accept
-        </button>
-        <button class="req-btn decline">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-            <path d="M4 4l8 8M12 4L4 12" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          Decline
-        </button>
-      </div>
-    </div>
-
-    <!-- Request 2 — Marco Rossi -->
-    <div class="request-card unread">
-      <div class="unread-strip"></div>
-      <div class="request-top">
-        <div class="req-avatar" style="background: linear-gradient(135deg, #f59e0b, #ef5023);">MR</div>
-        <div class="req-info">
-          <div class="req-name">Marco Rossi</div>
-          <div class="req-role">VP Sales · Finova Group</div>
-        </div>
-      </div>
-      <div class="req-actions">
-        <button class="req-btn accept">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-            <path d="M2 8l4 4 8-8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Accept
-        </button>
-        <button class="req-btn decline">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-            <path d="M4 4l8 8M12 4L4 12" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          Decline
-        </button>
-      </div>
-    </div>
-
-    <!-- Request 3 — Sara Nguyen -->
-    <div class="request-card unread">
-      <div class="unread-strip"></div>
-      <div class="request-top">
-        <div class="req-avatar" style="background: linear-gradient(135deg, #0ea5e9, #6366f1);">SN</div>
-        <div class="req-info">
-          <div class="req-name">Sara Nguyen</div>
-          <div class="req-role">Founder · SeedBridge Capital</div>
-        </div>
-      </div>
-      <div class="req-actions">
-        <button class="req-btn accept">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-            <path d="M2 8l4 4 8-8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Accept
-        </button>
-        <button class="req-btn decline">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-            <path d="M4 4l8 8M12 4L4 12" stroke="var(--red-600)" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          Decline
-        </button>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Bottom Nav -->
-    <div class="bottom-nav">
-      <div class="nav-link">
-        <div class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 21v-8h6v8" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <span class="nav-label">Home</span>
-        <span class="nav-dot"></span>
-      </div>
-      <div class="nav-link">
-        <div class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="7" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="17" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M7.5 12h5.5M13 12l3.5-4M13 12l3.5 4" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <span class="nav-label">Network</span>
-        <span class="nav-dot"></span>
-      </div>
-      <div class="nav-fab-wrap">
-        <div class="nav-fab">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="14" y="18" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="18" width="3" height="3" rx="0.5" fill="white"/></svg>
-        </div>
-      </div>
-      <div class="nav-link">
-        <div class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="var(--green)" fill-opacity="0.12" stroke="var(--green)" stroke-width="1.75"/><path d="M16.5 7.5l-3 6-5.5 2.5 3-6 5.5-2.5z" fill="var(--green)" stroke="var(--green)" stroke-width="0.5" stroke-linejoin="round"/></svg>
-        </div>
-        <span class="nav-label active">Explore</span>
-        <span class="nav-dot"></span>
-      </div>
-      <div class="nav-link">
-        <div class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round"/></svg>
-        </div>
-        <span class="nav-label">Profile</span>
-        <span class="nav-dot"></span>
-      </div>
-    </div></div></div>
-        <div class="preview-phone"><div class="screen-content s-index-13" style="width:390px;height:844px;transform:scale(0.174);transform-origin:top left;pointer-events:none;overflow:hidden;"><!-- Header -->
-  <div class="header">
-    <button class="back-btn" aria-label="Back">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M10 12L6 8l4-4" stroke="var(--slate-900)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </button>
-    <div class="header-title">Notifications</div>
-  </div>
-
-  <!-- Tabs -->
-  <div class="tabs">
-    <div class="tab">
-      <div class="tab-label">
-        News
-        <span class="tab-badge">5</span>
-      </div>
-      <div class="tab-underline"></div>
-    </div>
-    <div class="tab">
-      <div class="tab-label">
-        Requests
-        <span class="tab-badge orange">3</span>
-      </div>
-      <div class="tab-underline"></div>
-    </div>
-    <div class="tab active">
-      <div class="tab-label">
-        Others
-        <span class="tab-badge slate">4</span>
-      </div>
-      <div class="tab-underline"></div>
-    </div>
-  </div>
-
-  <!-- Content -->
-  <div class="scroll-area">
-
-    <div style="height:8px;"></div>
-
-    <!-- Message 1 — unread -->
-    <div class="notif-item unread">
-      <div class="unread-dot"></div>
-      <div class="notif-avatar" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">AK</div>
-      <div class="notif-body">
-        <div class="notif-text"><strong>Anna Kim</strong> · "Hey! Loved your InCard profile. Would love to connect…"</div>
-        <div class="notif-meta notif-time">2 min ago</div>
-        <div class="notif-actions">
-          <button class="notif-action-btn primary">Reply</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Message 2 — unread -->
-    <div class="notif-item unread">
-      <div class="unread-dot"></div>
-      <div class="notif-avatar" style="background: linear-gradient(135deg, #059669, #10b981);">MR</div>
-      <div class="notif-body">
-        <div class="notif-text"><strong>Marco Rossi</strong> · "Thanks for accepting! Are you free for a quick call this week?"</div>
-        <div class="notif-meta notif-time">18 min ago</div>
-        <div class="notif-actions">
-          <button class="notif-action-btn primary">Reply</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Message 3 — unread -->
-    <div class="notif-item unread">
-      <div class="unread-dot"></div>
-      <div class="notif-avatar" style="background: linear-gradient(135deg, #0ea5e9, #6366f1);">SN</div>
-      <div class="notif-body">
-        <div class="notif-text"><strong>Sara Nguyen</strong> · "Hi! I saw you scanned my card at the event — great to meet you!"</div>
-        <div class="notif-meta notif-time">1 hr ago</div>
-        <div class="notif-actions">
-          <button class="notif-action-btn primary">Reply</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Message 4 — read -->
-    <div class="notif-item">
-      <div class="notif-avatar" style="background: linear-gradient(135deg, #f59e0b, #ef5023);">JW</div>
-      <div class="notif-body">
-        <div class="notif-text"><strong>James Wong</strong> · "Interesting — let's schedule a call to discuss further."</div>
-        <div class="notif-meta notif-time">3 hr ago</div>
-        <div class="notif-actions">
-          <button class="notif-action-btn ghost">Reply</button>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Bottom Nav -->
-    <div class="bottom-nav">
-      <div class="nav-link">
-        <div class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 21v-8h6v8" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <span class="nav-label">Home</span>
-        <span class="nav-dot"></span>
-      </div>
-      <div class="nav-link">
-        <div class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="7" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><circle cx="19" cy="17" r="2.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M7.5 12h5.5M13 12l3.5-4M13 12l3.5 4" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <span class="nav-label">Network</span>
-        <span class="nav-dot"></span>
-      </div>
-      <div class="nav-fab-wrap">
-        <div class="nav-fab">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="white"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="white" stroke-width="1.75"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="white"/><rect x="14" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="14" width="3" height="3" rx="0.5" fill="white"/><rect x="14" y="18" width="3" height="3" rx="0.5" fill="white"/><rect x="18" y="18" width="3" height="3" rx="0.5" fill="white"/></svg>
-        </div>
-      </div>
-      <div class="nav-link">
-        <div class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="var(--green)" fill-opacity="0.12" stroke="var(--green)" stroke-width="1.75"/><path d="M16.5 7.5l-3 6-5.5 2.5 3-6 5.5-2.5z" fill="var(--green)" stroke="var(--green)" stroke-width="0.5" stroke-linejoin="round"/></svg>
-        </div>
-        <span class="nav-label active">Explore</span>
-        <span class="nav-dot"></span>
-      </div>
-      <div class="nav-link">
-        <div class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="var(--slate-400)" stroke-width="1.75"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="var(--slate-400)" stroke-width="1.75" stroke-linecap="round"/></svg>
-        </div>
-        <span class="nav-label">Profile</span>
-        <span class="nav-dot"></span>
-      </div>
-    </div></div></div>
-      </div>
-      <div class="card-body">
-        <div class="card-label">Flow 05</div>
-        <div class="card-title">InCard Notifications</div>
-        <div class="card-meta">
-          <span class="screen-count">3 screens</span>
-          <span class="arrow">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6h7M6 2.5L9.5 6 6 9.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
-        </div>
-      </div>
-    </a>
-
-  </div>
 
 </body>
 </html>

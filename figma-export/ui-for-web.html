@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — UI for WEB</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { overflow-x: auto; }
+body {
+  background: #a49d9d;
+  font-family: 'Public Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  padding: 48px 40px 80px;
+  width: max-content;
+  min-width: 100%;
+}
+.back { display: inline-flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.75); font-size: 12px; font-weight: 600; text-decoration: none; letter-spacing: 0.5px; margin-bottom: 32px; }
+.back:hover { color: #fff; }
+.flow-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.75); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 24px; }
+.flow-screens { display: flex; flex-direction: row; gap: 24px; align-items: flex-start; }
+.flow-screens > .screen { display: flex; flex-direction: column; align-items: center; gap: 10px; flex-shrink: 0; }
+.phone-frame { width: 390px; border-radius: 44px; overflow: hidden; background: #fff; box-shadow: 0 8px 40px rgba(0,0,0,0.32), 0 2px 8px rgba(0,0,0,0.16); }
+.screen-name { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.75); text-align: center; letter-spacing: 0.3px; }
+.screen-content { width: 390px; min-height: 844px; display: block; font-family: 'Public Sans', sans-serif; background: #fff; position: relative; }
+
+/* ── UI for WEB — Digital Profile ── */
+.s-web-1 {
+  --green:         #009037;
+  --green-dark:    #007a2f;
+  --green-light:   #2eb07a;
+  --green-bg:      rgba(0,144,55,0.1);
+  --green-surface: #dcfce7;
+  --emerald:       #10b981;
+  --emerald-bg:    #ecfdf5;
+  --slate-900:     #0f172a;
+  --slate-800:     #1e293b;
+  --slate-700:     #334155;
+  --slate-600:     #475569;
+  --slate-500:     #64748b;
+  --slate-400:     #94a3b8;
+  --slate-300:     #cbd5e1;
+  --slate-200:     #e2e8f0;
+  --slate-100:     #f1f5f9;
+  --slate-50:      #f8fafc;
+  --border-light:  #f3f4f6;
+  --red-600:       #dc2626;
+  --white:         #ffffff;
+  --whatsapp:      #10b981;
+  --zalo:          #2563eb;
+  --x-dark:        #1e293b;
+  --facebook:      #3b82f6;
+}
+.s-web-1 * { box-sizing: border-box; margin: 0; padding: 0; }
+.s-web-1 { scrollbar-width: none; -ms-overflow-style: none; }
+.s-web-1::-webkit-scrollbar { display: none; }
+.s-web-1 {
+  background: var(--white);
+  font-family: 'Public Sans', sans-serif;
+}
+.s-web-1 .screen {
+  width: 390px;
+  background: var(--white);
+  position: relative;
+  padding-top: 44px;
+  padding-bottom: 0;
+}
+
+/* ── Download Pop-up ── */
+.s-web-1 .download-popup {
+  position: relative;
+  z-index: 200;
+  margin-top: -44px;
+  background: #fff;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.1);
+  border-bottom: 1px solid var(--slate-200);
+  overflow: hidden;
+  transition: box-shadow 0.25s ease;
+}
+
+/* header — always visible, acts as collapse/expand toggle */
+.s-web-1 .download-popup-bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px 10px 14px;
+  background: linear-gradient(90deg, #007a2f 0%, #009037 50%, #2eb07a 100%);
+  cursor: pointer;
+  user-select: none;
+}
+.s-web-1 .download-popup-bar-icon {
+  width: 26px; height: 26px; border-radius: 7px;
+  flex-shrink: 0; overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.s-web-1 .download-popup-bar-icon img { width: 26px; height: 26px; object-fit: contain; display: block; }
+.s-web-1 .download-popup-bar-label {
+  flex: 1; font-weight: 700; font-size: 11px; color: #fff;
+  letter-spacing: 0.1px; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.s-web-1 .download-popup-arrow {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(255,255,255,0.18); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; color: #fff;
+  transition: transform 0.28s cubic-bezier(0.4,0,0.2,1), background 0.15s ease;
+}
+.s-web-1 .download-popup-arrow:hover { background: rgba(255,255,255,0.32); }
+
+/* collapsed: chevron flips, body hidden */
+.s-web-1 .download-popup.collapsed .download-popup-body { display: none; }
+.s-web-1 .download-popup.collapsed .download-popup-arrow { transform: rotate(180deg); }
+
+/* body — shown when expanded */
+.s-web-1 .download-popup-body {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px;
+  background: #fff;
+  border-top: 1px solid rgba(0,144,55,0.08);
+}
+.s-web-1 .download-popup-icon {
+  width: 42px; height: 42px; border-radius: 11px;
+  flex-shrink: 0; overflow: hidden;
+}
+.s-web-1 .download-popup-icon img { width: 42px; height: 42px; object-fit: contain; display: block; }
+.s-web-1 .download-popup-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.s-web-1 .download-popup-title {
+  font-size: 12px; font-weight: 700; color: var(--slate-900); line-height: 1.3;
+}
+.s-web-1 .download-popup-sub {
+  font-size: 10px; font-weight: 400; color: var(--slate-500); line-height: 1.5;
+}
+.s-web-1 .download-popup-btn {
+  flex-shrink: 0; border: none;
+  background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+  color: #fff; font-weight: 700; font-size: 12px;
+  font-family: 'Public Sans', sans-serif;
+  border-radius: 20px; padding: 8px 18px;
+  box-shadow: 0 2px 8px rgba(0,144,55,0.3);
+  cursor: pointer; white-space: nowrap;
+}
+
+/* Screen 5 collapsed-top overrides */
+.s-web-1 .download-popup.collapsed-top {
+  position: relative;
+  top: auto; left: auto; right: auto;
+  width: 100%; margin-top: -44px;
+  border-radius: 0;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.s-web-1 .download-popup.collapsed-top .download-popup-arrow { transform: rotate(180deg); }
+
+/* Cover / green band */
+.s-web-1 .green-band {
+  height: 160px;
+  background: var(--green-surface);
+  overflow: hidden;
+  position: relative;
+}
+.s-web-1 .green-band img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+}
+.s-web-1 .cover-lang {
+  position: absolute; top: 12px; right: 16px; z-index: 5;
+}
+.s-web-1 .lang-toggle {
+  display: flex; align-items: center;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 8px; padding: 2px; gap: 2px;
+}
+.s-web-1 .lang-btn {
+  border: none; background: transparent;
+  border-radius: 6px; padding: 4px 10px;
+  font-size: 11px; font-weight: 700;
+  font-family: 'Public Sans', sans-serif;
+  color: rgba(255,255,255,0.8);
+  cursor: pointer; transition: background 0.15s, color 0.15s;
+}
+.s-web-1 .lang-btn.active {
+  background: rgba(255,255,255,0.92);
+  color: var(--slate-800);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+/* Profile header */
+.s-web-1 .header-content {
+  padding: 0 24px;
+  margin-top: -56px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  z-index: 2;
+}
+.s-web-1 .avatar-stats-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.s-web-1 .avatar {
+  width: 112px; height: 112px;
+  border-radius: 50%;
+  border: 4px solid var(--white);
+  overflow: hidden;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+  background: var(--slate-200);
+  flex-shrink: 0;
+}
+.s-web-1 .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.s-web-1 .stats-row {
+  display: flex; gap: 0;
+  align-items: flex-start;
+  padding-bottom: 8px;
+}
+.s-web-1 .stat-item {
+  display: flex; flex-direction: column;
+  gap: 2px; align-items: flex-start;
+}
+.s-web-1 .stat-item.divider {
+  border-right: 1px solid var(--border-light);
+  padding-right: 17px;
+}
+.s-web-1 .stat-item.second { padding-left: 16px; }
+.s-web-1 .stat-label {
+  display: flex; align-items: center; gap: 4px;
+  font-weight: 700; font-size: 10px;
+  letter-spacing: 0.9px; text-transform: uppercase;
+  color: var(--slate-400);
+}
+.s-web-1 .stat-value { font-weight: 700; font-size: 16px; color: var(--slate-800); line-height: 1.5; }
+
+.s-web-1 .name-title {
+  display: flex; flex-direction: column;
+  gap: 6px; align-items: center;
+  padding-bottom: 0; text-align: center;
+}
+.s-web-1 .profile-name { font-weight: 700; font-size: 22px; color: var(--slate-900); letter-spacing: -0.55px; }
+.s-web-1 .profile-roles { display: flex; flex-direction: column; gap: 4px; align-items: center; width: 100%; }
+.s-web-1 .profile-role { font-weight: 400; font-size: 13px; color: var(--slate-500); line-height: 1.4; }
+.s-web-1 .profile-role .role-title { font-weight: 600; color: var(--slate-700); }
+.s-web-1 .profile-role .role-sep { color: var(--slate-300); margin: 0 4px; }
+.s-web-1 .profile-role .role-company { color: var(--slate-500); }
+.s-web-1 .profile-role.role-extra { display: none; }
+.s-web-1 .profile-roles.expanded .role-extra { display: block; }
+.s-web-1 .roles-toggle {
+  display: inline-flex; align-items: center; gap: 4px;
+  margin-top: 4px; border: none; background: none; cursor: pointer;
+  font-size: 11px; font-weight: 600; color: var(--green);
+  font-family: 'Public Sans', sans-serif; padding: 0;
+}
+.s-web-1 .roles-toggle svg { transition: transform 0.2s ease; }
+.s-web-1 .profile-roles.expanded .roles-toggle svg { transform: rotate(180deg); }
+
+/* Company-grouped roles */
+.s-web-1 .role-group { display: flex; flex-direction: column; gap: 5px; align-items: center; }
+.s-web-1 .role-group-company {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; font-weight: 700; color: var(--slate-500);
+  letter-spacing: 0.2px;
+}
+.s-web-1 .role-group-titles {
+  display: flex; flex-wrap: wrap; align-items: center;
+  justify-content: center; gap: 4px;
+}
+.s-web-1 .role-group-title { font-size: 13px; font-weight: 600; color: var(--slate-800); }
+.s-web-1 .role-group-sep { font-size: 11px; color: var(--slate-300); }
+
+/* Edit + Web controls bar */
+.s-web-1 .web-controls-bar {
+  display: flex; align-items: center;
+  justify-content: flex-end;
+  padding: 10px 24px;
+}
+.s-web-1 .edit-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1.5px solid var(--slate-200);
+  background: var(--white); border-radius: 8px;
+  padding: 6px 12px; font-size: 12px; font-weight: 600;
+  font-family: 'Public Sans', sans-serif;
+  color: var(--slate-700); cursor: pointer;
+}
+
+/* Action buttons */
+.s-web-1 .section-actions {
+  padding: 0 24px;
+  display: flex; flex-direction: column;
+  gap: 12px; margin-top: 8px;
+}
+.s-web-1 .btn-go-app {
+  background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+  height: 54px; border-radius: 16px; border: none;
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; font-weight: 700; font-size: 15px;
+  color: var(--white); cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,144,55,0.35);
+  font-family: 'Public Sans', sans-serif;
+}
+.s-web-1 .action-row { display: flex; gap: 12px; }
+.s-web-1 .action-btn {
+  flex: 1; border: none; border-radius: 16px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 13px 8px; gap: 4px; cursor: pointer;
+  background: transparent;
+}
+.s-web-1 .action-btn-icon { width: 20px; height: 20px; color: var(--green-light); }
+.s-web-1 .action-btn-label { font-weight: 400; font-size: 10px; color: var(--slate-500); text-align: center; }
+
+/* Social */
+.s-web-1 .section-social {
+  padding: 0 24px;
+  display: flex; flex-direction: column;
+  gap: 16px; margin-top: 24px; align-items: center;
+}
+.s-web-1 .section-label {
+  font-weight: 700; font-size: 10px;
+  letter-spacing: -0.275px; text-transform: uppercase;
+  color: var(--slate-400); text-align: center;
+}
+.s-web-1 .social-icons { display: flex; gap: 16px; align-items: center; justify-content: center; }
+.s-web-1 .social-circle {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; cursor: pointer;
+}
+
+/* Info */
+.s-web-1 .section-info {
+  padding: 0 24px; display: flex; flex-direction: column; gap: 0; margin-top: 24px;
+}
+.s-web-1 .industries-row { display: flex; flex-direction: column; gap: 8px; padding-bottom: 16px; }
+.s-web-1 .section-heading { font-weight: 700; font-size: 14px; color: var(--slate-900); line-height: 1.5; }
+.s-web-1 .tags-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.s-web-1 .tag {
+  background: var(--slate-100); border-radius: 9999px;
+  padding: 6px 12px; font-weight: 500; font-size: 12px;
+  color: var(--slate-600); line-height: 1;
+}
+.s-web-1 .accordion-item {
+  border-top: 1px solid var(--border-light);
+  padding-top: 17px; padding-bottom: 17px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.s-web-1 .accordion-header { display: flex; align-items: center; justify-content: space-between; }
+.s-web-1 .accordion-body { font-weight: 400; font-size: 14px; color: var(--slate-500); line-height: 1.625; }
+.s-web-1 .accordion-collapsed {
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid var(--border-light);
+  padding-top: 17px; padding-bottom: 17px;
+}
+.s-web-1 .accordion-collapsed-label { font-weight: 700; font-size: 13px; color: var(--slate-800); line-height: 1.4; }
+.s-web-1 .strength-list { display: flex; flex-direction: column; gap: 12px; }
+.s-web-1 .strength-item { display: flex; align-items: center; gap: 8px; }
+.s-web-1 .strength-dot { width: 16px; height: 16px; flex-shrink: 0; }
+.s-web-1 .strength-text { font-weight: 500; font-size: 12px; color: var(--slate-600); line-height: 1; }
+
+/* Products */
+.s-web-1 .section-products { margin-top: 24px; }
+.s-web-1 .products-header { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; margin-bottom: 16px; }
+.s-web-1 .products-dots { display: flex; gap: 4px; align-items: center; }
+.s-web-1 .dot-active { width: 8px; height: 8px; border-radius: 50%; background: var(--emerald); }
+.s-web-1 .dot-inactive { width: 8px; height: 8px; border-radius: 50%; background: var(--slate-200); }
+.s-web-1 .products-carousel {
+  overflow-x: auto; padding: 0 24px 16px;
+  display: flex; gap: 16px; scrollbar-width: none;
+}
+.s-web-1 .products-carousel::-webkit-scrollbar { display: none; }
+.s-web-1 .product-card {
+  flex-shrink: 0; width: 280px; background: var(--white);
+  border: 1px solid #f9fafb; border-radius: 24px;
+  overflow: hidden; box-shadow: 0 4px 20px -2px rgba(0,0,0,0.05);
+}
+.s-web-1 .product-img { width: 100%; height: 160px; object-fit: cover; display: block; background: var(--slate-100); }
+.s-web-1 .product-body { padding: 20px; display: flex; flex-direction: column; gap: 8px; }
+.s-web-1 .product-title { font-weight: 700; font-size: 16px; color: var(--slate-900); line-height: 1.5; }
+.s-web-1 .product-desc { font-weight: 400; font-size: 14px; color: var(--slate-500); line-height: 1.625; }
+.s-web-1 .product-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 8px; }
+.s-web-1 .product-link { font-weight: 700; font-size: 12px; color: var(--emerald); }
+.s-web-1 .product-arrow { width: 32px; height: 32px; background: var(--emerald-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+/* Portfolio */
+.s-web-1 .section-portfolio { padding: 0 24px 24px; margin-top: 16px; display: flex; flex-direction: column; gap: 16px; }
+.s-web-1 .portfolio-featured { width: 100%; border-radius: 24px; overflow: hidden; position: relative; }
+.s-web-1 .portfolio-featured-img { width: 100%; height: 192px; object-fit: cover; display: block; background: var(--slate-700); }
+.s-web-1 .portfolio-overlay {
+  position: absolute; inset: 0; background: rgba(0,0,0,0.4);
+  display: flex; flex-direction: column; justify-content: space-between; padding: 20px;
+}
+.s-web-1 .featured-badge {
+  background: rgba(255,255,255,0.9); border-radius: 9999px;
+  padding: 4px 12px; font-weight: 700; font-size: 10px;
+  color: var(--slate-800); display: inline-block;
+}
+.s-web-1 .play-btn {
+  width: 48px; height: 48px; background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(2px); border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center; align-self: center;
+}
+.s-web-1 .portfolio-featured-title { font-weight: 700; font-size: 16px; color: var(--white); line-height: 1.25; }
+.s-web-1 .portfolio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.s-web-1 .portfolio-item { border-radius: 24px; overflow: hidden; position: relative; aspect-ratio: 1; }
+.s-web-1 .portfolio-item-img { width: 100%; height: 100%; object-fit: cover; display: block; background: var(--slate-200); }
+.s-web-1 .portfolio-item-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+  display: flex; align-items: flex-end; padding: 16px;
+}
+.s-web-1 .portfolio-item-title { font-weight: 500; font-size: 14px; color: var(--white); line-height: 1.625; }
+.s-web-1 .portfolio-data-item { background: #1c4e58; }
+.s-web-1 .data-graph { width: 100%; height: 100%; padding: 16px; display: flex; align-items: center; justify-content: center; }
+.s-web-1 .data-graph-inner { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.s-web-1 .graph-bar-full { height: 4px; background: rgba(255,255,255,0.2); border-radius: 9999px; }
+.s-web-1 .graph-bar-partial { height: 4px; width: 60%; background: rgba(255,255,255,0.4); border-radius: 9999px; }
+.s-web-1 .graph-bars { display: flex; gap: 4px; height: 48px; align-items: flex-end; }
+.s-web-1 .graph-bar { width: 4px; background: rgba(255,255,255,0.8); border-radius: 2px; }
+.s-web-1 .graph-bar.tall { height: 40px; background: var(--white); }
+
+/* Save & Send sticky bar */
+.s-web-1 .save-send-bar {
+  position: sticky; bottom: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; background: #EF5023; color: var(--white);
+  padding: 16px 24px; font-size: 15px; font-weight: 800;
+  font-family: 'Public Sans', sans-serif;
+  box-shadow: 0 -6px 32px rgba(239,80,35,0.5), 0 0 0 0 rgba(239,80,35,0.4);
+  cursor: pointer; letter-spacing: 0.2px;
+  animation: pulse-bar 2s ease-in-out infinite;
+  position: relative;
+}
+@keyframes pulse-bar {
+  0%, 100% { box-shadow: 0 -6px 32px rgba(239,80,35,0.5), 0 -2px 0 rgba(239,80,35,0.3); }
+  50%       { box-shadow: 0 -10px 48px rgba(239,80,35,0.75), 0 -2px 0 rgba(239,80,35,0.5); }
+}
+.s-web-1 .save-close {
+  position: absolute; right: 16px;
+  border: none; background: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; padding: 4px;
+}
+
+
+/* ── Screen 2: Save & Send highlighted ── */
+.s-web-2 {
+  --green:         #009037;
+  --green-light:   #2eb07a;
+  --slate-900:     #0f172a;
+  --slate-400:     #94a3b8;
+  --slate-200:     #e2e8f0;
+  --white:         #ffffff;
+  --emerald:       #10b981;
+}
+.s-web-2 * { box-sizing: border-box; margin: 0; padding: 0; }
+.s-web-2 { scrollbar-width: none; -ms-overflow-style: none; font-family: 'Public Sans', sans-serif; }
+.s-web-2::-webkit-scrollbar { display: none; }
+.s-web-2 .screen {
+  width: 390px; min-height: 844px; position: relative;
+  overflow: hidden; background: #0f172a;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.s-web-2 .bg-blur {
+  position: absolute; inset: 0;
+  background: url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80') center/cover;
+  opacity: 0.12; filter: blur(4px);
+}
+.s-web-2 .bg-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(3px);
+}
+.s-web-2 .center-tip {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 80px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; z-index: 5;
+}
+.s-web-2 .tip-icon {
+  width: 64px; height: 64px; border-radius: 20px;
+  background: rgba(255,255,255,0.12); backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+}
+.s-web-2 .tip-title { font-weight: 700; font-size: 18px; color: var(--white); letter-spacing: -0.3px; text-align: center; }
+.s-web-2 .tip-sub { font-size: 13px; color: rgba(255,255,255,0.55); text-align: center; max-width: 240px; line-height: 1.5; }
+.s-web-2 .save-bar-glow {
+  position: relative; z-index: 10;
+  background: #EF5023;
+  padding: 14px 24px;
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; font-weight: 700; font-size: 14px;
+  color: var(--white); font-family: 'Public Sans', sans-serif;
+  box-shadow: 0 0 40px rgba(239,80,35,0.6), 0 0 80px rgba(239,80,35,0.3);
+  border-top: 1px solid rgba(239,80,35,0.5);
+}
+.s-web-2 .save-close {
+  position: absolute; right: 16px;
+  border: none; background: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; padding: 4px;
+}
+
+/* ── Screen 3: Modal collapsed ── */
+.s-web-3 {
+  --green:         #009037;
+  --green-bg:      rgba(0,144,55,0.1);
+  --slate-900:     #0f172a;
+  --slate-800:     #1e293b;
+  --slate-700:     #334155;
+  --slate-500:     #64748b;
+  --slate-400:     #94a3b8;
+  --slate-200:     #e2e8f0;
+  --slate-100:     #f1f5f9;
+  --slate-50:      #f8fafc;
+  --white:         #ffffff;
+}
+.s-web-3 * { box-sizing: border-box; margin: 0; padding: 0; }
+.s-web-3 { font-family: 'Public Sans', sans-serif; }
+.s-web-3 .screen {
+  width: 390px; min-height: 844px; position: relative;
+  overflow: hidden; background: rgba(15,23,42,0.5);
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.s-web-3 .sheet {
+  background: var(--white); border-radius: 28px 28px 0 0;
+  padding-bottom: 40px; box-shadow: 0 -8px 40px rgba(0,0,0,0.2);
+}
+.s-web-3 .handle-wrap { display: flex; justify-content: center; padding: 12px 0 4px; }
+.s-web-3 .handle { width: 40px; height: 4px; background: var(--slate-200); border-radius: 9999px; }
+.s-web-3 .sheet-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 8px 24px 10px; }
+.s-web-3 .sheet-title { font-weight: 700; font-size: 18px; color: var(--slate-900); }
+.s-web-3 .sheet-subtitle { font-size: 13px; color: var(--slate-500); margin-top: 3px; }
+.s-web-3 .sheet-subtitle strong { color: var(--green); font-weight: 600; }
+.s-web-3 .close-btn {
+  width: 30px; height: 30px; border: none; background: var(--slate-100);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--slate-500); flex-shrink: 0;
+}
+.s-web-3 .field-row { display: flex; flex-direction: column; gap: 5px; padding: 0 24px; margin-bottom: 12px; }
+.s-web-3 .field-label { font-size: 11px; font-weight: 700; color: var(--slate-500); text-transform: uppercase; letter-spacing: 0.6px; }
+.s-web-3 .field-required { color: #ef4444; }
+.s-web-3 .field-input {
+  height: 44px; background: var(--slate-50);
+  border: 1.5px solid var(--slate-200); border-radius: 10px;
+  padding: 0 14px; font-size: 14px; color: var(--slate-400);
+  display: flex; align-items: center; font-family: 'Public Sans', sans-serif;
+}
+.s-web-3 .expand-btn {
+  margin: 4px 24px 16px; display: flex; align-items: center; justify-content: space-between;
+  border: 1.5px dashed var(--slate-200); background: var(--slate-50);
+  border-radius: 10px; padding: 11px 14px;
+  font-size: 13px; font-weight: 600; color: var(--slate-500);
+  font-family: 'Public Sans', sans-serif; cursor: pointer;
+}
+.s-web-3 .actions { display: flex; gap: 12px; padding: 0 24px; }
+.s-web-3 .btn-save {
+  flex: 1; height: 50px; border: 1.5px solid var(--slate-200); background: var(--white);
+  border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  gap: 8px; font-size: 15px; font-weight: 700;
+  font-family: 'Public Sans', sans-serif; color: var(--slate-700); cursor: pointer;
+}
+.s-web-3 .btn-send {
+  flex: 2; height: 50px; border: none;
+  background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+  border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  gap: 8px; font-size: 15px; font-weight: 700;
+  font-family: 'Public Sans', sans-serif; color: var(--white); cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,144,55,0.3);
+}
+
+/* ── Screen 4: Modal expanded ── */
+.s-web-4 {
+  --green:         #009037;
+  --green-bg:      rgba(0,144,55,0.1);
+  --slate-900:     #0f172a;
+  --slate-800:     #1e293b;
+  --slate-700:     #334155;
+  --slate-500:     #64748b;
+  --slate-400:     #94a3b8;
+  --slate-200:     #e2e8f0;
+  --slate-100:     #f1f5f9;
+  --slate-50:      #f8fafc;
+  --white:         #ffffff;
+}
+.s-web-4 * { box-sizing: border-box; margin: 0; padding: 0; }
+.s-web-4 { font-family: 'Public Sans', sans-serif; }
+.s-web-4 .screen {
+  width: 390px; min-height: 844px; position: relative;
+  overflow: hidden; background: rgba(15,23,42,0.5);
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.s-web-4 .sheet {
+  background: var(--white); border-radius: 28px 28px 0 0;
+  padding-bottom: 40px; box-shadow: 0 -8px 40px rgba(0,0,0,0.2);
+}
+.s-web-4 .handle-wrap { display: flex; justify-content: center; padding: 12px 0 4px; }
+.s-web-4 .handle { width: 40px; height: 4px; background: var(--slate-200); border-radius: 9999px; }
+.s-web-4 .sheet-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 8px 24px 10px; }
+.s-web-4 .sheet-title { font-weight: 700; font-size: 18px; color: var(--slate-900); }
+.s-web-4 .sheet-subtitle { font-size: 13px; color: var(--slate-500); margin-top: 3px; }
+.s-web-4 .sheet-subtitle strong { color: var(--green); font-weight: 600; }
+.s-web-4 .close-btn {
+  width: 30px; height: 30px; border: none; background: var(--slate-100);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--slate-500); flex-shrink: 0;
+}
+.s-web-4 .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 24px; margin-bottom: 10px; }
+.s-web-4 .field { display: flex; flex-direction: column; gap: 5px; }
+.s-web-4 .field.full { grid-column: 1 / -1; }
+.s-web-4 .field-label { font-size: 11px; font-weight: 700; color: var(--slate-500); text-transform: uppercase; letter-spacing: 0.6px; }
+.s-web-4 .field-required { color: #ef4444; }
+.s-web-4 .field-input {
+  height: 40px; background: var(--slate-50);
+  border: 1.5px solid var(--slate-200); border-radius: 10px;
+  padding: 0 12px; font-size: 14px; font-weight: 500;
+  color: var(--slate-800); display: flex; align-items: center;
+  font-family: 'Public Sans', sans-serif;
+}
+.s-web-4 .field-textarea {
+  min-height: 52px; background: var(--slate-50);
+  border: 1.5px solid var(--slate-200); border-radius: 10px;
+  padding: 10px 12px; font-size: 14px; font-weight: 500;
+  color: var(--slate-800); font-family: 'Public Sans', sans-serif; line-height: 1.4;
+}
+.s-web-4 .expand-btn {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; justify-content: space-between;
+  border: 1.5px dashed var(--green); background: var(--green-bg);
+  border-radius: 10px; padding: 10px 12px;
+  font-size: 13px; font-weight: 600; color: var(--green);
+  font-family: 'Public Sans', sans-serif;
+}
+.s-web-4 .actions { display: flex; gap: 12px; padding: 10px 24px 0; }
+.s-web-4 .btn-save {
+  flex: 1; height: 50px; border: 1.5px solid var(--slate-200); background: var(--white);
+  border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  gap: 8px; font-size: 15px; font-weight: 700;
+  font-family: 'Public Sans', sans-serif; color: var(--slate-700); cursor: pointer;
+}
+.s-web-4 .btn-send {
+  flex: 2; height: 50px; border: none;
+  background: linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+  border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  gap: 8px; font-size: 15px; font-weight: 700;
+  font-family: 'Public Sans', sans-serif; color: var(--white); cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,144,55,0.3);
+}
+  </style>
+  <link rel="stylesheet" href="button-system.css" />
+  <link rel="stylesheet" href="design-system.css" />
+</head>
+<body>
+
+  <a class="back" href="index.html">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7l4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    All Flows
+  </a>
+
+  <div class="flow-label">UI for WEB</div>
+
+  <div class="flow-screens">
+
+    <!-- ══ SCREEN 1: Default profile ══ -->
+    <div class="screen">
+      <div id="screen1-frame" class="phone-frame"><div class="screen-content s-web-1"><div class="screen">
+
+        <!-- Download Pop-up -->
+        <div class="download-popup" id="downloadPopup">
+          <div class="download-popup-bar" onclick="(function(){var p=document.getElementById('downloadPopup');p.classList.toggle('collapsed');})()" role="button" aria-expanded="true">
+            <span class="download-popup-bar-label">InCard — Agentic AI &amp; Contact</span>
+            <button class="download-popup-arrow" aria-label="Toggle">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+            </button>
+          </div>
+          <div class="download-popup-body">
+            <div class="download-popup-icon"><img src="logo.png" alt="InCard" /></div>
+            <div class="download-popup-text">
+              <div class="download-popup-title">InCard</div>
+              <div class="download-popup-sub">Connect smarter, grow your network faster.</div>
+              <div class="download-popup-sub">Share via NFC or QR scan</div>
+            </div>
+            <button class="download-popup-btn">Connect</button>
+          </div>
+        </div>
+
+        <!-- Cover -->
+        <div class="green-band">
+          <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80" alt="Cover" />
+          <div class="cover-lang">
+            <div class="lang-toggle">
+              <button class="lang-btn active" onclick="this.classList.add('active');this.nextElementSibling.classList.remove('active')">EN</button>
+              <button class="lang-btn" onclick="this.classList.add('active');this.previousElementSibling.classList.remove('active')">VI</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile header -->
+        <div class="header-content">
+          <div class="avatar-stats-row">
+            <div class="avatar">
+              <img src="https://www.figma.com/api/mcp/asset/357b4e45-6b51-48db-b433-4bee87603cbb" alt="Alex Rivera" />
+            </div>
+            <div class="stats-row">
+              <div class="stat-item divider">
+                <div class="stat-label">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  VIEWS
+                </div>
+                <div class="stat-value">1,248</div>
+              </div>
+              <div class="stat-item second">
+                <div class="stat-label">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                  SCANS
+                </div>
+                <div class="stat-value">458</div>
+              </div>
+            </div>
+          </div>
+          <div class="name-title">
+            <div class="profile-name">Alex Rivera</div>
+            <div class="profile-roles" id="profileRoles">
+              <div class="profile-role"><span class="role-title">Creative Strategist</span><span class="role-sep">·</span><span class="role-company">Momentum Studio</span></div>
+              <div class="profile-role"><span class="role-title">Design Consultant</span><span class="role-sep">·</span><span class="role-company">Freelance</span></div>
+              <div class="profile-role"><span class="role-title">Brand Director</span><span class="role-sep">·</span><span class="role-company">Apex Creative</span></div>
+              <div class="profile-role role-extra"><span class="role-title">UX Advisor</span><span class="role-sep">·</span><span class="role-company">TechVentures</span></div>
+              <div class="profile-role role-extra"><span class="role-title">Product Lead</span><span class="role-sep">·</span><span class="role-company">StartupXYZ</span></div>
+              <div class="profile-role role-extra"><span class="role-title">Innovation Coach</span><span class="role-sep">·</span><span class="role-company">Growth Lab</span></div>
+              <div class="profile-role role-extra"><span class="role-title">Keynote Speaker</span><span class="role-sep">·</span><span class="role-company">Self-employed</span></div>
+              <button class="roles-toggle" onclick="(function(el){el.classList.toggle('expanded');var btn=el.querySelector('.roles-toggle');btn.innerHTML=el.classList.contains('expanded')?'Show less <svg width=\'10\' height=\'10\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2.5\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><polyline points=\'18 15 12 9 6 15\'/></svg>':'Show more <svg width=\'10\' height=\'10\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2.5\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><polyline points=\'6 9 12 15 18 9\'/></svg>';})(document.getElementById('profileRoles'))">Show more <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="section-actions">
+          <button class="btn-go-app">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <rect x="5" y="2" width="14" height="20" rx="3" stroke="white" stroke-width="1.8"/>
+              <path d="M12 17h.01" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M9 7h6M9 11h4" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            Go to app profile
+          </button>
+          <div class="action-row">
+            <div class="action-btn">
+              <svg class="action-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              <span class="action-btn-label">Edit profile</span>
+            </div>
+            <div class="action-btn">
+              <svg class="action-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="currentColor" stroke="none"/>
+                <rect x="14" y="3" width="7" height="7" rx="1"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="currentColor" stroke="none"/>
+                <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="currentColor" stroke="none"/>
+                <circle cx="17" cy="17" r="1.5" fill="currentColor" stroke="none"/>
+                <path d="M14 14h2M20 14v2M20 20h-2M14 20v-2"/>
+              </svg>
+              <span class="action-btn-label">QR profile</span>
+            </div>
+            <div class="action-btn">
+              <svg class="action-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="currentColor" stroke="none"/>
+                <rect x="14" y="3" width="7" height="7" rx="1"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="currentColor" stroke="none"/>
+                <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="currentColor" stroke="none"/>
+                <circle cx="17" cy="15.5" r="1.5" fill="currentColor" stroke="none"/>
+                <path d="M14 21c0-1.657 1.343-3 3-3s3 1.343 3 3"/>
+              </svg>
+              <span class="action-btn-label">QR contact</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Social -->
+        <div class="section-social">
+          <div class="section-label">Connect with me</div>
+          <div class="social-icons">
+            <div class="social-circle" style="background:var(--whatsapp)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.477 2 2 6.484 2 12.017c0 1.99.525 3.853 1.44 5.461L2.05 22l4.635-1.21A9.954 9.954 0 0012 22c5.523 0 10-4.484 10-10.017C22 6.484 17.522 2 12 2z"/></svg>
+            </div>
+            <div class="social-circle" style="background:var(--zalo)">
+              <span style="color:white;font-weight:700;font-size:18px;font-family:'Public Sans',sans-serif;">Z</span>
+            </div>
+            <div class="social-circle" style="background:var(--x-dark)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.254 5.622L18.245 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
+            </div>
+            <div class="social-circle" style="background:#3b82f6">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </div>
+            <div class="social-circle" style="background:#dc2626">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info sections -->
+        <div class="section-info">
+          <div class="industries-row">
+            <div class="section-heading">Industries</div>
+            <div class="tags-row">
+              <span class="tag">Product Design</span>
+              <span class="tag">Strategy</span>
+              <span class="tag">FinTech</span>
+              <span class="tag">Web3</span>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="section-heading">About Me</div>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><polyline points="18 15 12 9 6 15"/></svg>
+            </div>
+            <div class="accordion-body">I bridge the gap between complex business challenges and elegant user experiences. With over 10 years of experience...</div>
+          </div>
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="section-heading" style="font-size:13px;">Key Strengths</div>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><polyline points="18 15 12 9 6 15"/></svg>
+            </div>
+            <div class="strength-list">
+              <div class="strength-item">
+                <svg class="strength-dot" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.5" stroke="var(--green)" stroke-width="1"/><path d="M5 8l2 2 4-4" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span class="strength-text">Strategic Brand Development</span>
+              </div>
+              <div class="strength-item">
+                <svg class="strength-dot" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.5" stroke="var(--green)" stroke-width="1"/><path d="M5 8l2 2 4-4" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span class="strength-text">Cross-functional Team Leadership</span>
+              </div>
+              <div class="strength-item">
+                <svg class="strength-dot" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.5" stroke="var(--green)" stroke-width="1"/><path d="M5 8l2 2 4-4" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span class="strength-text">User-Centric Product Design</span>
+              </div>
+              <div class="strength-item">
+                <svg class="strength-dot" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.5" stroke="var(--green)" stroke-width="1"/><path d="M5 8l2 2 4-4" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span class="strength-text">Data-Driven Decision Making</span>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-collapsed">
+            <span class="accordion-collapsed-label">Main Services</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+          <div class="accordion-collapsed">
+            <span class="accordion-collapsed-label">Looking For</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+          <div class="accordion-collapsed">
+            <span class="accordion-collapsed-label">Collaboration</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+
+        <!-- Signature Products -->
+        <div class="section-products" style="margin-top:24px;">
+          <div class="products-header">
+            <span class="section-heading">Signature Products</span>
+            <div class="products-dots">
+              <span class="dot-active"></span>
+              <span class="dot-inactive"></span>
+              <span class="dot-inactive"></span>
+            </div>
+          </div>
+          <div class="products-carousel">
+            <div class="product-card">
+              <img class="product-img" src="https://www.figma.com/api/mcp/asset/fe3f41f4-5356-42bf-810e-5ce89976afd4" alt="Brand Strategy Workshop" />
+              <div class="product-body">
+                <div class="product-title">Brand Strategy Workshop</div>
+                <div class="product-desc">Transform your visual identity in 4 weeks</div>
+                <div class="product-footer">
+                  <span class="product-link">Learn More</span>
+                  <div class="product-arrow">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="product-card" style="opacity:0.85;">
+              <img class="product-img" src="https://www.figma.com/api/mcp/asset/ba3b0de2-8d2c-4bfb-9a8d-209fff532cd6" alt="UX Audit" />
+              <div class="product-body">
+                <div class="product-title">UX Audit</div>
+                <div class="product-desc">Deep dive analysis of your product</div>
+                <div class="product-footer">
+                  <span class="product-link">Learn More</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Portfolio -->
+        <div class="section-portfolio">
+          <div class="section-heading" style="padding-bottom:8px;">Portfolio Highlights</div>
+          <div class="portfolio-featured">
+            <img class="portfolio-featured-img" src="https://www.figma.com/api/mcp/asset/7dff11ad-0ef7-4bff-b059-f79ea65afdef" alt="Brand Strategy Overview" />
+            <div class="portfolio-overlay">
+              <div><span class="featured-badge">FEATURED</span></div>
+              <div class="play-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
+              <div class="portfolio-featured-title">Brand Strategy Overview</div>
+            </div>
+          </div>
+          <div class="portfolio-grid">
+            <div class="portfolio-item">
+              <img class="portfolio-item-img" src="https://www.figma.com/api/mcp/asset/94b17baa-46a9-4bb1-b28c-01fa4f5bbb8d" alt="UI Design System" />
+              <div class="portfolio-item-overlay"><span class="portfolio-item-title">UI Design System</span></div>
+            </div>
+            <div class="portfolio-item portfolio-data-item">
+              <div class="data-graph">
+                <div class="data-graph-inner">
+                  <div class="graph-bar-full"></div>
+                  <div class="graph-bar-partial"></div>
+                  <div class="graph-bars">
+                    <div class="graph-bar" style="height:16px;"></div>
+                    <div class="graph-bar" style="height:32px;"></div>
+                    <div class="graph-bar" style="height:24px;"></div>
+                    <div class="graph-bar tall"></div>
+                    <div class="graph-bar" style="height:20px;"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="portfolio-item-overlay"><span class="portfolio-item-title">User Research</span></div>
+            </div>
+            <div class="portfolio-item">
+              <img class="portfolio-item-img" src="https://www.figma.com/api/mcp/asset/1bbca44c-4a33-4a8a-8ae4-fe33230e8bb9" alt="FinTech App" />
+              <div class="portfolio-item-overlay"><span class="portfolio-item-title">FinTech App</span></div>
+            </div>
+            <div class="portfolio-item">
+              <img class="portfolio-item-img" src="https://www.figma.com/api/mcp/asset/ff590d26-d536-407d-98ed-90534338ba84" alt="Web Development" />
+              <div class="portfolio-item-overlay"><span class="portfolio-item-title">Web Development</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Save & Send sticky bar -->
+        <div class="save-send-bar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+          Save &amp; Send contact
+          <button class="save-close" aria-label="Close">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+      </div></div></div>
+      <div class="screen-name">Default Profile</div>
+    </div>
+
+    <!-- ══ SCREEN 2: Save & Send highlighted ══ -->
+    <div class="screen">
+      <div class="phone-frame"><div class="screen-content s-web-2"><div class="screen">
+        <div class="bg-blur"></div>
+        <div class="bg-overlay"></div>
+        <div class="center-tip">
+          <div class="tip-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+          </div>
+          <div class="tip-title">Tap to save this contact</div>
+          <div class="tip-sub">Share your info with Alex in one tap</div>
+        </div>
+        <div class="save-bar-glow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+          Save &amp; Send contact
+          <button class="save-close" aria-label="Close">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div></div></div>
+      <div class="screen-name">Save &amp; Send Highlighted</div>
+    </div>
+
+    <!-- ══ SCREEN 3: Modal collapsed ══ -->
+    <div class="screen">
+      <div class="phone-frame"><div class="screen-content s-web-3"><div class="screen">
+        <div class="sheet">
+          <div class="handle-wrap"><div class="handle"></div></div>
+          <div class="sheet-header">
+            <div>
+              <div class="sheet-title">Contact send to:</div>
+              <div class="sheet-subtitle"><strong>Alex Rivera</strong></div>
+            </div>
+            <button class="close-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="field-row">
+            <div class="field-label">Your name <span class="field-required">*</span></div>
+            <div class="field-input" style="color:var(--slate-400);">Enter your name</div>
+          </div>
+          <div class="field-row">
+            <div class="field-label">Phone <span class="field-required">*</span></div>
+            <div class="field-input" style="color:var(--slate-400);">Enter phone number</div>
+          </div>
+          <div class="expand-btn">
+            <span>Add more details</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+          <div class="actions">
+            <button class="btn-save">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              Save
+            </button>
+            <button class="btn-send">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+              Send
+            </button>
+          </div>
+        </div>
+      </div></div></div>
+      <div class="screen-name">Modal — Collapsed</div>
+    </div>
+
+    <!-- ══ SCREEN 4: Modal expanded ══ -->
+    <div class="screen">
+      <div class="phone-frame"><div class="screen-content s-web-4"><div class="screen">
+        <div class="sheet">
+          <div class="handle-wrap"><div class="handle"></div></div>
+          <div class="sheet-header">
+            <div>
+              <div class="sheet-title">Contact send to:</div>
+              <div class="sheet-subtitle"><strong>Alex Rivera</strong></div>
+            </div>
+            <button class="close-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="modal-grid">
+            <div class="field">
+              <div class="field-label">Your name <span class="field-required">*</span></div>
+              <div class="field-input">Nguyen Thu</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Phone <span class="field-required">*</span></div>
+              <div class="field-input">+84 909 123 456</div>
+            </div>
+            <div class="expand-btn">
+              <span>Hide details</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(180deg)"><polyline points="18 15 12 9 6 15"/></svg>
+            </div>
+            <div class="field">
+              <div class="field-label">Job title</div>
+              <div class="field-input">Product Designer</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Company</div>
+              <div class="field-input">InCard Co.</div>
+            </div>
+            <div class="field full">
+              <div class="field-label">Message</div>
+              <div class="field-textarea">Hi Alex, great meeting you at the event! Looking forward to connecting.</div>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn-save">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              Save
+            </button>
+            <button class="btn-send">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+              Send
+            </button>
+          </div>
+        </div>
+      </div></div></div>
+      <div class="screen-name">Modal — Expanded</div>
+    </div>
+
+    <!-- ══ SCREEN 5: Pop-up collapsed ══ -->
+    <div class="screen">
+      <div id="screen5-frame" class="phone-frame"><div class="screen-content s-web-1"><div class="screen">
+
+        <!-- Download Pop-up — collapsed state -->
+        <div class="download-popup collapsed collapsed-top" id="downloadPopup2">
+          <div class="download-popup-bar" onclick="(function(){var p=document.getElementById('downloadPopup2');p.classList.toggle('collapsed');})()" role="button" aria-expanded="false">
+            <span class="download-popup-bar-label">InCard — Agentic AI &amp; Contact</span>
+            <button class="download-popup-arrow" aria-label="Toggle">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+            </button>
+          </div>
+          <div class="download-popup-body">
+            <div class="download-popup-icon"><img src="logo.png" alt="InCard" /></div>
+            <div class="download-popup-text">
+              <div class="download-popup-title">InCard</div>
+              <div class="download-popup-sub">Connect smarter, grow your network faster.</div>
+              <div class="download-popup-sub">Share via NFC or QR scan</div>
+            </div>
+            <button class="download-popup-btn">Connect</button>
+          </div>
+        </div>
+
+        <!-- Cover -->
+        <div class="green-band">
+          <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80" alt="Cover" />
+          <div class="cover-lang">
+            <div class="lang-toggle">
+              <button class="lang-btn active">EN</button>
+              <button class="lang-btn">VI</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile header -->
+        <div class="header-content">
+          <div class="avatar-stats-row">
+            <div class="avatar">
+              <img src="https://www.figma.com/api/mcp/asset/357b4e45-6b51-48db-b433-4bee87603cbb" alt="Alex Rivera" />
+            </div>
+            <div class="stats-row">
+              <div class="stat-item divider">
+                <div class="stat-label">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  VIEWS
+                </div>
+                <div class="stat-value">1,248</div>
+              </div>
+              <div class="stat-item second">
+                <div class="stat-label">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                  SCANS
+                </div>
+                <div class="stat-value">458</div>
+              </div>
+            </div>
+          </div>
+          <div class="name-title">
+            <div class="profile-name">Alex Rivera</div>
+            <div class="profile-roles" id="profileRoles2">
+              <div class="profile-role"><span class="role-title">Creative Strategist</span><span class="role-sep">·</span><span class="role-company">Momentum Studio</span></div>
+              <div class="profile-role"><span class="role-title">Design Consultant</span><span class="role-sep">·</span><span class="role-company">Freelance</span></div>
+              <div class="profile-role"><span class="role-title">Brand Director</span><span class="role-sep">·</span><span class="role-company">Apex Creative</span></div>
+              <div class="profile-role role-extra"><span class="role-title">UX Advisor</span><span class="role-sep">·</span><span class="role-company">TechVentures</span></div>
+              <div class="profile-role role-extra"><span class="role-title">Product Lead</span><span class="role-sep">·</span><span class="role-company">StartupXYZ</span></div>
+              <div class="profile-role role-extra"><span class="role-title">Innovation Coach</span><span class="role-sep">·</span><span class="role-company">Growth Lab</span></div>
+              <div class="profile-role role-extra"><span class="role-title">Keynote Speaker</span><span class="role-sep">·</span><span class="role-company">Self-employed</span></div>
+              <button class="roles-toggle" onclick="(function(el){el.classList.toggle('expanded');var btn=el.querySelector('.roles-toggle');btn.innerHTML=el.classList.contains('expanded')?'Show less <svg width=\'10\' height=\'10\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2.5\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><polyline points=\'18 15 12 9 6 15\'/></svg>':'Show more <svg width=\'10\' height=\'10\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2.5\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><polyline points=\'6 9 12 15 18 9\'/></svg>';})(document.getElementById('profileRoles2'))">Show more <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="section-actions">
+          <button class="btn-go-app">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="5" y="2" width="14" height="20" rx="3" stroke="white" stroke-width="1.8"/><path d="M12 17h.01" stroke="white" stroke-width="2.5" stroke-linecap="round"/><path d="M9 7h6M9 11h4" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+            Go to app profile
+          </button>
+          <div class="action-row">
+            <div class="action-btn">
+              <svg class="action-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              <span class="action-btn-label">Edit profile</span>
+            </div>
+            <div class="action-btn">
+              <svg class="action-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="currentColor" stroke="none"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="currentColor" stroke="none"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="currentColor" stroke="none"/><circle cx="17" cy="17" r="1.5" fill="currentColor" stroke="none"/><path d="M14 14h2M20 14v2M20 20h-2M14 20v-2"/></svg>
+              <span class="action-btn-label">QR profile</span>
+            </div>
+            <div class="action-btn">
+              <svg class="action-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="currentColor" stroke="none"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="currentColor" stroke="none"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="currentColor" stroke="none"/><circle cx="17" cy="15.5" r="1.5" fill="currentColor" stroke="none"/><path d="M14 21c0-1.657 1.343-3 3-3s3 1.343 3 3"/></svg>
+              <span class="action-btn-label">QR contact</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Social -->
+        <div class="section-social">
+          <div class="section-label">Connect with me</div>
+          <div class="social-icons">
+            <div class="social-circle" style="background:var(--whatsapp)"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.477 2 2 6.484 2 12.017c0 1.99.525 3.853 1.44 5.461L2.05 22l4.635-1.21A9.954 9.954 0 0012 22c5.523 0 10-4.484 10-10.017C22 6.484 17.522 2 12 2z"/></svg></div>
+            <div class="social-circle" style="background:var(--zalo)"><span style="color:white;font-weight:700;font-size:18px;font-family:'Public Sans',sans-serif;">Z</span></div>
+            <div class="social-circle" style="background:var(--x-dark)"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.254 5.622L18.245 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></div>
+            <div class="social-circle" style="background:#3b82f6"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>
+            <div class="social-circle" style="background:#dc2626"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
+          </div>
+        </div>
+
+        <!-- Info sections -->
+        <div class="section-info">
+          <div class="industries-row">
+            <div class="section-heading">Industries</div>
+            <div class="tags-row">
+              <span class="tag">Product Design</span><span class="tag">Strategy</span><span class="tag">FinTech</span><span class="tag">Web3</span>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="section-heading">About Me</div>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><polyline points="18 15 12 9 6 15"/></svg>
+            </div>
+            <div class="accordion-body">I bridge the gap between complex business challenges and elegant user experiences. With over 10 years of experience...</div>
+          </div>
+          <div class="accordion-collapsed"><span class="accordion-collapsed-label">Key Strengths</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          <div class="accordion-collapsed"><span class="accordion-collapsed-label">Main Services</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          <div class="accordion-collapsed"><span class="accordion-collapsed-label">Looking For</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        </div>
+
+        <!-- Save & Send sticky bar -->
+        <div class="save-send-bar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+          Save &amp; Send contact
+          <button class="save-close" aria-label="Close">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+      </div></div></div>
+      <div class="screen-name">Pop-up Collapsed</div>
+    </div>
+
+    <!-- ══ SCREEN 6: Many titles, same company ══ -->
+    <div class="screen">
+      <div id="screen6-frame" class="phone-frame"><div class="screen-content s-web-1"><div class="screen">
+
+        <!-- Download Pop-up -->
+        <div class="download-popup" id="downloadPopup6">
+          <div class="download-popup-bar" onclick="(function(){var p=document.getElementById('downloadPopup6');p.classList.toggle('collapsed');})()" role="button" aria-expanded="true">
+            <span class="download-popup-bar-label">InCard — Agentic AI &amp; Contact</span>
+            <button class="download-popup-arrow" aria-label="Toggle">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+            </button>
+          </div>
+          <div class="download-popup-body">
+            <div class="download-popup-icon"><img src="logo.png" alt="InCard" /></div>
+            <div class="download-popup-text">
+              <div class="download-popup-title">InCard</div>
+              <div class="download-popup-sub">Connect smarter, grow your network faster.</div>
+              <div class="download-popup-sub">Share via NFC or QR scan</div>
+            </div>
+            <button class="download-popup-btn">Connect</button>
+          </div>
+        </div>
+
+        <!-- Cover -->
+        <div class="green-band">
+          <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80" alt="Cover" />
+          <div class="cover-lang">
+            <div class="lang-toggle">
+              <button class="lang-btn active">EN</button>
+              <button class="lang-btn">VI</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile header -->
+        <div class="header-content">
+          <div class="avatar-stats-row">
+            <div class="avatar">
+              <img src="https://www.figma.com/api/mcp/asset/357b4e45-6b51-48db-b433-4bee87603cbb" alt="Alex Rivera" />
+            </div>
+            <div class="stats-row">
+              <div class="stat-item divider">
+                <div class="stat-label">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  VIEWS
+                </div>
+                <div class="stat-value">1,248</div>
+              </div>
+              <div class="stat-item second">
+                <div class="stat-label">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                  SCANS
+                </div>
+                <div class="stat-value">458</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Name + roles grouped by company -->
+          <div class="name-title">
+            <div class="profile-name">Alex Rivera</div>
+            <div class="profile-roles" id="profileRoles6">
+              <div class="role-group">
+                <div class="role-group-company">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                  Momentum Studio
+                </div>
+                <div class="role-group-titles">
+                  <span class="role-group-title">Creative Director</span>
+                  <span class="role-group-sep">·</span>
+                  <span class="role-group-title">Brand Strategist</span>
+                  <span class="role-group-sep">·</span>
+                  <span class="role-group-title">UX Lead</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="section-actions">
+          <button class="btn-go-app">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <rect x="5" y="2" width="14" height="20" rx="3" stroke="white" stroke-width="1.8"/>
+              <path d="M12 17h.01" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M9 7h6M9 11h4" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            Go to app profile
+          </button>
+          <div class="action-row">
+            <div class="action-btn">
+              <svg class="action-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              <span class="action-btn-label">Edit profile</span>
+            </div>
+            <div class="action-btn">
+              <svg class="action-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="currentColor" stroke="none"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="currentColor" stroke="none"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="currentColor" stroke="none"/><circle cx="17" cy="17" r="1.5" fill="currentColor" stroke="none"/><path d="M14 14h2M20 14v2M20 20h-2M14 20v-2"/></svg>
+              <span class="action-btn-label">QR profile</span>
+            </div>
+            <div class="action-btn">
+              <svg class="action-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="4.5" y="4.5" width="4" height="4" rx="0.5" fill="currentColor" stroke="none"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="15.5" y="4.5" width="4" height="4" rx="0.5" fill="currentColor" stroke="none"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="4.5" y="15.5" width="4" height="4" rx="0.5" fill="currentColor" stroke="none"/><circle cx="17" cy="15.5" r="1.5" fill="currentColor" stroke="none"/><path d="M14 21c0-1.657 1.343-3 3-3s3 1.343 3 3"/></svg>
+              <span class="action-btn-label">QR contact</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Social -->
+        <div class="section-social">
+          <div class="section-label">Connect with me</div>
+          <div class="social-icons">
+            <div class="social-circle" style="background:var(--whatsapp)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.477 2 2 6.484 2 12.017c0 1.99.525 3.853 1.44 5.461L2.05 22l4.635-1.21A9.954 9.954 0 0012 22c5.523 0 10-4.484 10-10.017C22 6.484 17.522 2 12 2z"/></svg>
+            </div>
+            <div class="social-circle" style="background:var(--zalo)">
+              <span style="color:white;font-weight:700;font-size:18px;font-family:'Public Sans',sans-serif;">Z</span>
+            </div>
+            <div class="social-circle" style="background:var(--x-dark)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.254 5.622L18.245 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
+            </div>
+            <div class="social-circle" style="background:#3b82f6">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </div>
+            <div class="social-circle" style="background:#dc2626">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info sections -->
+        <div class="section-info">
+          <div class="industries-row">
+            <div class="section-heading">Industries</div>
+            <div class="tags-row">
+              <span class="tag">Product Design</span>
+              <span class="tag">Strategy</span>
+              <span class="tag">FinTech</span>
+              <span class="tag">Web3</span>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="section-heading">About Me</div>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><polyline points="18 15 12 9 6 15"/></svg>
+            </div>
+            <div class="accordion-body">I bridge the gap between complex business challenges and elegant user experiences. With over 10 years of experience...</div>
+          </div>
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="section-heading" style="font-size:13px;">Key Strengths</div>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><polyline points="18 15 12 9 6 15"/></svg>
+            </div>
+            <div class="strength-list">
+              <div class="strength-item"><svg class="strength-dot" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.5" stroke="var(--green)" stroke-width="1"/><path d="M5 8l2 2 4-4" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="strength-text">Strategic Brand Development</span></div>
+              <div class="strength-item"><svg class="strength-dot" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.5" stroke="var(--green)" stroke-width="1"/><path d="M5 8l2 2 4-4" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="strength-text">Cross-functional Team Leadership</span></div>
+              <div class="strength-item"><svg class="strength-dot" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.5" stroke="var(--green)" stroke-width="1"/><path d="M5 8l2 2 4-4" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="strength-text">User-Centric Product Design</span></div>
+            </div>
+          </div>
+          <div class="accordion-collapsed"><span class="accordion-collapsed-label">Main Services</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          <div class="accordion-collapsed"><span class="accordion-collapsed-label">Looking For</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          <div class="accordion-collapsed"><span class="accordion-collapsed-label">Collaboration</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--slate-400)"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        </div>
+
+        <!-- Signature Products -->
+        <div class="section-products" style="margin-top:24px;">
+          <div class="products-header">
+            <span class="section-heading">Signature Products</span>
+            <div class="products-dots"><span class="dot-active"></span><span class="dot-inactive"></span><span class="dot-inactive"></span></div>
+          </div>
+          <div class="products-carousel">
+            <div class="product-card">
+              <img class="product-img" src="https://www.figma.com/api/mcp/asset/fe3f41f4-5356-42bf-810e-5ce89976afd4" alt="Brand Strategy Workshop" />
+              <div class="product-body">
+                <div class="product-title">Brand Strategy Workshop</div>
+                <div class="product-desc">Transform your visual identity in 4 weeks</div>
+                <div class="product-footer"><span class="product-link">Learn More</span><div class="product-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div>
+              </div>
+            </div>
+            <div class="product-card" style="opacity:0.85;">
+              <img class="product-img" src="https://www.figma.com/api/mcp/asset/ba3b0de2-8d2c-4bfb-9a8d-209fff532cd6" alt="UX Audit" />
+              <div class="product-body">
+                <div class="product-title">UX Audit</div>
+                <div class="product-desc">Deep dive analysis of your product</div>
+                <div class="product-footer"><span class="product-link">Learn More</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Portfolio -->
+        <div class="section-portfolio">
+          <div class="section-heading" style="padding-bottom:8px;">Portfolio Highlights</div>
+          <div class="portfolio-featured">
+            <img class="portfolio-featured-img" src="https://www.figma.com/api/mcp/asset/7dff11ad-0ef7-4bff-b059-f79ea65afdef" alt="Brand Strategy Overview" />
+            <div class="portfolio-overlay">
+              <div><span class="featured-badge">FEATURED</span></div>
+              <div class="play-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+              <div class="portfolio-featured-title">Brand Strategy Overview</div>
+            </div>
+          </div>
+          <div class="portfolio-grid">
+            <div class="portfolio-item"><img class="portfolio-item-img" src="https://www.figma.com/api/mcp/asset/94b17baa-46a9-4bb1-b28c-01fa4f5bbb8d" alt="UI Design System" /><div class="portfolio-item-overlay"><span class="portfolio-item-title">UI Design System</span></div></div>
+            <div class="portfolio-item portfolio-data-item">
+              <div class="data-graph"><div class="data-graph-inner"><div class="graph-bar-full"></div><div class="graph-bar-partial"></div><div class="graph-bars"><div class="graph-bar" style="height:16px;"></div><div class="graph-bar" style="height:32px;"></div><div class="graph-bar" style="height:24px;"></div><div class="graph-bar tall"></div><div class="graph-bar" style="height:20px;"></div></div></div></div>
+              <div class="portfolio-item-overlay"><span class="portfolio-item-title">User Research</span></div>
+            </div>
+            <div class="portfolio-item"><img class="portfolio-item-img" src="https://www.figma.com/api/mcp/asset/1bbca44c-4a33-4a8a-8ae4-fe33230e8bb9" alt="FinTech App" /><div class="portfolio-item-overlay"><span class="portfolio-item-title">FinTech App</span></div></div>
+            <div class="portfolio-item" style="background:var(--slate-100);"></div>
+          </div>
+        </div>
+
+        <!-- Save & Send sticky bar -->
+        <div class="save-send-bar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+          Save &amp; Send contact
+          <button class="save-close" aria-label="Close">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+      </div></div></div>
+      <div class="screen-name">Many Titles — Same Company</div>
+    </div>
+
+  </div>
+
+
+</body>
+</html>

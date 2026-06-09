@@ -824,16 +824,15 @@
    10. SCREEN & LAYOUT HELPERS
    ═══════════════════════════════════════════════════ */
 
-/* Global scrollbar hiding (consistent across all screens) */
-html, body {
+/* Scrollbar hiding — scoped to screen content only */
+.screen-content {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
-html::-webkit-scrollbar,
-body::-webkit-scrollbar { display: none; }
+.screen-content::-webkit-scrollbar { display: none; }
 
-/* Standard 390px phone frame */
-.screen {
+/* Standard 390px phone frame — scoped to inside screen-content only */
+.screen-content .screen {
   width: var(--screen-width);
   min-height: 100vh;
   display: flex;

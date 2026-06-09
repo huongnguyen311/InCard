@@ -2,28 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=390, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>InCard — Home &amp; Account</title>
   <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { width: 390px; overflow: hidden; }
+    html, body { overflow-x: auto; }
     body { background: #a49d9d; font-family: 'Public Sans', sans-serif;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale; min-height: 100vh; padding: 48px 40px 80px; 
-      width: 390px;
+      -moz-osx-font-smoothing: grayscale; min-height: 100vh; padding: 48px 40px 80px;
+      width: max-content; min-width: 100%;
     }
     .back { display: inline-flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.75); font-size: 12px; font-weight: 600; text-decoration: none; letter-spacing: 0.5px; margin-bottom: 32px; }
     .back:hover { color: #fff; }
     .flow-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.75); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 24px; }
     .flow-screens { display: flex; flex-direction: row; gap: 24px; align-items: flex-start; }
-    .screen { display: flex; flex-direction: column; align-items: center; gap: 10px; flex-shrink: 0; 
-      border-radius: 44px;
-      overflow: hidden;
-    }
-    .phone-frame { width: 390px; border-radius: 44px; overflow-x: hidden; overflow-y: visible; background: #fff; box-shadow: 0 8px 40px rgba(0,0,0,0.32), 0 2px 8px rgba(0,0,0,0.16); }
+    .flow-screens > .screen { display: flex; flex-direction: column; align-items: center; gap: 10px; flex-shrink: 0; }
+    .phone-frame { width: 390px; border-radius: 44px; overflow: hidden; background: #fff; box-shadow: 0 8px 40px rgba(0,0,0,0.32), 0 2px 8px rgba(0,0,0,0.16); }
     .screen-name { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.75); text-align: center; letter-spacing: 0.3px; }
   </style>
   <link rel="stylesheet" href="button-system.css" />
@@ -1812,15 +1809,13 @@
     .s-home-7 .conn-role { font-size: 14px; color: var(--slate-500); line-height: 1.43; }
     .s-home-7 .conn-company { font-size: 12px; font-weight: 500; color: var(--green); line-height: 1.33; }
     .s-home-7 .conn-action {
-      width: 40px; height: 40px; border-radius: 12px;
-      background: var(--slate-100);
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      width: 32px; height: 32px; border-radius: 8px;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
-    .s-home-7 .conn-action svg { width: 18px; height: 18px; }
-    .s-home-7 .conn-action.chat { /* green chat icon */ }
-    .s-home-7 .conn-action svg.chat-icon path { fill: var(--green); }
+    .s-home-7 .conn-action svg { width: 16px; height: 16px; }
+    .s-home-7 .conn-action.msg { background: var(--green-bg); }
+    .s-home-7 .conn-action.connect { background: var(--slate-100); }
 
     /* Bottom Nav */
     .s-home-7 .bottom-nav {
@@ -2043,11 +2038,11 @@
     .s-home-9 {
       font-family: 'DM Sans', sans-serif;
       width: 390px;
-      height: 844px;
+      min-height: 844px;
       background: var(--bg);
       display: flex;
       flex-direction: column;
-      
+
       position: relative;
     }
 
@@ -2136,14 +2131,13 @@
     ══════════════════════════════ */
     .s-home-9 .messages {
       flex: 1;
-      overflow-y: auto;
+      overflow-y: visible;
       padding: 20px 16px 16px;
       display: flex; flex-direction: column;
       gap: 4px;
       position: relative;
       z-index: 1;
     }
-    .s-home-9 .messages::-webkit-scrollbar { display: none; }
 
     /* Date separator */
     .s-home-9 .date-sep {
@@ -2305,7 +2299,7 @@
        INPUT BAR
     ══════════════════════════════ */
     .s-home-9 .input-bar {
-      padding: 8px 16px 18px;
+      padding: 8px 16px 8px;
       flex-shrink: 0;
       position: relative; z-index: 2;
       background: linear-gradient(0deg, var(--bg) 60%, transparent);
@@ -2703,7 +2697,7 @@
 
     .s-home-12 {
       font-family: 'DM Sans', sans-serif;
-      width: 390px; height: 844px;
+      width: 390px; min-height: 844px;
       background: var(--bg);
       display: flex; flex-direction: column;
        position: relative;
@@ -2844,7 +2838,7 @@
 
     /* ── Input bar ── */
     .s-home-12 .input-bar {
-      padding: 8px 16px 18px; flex-shrink: 0;
+      padding: 8px 16px 8px; flex-shrink: 0;
       position: relative; z-index: 2;
       background: linear-gradient(0deg, var(--bg) 60%, transparent);
       border-top: 1px solid var(--border-strong);
@@ -3910,7 +3904,7 @@
     .s-home-16 {  }
     .s-home-16 {
       font-family: 'Public Sans', sans-serif;
-      width: 390px; height: 844px;
+      width: 390px; min-height: 844px;
       background: var(--bg);
       display: flex; flex-direction: column;
        position: relative;
@@ -3950,10 +3944,9 @@
 
     /* ── Scrollable body ── */
     .s-home-16 .scroll-body {
-      flex: 1; overflow-y: auto;
+      flex: 1; overflow-y: visible;
       padding: 0 18px 24px;
     }
-    .s-home-16 .scroll-body::-webkit-scrollbar { display: none; }
 
     /* title */
     .s-home-16 .post-title {
@@ -4345,7 +4338,7 @@
 
     .s-home-18 {
       font-family: 'Public Sans', sans-serif;
-      width: 390px; height: 844px;
+      width: 390px; min-height: 844px;
       background: var(--bg);
       display: flex; flex-direction: column;
        position: relative;
@@ -4402,11 +4395,10 @@
 
     /* ── SCROLLABLE BODY ── */
     .s-home-18 .body {
-      flex: 1; overflow-y: auto; padding: 20px 16px 24px;
+      flex: 1; overflow-y: visible; padding: 20px 16px 24px;
       display: flex; flex-direction: column; gap: 20px;
       position: relative; z-index: 1;
     }
-    .s-home-18 .body::-webkit-scrollbar { display: none; }
 
     /* ── NETWORK TOGGLE ── */
     .s-home-18 .network-toggle {
@@ -4594,7 +4586,7 @@
 
     /* ── INPUT BAR ── */
     .s-home-18 .input-bar {
-      padding: 10px 16px 20px;
+      padding: 10px 16px 8px;
       flex-shrink: 0;
       position: relative; z-index: 2;
       background: linear-gradient(0deg, var(--bg) 60%, transparent);
@@ -10777,7 +10769,7 @@
 
     <!-- Connection list -->
     <div class="conn-list">
-      <!-- Item 1: chat (connected) -->
+      <!-- Item 1: msg (connected) -->
       <div class="conn-item">
         <div class="conn-avatar">
           <img src="https://www.figma.com/api/mcp/asset/8b4e934e-02e7-408d-82da-497ccff8dfd6" alt="Sarah Jenkins" />
@@ -10787,13 +10779,11 @@
           <div class="conn-role">Product Manager</div>
           <div class="conn-company">TechFlow Inc.</div>
         </div>
-        <div class="conn-action">
-          <svg viewBox="0 0 18 18" fill="none" class="chat-icon">
-            <path d="M16 1H2C1.45 1 1 1.45 1 2v11c0 .55.45 1 1 1h2v3l3.6-3H16c.55 0 1-.45 1-1V2c0-.55-.45-1-1-1z" fill="var(--green)"/>
-          </svg>
+        <div class="conn-action msg">
+          <svg width="16" height="16" viewBox="0 0 17 17" fill="none"><path d="M2 2h13a1 1 0 011 1v9a1 1 0 01-1 1H5l-4 3V3a1 1 0 011-1z" stroke="var(--green)" stroke-width="1.4" stroke-linejoin="round"/></svg>
         </div>
       </div>
-      <!-- Item 2: add (pending) -->
+      <!-- Item 2: connect (pending) -->
       <div class="conn-item">
         <div class="conn-avatar">
           <img src="https://www.figma.com/api/mcp/asset/896ea5e5-ea87-4330-9801-e96d5aa67f5b" alt="Marcus Chen" />
@@ -10803,13 +10793,11 @@
           <div class="conn-role">Senior Software Engineer</div>
           <div class="conn-company">CloudScale Systems</div>
         </div>
-        <div class="conn-action">
-          <svg viewBox="0 0 20 15" fill="none">
-            <path d="M14 8v6M17 11h-6M8 10a4 4 0 100-8 4 4 0 000 8zM0 14a8 8 0 0112.08-6.88" stroke="var(--slate-500)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+        <div class="conn-action connect">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M16 19v-1a4 4 0 00-4-4H6a4 4 0 00-4 4v1" stroke="var(--slate-500)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="8" r="3" stroke="var(--slate-500)" stroke-width="1.6" stroke-linecap="round"/><path d="M19 8v6M22 11h-6" stroke="var(--slate-500)" stroke-width="1.6" stroke-linecap="round"/></svg>
         </div>
       </div>
-      <!-- Item 3: chat -->
+      <!-- Item 3: msg -->
       <div class="conn-item">
         <div class="conn-avatar">
           <img src="https://www.figma.com/api/mcp/asset/bdb38b4e-8c66-4bee-9ded-d60fc382d986" alt="Elena Rodriguez" />
@@ -10819,13 +10807,11 @@
           <div class="conn-role">Creative Director</div>
           <div class="conn-company">Studio Pulse</div>
         </div>
-        <div class="conn-action">
-          <svg viewBox="0 0 18 18" fill="none">
-            <path d="M16 1H2C1.45 1 1 1.45 1 2v11c0 .55.45 1 1 1h2v3l3.6-3H16c.55 0 1-.45 1-1V2c0-.55-.45-1-1-1z" fill="var(--green)"/>
-          </svg>
+        <div class="conn-action msg">
+          <svg width="16" height="16" viewBox="0 0 17 17" fill="none"><path d="M2 2h13a1 1 0 011 1v9a1 1 0 01-1 1H5l-4 3V3a1 1 0 011-1z" stroke="var(--green)" stroke-width="1.4" stroke-linejoin="round"/></svg>
         </div>
       </div>
-      <!-- Item 4: add -->
+      <!-- Item 4: connect -->
       <div class="conn-item">
         <div class="conn-avatar">
           <img src="https://www.figma.com/api/mcp/asset/f9dbf597-efc3-4447-bf5e-51dd6e558194" alt="David Thompson" />
@@ -10835,13 +10821,11 @@
           <div class="conn-role">Venture Partner</div>
           <div class="conn-company">Seedling Ventures</div>
         </div>
-        <div class="conn-action">
-          <svg viewBox="0 0 20 15" fill="none">
-            <path d="M14 8v6M17 11h-6M8 10a4 4 0 100-8 4 4 0 000 8zM0 14a8 8 0 0112.08-6.88" stroke="var(--slate-500)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+        <div class="conn-action connect">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M16 19v-1a4 4 0 00-4-4H6a4 4 0 00-4 4v1" stroke="var(--slate-500)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="8" r="3" stroke="var(--slate-500)" stroke-width="1.6" stroke-linecap="round"/><path d="M19 8v6M22 11h-6" stroke="var(--slate-500)" stroke-width="1.6" stroke-linecap="round"/></svg>
         </div>
       </div>
-      <!-- Item 5: chat -->
+      <!-- Item 5: msg -->
       <div class="conn-item">
         <div class="conn-avatar">
           <img src="https://www.figma.com/api/mcp/asset/886ad171-fae1-49ba-ac9e-7e4184a54da9" alt="Jessica Wu" />
@@ -10851,10 +10835,8 @@
           <div class="conn-role">Head of Sales</div>
           <div class="conn-company">Marketify</div>
         </div>
-        <div class="conn-action">
-          <svg viewBox="0 0 18 18" fill="none">
-            <path d="M16 1H2C1.45 1 1 1.45 1 2v11c0 .55.45 1 1 1h2v3l3.6-3H16c.55 0 1-.45 1-1V2c0-.55-.45-1-1-1z" fill="var(--green)"/>
-          </svg>
+        <div class="conn-action msg">
+          <svg width="16" height="16" viewBox="0 0 17 17" fill="none"><path d="M2 2h13a1 1 0 011 1v9a1 1 0 01-1 1H5l-4 3V3a1 1 0 011-1z" stroke="var(--green)" stroke-width="1.4" stroke-linejoin="round"/></svg>
         </div>
       </div>
     </div>

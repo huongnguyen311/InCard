@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>InCard — All Screens</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Public Sans', sans-serif;
+      background: #1e293b;
+      color: #f1f5f9;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Header ── */
+    .page-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15,23,42,0.95);
+      backdrop-filter: blur(12px);
+      padding: 20px 32px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .page-header h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .page-header .subtitle {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-bottom: 12px;
+    }
+
+    /* ── Flow nav tabs ── */
+    .flow-nav {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .flow-nav a {
+      flex-shrink: 0;
+      padding: 6px 16px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #94a3b8;
+      text-decoration: none;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: all 0.15s ease;
+    }
+    .flow-nav a:hover,
+    .flow-nav a.active {
+      background: #009037;
+      color: #fff;
+      border-color: #009037;
+    }
+    .flow-nav .count {
+      font-size: 11px;
+      font-weight: 400;
+      opacity: 0.7;
+      margin-left: 4px;
+    }
+
+    /* ── Flow sections ── */
+    .flow-section {
+      padding: 32px;
+    }
+    .flow-section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .flow-section-header h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .flow-section-header .badge {
+      font-size: 12px;
+      font-weight: 600;
+      color: #009037;
+      background: rgba(0,144,55,0.15);
+      padding: 3px 10px;
+      border-radius: 9999px;
+    }
+
+    /* ── Screen row: horizontal scroll ── */
+    .screen-row {
+      display: flex;
+      gap: 24px;
+      overflow-x: auto;
+      overflow-y: visible;
+      padding-bottom: 24px;
+      scroll-snap-type: x proximity;
+      -webkit-overflow-scrolling: touch;
+    }
+    .screen-row::-webkit-scrollbar {
+      height: 6px;
+    }
+    .screen-row::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.04);
+      border-radius: 3px;
+    }
+    .screen-row::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.15);
+      border-radius: 3px;
+    }
+
+    /* ── Screen card ── */
+    .screen-card {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      scroll-snap-align: start;
+    }
+    .screen-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #94a3b8;
+      text-align: center;
+      max-width: 390px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .screen-label .num {
+      color: #009037;
+      font-weight: 700;
+      margin-right: 6px;
+    }
+
+    /* ── iframe phone frame ── */
+    .phone-wrap {
+      width: 390px;
+      border-radius: 44px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    .phone-wrap iframe {
+      width: 390px;
+      border: none;
+      display: block;
+      background: #fff;
+    }
+    .screen-card a.open-link {
+      font-size: 11px;
+      font-weight: 600;
+      color: #009037;
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.15s;
+    }
+    .screen-card a.open-link:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    /* ── Divider between flows ── */
+    .flow-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      margin: 0 32px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-header">
+    <h1>InCard — All Screens</h1>
+    <p class="subtitle">All mockup screens organized by flow. Scroll horizontally to browse each flow.</p>
+    <nav class="flow-nav">
+      <a href="#auth" class="active">Auth<span class="count">(19)</span></a>
+      <a href="#home">Home<span class="count">(32)</span></a>
+      <a href="#network">Network<span class="count">(28)</span></a>
+      <a href="#notifications">Notifications<span class="count">(3)</span></a>
+      <a href="#profile">Profile<span class="count">(20)</span></a>
+    </nav>
+  </div>
+
+  <!-- ════════════════════════ AUTH ════════════════════════ -->
+  <div class="flow-section" id="auth">
+    <div class="flow-section-header">
+      <h2>Auth</h2>
+      <span class="badge">19 screens</span>
+    </div>
+    <div class="screen-row">
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">00</span>Splash</div>
+        <div class="phone-wrap"><iframe src="auth/00-splash" loading="lazy"></iframe></div>
+        <a class="open-link" href="auth/00-splash" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">01</span>Sign Up</div>
+        <div class="phone-wrap"><iframe src="auth/01-sign-up" loading="lazy"></iframe></div>
+        <a class="open-link" href="auth/01-sign-up" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">02</span>Sign In</div>
+        <div class="phone-wrap"><iframe src="auth/02-sign-in" loading="lazy"></iframe></div>
+        <a class="open-link" href="auth/02-sign-in" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">03</span>Create Profile</div>
+        <div class="phone-wrap"><iframe src="auth/03-create-profile" loading="lazy"></iframe></div>
+        <a class="open-link" href="auth/03-create-profile" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">03b</span>Create Profile (LinkedIn)</div>
+        <div class="phone-wrap"><iframe src="auth/03b-create-profile-linkedin" loading="lazy"></iframe></div>
+        <a class="open-link" href="auth/03b-create-profile-linkedin" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">03b</span>Create Profile (Tour Guide)</div>
+        <div class="phone-wrap"><iframe src="auth/03b-create-profile-tourguide" loading="lazy"></iframe></div>
+        <a class="open-link" href="auth/03b-create-profile-tourguide" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">04</span>Professional Details</div>
+        <div class="phone-wrap"><iframe src="auth/04-professional-details" loading="lazy"></iframe></div>
+        <a class="open-link" href="auth/04-professional-details" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">05</span>Connect With Me</div>
+        <div class="phone-wrap"><iframe src="auth/05-connect-with-me" loading="lazy"></iframe></div>
+        <a class="open-link" href="auth/05-connect-with-me" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">06</span>Add Portfolio Video</div>
+        <div class="phone-wrap"><iframe src="auth/06-add-portfolio-video" loading="lazy"></iframe></div>
+        <a class="open-link" href="auth/06-add-portfolio-video" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">07</span>Add Portfolio Image</div>
+        <div class="phone-wrap"><iframe src="auth/07-add-portfolio-image" loading="lazy"></iframe></div>
+        <a class="open-link" href="auth/07-add-portfolio-image" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">08</span>Add Service/Product</div>
+        <div class="phone-wrap"><iframe src="auth/08-add-service-product" loading="lazy"></iframe></div>
+        <a class="open-link" href="auth/08-add-service-product" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">09</span>Success Modal</div>
+        <div class="phone-wrap"><iframe src="auth/09-success-modal" loading="lazy"></iframe></div>
+        <a class="open-link" href="auth/09-success-modal" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">T01</span>Tour: Photo</div>
+        <div class="phone-wrap"><iframe src="auth/tour-01-photo" loading="lazy"></iframe></div>
+        <a class="open-link" href="auth/tour-01-photo" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">T02</span>Tour: Basic Info</div>
+        <div class="phone-wrap"><iframe src="auth/tour-02-basic-info" loading="lazy"></iframe></div>
+        <a class="open-link" href="auth/tour-02-basic-info" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">T03</span>Tour: Complete</div>
+        <div class="phone-wrap"><iframe src="auth/tour-03-complete" loading="lazy"></iframe></div>
+        <a class="open-link" href="auth/tour-03-complete" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">T04</span>Tour: Job Title</div>
+        <div class="phone-wrap"><iframe src="auth/tour-04-job-title" loading="lazy"></iframe></div>
+        <a class="open-link" href="auth/tour-04-job-title" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">T04</span>Tour: Professional</div>
+        <div class="phone-wrap"><iframe src="auth/tour-04-professional" loading="lazy"></iframe></div>
+        <a class="open-link" href="auth/tour-04-professional" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">T05</span>Tour: Bio</div>
+        <div class="phone-wrap"><iframe src="auth/tour-05-bio" loading="lazy"></iframe></div>
+        <a class="open-link" href="auth/tour-05-bio" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">T06</span>Tour: Quick Actions</div>
+        <div class="phone-wrap"><iframe src="auth/tour-06-quick-actions" loading="lazy"></iframe></div>
+        <a class="open-link" href="auth/tour-06-quick-actions" target="_blank">Open full page</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-divider"></div>
+
+  <!-- ════════════════════════ HOME ════════════════════════ -->
+  <div class="flow-section" id="home">
+    <div class="flow-section-header">
+      <h2>Home</h2>
+      <span class="badge">32 screens</span>
+    </div>
+    <div class="screen-row">
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">01</span>Home Dashboard</div>
+        <div class="phone-wrap"><iframe src="home/01-home-dashboard" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/01-home-dashboard" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">02</span>Account Details</div>
+        <div class="phone-wrap"><iframe src="home/02-account-details" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/02-account-details" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">03</span>Account Details Edit</div>
+        <div class="phone-wrap"><iframe src="home/03-account-details-edit" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/03-account-details-edit" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">04</span>Potential Connections</div>
+        <div class="phone-wrap"><iframe src="home/04-potential-connections" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/04-potential-connections" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">05</span>Syncing Database</div>
+        <div class="phone-wrap"><iframe src="home/05-syncing-database" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/05-syncing-database" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">06</span>Connection Limit</div>
+        <div class="phone-wrap"><iframe src="home/06-connection-limit-reached" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/06-connection-limit-reached" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">07</span>Recent Connections</div>
+        <div class="phone-wrap"><iframe src="home/07-recent-connections" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/07-recent-connections" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">08</span>Connection Sent</div>
+        <div class="phone-wrap"><iframe src="home/08-connection-sent" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/08-connection-sent" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">09</span>Inka Assistant</div>
+        <div class="phone-wrap"><iframe src="home/09-inka-assistant" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/09-inka-assistant" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">10</span>Inka Chat History</div>
+        <div class="phone-wrap"><iframe src="home/10-inka-chat-history" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/10-inka-chat-history" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">11</span>Inka Edit Title</div>
+        <div class="phone-wrap"><iframe src="home/11-inka-edit-title" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/11-inka-edit-title" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">12</span>Inka New Chat</div>
+        <div class="phone-wrap"><iframe src="home/12-inka-new-chat" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/12-inka-new-chat" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">13</span>Top Performers</div>
+        <div class="phone-wrap"><iframe src="home/13-top-performers" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/13-top-performers" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">14</span>Your Points</div>
+        <div class="phone-wrap"><iframe src="home/14-your-points" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/14-your-points" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">15</span>Discover</div>
+        <div class="phone-wrap"><iframe src="home/15-discover" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/15-discover" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">16</span>Post Detail</div>
+        <div class="phone-wrap"><iframe src="home/16-post-detail" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/16-post-detail" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">17</span>My Feeds (Empty)</div>
+        <div class="phone-wrap"><iframe src="home/17-my-feeds-empty" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/17-my-feeds-empty" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">18</span>AI Search Profile</div>
+        <div class="phone-wrap"><iframe src="home/18-ai-search-profile" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/18-ai-search-profile" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">19</span>AI Search Filters</div>
+        <div class="phone-wrap"><iframe src="home/19-ai-search-filters" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/19-ai-search-filters" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">20</span>Settings</div>
+        <div class="phone-wrap"><iframe src="home/20-settings" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/20-settings" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">21</span>My Cards</div>
+        <div class="phone-wrap"><iframe src="home/21-my-cards" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/21-my-cards" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">22</span>My Member</div>
+        <div class="phone-wrap"><iframe src="home/22-my-member" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/22-my-member" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">23</span>My Groups</div>
+        <div class="phone-wrap"><iframe src="home/23-my-groups" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/23-my-groups" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">24</span>Change Password</div>
+        <div class="phone-wrap"><iframe src="home/24-change-password" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/24-change-password" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">25</span>Language</div>
+        <div class="phone-wrap"><iframe src="home/25-language" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/25-language" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">26</span>Manage Google</div>
+        <div class="phone-wrap"><iframe src="home/26-manage-google" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/26-manage-google" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">27</span>Calendar</div>
+        <div class="phone-wrap"><iframe src="home/27-calendar" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/27-calendar" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">28</span>Calendar Daily</div>
+        <div class="phone-wrap"><iframe src="home/28-calendar-daily" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/28-calendar-daily" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">29</span>Calendar Settings</div>
+        <div class="phone-wrap"><iframe src="home/29-calendar-settings" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/29-calendar-settings" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">30</span>My Tasks</div>
+        <div class="phone-wrap"><iframe src="home/30-my-tasks" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/30-my-tasks" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">31</span>My Tasks Monthly</div>
+        <div class="phone-wrap"><iframe src="home/31-my-tasks-monthly" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/31-my-tasks-monthly" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">32</span>Referral History</div>
+        <div class="phone-wrap"><iframe src="home/32-referral-history" loading="lazy"></iframe></div>
+        <a class="open-link" href="home/32-referral-history" target="_blank">Open full page</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-divider"></div>
+
+  <!-- ════════════════════════ NETWORK ════════════════════════ -->
+  <div class="flow-section" id="network">
+    <div class="flow-section-header">
+      <h2>Network</h2>
+      <span class="badge">28 screens</span>
+    </div>
+    <div class="screen-row">
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">01</span>Network</div>
+        <div class="phone-wrap"><iframe src="network/01-network" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/01-network" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">01b</span>No Connections</div>
+        <div class="phone-wrap"><iframe src="network/01b-no-connections" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/01b-no-connections" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">01c</span>Sync Calendar Settings</div>
+        <div class="phone-wrap"><iframe src="network/01c-sync-calendar-settings" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/01c-sync-calendar-settings" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">02</span>Scanned Cards</div>
+        <div class="phone-wrap"><iframe src="network/02-scanned-cards" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/02-scanned-cards" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">02b</span>No Scanned Cards</div>
+        <div class="phone-wrap"><iframe src="network/02b-no-scanned-cards" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/02b-no-scanned-cards" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">03</span>Scanned Card Detail</div>
+        <div class="phone-wrap"><iframe src="network/03-scanned-card-detail" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/03-scanned-card-detail" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">04</span>Edit Card Detail</div>
+        <div class="phone-wrap"><iframe src="network/04-edit-card-detail" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/04-edit-card-detail" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">05</span>Scan New Card</div>
+        <div class="phone-wrap"><iframe src="network/05-scan-new-card" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/05-scan-new-card" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">06</span>Scanned Card</div>
+        <div class="phone-wrap"><iframe src="network/06-scanned-card" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/06-scanned-card" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">07</span>Scan Multi Cards</div>
+        <div class="phone-wrap"><iframe src="network/07-scan-multi-cards" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/07-scan-multi-cards" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">08</span>Scan Multi Card</div>
+        <div class="phone-wrap"><iframe src="network/08-scan-multi-card" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/08-scan-multi-card" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">09</span>Contacts</div>
+        <div class="phone-wrap"><iframe src="network/09-contacts" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/09-contacts" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">09</span>QR Scan</div>
+        <div class="phone-wrap"><iframe src="network/09-qr-scan" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/09-qr-scan" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">09b</span>No Contacts</div>
+        <div class="phone-wrap"><iframe src="network/09b-no-contacts" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/09b-no-contacts" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">09c</span>Filter Contacts</div>
+        <div class="phone-wrap"><iframe src="network/09c-filter-contacts" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/09c-filter-contacts" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">09d</span>Filtered Results</div>
+        <div class="phone-wrap"><iframe src="network/09d-filtered-results" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/09d-filtered-results" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">09e</span>AI Search Contacts</div>
+        <div class="phone-wrap"><iframe src="network/09e-ai-search-contacts" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/09e-ai-search-contacts" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">09f</span>Delete Contact Success</div>
+        <div class="phone-wrap"><iframe src="network/09f-delete-contact-success" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/09f-delete-contact-success" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">09g</span>AI Search Limit</div>
+        <div class="phone-wrap"><iframe src="network/09g-ai-search-limit" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/09g-ai-search-limit" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">09h</span>Upgrade Premium</div>
+        <div class="phone-wrap"><iframe src="network/09h-upgrade-premium" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/09h-upgrade-premium" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">10</span>Leads</div>
+        <div class="phone-wrap"><iframe src="network/10-leads" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/10-leads" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">10</span>QR Profile</div>
+        <div class="phone-wrap"><iframe src="network/10-qr-profile" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/10-qr-profile" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">10b</span>No Leads</div>
+        <div class="phone-wrap"><iframe src="network/10b-no-leads" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/10b-no-leads" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">11</span>Contact Detail</div>
+        <div class="phone-wrap"><iframe src="network/11-contact-detail" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/11-contact-detail" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">11</span>QR Offline</div>
+        <div class="phone-wrap"><iframe src="network/11-qr-offline" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/11-qr-offline" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">11b</span>Edit Contact</div>
+        <div class="phone-wrap"><iframe src="network/11b-edit-contact" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/11b-edit-contact" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">12</span>Chat</div>
+        <div class="phone-wrap"><iframe src="network/12-chat" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/12-chat" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">12b</span>Chat AI Modal</div>
+        <div class="phone-wrap"><iframe src="network/12b-chat-ai-modal" loading="lazy"></iframe></div>
+        <a class="open-link" href="network/12b-chat-ai-modal" target="_blank">Open full page</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-divider"></div>
+
+  <!-- ════════════════════════ NOTIFICATIONS ════════════════════════ -->
+  <div class="flow-section" id="notifications">
+    <div class="flow-section-header">
+      <h2>Notifications</h2>
+      <span class="badge">3 screens</span>
+    </div>
+    <div class="screen-row">
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">01</span>News</div>
+        <div class="phone-wrap"><iframe src="notifications/01-news" loading="lazy"></iframe></div>
+        <a class="open-link" href="notifications/01-news" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">02</span>Requested Contact</div>
+        <div class="phone-wrap"><iframe src="notifications/02-requested-contact" loading="lazy"></iframe></div>
+        <a class="open-link" href="notifications/02-requested-contact" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">03</span>Others</div>
+        <div class="phone-wrap"><iframe src="notifications/03-others" loading="lazy"></iframe></div>
+        <a class="open-link" href="notifications/03-others" target="_blank">Open full page</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-divider"></div>
+
+  <!-- ════════════════════════ PROFILE ════════════════════════ -->
+  <div class="flow-section" id="profile">
+    <div class="flow-section-header">
+      <h2>Profile</h2>
+      <span class="badge">20 screens</span>
+    </div>
+    <div class="screen-row">
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">01</span>Digital Profile</div>
+        <div class="phone-wrap"><iframe src="profile/01-digital-profile" loading="lazy"></iframe></div>
+        <a class="open-link" href="profile/01-digital-profile" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">02</span>Schedule Meeting</div>
+        <div class="phone-wrap"><iframe src="profile/02-schedule-meeting" loading="lazy"></iframe></div>
+        <a class="open-link" href="profile/02-schedule-meeting" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">03</span>Meeting Scheduled</div>
+        <div class="phone-wrap"><iframe src="profile/03-meeting-scheduled" loading="lazy"></iframe></div>
+        <a class="open-link" href="profile/03-meeting-scheduled" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">04</span>Digital Profile (Own)</div>
+        <div class="phone-wrap"><iframe src="profile/04-digital-profile-own" loading="lazy"></iframe></div>
+        <a class="open-link" href="profile/04-digital-profile-own" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">05</span>NFC Tap</div>
+        <div class="phone-wrap"><iframe src="profile/05-nfc-tap" loading="lazy"></iframe></div>
+        <a class="open-link" href="profile/05-nfc-tap" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">06</span>Add Portfolio Images</div>
+        <div class="phone-wrap"><iframe src="profile/06-add-portfolio-images" loading="lazy"></iframe></div>
+        <a class="open-link" href="profile/06-add-portfolio-images" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">07</span>Activation Failed</div>
+        <div class="phone-wrap"><iframe src="profile/07-activation-failed" loading="lazy"></iframe></div>
+        <a class="open-link" href="profile/07-activation-failed" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">08</span>Activation Success</div>
+        <div class="phone-wrap"><iframe src="profile/08-activation-success" loading="lazy"></iframe></div>
+        <a class="open-link" href="profile/08-activation-success" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">09</span>Add Portfolio Modal</div>
+        <div class="phone-wrap"><iframe src="profile/09-add-portfolio-modal" loading="lazy"></iframe></div>
+        <a class="open-link" href="profile/09-add-portfolio-modal" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">10</span>Compact Add Service</div>
+        <div class="phone-wrap"><iframe src="profile/10-compact-add-service" loading="lazy"></iframe></div>
+        <a class="open-link" href="profile/10-compact-add-service" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">11</span>NFC Scan QR</div>
+        <div class="phone-wrap"><iframe src="profile/11-nfc-scan-qr" loading="lazy"></iframe></div>
+        <a class="open-link" href="profile/11-nfc-scan-qr" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">12</span>Edit Profile</div>
+        <div class="phone-wrap"><iframe src="profile/12-edit-profile" loading="lazy"></iframe></div>
+        <a class="open-link" href="profile/12-edit-profile" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">13</span>Connect Social</div>
+        <div class="phone-wrap"><iframe src="profile/13-connect-social" loading="lazy"></iframe></div>
+        <a class="open-link" href="profile/13-connect-social" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">14</span>Add Portfolio Video</div>
+        <div class="phone-wrap"><iframe src="profile/14-add-portfolio-video" loading="lazy"></iframe></div>
+        <a class="open-link" href="profile/14-add-portfolio-video" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">15</span>Add Portfolio Image</div>
+        <div class="phone-wrap"><iframe src="profile/15-add-portfolio-image" loading="lazy"></iframe></div>
+        <a class="open-link" href="profile/15-add-portfolio-image" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">16</span>Add Service/Product</div>
+        <div class="phone-wrap"><iframe src="profile/16-add-service-product" loading="lazy"></iframe></div>
+        <a class="open-link" href="profile/16-add-service-product" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">17</span>Success Modal</div>
+        <div class="phone-wrap"><iframe src="profile/17-success-modal" loading="lazy"></iframe></div>
+        <a class="open-link" href="profile/17-success-modal" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">18</span>Import LinkedIn</div>
+        <div class="phone-wrap"><iframe src="profile/18-import-linkedin" loading="lazy"></iframe></div>
+        <a class="open-link" href="profile/18-import-linkedin" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">19</span>Import Options</div>
+        <div class="phone-wrap"><iframe src="profile/19-import-options" loading="lazy"></iframe></div>
+        <a class="open-link" href="profile/19-import-options" target="_blank">Open full page</a>
+      </div>
+      <div class="screen-card">
+        <div class="screen-label"><span class="num">20</span>Extracting LinkedIn</div>
+        <div class="phone-wrap"><iframe src="profile/20-extracting-linkedin" loading="lazy"></iframe></div>
+        <a class="open-link" href="profile/20-extracting-linkedin" target="_blank">Open full page</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Auto-resize iframes to show full content
+    function resizeIframe(iframe) {
+      try {
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        const height = Math.max(
+          doc.body.scrollHeight,
+          doc.body.offsetHeight,
+          doc.documentElement.scrollHeight,
+          doc.documentElement.offsetHeight,
+          844
+        );
+        iframe.style.height = height + 'px';
+      } catch (e) {
+        iframe.style.height = '844px';
+      }
+    }
+
+    // Observe iframes as they load
+    document.querySelectorAll('.phone-wrap iframe').forEach(iframe => {
+      iframe.addEventListener('load', () => resizeIframe(iframe));
+      // Fallback height
+      iframe.style.height = '844px';
+    });
+
+    // Flow nav active state on scroll
+    const sections = document.querySelectorAll('.flow-section');
+    const navLinks = document.querySelectorAll('.flow-nav a');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, { rootMargin: '-100px 0px -60% 0px' });
+
+    sections.forEach(section => observer.observe(section));
+
+    // Smooth scroll for nav links
+    navLinks.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
+</body>
+</html>

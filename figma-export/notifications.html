@@ -2,28 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=390, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>InCard — Notifications Flow</title>
   <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { width: 390px; overflow: hidden; }
+    html, body { overflow-x: auto; }
     body { background: #a49d9d; font-family: 'Public Sans', sans-serif;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale; min-height: 100vh; padding: 48px 40px 80px; 
-      width: 390px;
+      -moz-osx-font-smoothing: grayscale; min-height: 100vh; padding: 48px 40px 80px;
+      width: max-content; min-width: 100%;
     }
     .back { display: inline-flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.75); font-size: 12px; font-weight: 600; text-decoration: none; letter-spacing: 0.5px; margin-bottom: 32px; }
     .back:hover { color: #fff; }
     .flow-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.75); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 24px; }
     .flow-screens { display: flex; flex-direction: row; gap: 24px; align-items: flex-start; }
-    .screen { display: flex; flex-direction: column; align-items: center; gap: 10px; flex-shrink: 0; 
-      border-radius: 44px;
-      overflow: hidden;
-    }
-    .phone-frame { width: 390px; border-radius: 44px; overflow-x: hidden; overflow-y: visible; background: #fff; box-shadow: 0 8px 40px rgba(0,0,0,0.32), 0 2px 8px rgba(0,0,0,0.16); }
+    .flow-screens > .screen { display: flex; flex-direction: column; align-items: center; gap: 10px; flex-shrink: 0; }
+    .phone-frame { width: 390px; border-radius: 44px; overflow: hidden; background: #fff; box-shadow: 0 8px 40px rgba(0,0,0,0.32), 0 2px 8px rgba(0,0,0,0.16); }
     .screen-name { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.75); text-align: center; letter-spacing: 0.3px; }
   </style>
   <link rel="stylesheet" href="button-system.css" />
