@@ -1,0 +1,139 @@
+- generic [active] [ref=e1]:
+  - link "Chọn concept" [ref=e2] [cursor=pointer]:
+    - /url: ai-agent-choose.html
+    - img [ref=e3]
+    - text: Chọn concept
+  - generic [ref=e5]: InCard · Concept B
+  - generic [ref=e6]: Signal — Ambient AI Orb
+  - generic [ref=e7]:
+    - generic [ref=e8]:
+      - generic [ref=e9]:
+        - generic [ref=e10]:
+          - generic [ref=e13]:
+            - generic [ref=e14]:
+              - generic [ref=e15]: InCard
+              - generic [ref=e16]: Tap. Share. Connect.
+            - generic [ref=e17]:
+              - link "Solutions" [ref=e18] [cursor=pointer]:
+                - /url: "#"
+              - link "Features" [ref=e19] [cursor=pointer]:
+                - /url: "#"
+              - link "Pricing" [ref=e20] [cursor=pointer]:
+                - /url: "#"
+              - button "Get Your Card" [ref=e21] [cursor=pointer]
+          - generic [ref=e22]:
+            - generic [ref=e23]: ✦ AI-Powered Support
+            - heading "One tap. Infinite connections." [level=1] [ref=e24]:
+              - text: One tap.
+              - text: Infinite connections.
+            - paragraph [ref=e25]: Share your identity, portfolio and links with a single tap — and let Inka answer every question in real time.
+          - generic [ref=e26]:
+            - generic [ref=e27]:
+              - generic [ref=e28]: 50k+
+              - generic [ref=e29]: Cards Created
+            - generic [ref=e30]:
+              - generic [ref=e31]: 120+
+              - generic [ref=e32]: Countries
+            - generic [ref=e33]:
+              - generic [ref=e34]: 98%
+              - generic [ref=e35]: Satisfaction
+        - generic [ref=e36]:
+          - generic [ref=e37]:
+            - img [ref=e38]
+            - text: Ask Inka
+          - img "Inka" [ref=e47] [cursor=pointer]
+      - generic [ref=e48]: Idle — signal mascot
+      - generic [ref=e49]: Ambient · Alive · Low-footprint · On-brand (NFC ripple)
+    - generic [ref=e50]:
+      - generic [ref=e51]:
+        - generic [ref=e52]:
+          - generic [ref=e54]:
+            - generic [ref=e55]:
+              - generic [ref=e56]: InCard
+              - generic [ref=e57]: Tap. Share. Connect.
+            - generic [ref=e58]:
+              - link "Solutions" [ref=e59] [cursor=pointer]:
+                - /url: "#"
+              - link "Features" [ref=e60] [cursor=pointer]:
+                - /url: "#"
+          - generic [ref=e61]:
+            - generic [ref=e62]: ✦ AI-Powered Support
+            - heading "One tap. Infinite connections." [level=1] [ref=e63]:
+              - text: One tap.
+              - text: Infinite connections.
+        - generic [ref=e64]:
+          - generic [ref=e65]:
+            - generic [ref=e66]: Inka · InCard AI
+            - button [ref=e68] [cursor=pointer]:
+              - img [ref=e69]
+          - generic [ref=e71]:
+            - img "Inka" [ref=e79]
+            - heading "Hey — I'm Inka ✦" [level=2] [ref=e80]
+            - paragraph [ref=e81]: Your InCard guide. Ask me anything, or tap a suggestion to begin.
+          - generic [ref=e82]:
+            - generic [ref=e83]: Try asking
+            - generic [ref=e84] [cursor=pointer]:
+              - img [ref=e86]
+              - text: How does a tap actually work?
+              - img [ref=e89]
+            - generic [ref=e91] [cursor=pointer]:
+              - img [ref=e93]
+              - text: See pricing & plans
+              - img [ref=e96]
+            - generic [ref=e98] [cursor=pointer]:
+              - img [ref=e100]
+              - text: Track who viewed my card
+              - img [ref=e103]
+          - generic [ref=e105]:
+            - generic [ref=e106]:
+              - generic [ref=e107]: Ask Inka anything…
+              - button [ref=e108] [cursor=pointer]:
+                - img [ref=e109]
+              - button [ref=e112] [cursor=pointer]:
+                - img [ref=e113]
+            - generic [ref=e115]: Powered by InCard AI Platform
+      - generic [ref=e116]: Open — command view
+      - generic [ref=e117]: Orb-centric · Glassmorphic · Voice-ready · Distinctive
+    - generic [ref=e118]:
+      - generic [ref=e119]:
+        - generic [ref=e120]:
+          - generic [ref=e122]:
+            - generic [ref=e123]:
+              - generic [ref=e124]: InCard
+              - generic [ref=e125]: Tap. Share. Connect.
+            - generic [ref=e126]:
+              - link "Solutions" [ref=e127] [cursor=pointer]:
+                - /url: "#"
+              - link "Features" [ref=e128] [cursor=pointer]:
+                - /url: "#"
+          - generic [ref=e129]:
+            - generic [ref=e130]: ✦ AI-Powered Support
+            - heading "One tap. Infinite connections." [level=1] [ref=e131]:
+              - text: One tap.
+              - text: Infinite connections.
+        - generic [ref=e132]:
+          - generic [ref=e133]:
+            - img "Inka" [ref=e138]
+            - generic [ref=e139]:
+              - generic [ref=e140]: Inka
+              - generic [ref=e141]: Typing…
+            - button [ref=e143] [cursor=pointer]:
+              - img [ref=e144]
+          - generic [ref=e146]:
+            - generic [ref=e147]: Hey! I'm Inka ✦ Ask me anything about InCard — or tap your card to any phone to see the magic. 📲
+            - generic [ref=e148]: How do I share my card without an app?
+            - generic [ref=e149]: Just tap it to any phone — your profile opens in the browser instantly. No app, no friction. QR works too.
+            - generic [ref=e150]: Can I see who viewed it?
+          - generic [ref=e155]:
+            - generic [ref=e156] [cursor=pointer]: 💳 Pricing
+            - generic [ref=e157] [cursor=pointer]: 🎨 Customize card
+          - generic [ref=e158]:
+            - generic [ref=e159]:
+              - generic [ref=e160]: Message Inka…
+              - button [ref=e161] [cursor=pointer]:
+                - img [ref=e162]
+              - button [ref=e165] [cursor=pointer]:
+                - img [ref=e166]
+            - generic [ref=e168]: Powered by InCard AI Platform
+      - generic [ref=e169]: Conversation
+      - generic [ref=e170]: Glass bubbles · Typing · Ambient mascot

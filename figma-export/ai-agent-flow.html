@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — AI Agent Widget</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="button-system.css" />
+  <link rel="stylesheet" href="design-system.css" />
+  <style>
+    :root {
+      --green:         #009037;
+      --green-dark:    #007a2f;
+      --green-light:   #2eb07a;
+      --green-glow:    rgba(46,176,122,0.55);
+      --emerald:       #10b981;
+      --emerald-bg:    #ecfdf5;
+      --slate-900:     #0f172a;
+      --slate-800:     #1e293b;
+      --slate-700:     #334155;
+      --slate-600:     #475569;
+      --slate-500:     #64748b;
+      --slate-400:     #94a3b8;
+      --slate-300:     #cbd5e1;
+      --slate-200:     #e2e8f0;
+      --slate-100:     #f1f5f9;
+      --slate-50:      #f8fafc;
+      --white:         #ffffff;
+      --ink-900:       #0a1a14;   /* deep landing backdrop */
+      --ink-800:       #0f261d;
+      --grad-brand:    linear-gradient(135deg, #2eb07a 0%, #009037 100%);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow-x: auto; }
+    body {
+      background: #a49d9d;
+      font-family: 'Public Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      padding: 48px 40px 80px;
+      width: max-content;
+      min-width: 100%;
+    }
+    .flow-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.75); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+    .flow-title { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 28px; letter-spacing: -0.3px; }
+    .flow-screens { display: flex; flex-direction: row; gap: 28px; align-items: flex-start; }
+    .stage { display: flex; flex-direction: column; align-items: center; gap: 12px; flex-shrink: 0; }
+    .screen-name { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.8); text-align: center; letter-spacing: 0.6px; text-transform: uppercase; }
+
+    /* ─────────────────────────────────────────────
+       LANDING BACKDROP (frame that holds each state)
+    ───────────────────────────────────────────── */
+    .frame {
+      position: relative;
+      width: 440px;
+      height: 720px;
+      border-radius: 32px;
+      overflow: hidden;
+      background:
+        radial-gradient(120% 90% at 15% 0%, #14342a 0%, rgba(20,52,42,0) 55%),
+        radial-gradient(120% 100% at 100% 100%, #0d3a2a 0%, rgba(13,58,42,0) 50%),
+        linear-gradient(160deg, var(--ink-800) 0%, var(--ink-900) 100%);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.24);
+      isolation: isolate;
+    }
+    /* faint dotted grid + hero copy hint so the widget reads as an overlay on a real page */
+    .frame::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 22px 22px;
+      z-index: 0;
+    }
+    .hero-hint {
+      position: absolute; top: 44px; left: 36px; right: 120px; z-index: 1;
+    }
+    .hero-hint .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+      color: var(--green-light);
+      background: rgba(46,176,122,0.12);
+      border: 1px solid rgba(46,176,122,0.3);
+      padding: 6px 12px; border-radius: 999px; margin-bottom: 16px;
+    }
+    .hero-hint h2 { color: #fff; font-size: 30px; font-weight: 800; line-height: 1.1; letter-spacing: -0.6px; }
+    .hero-hint h2 span { color: var(--green-light); }
+    .hero-hint p { color: rgba(255,255,255,0.5); font-size: 13px; margin-top: 12px; line-height: 1.5; max-width: 240px; }
+
+    /* ─────────────────────────────────────────────
+       FLOATING LAUNCHER (state 1)
+    ───────────────────────────────────────────── */
+    .launcher {
+      position: absolute; bottom: 28px; right: 28px; z-index: 6;
+      width: 64px; height: 64px; border-radius: 50%;
+      background: var(--grad-brand);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; cursor: pointer;
+      box-shadow: 0 10px 28px rgba(0,144,55,0.5), 0 2px 6px rgba(0,0,0,0.2);
+      animation: launcher-bob 4s ease-in-out infinite;
+    }
+    /* two radar pulse rings */
+    .launcher::before, .launcher::after {
+      content: ""; position: absolute; inset: 0; border-radius: 50%;
+      border: 2px solid var(--green-light);
+      animation: pulse-ring 2.6s ease-out infinite;
+    }
+    .launcher::after { animation-delay: 1.3s; }
+    .launcher svg { width: 28px; height: 28px; position: relative; z-index: 2; }
+    /* sparkle on launcher */
+    .launcher .spark {
+      position: absolute; top: -2px; right: -2px; z-index: 3;
+      width: 16px; height: 16px; color: #fff;
+      filter: drop-shadow(0 0 4px rgba(255,255,255,0.9));
+      animation: twinkle 2.2s ease-in-out infinite;
+    }
+    /* mini avatar peeking + online dot */
+    .launcher .peek {
+      position: absolute; bottom: -4px; left: -6px; z-index: 4;
+      width: 30px; height: 30px; border-radius: 50%;
+      border: 2px solid #fff; overflow: hidden;
+      background: var(--green-surface);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    }
+    .launcher .peek img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+    .online-dot {
+      position: absolute; bottom: -3px; left: 16px; z-index: 5;
+      width: 11px; height: 11px; border-radius: 50%;
+      background: #22c55e; border: 2px solid #fff;
+      box-shadow: 0 0 0 0 rgba(34,197,94,0.6);
+      animation: online-pulse 2s ease-out infinite;
+    }
+
+    /* teaser bubble */
+    .teaser {
+      position: absolute; bottom: 40px; right: 104px; z-index: 6;
+      width: 236px;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 18px 18px 4px 18px;
+      padding: 14px 16px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.28);
+      transform-origin: bottom right;
+      animation: teaser-in 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.4s both;
+    }
+    .teaser .row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .teaser .av { width: 26px; height: 26px; border-radius: 50%; overflow: hidden; background: var(--green-surface); flex-shrink: 0; }
+    .teaser .av img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+    .teaser .nm { font-size: 12px; font-weight: 700; color: var(--slate-800); }
+    .teaser .tag { font-size: 9px; font-weight: 700; color: var(--green); background: var(--green-surface); padding: 2px 7px; border-radius: 999px; }
+    .teaser p { font-size: 13px; line-height: 1.45; color: var(--slate-700); }
+    .teaser .close { position: absolute; top: 8px; right: 8px; width: 18px; height: 18px; border-radius: 50%; background: var(--slate-100); border: none; color: var(--slate-500); font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+    /* ─────────────────────────────────────────────
+       CHAT PANEL (shared shell for states 2-4)
+    ───────────────────────────────────────────── */
+    .panel {
+      position: absolute; bottom: 24px; right: 24px; z-index: 5;
+      width: 388px; height: 664px;
+      background: var(--white);
+      border-radius: 26px;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.4), 0 4px 14px rgba(0,0,0,0.2);
+      transform-origin: bottom right;
+      animation: panel-in 0.55s cubic-bezier(0.34,1.4,0.5,1) both;
+    }
+
+    /* animated aurora header */
+    .p-header {
+      position: relative;
+      padding: 20px 18px 22px;
+      color: #fff;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #2eb07a 0%, #009037 60%, #007a2f 100%);
+    }
+    .p-header .aurora {
+      position: absolute; inset: -40% -20%;
+      background:
+        radial-gradient(closest-side, rgba(120,255,190,0.55), transparent 70%),
+        radial-gradient(closest-side, rgba(16,185,129,0.5), transparent 70%),
+        radial-gradient(closest-side, rgba(255,255,255,0.35), transparent 70%);
+      background-size: 55% 60%, 50% 55%, 40% 45%;
+      background-position: 10% 20%, 80% 70%, 50% 100%;
+      background-repeat: no-repeat;
+      filter: blur(14px);
+      animation: aurora 9s ease-in-out infinite alternate;
+      z-index: 0;
+    }
+    .p-header .h-top { position: relative; z-index: 1; display: flex; align-items: center; gap: 12px; }
+    .p-avatar {
+      width: 46px; height: 46px; border-radius: 50%; overflow: hidden; flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,0.85);
+      background: var(--green-surface);
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.18), 0 0 18px 2px var(--green-glow);
+      animation: ring-glow 3s ease-in-out infinite;
+    }
+    .p-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+    .h-meta { flex: 1; min-width: 0; }
+    .h-meta .nm { font-size: 16px; font-weight: 700; letter-spacing: -0.2px; display: flex; align-items: center; gap: 7px; }
+    .h-meta .badge-ai {
+      font-size: 9px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 999px;
+      background: rgba(255,255,255,0.22);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.35);
+    }
+    .h-meta .status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.85); margin-top: 3px; }
+    .h-meta .status .dot { width: 7px; height: 7px; border-radius: 50%; background: #7dffb0; box-shadow: 0 0 6px #7dffb0; }
+    .h-actions { position: relative; z-index: 1; display: flex; gap: 6px; }
+    .h-btn { width: 32px; height: 32px; border-radius: 50%; border: none; cursor: pointer; background: rgba(255,255,255,0.18); color: #fff; display: flex; align-items: center; justify-content: center; }
+    .h-btn:hover { background: rgba(255,255,255,0.3); }
+    .h-btn svg { width: 17px; height: 17px; }
+
+    /* ── PANEL BODY: conversation list (state 2) ── */
+    .p-body { flex: 1; overflow-y: auto; background: var(--slate-50); scrollbar-width: none; }
+    .p-body::-webkit-scrollbar { display: none; }
+    .list-head { font-size: 11px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: var(--slate-400); padding: 18px 18px 8px; }
+    .conv {
+      display: flex; align-items: center; gap: 12px;
+      background: #fff; margin: 0 14px 10px; padding: 13px 14px;
+      border-radius: 16px; border: 1px solid var(--slate-100);
+      box-shadow: 0 1px 3px rgba(15,23,42,0.04);
+      cursor: pointer; transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+      animation: rise 0.5s ease both;
+    }
+    .conv:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,144,55,0.12); border-color: rgba(46,176,122,0.4); }
+    .conv .cav { width: 44px; height: 44px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: var(--green-surface); position: relative; }
+    .conv .cav img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+    .conv .cav .odot { position: absolute; bottom: 1px; right: 1px; width: 11px; height: 11px; border-radius: 50%; background: #22c55e; border: 2px solid #fff; }
+    .conv .cbody { flex: 1; min-width: 0; }
+    .conv .cbody .r1 { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+    .conv .cbody .cnm { font-size: 14px; font-weight: 700; color: var(--slate-800); }
+    .conv .cbody .ctime { font-size: 11px; color: var(--slate-400); flex-shrink: 0; }
+    .conv .cbody .cmsg { font-size: 12.5px; color: var(--slate-500); margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .conv .unread { width: 20px; height: 20px; border-radius: 50%; background: var(--green); color: #fff; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+    /* ── PANEL FOOTER ── */
+    .p-footer { flex-shrink: 0; background: #fff; border-top: 1px solid var(--slate-100); padding: 14px 16px 12px; }
+    .btn-newconv {
+      position: relative; overflow: hidden;
+      width: 100%; height: 52px; border: none; border-radius: 14px; cursor: pointer;
+      background: var(--grad-brand); color: #fff; font-family: inherit;
+      font-size: 15px; font-weight: 700; letter-spacing: -0.1px;
+      display: flex; align-items: center; justify-content: center; gap: 9px;
+      box-shadow: 0 6px 18px rgba(0,144,55,0.4);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn-newconv:hover { box-shadow: 0 10px 26px rgba(0,144,55,0.5); }
+    .btn-newconv:active { transform: scale(0.985); }
+    .btn-newconv svg { width: 18px; height: 18px; }
+    /* shimmer sweep */
+    .btn-newconv::after {
+      content: ""; position: absolute; top: 0; left: -60%; width: 45%; height: 100%;
+      background: linear-gradient(100deg, transparent, rgba(255,255,255,0.45), transparent);
+      transform: skewX(-18deg);
+      animation: shimmer 3.4s ease-in-out infinite;
+    }
+    .powered { display: flex; align-items: center; justify-content: center; gap: 7px; margin-top: 11px; font-size: 11px; color: var(--slate-400); font-weight: 500; }
+    .powered b { color: var(--slate-600); font-weight: 700; }
+    .powered .mark {
+      width: 18px; height: 18px; border-radius: 5px; background: var(--grad-brand);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 10px var(--green-glow);
+      animation: mark-glow 2.6s ease-in-out infinite;
+    }
+    .powered .mark svg { width: 11px; height: 11px; color: #fff; }
+
+    /* ─────────────────────────────────────────────
+       ACTIVE CHAT (state 3)
+    ───────────────────────────────────────────── */
+    .chat-body {
+      flex: 1; overflow-y: auto; padding: 18px 16px 8px;
+      background:
+        radial-gradient(120% 60% at 50% 0%, #f0fdf6 0%, rgba(240,253,246,0) 45%),
+        var(--slate-50);
+      display: flex; flex-direction: column; gap: 12px;
+      scrollbar-width: none;
+    }
+    .chat-body::-webkit-scrollbar { display: none; }
+    .daystamp { align-self: center; font-size: 11px; color: var(--slate-400); background: var(--slate-100); padding: 4px 12px; border-radius: 999px; margin: 2px 0 4px; }
+    .msg { max-width: 78%; display: flex; gap: 8px; align-items: flex-end; animation: msg-in 0.5s cubic-bezier(0.22,1,0.36,1) both; }
+    .msg .mav { width: 26px; height: 26px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: var(--green-surface); }
+    .msg .mav img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+    .bubble { padding: 11px 14px; font-size: 14px; line-height: 1.45; }
+    .msg.ai { align-self: flex-start; }
+    .msg.ai .bubble {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--slate-200);
+      color: var(--slate-800);
+      border-radius: 4px 16px 16px 16px;
+      box-shadow: 0 2px 8px rgba(15,23,42,0.05);
+    }
+    .msg.user { align-self: flex-end; }
+    .msg.user .bubble {
+      background: var(--grad-brand); color: #fff;
+      border-radius: 16px 16px 4px 16px;
+      box-shadow: 0 4px 12px rgba(0,144,55,0.28);
+    }
+    .msg:nth-child(2) { animation-delay: 0.05s; }
+    .msg:nth-child(3) { animation-delay: 0.15s; }
+    .msg:nth-child(4) { animation-delay: 0.28s; }
+    .msg:nth-child(5) { animation-delay: 0.42s; }
+
+    /* typing indicator */
+    .typing { align-self: flex-start; display: flex; gap: 8px; align-items: flex-end; animation: msg-in 0.5s ease 0.5s both; }
+    .typing .mav { width: 26px; height: 26px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: var(--green-surface); }
+    .typing .mav img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+    .typing .dots { background: rgba(255,255,255,0.85); backdrop-filter: blur(8px); border: 1px solid var(--slate-200); border-radius: 4px 14px 14px 14px; padding: 13px 15px; display: flex; gap: 5px; }
+    .typing .dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--slate-400); display: block; animation: bounce 1.3s ease-in-out infinite; }
+    .typing .dots i:nth-child(2) { animation-delay: 0.18s; }
+    .typing .dots i:nth-child(3) { animation-delay: 0.36s; }
+
+    /* quick-reply chips */
+    .chips { flex-shrink: 0; display: flex; gap: 8px; padding: 10px 16px; overflow-x: auto; background: var(--slate-50); scrollbar-width: none; }
+    .chips::-webkit-scrollbar { display: none; }
+    .chip {
+      flex-shrink: 0; white-space: nowrap; cursor: pointer;
+      font-size: 13px; font-weight: 600; color: var(--green-dark);
+      background: #fff; border: 1.5px solid rgba(46,176,122,0.4);
+      padding: 9px 14px; border-radius: 999px;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+    .chip:hover { background: var(--green-surface); transform: translateY(-1px); }
+
+    /* input bar */
+    .chat-input { flex-shrink: 0; background: #fff; border-top: 1px solid var(--slate-100); padding: 12px 14px 14px; display: flex; align-items: center; gap: 10px; }
+    .chat-input .field {
+      flex: 1; height: 46px; border-radius: 999px; background: var(--slate-50);
+      border: 1.5px solid var(--slate-200); padding: 0 16px;
+      font-size: 14px; color: var(--slate-500); display: flex; align-items: center;
+    }
+    .chat-input .plus { width: 40px; height: 40px; border-radius: 50%; background: var(--slate-100); border: none; color: var(--slate-500); flex-shrink: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .chat-input .plus svg { width: 20px; height: 20px; }
+    .chat-input .send {
+      width: 46px; height: 46px; border-radius: 50%; border: none; flex-shrink: 0; cursor: pointer;
+      background: var(--grad-brand); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 14px rgba(0,144,55,0.4);
+      transition: transform 0.15s ease;
+    }
+    .chat-input .send:hover { transform: scale(1.06); }
+    .chat-input .send svg { width: 20px; height: 20px; }
+
+    /* ─────────────────────────────────────────────
+       WELCOME STATE (state 4)
+    ───────────────────────────────────────────── */
+    .welcome-body {
+      flex: 1; overflow-y: auto; scrollbar-width: none;
+      background:
+        radial-gradient(120% 55% at 50% 0%, #e9fbf1 0%, rgba(233,251,241,0) 55%),
+        var(--slate-50);
+      padding: 8px 20px 20px; text-align: center;
+    }
+    .welcome-body::-webkit-scrollbar { display: none; }
+    .wc-hero { position: relative; padding: 26px 0 14px; display: flex; flex-direction: column; align-items: center; }
+    .wc-avatar {
+      position: relative; z-index: 2;
+      width: 96px; height: 96px; border-radius: 50%; overflow: hidden;
+      border: 3px solid #fff;
+      background: var(--green-surface);
+      box-shadow: 0 0 0 6px rgba(46,176,122,0.14), 0 8px 26px rgba(0,144,55,0.3);
+      animation: float 5s ease-in-out infinite;
+    }
+    .wc-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+    /* glow halo behind avatar */
+    .wc-hero .halo {
+      position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+      width: 150px; height: 150px; border-radius: 50%; z-index: 0;
+      background: radial-gradient(closest-side, rgba(46,176,122,0.4), transparent 70%);
+      filter: blur(6px);
+      animation: halo-breathe 4s ease-in-out infinite;
+    }
+    /* sparkles */
+    .sparkle { position: absolute; z-index: 3; color: var(--green-light); filter: drop-shadow(0 0 4px rgba(46,176,122,0.7)); animation: twinkle 2.4s ease-in-out infinite; }
+    .sparkle.s1 { top: 14px; left: 128px; width: 16px; height: 16px; animation-delay: 0s; }
+    .sparkle.s2 { top: 62px; left: 300px; width: 12px; height: 12px; animation-delay: 0.6s; }
+    .sparkle.s3 { top: 96px; left: 96px;  width: 10px; height: 10px; animation-delay: 1.1s; }
+    .sparkle.s4 { top: 30px; left: 250px; width: 13px; height: 13px; animation-delay: 1.6s; }
+    .wc-hero h3 { position: relative; z-index: 2; margin-top: 18px; font-size: 22px; font-weight: 800; color: var(--slate-900); letter-spacing: -0.4px; }
+    .wc-hero .sub { position: relative; z-index: 2; margin-top: 6px; font-size: 13.5px; color: var(--slate-500); line-height: 1.5; max-width: 280px; }
+    .wc-hero .badge-ai {
+      display: inline-flex; align-items: center; gap: 5px; margin-top: 12px;
+      font-size: 10px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;
+      color: var(--green-dark); background: var(--green-surface);
+      padding: 5px 11px; border-radius: 999px;
+    }
+    .wc-suggest { margin-top: 22px; display: flex; flex-direction: column; gap: 10px; text-align: left; }
+    .sugg {
+      display: flex; align-items: center; gap: 12px; cursor: pointer;
+      background: #fff; border: 1px solid var(--slate-200); border-radius: 16px; padding: 14px 15px;
+      box-shadow: 0 1px 3px rgba(15,23,42,0.04);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+      animation: rise 0.5s ease both;
+    }
+    .sugg:nth-child(2) { animation-delay: 0.08s; }
+    .sugg:nth-child(3) { animation-delay: 0.16s; }
+    .sugg:nth-child(4) { animation-delay: 0.24s; }
+    .sugg:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,144,55,0.12); border-color: rgba(46,176,122,0.45); }
+    .sugg .ic { width: 40px; height: 40px; border-radius: 12px; background: var(--green-bg); color: var(--green); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .sugg .ic svg { width: 20px; height: 20px; }
+    .sugg .tx { flex: 1; }
+    .sugg .tx .t1 { font-size: 14px; font-weight: 700; color: var(--slate-800); }
+    .sugg .tx .t2 { font-size: 12px; color: var(--slate-500); margin-top: 2px; }
+    .sugg .arw { color: var(--slate-300); }
+
+    /* ─────────────────────────────────────────────
+       KEYFRAMES
+    ───────────────────────────────────────────── */
+    @keyframes launcher-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    @keyframes pulse-ring { 0% { transform: scale(1); opacity: 0.7; } 100% { transform: scale(1.9); opacity: 0; } }
+    @keyframes online-pulse { 0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.55); } 100% { box-shadow: 0 0 0 8px rgba(34,197,94,0); } }
+    @keyframes twinkle { 0%,100% { opacity: 0.35; transform: scale(0.8) rotate(0deg); } 50% { opacity: 1; transform: scale(1.15) rotate(15deg); } }
+    @keyframes teaser-in { 0% { opacity: 0; transform: translateY(14px) scale(0.85); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes panel-in { 0% { opacity: 0; transform: translateY(28px) scale(0.9); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes aurora {
+      0%   { background-position: 10% 20%, 80% 70%, 50% 100%; }
+      50%  { background-position: 40% 60%, 55% 30%, 20% 80%; }
+      100% { background-position: 75% 30%, 20% 80%, 70% 60%; }
+    }
+    @keyframes ring-glow {
+      0%,100% { box-shadow: 0 0 0 3px rgba(255,255,255,0.18), 0 0 14px 1px var(--green-glow); }
+      50%     { box-shadow: 0 0 0 3px rgba(255,255,255,0.28), 0 0 26px 5px var(--green-glow); }
+    }
+    @keyframes shimmer { 0% { left: -60%; } 55%,100% { left: 130%; } }
+    @keyframes mark-glow { 0%,100% { box-shadow: 0 0 6px var(--green-glow); } 50% { box-shadow: 0 0 16px 2px var(--green-glow); } }
+    @keyframes rise { 0% { opacity: 0; transform: translateY(12px); } 100% { opacity: 1; transform: translateY(0); } }
+    @keyframes msg-in { 0% { opacity: 0; transform: translateY(12px) scale(0.96); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes bounce { 0%,60%,100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-6px); opacity: 1; } }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    @keyframes halo-breathe { 0%,100% { opacity: 0.55; transform: translateX(-50%) scale(1); } 50% { opacity: 0.9; transform: translateX(-50%) scale(1.12); } }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="flow-label">InCard · Landing Widget</div>
+  <div class="flow-title">AI Agent — Ms. Thuy · Redesign</div>
+
+  <div class="flow-screens">
+
+    <!-- ══════════ STATE 1: FLOATING LAUNCHER + TEASER ══════════ -->
+    <div class="stage">
+      <div class="frame">
+        <div class="hero-hint">
+          <span class="pill">◆ Agentic AI Platform</span>
+          <h2>Turn every tap into a <span>conversation.</span></h2>
+          <p>Your smart digital card, backed by an AI agent that answers for you 24/7.</p>
+        </div>
+
+        <!-- teaser bubble -->
+        <div class="teaser">
+          <button class="close" aria-label="Dismiss">✕</button>
+          <div class="row">
+            <div class="av"><img src="ai-inka.png" alt="Ms. Thuy" /></div>
+            <span class="nm">Ms. Thuy</span>
+            <span class="tag">AI</span>
+          </div>
+          <p>Chào bạn 👋 Mình là Ms. Thuy — cần InCard hỗ trợ gì không?</p>
+        </div>
+
+        <!-- launcher -->
+        <div class="launcher">
+          <svg class="spark" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.6 5.2L19 9l-5.4 1.8L12 16l-1.6-5.2L5 9l5.4-1.8z"/></svg>
+          <div class="peek"><img src="ai-inka.png" alt="" /></div>
+          <span class="online-dot"></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        </div>
+      </div>
+      <div class="screen-name">1 · Floating launcher + teaser</div>
+    </div>
+
+    <!-- ══════════ STATE 2: PANEL — CONVERSATION LIST ══════════ -->
+    <div class="stage">
+      <div class="frame">
+        <div class="panel">
+          <div class="p-header">
+            <div class="aurora"></div>
+            <div class="h-top">
+              <div class="p-avatar"><img src="ai-inka.png" alt="Ms. Thuy" /></div>
+              <div class="h-meta">
+                <div class="nm">Ms. Thuy <span class="badge-ai">AI Agent</span></div>
+                <div class="status"><span class="dot"></span> Online · replies instantly</div>
+              </div>
+              <div class="h-actions">
+                <button class="h-btn" aria-label="Minimize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+                <button class="h-btn" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-body">
+            <div class="list-head">Recent conversations</div>
+
+            <div class="conv">
+              <div class="cav"><img src="ai-inka.png" alt="" /><span class="odot"></span></div>
+              <div class="cbody">
+                <div class="r1"><span class="cnm">Ms. Thuy AI Agent</span><span class="ctime">21 days ago</span></div>
+                <div class="cmsg">Thanks for connecting! Let me know if…</div>
+              </div>
+            </div>
+
+            <div class="conv">
+              <div class="cav"><img src="ai-inka.png" alt="" /><span class="odot"></span></div>
+              <div class="cbody">
+                <div class="r1"><span class="cnm">Pricing &amp; plans</span><span class="ctime">2h ago</span></div>
+                <div class="cmsg">The Pro plan includes unlimited NFC taps…</div>
+              </div>
+              <span class="unread">2</span>
+            </div>
+
+            <div class="conv">
+              <div class="cav"><img src="ai-inka.png" alt="" /><span class="odot"></span></div>
+              <div class="cbody">
+                <div class="r1"><span class="cnm">How NFC cards work</span><span class="ctime">1d ago</span></div>
+                <div class="cmsg">Just tap the card on any phone — no app…</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-footer">
+            <button class="btn-newconv">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+              Start a New Conversation
+            </button>
+            <div class="powered">
+              <span class="mark"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.6 5.2L19 9l-5.4 1.8L12 16l-1.6-5.2L5 9l5.4-1.8z"/></svg></span>
+              Powered by <b>InCard Agentic AI Platform</b>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-name">2 · Chat panel (conversation list)</div>
+    </div>
+
+    <!-- ══════════ STATE 3: ACTIVE CHAT ══════════ -->
+    <div class="stage">
+      <div class="frame">
+        <div class="panel">
+          <div class="p-header">
+            <div class="aurora"></div>
+            <div class="h-top">
+              <button class="h-btn" aria-label="Back" style="background:rgba(255,255,255,0.18);margin-right:2px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+              <div class="p-avatar"><img src="ai-inka.png" alt="Ms. Thuy" /></div>
+              <div class="h-meta">
+                <div class="nm">Ms. Thuy <span class="badge-ai">AI Agent</span></div>
+                <div class="status"><span class="dot"></span> Typing…</div>
+              </div>
+              <div class="h-actions">
+                <button class="h-btn" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-body">
+            <div class="daystamp">Today</div>
+
+            <div class="msg ai">
+              <div class="mav"><img src="ai-inka.png" alt="" /></div>
+              <div class="bubble">Hi! I'm Ms. Thuy, your InCard AI agent 🌱 How can I help you today?</div>
+            </div>
+
+            <div class="msg user">
+              <div class="bubble">How do I share my card without an app?</div>
+            </div>
+
+            <div class="msg ai">
+              <div class="mav"><img src="ai-inka.png" alt="" /></div>
+              <div class="bubble">Just tap your InCard on any smartphone, or let them scan your QR — your profile opens instantly in the browser. No app needed! 📲</div>
+            </div>
+
+            <div class="msg user">
+              <div class="bubble">Nice. Can I track who viewed it?</div>
+            </div>
+
+            <div class="typing">
+              <div class="mav"><img src="ai-inka.png" alt="" /></div>
+              <div class="dots"><i></i><i></i><i></i></div>
+            </div>
+          </div>
+
+          <div class="chips">
+            <div class="chip">💳 Pricing &amp; plans</div>
+            <div class="chip">📶 What is NFC?</div>
+            <div class="chip">📊 Track views</div>
+            <div class="chip">🎨 Customize card</div>
+          </div>
+
+          <div class="chat-input">
+            <button class="plus" aria-label="Add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+            <div class="field">Type a message…</div>
+            <button class="send" aria-label="Send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></button>
+          </div>
+        </div>
+      </div>
+      <div class="screen-name">3 · Active chat</div>
+    </div>
+
+    <!-- ══════════ STATE 4: WELCOME ══════════ -->
+    <div class="stage">
+      <div class="frame">
+        <div class="panel">
+          <div class="p-header">
+            <div class="aurora"></div>
+            <div class="h-top">
+              <div class="p-avatar"><img src="ai-inka.png" alt="Ms. Thuy" /></div>
+              <div class="h-meta">
+                <div class="nm">Ms. Thuy <span class="badge-ai">AI Agent</span></div>
+                <div class="status"><span class="dot"></span> Online now</div>
+              </div>
+              <div class="h-actions">
+                <button class="h-btn" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="welcome-body">
+            <div class="wc-hero">
+              <div class="halo"></div>
+              <svg class="sparkle s1" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.6 5.2L19 9l-5.4 1.8L12 16l-1.6-5.2L5 9l5.4-1.8z"/></svg>
+              <svg class="sparkle s2" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.6 5.2L19 9l-5.4 1.8L12 16l-1.6-5.2L5 9l5.4-1.8z"/></svg>
+              <svg class="sparkle s3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.6 5.2L19 9l-5.4 1.8L12 16l-1.6-5.2L5 9l5.4-1.8z"/></svg>
+              <svg class="sparkle s4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.6 5.2L19 9l-5.4 1.8L12 16l-1.6-5.2L5 9l5.4-1.8z"/></svg>
+              <div class="wc-avatar"><img src="ai-inka.png" alt="Ms. Thuy" /></div>
+              <div class="badge-ai">✦ Agentic AI</div>
+              <h3>Hi, I'm Ms. Thuy 👋</h3>
+              <p class="sub">Ask me anything about InCard — pricing, NFC cards, or setting up your digital profile.</p>
+            </div>
+
+            <div class="wc-suggest">
+              <div class="sugg">
+                <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+                <div class="tx"><div class="t1">Pricing &amp; plans</div><div class="t2">Compare Free, Pro &amp; Business</div></div>
+                <span class="arw"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+              </div>
+              <div class="sugg">
+                <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg></span>
+                <div class="tx"><div class="t1">How NFC cards work</div><div class="t2">Tap to share — no app required</div></div>
+                <span class="arw"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+              </div>
+              <div class="sugg">
+                <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></span>
+                <div class="tx"><div class="t1">Track profile views</div><div class="t2">See who tapped your card</div></div>
+                <span class="arw"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-input">
+            <button class="plus" aria-label="Add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+            <div class="field">Ask Ms. Thuy anything…</div>
+            <button class="send" aria-label="Send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></button>
+          </div>
+        </div>
+      </div>
+      <div class="screen-name">4 · Welcome / first open</div>
+    </div>
+
+  </div>
+</body>
+</html>

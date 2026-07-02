@@ -1,0 +1,197 @@
+- generic [active] [ref=e1]:
+  - link "Chọn concept" [ref=e2] [cursor=pointer]:
+    - /url: ai-agent-choose.html
+    - img [ref=e3]
+    - text: Chọn concept
+  - generic [ref=e5]: InCard · Concept C
+  - generic [ref=e6]: Hybrid — Friendly launcher × Ambient orb chat
+  - generic [ref=e7]:
+    - generic [ref=e8]:
+      - generic [ref=e9]:
+        - generic [ref=e10]:
+          - generic [ref=e13]:
+            - generic [ref=e14]:
+              - generic [ref=e15]: InCard
+              - generic [ref=e16]: Tap. Share. Connect.
+            - generic [ref=e17]:
+              - link "Solutions ▼" [ref=e18] [cursor=pointer]:
+                - /url: "#"
+                - text: Solutions
+                - generic [ref=e19]: ▼
+              - link "Features ▼" [ref=e20] [cursor=pointer]:
+                - /url: "#"
+                - text: Features
+                - generic [ref=e21]: ▼
+              - link "Pricing" [ref=e22] [cursor=pointer]:
+                - /url: "#"
+              - link "About Us" [ref=e23] [cursor=pointer]:
+                - /url: "#"
+              - button "Get Your Card" [ref=e24] [cursor=pointer]
+          - generic [ref=e25]:
+            - generic [ref=e26]: ✦ AI-Powered Support ✦
+            - heading "Hi! I'm Your AI Success Agent 👋" [level=1] [ref=e27]:
+              - text: Hi! I'm Your
+              - text: AI Success Agent 👋
+            - paragraph [ref=e28]: Get instant answers about our digital cards, NFC, or how InCard helps you connect and grow.
+            - list [ref=e29]:
+              - listitem [ref=e30]:
+                - img [ref=e32]
+                - text: 24/7 Instant Responses
+              - listitem [ref=e34]:
+                - img [ref=e36]
+                - text: Personalized Recommendations
+              - listitem [ref=e38]:
+                - img [ref=e40]
+                - text: Set Up Your Card in Minutes
+          - generic [ref=e42]:
+            - generic [ref=e43]:
+              - img [ref=e45]
+              - generic [ref=e48]: 50k+
+              - generic [ref=e49]: Cards Created
+            - generic [ref=e50]:
+              - img [ref=e52]
+              - generic [ref=e55]: 120+
+              - generic [ref=e56]: Countries
+            - generic [ref=e57]:
+              - img [ref=e59]
+              - generic [ref=e62]: 98%
+              - generic [ref=e63]: Satisfaction
+          - generic [ref=e64]:
+            - generic [ref=e65]: Trusted by innovative companies worldwide
+            - generic [ref=e66]:
+              - generic [ref=e67]: aws
+              - generic [ref=e68]: Microsoft
+              - generic [ref=e69]: DHL
+              - generic [ref=e70]: Canon
+              - generic [ref=e71]: Panasonic
+        - generic [ref=e72]:
+          - generic [ref=e73]:
+            - button "✕" [ref=e74] [cursor=pointer]
+            - img [ref=e75]
+            - generic [ref=e77]: Hi there! 👋
+            - paragraph [ref=e78]: Need help with your digital card?
+            - button "Chat with me" [ref=e79] [cursor=pointer]:
+              - text: Chat with me
+              - img [ref=e80]
+          - generic [ref=e82] [cursor=pointer]:
+            - img "AI Success Agent" [ref=e85]
+            - generic [ref=e87]: 👋
+      - generic [ref=e88]: Before open (chat closed)
+      - generic [ref=e89]: Eye-catching · Friendly · Humanized · Non-intrusive
+    - generic [ref=e90]:
+      - generic [ref=e91]:
+        - generic [ref=e92]:
+          - generic [ref=e94]:
+            - generic [ref=e95]:
+              - generic [ref=e96]: InCard
+              - generic [ref=e97]: Tap. Share. Connect.
+            - generic [ref=e98]:
+              - link "Solutions ▼" [ref=e99] [cursor=pointer]:
+                - /url: "#"
+                - text: Solutions
+                - generic [ref=e100]: ▼
+              - link "Features ▼" [ref=e101] [cursor=pointer]:
+                - /url: "#"
+                - text: Features
+                - generic [ref=e102]: ▼
+          - generic [ref=e103]:
+            - generic [ref=e104]: ✦ AI-Powered Support ✦
+            - heading "Hi! I'm Your AI Success Agent" [level=1] [ref=e105]:
+              - text: Hi! I'm Your
+              - text: AI Success Agent
+            - paragraph [ref=e106]: Get instant answers about our digital cards, NFC, or how InCard helps you connect and grow.
+            - list [ref=e107]:
+              - listitem [ref=e108]:
+                - img [ref=e110]
+                - text: 24/7 Instant Responses
+              - listitem [ref=e112]:
+                - img [ref=e114]
+                - text: Personalized Recommendations
+          - generic [ref=e116]:
+            - generic [ref=e117]:
+              - generic [ref=e118]: 50k+
+              - generic [ref=e119]: Cards Created
+            - generic [ref=e120]:
+              - generic [ref=e121]: 120+
+              - generic [ref=e122]: Countries
+        - generic [ref=e123]:
+          - generic [ref=e124]:
+            - generic [ref=e125]: Inka · InCard AI
+            - button [ref=e127] [cursor=pointer]:
+              - img [ref=e128]
+          - generic [ref=e130]:
+            - img "Inka" [ref=e138]
+            - heading "Hey — I'm Inka ✦" [level=2] [ref=e139]
+            - paragraph [ref=e140]: Your InCard guide. Ask me anything, or tap a suggestion to begin.
+          - generic [ref=e141]:
+            - generic [ref=e142]: Try asking
+            - generic [ref=e143] [cursor=pointer]:
+              - img [ref=e145]
+              - text: How does a tap actually work?
+              - img [ref=e148]
+            - generic [ref=e150] [cursor=pointer]:
+              - img [ref=e152]
+              - text: See pricing & plans
+              - img [ref=e155]
+            - generic [ref=e157] [cursor=pointer]:
+              - img [ref=e159]
+              - text: Track who viewed my card
+              - img [ref=e162]
+          - generic [ref=e164]:
+            - generic [ref=e165]:
+              - generic [ref=e166]: Ask Inka anything…
+              - button [ref=e167] [cursor=pointer]:
+                - img [ref=e168]
+              - button [ref=e171] [cursor=pointer]:
+                - img [ref=e172]
+            - generic [ref=e174]: Powered by InCard AI Platform
+      - generic [ref=e175]: After open (welcome)
+      - generic [ref=e176]: Orb-centric · Glassmorphic · Voice-ready · Distinctive
+    - generic [ref=e177]:
+      - generic [ref=e178]:
+        - generic [ref=e179]:
+          - generic [ref=e181]:
+            - generic [ref=e182]:
+              - generic [ref=e183]: InCard
+              - generic [ref=e184]: Tap. Share. Connect.
+            - generic [ref=e185]:
+              - link "Solutions ▼" [ref=e186] [cursor=pointer]:
+                - /url: "#"
+                - text: Solutions
+                - generic [ref=e187]: ▼
+              - link "Features ▼" [ref=e188] [cursor=pointer]:
+                - /url: "#"
+                - text: Features
+                - generic [ref=e189]: ▼
+          - generic [ref=e190]:
+            - generic [ref=e191]: ✦ AI-Powered Support ✦
+            - heading "Hi! I'm Your AI Success Agent" [level=1] [ref=e192]:
+              - text: Hi! I'm Your
+              - text: AI Success Agent
+            - paragraph [ref=e193]: Get instant answers about our digital cards, NFC, or how InCard helps you connect and grow.
+        - generic [ref=e194]:
+          - generic [ref=e195]:
+            - img "Inka" [ref=e200]
+            - generic [ref=e201]:
+              - generic [ref=e202]: Inka
+              - generic [ref=e203]: Typing…
+            - button [ref=e205] [cursor=pointer]:
+              - img [ref=e206]
+          - generic [ref=e208]:
+            - generic [ref=e209]: Hey! I'm Inka ✦ Ask me anything about InCard — or tap your card to any phone to see the magic. 📲
+            - generic [ref=e210]: How do I share my card without an app?
+            - generic [ref=e211]: Just tap it to any phone — your profile opens in the browser instantly. No app, no friction. QR works too.
+            - generic [ref=e212]: Can I see who viewed it?
+          - generic [ref=e217]:
+            - generic [ref=e218] [cursor=pointer]: 💳 Pricing
+            - generic [ref=e219] [cursor=pointer]: 🎨 Customize card
+          - generic [ref=e220]:
+            - generic [ref=e221]:
+              - generic [ref=e222]: Message Inka…
+              - button [ref=e223] [cursor=pointer]:
+                - img [ref=e224]
+              - button [ref=e227] [cursor=pointer]:
+                - img [ref=e228]
+            - generic [ref=e230]: Powered by InCard AI Platform
+      - generic [ref=e231]: Active chat
+      - generic [ref=e232]: Glass bubbles · Typing · Ambient mascot

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard — Chọn AI Agent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:      #060f0c;
+      --card:    #0b1a14;
+      --line:    rgba(255,255,255,0.08);
+      --green:   #10b981;
+      --mint:    #6ee7b7;
+      --cyan:    #22d3ee;
+      --lime:    #bef264;
+      --hi:      #eafff5;
+      --mid:     rgba(226,255,242,0.66);
+      --lo:      rgba(200,240,222,0.4);
+      --disp:    'Space Grotesk', sans-serif;
+      --body:    'Inter', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--body); color: var(--hi); min-height: 100vh;
+      background:
+        radial-gradient(80% 60% at 20% -5%, rgba(16,185,129,0.14), transparent 55%),
+        radial-gradient(70% 60% at 100% 105%, rgba(34,211,238,0.1), transparent 55%),
+        var(--bg);
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 56px 32px 64px;
+    }
+
+    header { text-align: center; max-width: 640px; margin-bottom: 44px; }
+    .eyebrow { font-family: var(--disp); font-size: 12px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; color: var(--mint); margin-bottom: 14px; }
+    h1 { font-family: var(--disp); font-size: 40px; font-weight: 700; letter-spacing: -1px; line-height: 1.1; }
+    h1 .g { background: linear-gradient(92deg, var(--mint), var(--cyan) 55%, var(--lime)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    header p { font-size: 16px; color: var(--mid); line-height: 1.55; margin-top: 16px; }
+
+    .grid { display: flex; gap: 24px; align-items: stretch; flex-wrap: nowrap; justify-content: center; width: 100%; max-width: 1320px; }
+
+    .opt {
+      flex: 1 1 0; min-width: 0; max-width: 440px; text-decoration: none; color: inherit;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.008));
+      border: 1px solid var(--line); border-radius: 24px; overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: transform 0.25s cubic-bezier(0.34,1.4,0.5,1), border-color 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
+    }
+    .opt::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; z-index: 3; }
+    .opt.a::before { background: linear-gradient(90deg, #2eb07a, #10b981, #34d399); }
+    .opt.b::before { background: linear-gradient(90deg, #6ee7b7, #22d3ee, #bef264); }
+    .opt.c::before { background: linear-gradient(90deg, #2eb07a, #10b981, #22d3ee); }
+    .opt:hover { transform: translateY(-6px); box-shadow: 0 30px 70px rgba(0,0,0,0.5); }
+    .opt.a:hover { border-color: rgba(16,185,129,0.5); }
+    .opt.b:hover { border-color: rgba(110,231,183,0.5); }
+    .opt.c:hover { border-color: rgba(52,211,153,0.5); }
+
+    /* live preview window */
+    .preview { position: relative; height: 320px; overflow: hidden; background: #05141d; border-bottom: 1px solid var(--line); }
+    .preview iframe { position: absolute; top: 0; left: 0; width: 1780px; height: 940px; border: 0; transform: scale(0.44) translate(-780px, -128px); transform-origin: top left; pointer-events: none; }
+    .preview .veil { position: absolute; inset: 0; z-index: 2; background: linear-gradient(180deg, transparent 60%, rgba(6,15,12,0.35)); pointer-events: none; }
+    .preview .open-tag {
+      position: absolute; bottom: 12px; right: 12px; z-index: 3;
+      font-family: var(--disp); font-size: 11px; font-weight: 500; letter-spacing: 0.5px;
+      color: var(--hi); background: rgba(6,15,12,0.7); backdrop-filter: blur(8px);
+      border: 1px solid var(--line); border-radius: 999px; padding: 7px 13px;
+      display: inline-flex; align-items: center; gap: 6px;
+      opacity: 0; transform: translateY(4px); transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .opt:hover .open-tag { opacity: 1; transform: translateY(0); }
+
+    .body { padding: 24px 24px 26px; display: flex; flex-direction: column; flex: 1; }
+    .opt-label { font-family: var(--disp); font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
+    .opt.a .opt-label { color: var(--mint); }
+    .opt.b .opt-label { color: var(--cyan); }
+    .opt.c .opt-label { color: #34d399; }
+    .opt h2 { font-family: var(--disp); font-size: 24px; font-weight: 700; letter-spacing: -0.4px; margin: 8px 0 6px; }
+    .opt .desc { font-size: 14px; color: var(--mid); line-height: 1.55; }
+    .traits { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 22px; }
+    .traits span { font-size: 12px; font-weight: 500; color: var(--mid); background: rgba(255,255,255,0.05); border: 1px solid var(--line); padding: 6px 11px; border-radius: 999px; }
+
+    .cta {
+      margin-top: auto; height: 50px; border-radius: 13px; display: flex; align-items: center; justify-content: center; gap: 9px;
+      font-family: var(--disp); font-size: 15px; font-weight: 600; letter-spacing: 0.2px; color: #04120c;
+    }
+    .opt.a .cta { background: linear-gradient(135deg, #2eb07a, #10b981); box-shadow: 0 8px 22px rgba(16,185,129,0.4); }
+    .opt.b .cta { background: linear-gradient(135deg, #6ee7b7, #22d3ee); box-shadow: 0 8px 22px rgba(34,211,238,0.35); }
+    .opt.c .cta { background: linear-gradient(135deg, #2eb07a, #22d3ee); box-shadow: 0 8px 22px rgba(34,211,238,0.32); }
+    .cta svg { width: 18px; height: 18px; transition: transform 0.2s ease; }
+    .opt:hover .cta svg { transform: translateX(4px); }
+
+    footer { margin-top: 40px; font-size: 13px; color: var(--lo); text-align: center; }
+    footer b { color: var(--mid); font-family: var(--disp); font-weight: 500; }
+
+    @media (max-width: 1180px) { .grid { flex-wrap: wrap; } .opt { flex: 1 1 460px; max-width: 500px; } h1 { font-size: 32px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="eyebrow">✦ InCard AI Agent</div>
+    <h1>Chọn <span class="g">phong cách</span> AI Agent</h1>
+    <p>Ba hướng thiết kế cho trợ lý AI trên landing page. Xem preview trực tiếp bên dưới, bấm vào để mở bản đầy đủ (3 màn hình) trong tab mới.</p>
+  </header>
+
+  <div class="grid">
+
+    <!-- OPTION 1 -->
+    <a class="opt a" href="inapps-ai-agent.html" target="_blank" rel="noopener">
+      <div class="preview">
+        <iframe src="inapps-ai-agent.html" title="Option 1 preview" scrolling="no" loading="lazy"></iframe>
+        <span class="veil"></span>
+        <span class="open-tag">Mở bản đầy đủ ↗</span>
+      </div>
+      <div class="body">
+        <div class="opt-label">Option 1</div>
+        <h2>AI Success Agent</h2>
+        <div class="desc">Panel chat thân thiện, header xanh, avatar và action cards rõ ràng. Quen thuộc, dễ dùng, hợp số đông.</div>
+        <div class="traits"><span>Friendly</span><span>Action cards</span><span>Avatar</span><span>Conversion-focused</span></div>
+        <div class="cta">Xem Option 1
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </div>
+      </div>
+    </a>
+
+    <!-- OPTION 2 -->
+    <a class="opt b" href="ai-agent-concept-b.html" target="_blank" rel="noopener">
+      <div class="preview">
+        <iframe src="ai-agent-concept-b.html" title="Option 2 preview" scrolling="no" loading="lazy"></iframe>
+        <span class="veil"></span>
+        <span class="open-tag">Mở bản đầy đủ ↗</span>
+      </div>
+      <div class="body">
+        <div class="opt-label">Option 2</div>
+        <h2>Signal — Ambient AI Orb</h2>
+        <div class="desc">Quả cầu AI holographic phát sóng NFC, kính obsidian, waveform và input voice-first. Futuristic, khác biệt, AI-native.</div>
+        <div class="traits"><span>Holographic orb</span><span>Glassmorphism</span><span>Voice-ready</span><span>Distinctive</span></div>
+        <div class="cta">Xem Option 2
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </div>
+      </div>
+    </a>
+
+    <!-- OPTION 3 -->
+    <a class="opt c" href="ai-agent-concept-c.html" target="_blank" rel="noopener">
+      <div class="preview">
+        <iframe src="ai-agent-concept-c.html" title="Option 3 preview" scrolling="no" loading="lazy"></iframe>
+        <span class="veil"></span>
+        <span class="open-tag">Mở bản đầy đủ ↗</span>
+      </div>
+      <div class="body">
+        <div class="opt-label">Option 3</div>
+        <h2>Hybrid — Friendly × Orb</h2>
+        <div class="desc">Launcher thân thiện, dễ tiếp cận của Option 1 — nhưng khi mở chat thì chuyển sang kính obsidian &amp; quả cầu AI holographic của Option 2. Quen thuộc lúc chào, khác biệt lúc trò chuyện.</div>
+        <div class="traits"><span>Friendly launcher</span><span>Glass chat</span><span>Holographic orb</span><span>Best of both</span></div>
+        <div class="cta">Xem Option 3
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </div>
+      </div>
+    </a>
+
+  </div>
+
+  <footer>Preview hiển thị màn hình <b>Open</b> của mỗi option · bấm card để xem đủ 3 trạng thái</footer>
+</body>
+</html>
