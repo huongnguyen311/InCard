@@ -148,6 +148,116 @@
 
 
 /* ═══════════════════════════════════════════════════
+   1b. DARK THEME (token remap)
+   ───────────────────────────────────────────────────
+   Components consume raw scale tokens directly, so dark
+   mode is a pure token override — no markup changes.
+   - Auto:   follows OS unless [data-theme="light"] forces light
+   - Manual: [data-theme="dark"] on <html> forces dark (toggle)
+   NOTE: keep the two blocks below identical — plain CSS
+   can't share a declaration block across a media query.
+   ═══════════════════════════════════════════════════ */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    /* Brand — brightened for contrast on dark surfaces */
+    --green:          #22c55e;
+    --green-dark:     #16a34a;
+    --green-light:    #34d17f;
+    --green-bg:       rgba(34, 197, 94, 0.14);
+    --green-surface:  rgba(34, 197, 94, 0.16);
+    --emerald:        #34d399;
+    --emerald-bg:     rgba(52, 211, 153, 0.14);
+
+    /* Slate ramp inverted: text lightens, surfaces darken */
+    --slate-900:  #f8fafc;
+    --slate-800:  #e2e8f0;
+    --slate-700:  #cbd5e1;
+    --slate-600:  #94a3b8;
+    --slate-500:  #7c8aa0;
+    --slate-400:  #64748b;
+    --slate-300:  #475569;
+    --slate-200:  #334155;
+    --slate-100:  #1e293b;
+    --slate-50:   #172033;
+
+    /* Neutrals */
+    --white:      #1e293b;
+    --gray-bg:    #0f172a;
+
+    /* Status tints → translucent so they sit on dark */
+    --red-600:    #f87171;
+    --red-100:    rgba(248, 113, 113, 0.16);
+    --amber-500:  #fbbf24;
+    --amber-100:  rgba(251, 191, 36, 0.16);
+    --blue-600:   #60a5fa;
+    --blue-100:   rgba(96, 165, 250, 0.16);
+    --orange:     #fb7250;
+    --orange-light:#fca589;
+    --orange-bg:  rgba(251, 114, 80, 0.14);
+
+    /* Shadows deepen for dark backgrounds */
+    --shadow-xs:  0 1px 3px rgba(0, 0, 0, 0.40);
+    --shadow-sm:  0 2px 8px rgba(0, 0, 0, 0.40);
+    --shadow-md:  0 4px 16px rgba(0, 0, 0, 0.45);
+    --shadow-lg:  0 8px 24px rgba(0, 0, 0, 0.50);
+    --shadow-xl:  0 12px 32px rgba(0, 0, 0, 0.55);
+    --shadow-frame: 0 4px 24px rgba(0, 0, 0, 0.60);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Brand — brightened for contrast on dark surfaces */
+  --green:          #22c55e;
+  --green-dark:     #16a34a;
+  --green-light:    #34d17f;
+  --green-bg:       rgba(34, 197, 94, 0.14);
+  --green-surface:  rgba(34, 197, 94, 0.16);
+  --emerald:        #34d399;
+  --emerald-bg:     rgba(52, 211, 153, 0.14);
+
+  /* Slate ramp inverted: text lightens, surfaces darken */
+  --slate-900:  #f8fafc;
+  --slate-800:  #e2e8f0;
+  --slate-700:  #cbd5e1;
+  --slate-600:  #94a3b8;
+  --slate-500:  #7c8aa0;
+  --slate-400:  #64748b;
+  --slate-300:  #475569;
+  --slate-200:  #334155;
+  --slate-100:  #1e293b;
+  --slate-50:   #172033;
+
+  /* Neutrals */
+  --white:      #1e293b;
+  --gray-bg:    #0f172a;
+
+  /* Status tints → translucent so they sit on dark */
+  --red-600:    #f87171;
+  --red-100:    rgba(248, 113, 113, 0.16);
+  --amber-500:  #fbbf24;
+  --amber-100:  rgba(251, 191, 36, 0.16);
+  --blue-600:   #60a5fa;
+  --blue-100:   rgba(96, 165, 250, 0.16);
+  --orange:     #fb7250;
+  --orange-light:#fca589;
+  --orange-bg:  rgba(251, 114, 80, 0.14);
+
+  /* Shadows deepen for dark backgrounds */
+  --shadow-xs:  0 1px 3px rgba(0, 0, 0, 0.40);
+  --shadow-sm:  0 2px 8px rgba(0, 0, 0, 0.40);
+  --shadow-md:  0 4px 16px rgba(0, 0, 0, 0.45);
+  --shadow-lg:  0 8px 24px rgba(0, 0, 0, 0.50);
+  --shadow-xl:  0 12px 32px rgba(0, 0, 0, 0.55);
+  --shadow-frame: 0 4px 24px rgba(0, 0, 0, 0.60);
+}
+
+
+/* ═══════════════════════════════════════════════════
    2. TYPOGRAPHY SCALE
    ═══════════════════════════════════════════════════ */
 
