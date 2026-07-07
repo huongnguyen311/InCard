@@ -411,6 +411,38 @@
       padding: 11px 13px;
     }
 
+    /* Suggested follow-up questions under an AI answer */
+    .suggestions {
+      align-self: flex-start;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-width: 85%;
+      margin: -4px 0 2px 38px;
+    }
+
+    .suggest-q {
+      text-align: left;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--green);
+      background: none;
+      border: none;
+      padding: 3px 0;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .suggest-q::before { content: "💬"; font-size: 12px; }
+
+    .suggest-q:hover { text-decoration: underline; opacity: 0.85; }
+
+    .widget-wrapper.theme-dark .suggest-q { color: #34d17f; }
+
     .typing {
       display: flex;
       gap: 6px;
@@ -993,6 +1025,11 @@
             <div class="bubble">Tap your card or scan QR code — instant browser share! No app needed 📲</div>
           </div>
 
+          <div class="suggestions">
+            <button class="suggest-q" onclick="sendSuggested('How do I customize my card?')">How do I customize my card?</button>
+            <button class="suggest-q" onclick="sendSuggested('Can I track who viewed my card?')">Can I track who viewed my card?</button>
+          </div>
+
           <div class="msg user">
             <div class="bubble">Can I track who viewed it?</div>
           </div>
@@ -1169,6 +1206,14 @@
       }
     }
 
+    // Click a suggested question → send it as a user message; AI replies (with new suggestions)
+    function sendSuggested(text) {
+      const active = document.querySelector('.state.active');
+      const state = active ? active.id.replace('state-', '') : 'chat';
+      addMessage(state, text, true);
+      setTimeout(() => addMessage(state, '✨ Great question! Let me walk you through that.', false), 800);
+    }
+
     function sendChatMessage() {
       const input = document.getElementById('msg-input-chat');
       const text = input.value.trim();
@@ -1196,9 +1241,31 @@
       }, 300);
     }
 
+    // 2 follow-up suggestions shown under the latest AI answer
+    const SUGGESTED_QUESTIONS = [
+      'How do I customize my card?',
+      'Can I track who viewed my card?'
+    ];
+
+    function appendSuggestions(pBody) {
+      const wrap = document.createElement('div');
+      wrap.className = 'suggestions';
+      SUGGESTED_QUESTIONS.forEach(q => {
+        const b = document.createElement('button');
+        b.className = 'suggest-q';
+        b.textContent = q;
+        b.addEventListener('click', () => sendSuggested(q));
+        wrap.appendChild(b);
+      });
+      pBody.appendChild(wrap);
+    }
+
     function addMessage(state, text, isUser) {
       const pBody = document.querySelector(`#state-${state} .p-body`);
       if (!pBody) return;
+
+      // Clear previous suggestions — they belong only under the latest AI answer
+      pBody.querySelectorAll('.suggestions').forEach(s => s.remove());
 
       const msgDiv = document.createElement('div');
       msgDiv.className = isUser ? 'msg user' : 'msg';
@@ -1219,6 +1286,10 @@
       msgDiv.appendChild(bubble);
 
       pBody.appendChild(msgDiv);
+
+      // Show follow-up suggestions after an AI answer
+      if (!isUser) appendSuggestions(pBody);
+
       pBody.scrollTop = pBody.scrollHeight;
     }
 
