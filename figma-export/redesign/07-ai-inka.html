@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard Redesign — 07 Trợ lý Inka</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../button-system.css" />
+  <link rel="stylesheet" href="../design-system.css" />
+  <link rel="stylesheet" href="rd.css" />
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <style>
+    .av.tb { background: rgba(59,130,246,0.12); color: var(--blue-500); }
+    .av.tg { background: var(--gold-bg); color: var(--gold); }
+    .av.ts { background: var(--slate-100); color: var(--slate-700); }
+
+    /* Inka app bar */
+    .ibar .tb { flex: 1; display: flex; align-items: center; gap: 8px; justify-content: center; }
+    .ibar .tb img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; object-position: top; background: var(--green-50); border: 1.5px solid var(--green-100); }
+    .ibar .tb b { font-size: 16px; display: block; line-height: 1.1; }
+    .ibar .tb span { font-size: 11.5px; color: var(--green); font-weight: 600; display: flex; align-items: center; gap: 4px; }
+    .ibar .tb span::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+    .modes { padding: 0 20px 10px; flex-shrink: 0; }
+
+    /* welcome */
+    .wel { text-align: center; padding: 18px 8px 0; }
+    .wel .ava { width: 84px; height: 84px; border-radius: 50%; object-fit: cover; object-position: top; background: var(--green-50); border: 3px solid var(--white); box-shadow: 0 0 0 2px var(--green-200), var(--shadow-md); margin: 0 auto 14px; display: block; }
+    .wel h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.2px; }
+    .wel p { font-size: 14px; color: var(--slate-500); line-height: 1.5; margin: 6px auto 0; max-width: 300px; }
+    .sg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 22px; }
+    .sg { background: var(--white); border: 1px solid var(--slate-200); border-radius: 16px; padding: 14px; text-align: left; box-shadow: var(--shadow-sm); }
+    .sg .ic { width: 36px; height: 36px; border-radius: 11px; background: var(--green-50); color: var(--green); display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+    .sg .ic i, .sg .ic svg { width: 19px; height: 19px; }
+    .sg b { display: block; font-size: 14px; }
+    .sg span { display: block; font-size: 12.5px; color: var(--slate-500); margin-top: 3px; line-height: 1.4; }
+    .scope { display: flex; gap: 8px; align-items: center; justify-content: center; margin-top: 16px; font-size: 12px; color: var(--slate-500); }
+    .scope i, .scope svg { width: 14px; height: 14px; color: var(--green); }
+
+    /* chat */
+    .day { text-align: center; font-size: 12px; color: var(--slate-400); font-weight: 600; margin: 6px 0 14px; }
+    .msg { display: flex; gap: 8px; margin-bottom: 14px; align-items: flex-end; }
+    .msg .ia { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; object-position: top; background: var(--green-50); flex-shrink: 0; border: 1.5px solid var(--green-100); }
+    .bub { max-width: 282px; padding: 11px 14px; border-radius: 18px 18px 18px 6px; background: var(--white); border: 1px solid var(--slate-200); font-size: 14.5px; line-height: 1.45; color: var(--slate-800); }
+    .msg.me { justify-content: flex-end; }
+    .msg.me .bub { background: linear-gradient(135deg, var(--green-light), var(--green)); color: var(--white); border: 0; border-radius: 18px 18px 6px 18px; }
+    .msg .col-w { display: flex; flex-direction: column; gap: 8px; min-width: 0; flex: 1; }
+    .follow { display: flex; gap: 6px; flex-wrap: wrap; margin: -2px 0 12px 36px; }
+    .follow .chip { height: 32px; font-size: 12.5px; }
+
+    /* task confirmation card */
+    .tcard { background: var(--white); border: 1.5px solid var(--green-200); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-sm); }
+    .tcard .th { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--green-50); font-size: 13px; font-weight: 700; color: var(--green-dark); }
+    .tcard .th i, .tcard .th svg { width: 16px; height: 16px; }
+    .tcard .th .badge { margin-left: auto; }
+    .tcard .tt { padding: 12px 14px 4px; font-size: 16px; font-weight: 700; }
+    .kv { display: flex; align-items: center; gap: 10px; padding: 7px 14px; font-size: 13.5px; color: var(--slate-700); }
+    .kv i, .kv svg { width: 17px; height: 17px; color: var(--slate-400); flex-shrink: 0; }
+    .kv .av { width: 22px; height: 22px; font-size: 9px; }
+    .tcard .btn-row { padding: 10px 14px 14px; }
+    .tcard .btn-row .btn { height: 40px; font-size: 14px; }
+
+    /* profile results */
+    .crit { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .crit .badge { height: 24px; }
+    .rc { background: var(--white); border: 1px solid var(--slate-200); border-radius: 16px; padding: 12px; box-shadow: var(--shadow-sm); }
+    .rc .hd { display: flex; gap: 10px; align-items: center; }
+    .rc .hd b { font-size: 14.5px; display: block; }
+    .rc .hd .f1 span { font-size: 12.5px; color: var(--slate-500); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .rc .why { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0; }
+    .rc .btn-row .btn { height: 36px; font-size: 13.5px; border-radius: 10px; }
+
+    /* composer */
+    .composer { flex-shrink: 0; padding: 8px 16px 4px; background: var(--white); border-top: 1px solid var(--slate-100); }
+    .cbox { display: flex; align-items: center; gap: 4px; min-height: 52px; border-radius: 26px; border: 1.5px solid var(--slate-200); background: var(--slate-50); padding: 0 6px 0 16px; }
+    .cbox .ph { flex: 1; font-size: 15px; color: var(--slate-400); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cbox.off { background: var(--slate-100); }
+    .cbox.off .ph { color: var(--slate-500); font-size: 13.5px; }
+    .cbtn { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--slate-600); flex-shrink: 0; }
+    .cbtn i, .cbtn svg { width: 20px; height: 20px; }
+    .cbtn.send { background: linear-gradient(135deg, var(--green-light), var(--green)); color: var(--white); box-shadow: 0 3px 10px rgba(0,144,55,0.3); }
+    .cbtn.send.dis { opacity: .35; box-shadow: none; }
+    .cmeta { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--slate-400); padding: 6px 6px 0; }
+    .cmeta b { color: var(--slate-600); }
+
+    /* voice */
+    .listen { flex-shrink: 0; background: var(--white); border-top: 1px solid var(--slate-100); padding: 14px 16px 6px; border-radius: 24px 24px 0 0; box-shadow: 0 -8px 24px rgba(15,23,42,0.06); }
+    .listen .live { font-size: 15px; color: var(--slate-800); line-height: 1.45; min-height: 44px; padding: 0 4px; }
+    .listen .live span { color: var(--slate-400); }
+    .listen .ctl { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+    .wave { display: flex; align-items: center; gap: 3px; height: 40px; }
+    .wave span { width: 4px; border-radius: 2px; background: var(--green); animation: wv 1s ease-in-out infinite; }
+    @keyframes wv { 0%,100% { transform: scaleY(.55); } 50% { transform: scaleY(1); } }
+    .listen .lab { text-align: center; font-size: 12.5px; font-weight: 700; color: var(--green); margin-top: 2px; }
+    .stopbtn { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--green-light), var(--green)); color: var(--white); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 8px var(--green-bg), var(--shadow-green); }
+    .stopbtn i, .stopbtn svg { width: 22px; height: 22px; fill: currentColor; }
+
+    /* history drawer */
+    .drawer { position: absolute; left: 0; top: 0; bottom: 0; width: 316px; z-index: 22; background: var(--white); border-radius: 0 28px 28px 0; display: flex; flex-direction: column; box-shadow: var(--shadow-lg); }
+    .drawer .dh { display: flex; align-items: center; justify-content: space-between; padding: 6px 12px 6px 20px; }
+    .drawer .dh h3 { font-size: 20px; font-weight: 800; }
+    .hitem { display: flex; align-items: center; gap: 10px; padding: 10px 8px 10px 12px; border-radius: 12px; position: relative; }
+    .hitem.on { background: var(--green-50); }
+    .hitem .hi { width: 32px; height: 32px; border-radius: 10px; background: var(--slate-100); color: var(--slate-600); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .hitem.on .hi { background: var(--white); color: var(--green); }
+    .hitem .hi i, .hitem .hi svg { width: 16px; height: 16px; }
+    .hitem .tx { flex: 1; min-width: 0; }
+    .hitem .tx b { display: block; font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hitem .tx span { font-size: 12px; color: var(--slate-400); }
+    .hitem .more { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--slate-500); }
+    .hitem .more.act { background: var(--white); box-shadow: var(--shadow-sm); color: var(--ink); }
+    .hitem .more i, .hitem .more svg { width: 18px; height: 18px; }
+    .menu { position: absolute; right: 8px; top: 50px; z-index: 3; width: 168px; background: var(--white); border-radius: 14px; box-shadow: var(--shadow-lg); border: 1px solid var(--slate-200); padding: 6px; }
+    .menu a { display: flex; align-items: center; gap: 10px; height: 42px; padding: 0 10px; border-radius: 9px; font-size: 14px; font-weight: 600; color: var(--slate-700); }
+    .menu a i, .menu a svg { width: 18px; height: 18px; }
+    .menu a.red { color: var(--red-600); }
+    .menu a + a { margin-top: 2px; }
+    .menu a.hl { background: var(--slate-50); }
+    .dlabel { font-size: 12px; font-weight: 700; color: var(--slate-400); letter-spacing: .8px; text-transform: uppercase; margin: 16px 12px 6px; }
+
+    /* limit */
+    .limit { background: var(--white); border: 1px solid var(--gold-border); border-radius: 18px; padding: 18px; text-align: center; box-shadow: var(--shadow-md); margin-top: 6px; }
+    .limit .ava { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; object-position: top; background: var(--green-50); margin: 0 auto 10px; display: block; border: 2px solid var(--gold-border); }
+    .limit h3 { font-size: 17px; font-weight: 700; }
+    .limit p { font-size: 13.5px; color: var(--slate-500); line-height: 1.5; margin-top: 6px; }
+    .limit .progress { margin: 14px 0 6px; }
+    .limit .progress > span { background: linear-gradient(90deg, var(--gold-border), var(--gold)); }
+    .limit .perks { text-align: left; margin: 14px 0 16px; display: flex; flex-direction: column; gap: 8px; }
+    .limit .perks div { display: flex; gap: 8px; align-items: center; font-size: 13.5px; color: var(--slate-700); }
+    .limit .perks i, .limit .perks svg { width: 16px; height: 16px; color: var(--gold); }
+
+    /* contacts bg (AI filter) */
+    .ct { display: flex; align-items: center; gap: 12px; padding: 11px 0; }
+    .ct + .ct { border-top: 1px solid var(--slate-100); }
+    .ct b { font-size: 14.5px; display: block; }
+    .ct span { font-size: 12.5px; color: var(--slate-500); }
+    .counter { position: absolute; right: 14px; bottom: 10px; font-size: 12px; font-weight: 700; color: var(--slate-400); }
+    .counter b { color: var(--green); }
+    .qask { display: flex; align-items: center; gap: 12px; padding: 11px 4px; font-size: 14px; color: var(--slate-700); }
+    .qask + .qask { border-top: 1px solid var(--slate-100); }
+    .qask i, .qask svg { width: 18px; height: 18px; color: var(--green); flex-shrink: 0; }
+    .qask i.go { color: var(--slate-400); margin-left: auto; width: 16px; height: 16px; }
+
+    /* multi-card: card selector + picker */
+    .mini-sw { display: inline-block; width: 16px; height: 11px; border-radius: 3px; background: var(--card-graphite); flex-shrink: 0; }
+    .mini-sw.pearl { background: var(--card-pearl); border: 1px solid var(--slate-200); }
+    .mini-sw.stone { background: var(--card-stone); border: 1px solid var(--slate-200); }
+    .sg .by-card { display: inline-flex; align-items: center; gap: 5px; height: 24px; margin-top: 8px; padding: 0 6px 0 6px; border-radius: 12px; background: var(--green-50); border: 1px solid var(--green-100); color: var(--green-dark); font-size: 11.5px; font-weight: 700; }
+    .sg .by-card i, .sg .by-card svg { width: 13px; height: 13px; }
+    .via { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; color: var(--slate-500); font-weight: 600; }
+    .via i, .via svg { width: 13px; height: 13px; }
+    .pick { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1.5px solid var(--slate-200); border-radius: 14px; margin-bottom: 10px; }
+    .pick .sw { width: 52px; height: 34px; border-radius: 7px; background: var(--card-graphite); flex-shrink: 0; }
+    .pick .sw.pearl { background: var(--card-pearl); border: 1px solid var(--slate-200); }
+    .pick .sw.stone { background: var(--card-stone); border: 1px solid var(--slate-200); }
+    .pick .f1 { min-width: 0; }
+    .pick b { display: block; font-size: 14.5px; margin-bottom: 2px; }
+    .pick .f1 span { display: block; font-size: 12.5px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pick .f1 span.lk { color: var(--green-dark); font-weight: 600; }
+    .pick > i, .pick > svg { width: 18px; height: 18px; color: var(--slate-400); flex-shrink: 0; }
+    .pick-note { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px; color: var(--slate-500); margin-top: 4px; }
+    .pick-note i, .pick-note svg { width: 14px; height: 14px; }
+    /* A4 · Sửa công việc (sheet) */
+    .ts-2 { display: flex; gap: 12px; }
+    .ts-2 .field { flex: 1; min-width: 0; }
+    .ts-chips .chip { height: 34px; font-size: 13px; padding: 0 12px; }
+  </style>
+</head>
+<body class="rd-canvas">
+  <div class="rd-head">
+    <a class="back" href="index.html">← Tất cả flow</a>
+    <h1>07 · Trợ lý Inka (AI)</h1>
+    <p>Gộp “Trợ lý Inka chatbot” và “Tìm hồ sơ” (nút AI cam) thành một màn Inka duy nhất với 2 chế độ chuyển nhanh. Vào từ nút “Hỏi Inka” ở Trang chủ hoặc pill AI trong ô tìm kiếm. Nút giọng nói nằm trong ô nhập, không còn FAB đè lên nội dung. Toàn bộ chữ tiếng Việt.</p>
+  </div>
+
+  <!-- ===================== A. Inka unified ===================== -->
+  <section class="rd-section">
+    <h2>A · Màn Inka hợp nhất</h2>
+    <div class="rd-row">
+
+      <!-- A1 welcome assistant -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ibar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="tb"><img src="assets/inka.png" alt="" /><div><b>Inka</b><span>Trợ lý AI</span></div></div>
+            <button class="icon-btn" style="margin-right:-8px"><i data-lucide="history"></i></button>
+            <button class="icon-btn"><i data-lucide="square-pen"></i></button>
+          </div>
+          <div class="modes"><div class="seg"><a class="on"><i data-lucide="sparkles"></i>Trợ lý</a><a><i data-lucide="user-round-search"></i>Tìm hồ sơ</a></div></div>
+          <div class="body">
+            <div class="scroll">
+              <div class="wel">
+                <img class="ava" src="assets/inka.png" alt="Inka" />
+                <h2>Chào Minh Anh, mình là Inka</h2>
+                <p>Mình giúp bạn đặt lịch, nhắc việc, soạn email và quản lý danh bạ. Bạn cần gì hôm nay?</p>
+              </div>
+              <div class="sg-grid">
+                <div class="sg"><span class="ic"><i data-lucide="calendar-plus"></i></span><b>Tạo lịch hẹn</b><span>“Hẹn chị Phương 10h thứ Hai”</span></div>
+                <div class="sg"><span class="ic"><i data-lucide="bell-ring"></i></span><b>Nhắc việc &amp; follow-up</b><span>“Nhắc tôi gọi anh Tâm chiều mai”</span></div>
+                <div class="sg"><span class="ic"><i data-lucide="mail-plus"></i></span><b>Soạn email</b><span>“Viết email cảm ơn sau buổi gặp”</span></div>
+                <div class="sg"><span class="ic"><i data-lucide="trending-up"></i></span><b>Phân tích thị trường</b><span>“Xu hướng ngành bán lẻ 2026”</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="composer">
+            <div class="cbox"><span class="ph">Hỏi Inka bất cứ điều gì…</span><span class="cbtn"><i data-lucide="mic"></i></span><span class="cbtn send dis"><i data-lucide="arrow-up"></i></span></div>
+            <div class="cmeta"><span>Inka có thể nhầm, hãy kiểm tra lại.</span><span>Còn <b>7/10</b> lượt hôm nay</span></div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">A1 · Inka · Chào mừng (Trợ lý)<small>Bỏ ảnh infographic tiếng Anh và đoạn giới thiệu dài; thay bằng 4 gợi ý có ví dụ câu hỏi, chạm là gửi. Mic nằm trong ô nhập. Hiện số lượt còn lại để người dùng không bị bất ngờ.</small></div>
+      </div>
+
+      <!-- A2 welcome profile search -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ibar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="tb"><img src="assets/inka.png" alt="" /><div><b>Inka</b><span>Trợ lý AI</span></div></div>
+            <button class="icon-btn" style="margin-right:-8px"><i data-lucide="history"></i></button>
+            <button class="icon-btn"><i data-lucide="square-pen"></i></button>
+          </div>
+          <div class="modes"><div class="seg"><a><i data-lucide="sparkles"></i>Trợ lý</a><a class="on"><i data-lucide="user-round-search"></i>Tìm hồ sơ</a></div></div>
+          <div class="body">
+            <div class="scroll">
+              <div class="wel">
+                <img class="ava" src="assets/inka.png" alt="Inka" />
+                <h2>Bạn muốn gặp ai?</h2>
+                <p>Mô tả người bạn cần tìm, Inka sẽ lọc trong cộng đồng InCard và giải thích vì sao họ phù hợp.</p>
+              </div>
+              <div class="sg-grid">
+                <div class="sg"><span class="ic"><i data-lucide="crown"></i></span><b>Người ra quyết định</b><span>Founder, CEO, Giám đốc</span></div>
+                <div class="sg"><span class="ic"><i data-lucide="handshake"></i></span><b>Đối tác kinh doanh</b><span>BD, Sales, Đại lý</span></div>
+                <div class="sg"><span class="ic"><i data-lucide="layers"></i></span><b>Cùng ngành với tôi</b><span>Công nghệ · Tư vấn</span><span class="by-card"><i class="mini-sw"></i>Theo thẻ: Thẻ InApps<i data-lucide="chevron-down"></i></span></div>
+                <div class="sg"><span class="ic"><i data-lucide="map-pin"></i></span><b>Gần tôi</b><span>Đang ở TP.HCM</span></div>
+              </div>
+              <div class="scope"><i data-lucide="shield-check"></i>Chỉ hiện hồ sơ đã bật chế độ công khai</div>
+            </div>
+          </div>
+          <div class="composer">
+            <div class="cbox"><span class="ph">VD: Giám đốc marketing ngành F&amp;B</span><span class="cbtn"><i data-lucide="mic"></i></span><span class="cbtn send dis"><i data-lucide="arrow-up"></i></span></div>
+            <div class="cmeta"><span>Kết quả dựa trên hồ sơ công khai</span><span>Còn <b>7/10</b> lượt hôm nay</span></div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">A2 · Inka · Chào mừng (Tìm hồ sơ)<small>“Tìm hồ sơ” không còn là màn riêng: chỉ là chế độ thứ hai của Inka, cùng ô nhập và lịch sử. Gợi ý dùng tiếng Việt thay cho chip viết hoa từng chữ; ô nhập có ví dụ cụ thể. Ngành nghề khác nhau theo từng thẻ, nên "Cùng ngành với tôi" có bộ chọn "Theo thẻ: Thẻ InApps ▾" — đổi sang Thẻ CLB Doanh nhân trẻ hoặc Thẻ Mentor khởi nghiệp thì ngành gợi ý đổi theo.</small></div>
+      </div>
+
+      <!-- A3 conversation -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ibar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="tb"><img src="assets/inka.png" alt="" /><div><b>Inka</b><span>Trợ lý AI</span></div></div>
+            <button class="icon-btn" style="margin-right:-8px"><i data-lucide="history"></i></button>
+            <button class="icon-btn"><i data-lucide="square-pen"></i></button>
+          </div>
+          <div class="modes"><div class="seg"><a class="on"><i data-lucide="sparkles"></i>Trợ lý</a><a><i data-lucide="user-round-search"></i>Tìm hồ sơ</a></div></div>
+          <div class="body">
+            <div class="scroll">
+              <div class="day">Hôm nay · 9:38</div>
+              <div class="msg me"><div class="bub">Nhắc tôi gọi anh Tâm 3h chiều mai</div></div>
+              <div class="msg">
+                <img class="ia" src="assets/inka.png" alt="" />
+                <div class="col-w">
+                  <div class="bub">Mình đã soạn sẵn nhắc việc. Bạn kiểm tra rồi bấm <b>Xác nhận</b> nhé:</div>
+                  <div class="tcard">
+                    <div class="th"><i data-lucide="list-checks"></i>Công việc mới<span class="badge gray">Chờ xác nhận</span></div>
+                    <div class="tt">Gọi điện cho anh Hồ Văn Tâm</div>
+                    <div class="kv"><i data-lucide="clock"></i>15:00 · Thứ Sáu, 13/11/2026</div>
+                    <div class="kv"><img class="av" src="https://i.pravatar.cc/150?img=68" alt="" />Hồ Văn Tâm · Founder, CEO – InApps Technology</div>
+                    <div class="kv"><i data-lucide="phone"></i>0903 556 781 (từ danh bạ)</div>
+                    <div class="kv"><i data-lucide="bell"></i>Nhắc trước 15 phút</div>
+                    <div class="btn-row"><button class="btn outline"><i data-lucide="pencil"></i>Sửa</button><button class="btn primary"><i data-lucide="check"></i>Xác nhận</button></div>
+                  </div>
+                </div>
+              </div>
+              <div class="follow"><span class="chip soft">Thêm ghi chú cuộc gọi</span><span class="chip soft">Soạn email cho anh Tâm</span></div>
+            </div>
+          </div>
+          <div class="composer">
+            <div class="cbox"><span class="ph">Hỏi Inka bất cứ điều gì…</span><span class="cbtn"><i data-lucide="mic"></i></span><span class="cbtn send dis"><i data-lucide="arrow-up"></i></span></div>
+            <div class="cmeta"><span>Inka có thể nhầm, hãy kiểm tra lại.</span><span>Còn <b>6/10</b> lượt hôm nay</span></div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">A3 · Trò chuyện · tạo nhắc việc<small>Inka không tự tạo ngay mà trả về thẻ xác nhận có đủ giờ, người liên hệ, nhắc trước; người dùng Sửa hoặc Xác nhận. Gợi ý bước tiếp theo giúp cuộc trò chuyện không bị cụt.</small></div>
+      </div>
+
+      <!-- A4 Edit task sheet -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ibar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="tb"><img src="assets/inka.png" alt="" /><div><b>Inka</b><span>Trợ lý AI</span></div></div>
+            <button class="icon-btn" style="margin-right:-8px"><i data-lucide="history"></i></button>
+            <button class="icon-btn"><i data-lucide="square-pen"></i></button>
+          </div>
+          <div class="body">
+            <div class="scroll">
+              <div class="day">Hôm nay · 9:38</div>
+              <div class="msg me"><div class="bub">Nhắc tôi gọi anh Tâm 3h chiều mai</div></div>
+              <div class="msg"><img class="ia" src="assets/inka.png" alt="" /><div class="col-w"><div class="bub">Mình đã soạn sẵn nhắc việc. Bạn kiểm tra rồi bấm <b>Xác nhận</b> nhé:</div></div></div>
+            </div>
+          </div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Sửa công việc</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <div class="field"><label>Nội dung</label><div class="input focus"><i data-lucide="list-checks"></i><span class="v">Gọi lại anh Tâm về báo giá thẻ NFC</span></div></div>
+            <div class="ts-2">
+              <div class="field"><label>Ngày</label><div class="input"><i data-lucide="calendar"></i><span class="v">Thứ Sáu, 13/11</span></div></div>
+              <div class="field"><label>Giờ</label><div class="input"><i data-lucide="clock"></i><span class="v">15:00</span></div></div>
+            </div>
+            <div class="field"><label>Nhắc trước</label>
+              <div class="chips ts-chips"><span class="chip">5 phút</span><span class="chip on">15 phút</span><span class="chip">30 phút</span><span class="chip">1 giờ</span></div>
+            </div>
+            <div class="field"><label>Liên quan tới</label><div class="input"><img class="av" src="https://i.pravatar.cc/150?img=68" alt="" style="width:26px;height:26px" /><span class="v">Hồ Văn Tâm</span><i data-lucide="chevron-down" style="margin-left:auto"></i></div></div>
+            <div class="btn-row mt8">
+              <button class="btn outline">Huỷ</button>
+              <button class="btn primary" style="flex:1.6">Lưu</button>
+            </div>
+          </div>
+        </div>
+        <div class="cap">A4 · Sửa công việc (sheet)<small>Mở từ nút "Sửa" trên thẻ nhắc việc ở A3. Mọi thông tin Inka đã hiểu (nội dung, ngày, giờ, nhắc trước, người liên quan) đều sửa được tại chỗ, không phải gõ lại câu lệnh. "Lưu" quay về A3 với thẻ đã cập nhật để bấm Xác nhận; "Huỷ" giữ nguyên bản Inka soạn.</small></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== B. Profile search results ===================== -->
+  <section class="rd-section">
+    <h2>B · Tìm hồ sơ bằng AI</h2>
+    <div class="rd-row">
+
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ibar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="tb"><img src="assets/inka.png" alt="" /><div><b>Inka</b><span>Trợ lý AI</span></div></div>
+            <button class="icon-btn" style="margin-right:-8px"><i data-lucide="history"></i></button>
+            <button class="icon-btn"><i data-lucide="square-pen"></i></button>
+          </div>
+          <div class="modes"><div class="seg"><a><i data-lucide="sparkles"></i>Trợ lý</a><a class="on"><i data-lucide="user-round-search"></i>Tìm hồ sơ</a></div></div>
+          <div class="body">
+            <div class="scroll">
+              <div class="day">Hôm nay · 10:05</div>
+              <div class="msg me"><div class="bub">Tìm 3 CEO ngành công nghệ ở HCM</div></div>
+              <div class="msg" style="align-items:flex-start">
+                <img class="ia" src="assets/inka.png" alt="" />
+                <div class="col-w">
+                  <div class="bub">Mình tìm được 3 người phù hợp nhất:
+                    <div class="crit"><span class="badge green"><i data-lucide="briefcase"></i>CEO</span><span class="badge green"><i data-lucide="layers"></i>Công nghệ</span><span class="badge green"><i data-lucide="map-pin"></i>TP.HCM</span></div>
+                  </div>
+                  <div class="rc">
+                    <div class="hd"><img class="av" src="https://i.pravatar.cc/150?img=68" alt="" /><div class="f1"><b>Hồ Văn Tâm</b><span>Founder, CEO · InApps Technology</span></div></div>
+                    <div class="why"><span class="badge green"><i data-lucide="sparkles"></i>Cùng ngành</span><span class="via"><i class="mini-sw"></i>Đã kết nối qua Thẻ InApps</span></div>
+                    <div class="btn-row"><button class="btn outline">Xem</button><button class="btn secondary"><i data-lucide="check"></i>Đã kết nối</button></div>
+                  </div>
+                  <div class="rc">
+                    <div class="hd"><span class="av tb">LN</span><div class="f1"><b>Lê Nhật Nam</b><span>CEO · ICTGO</span></div></div>
+                    <div class="why"><span class="badge green"><i data-lucide="target"></i>Đang tìm đối tác phần mềm</span></div>
+                    <div class="btn-row"><button class="btn outline">Xem</button><button class="btn primary"><i data-lucide="user-plus"></i>Kết nối</button></div>
+                  </div>
+                  <div class="rc">
+                    <div class="hd"><span class="av tg">QB</span><div class="f1"><b>Nguyễn Quốc Bảo</b><span>CEO · Saigon Tech Hub</span></div></div>
+                    <div class="why"><span class="badge gray"><i data-lucide="calendar"></i>Cùng dự sự kiện InCard Meetup</span></div>
+                    <div class="btn-row"><button class="btn outline">Xem</button><button class="btn primary"><i data-lucide="user-plus"></i>Kết nối</button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="composer">
+            <div class="cbox"><span class="ph">Thu hẹp kết quả, VD: “ở TP.HCM”</span><span class="cbtn"><i data-lucide="mic"></i></span><span class="cbtn send dis"><i data-lucide="arrow-up"></i></span></div>
+            <div class="cmeta"><span>Kết quả dựa trên hồ sơ công khai</span><span>Còn <b>5/10</b> lượt hôm nay</span></div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">B1 · Kết quả tìm hồ sơ<small>Mỗi kết quả là thẻ hồ sơ có lý do phù hợp và 2 hành động Xem / Kết nối ngay trong chat. Tiêu chí Inka hiểu được hiển thị bằng chip để người dùng biết AI đã hiểu đúng chưa. Bỏ nhãn “Today” tiếng Anh. Bấm "Kết nối" mở sheet B2 "Gửi thẻ nào?" để chọn thẻ gửi kèm lời mời; người đã kết nối hiện "Đã kết nối qua Thẻ …" (Hồ Văn Tâm khớp với Danh bạ 04).</small></div>
+      </div>
+
+      <!-- B2 card picker for connect -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ibar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="tb"><img src="assets/inka.png" alt="" /><div><b>Inka</b><span>Trợ lý AI</span></div></div>
+            <button class="icon-btn" style="margin-right:-8px"><i data-lucide="history"></i></button>
+            <button class="icon-btn"><i data-lucide="square-pen"></i></button>
+          </div>
+          <div class="modes"><div class="seg"><a><i data-lucide="sparkles"></i>Trợ lý</a><a class="on"><i data-lucide="user-round-search"></i>Tìm hồ sơ</a></div></div>
+          <div class="body"><div class="scroll"><div class="day">Hôm nay · 10:05</div><div class="msg me"><div class="bub">Tìm 3 CEO ngành công nghệ ở HCM</div></div></div></div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><div><h3>Gửi thẻ nào?</h3><p class="t-xs mt4">Gửi lời mời kết nối tới <b style="color:var(--ink)">Lê Nhật Nam</b> kèm thẻ bạn chọn</p></div><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <div class="pick" data-go="back|Đã gửi lời mời kết nối tới Lê Nhật Nam"><span class="sw"></span><div class="f1"><b>Nguyễn Minh Anh</b><span>Giám đốc kinh doanh · InApps Technology</span><span class="lk">incard.biz/minhanh</span></div><i data-lucide="chevron-right"></i></div>
+            <div class="pick" data-go="back|Đã gửi lời mời kết nối tới Lê Nhật Nam"><span class="sw pearl"></span><div class="f1"><b>Nguyễn Minh Anh</b><span>Phó Chủ tịch · CLB Doanh nhân trẻ Sài Gòn</span><span class="lk">incard.biz/minhanh/clb-dnt</span></div><i data-lucide="chevron-right"></i></div>
+            <div class="pick" data-go="back|Đã gửi lời mời kết nối tới Lê Nhật Nam"><span class="sw stone"></span><div class="f1"><b>Nguyễn Minh Anh</b><span>Diễn giả · Mentor khởi nghiệp</span><span class="lk">incard.biz/minhanh/mentor</span></div><i data-lucide="chevron-right"></i></div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">B2 · Gửi thẻ nào? (sheet)<small>Màn mới, mở từ nút "Kết nối" trên thẻ kết quả B1. Liệt kê cả 3 thẻ (màu thẻ, chức danh chính · công ty, link công khai), bấm một dòng là gửi lời mời kèm thẻ đó. Không có thẻ mặc định — lần nào cũng hỏi.</small></div>
+      </div>
+
+      <style>.sh-sec{font-size:13px;font-weight:700;color:var(--slate-700);margin:16px 0 10px}.chip.sel{background:var(--green-50);border-color:var(--green);color:var(--green-dark)}.chips.wrap{flex-wrap:wrap}</style>
+      <!-- B3 profile search filters (bổ sung từ screens/home/19-ai-search-filters) -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ibar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="tb"><img src="assets/inka.png" alt="" /><div><b>Inka</b><span>Trợ lý AI</span></div></div>
+            <button class="icon-btn" style="margin-right:-8px"><i data-lucide="history"></i></button>
+            <button class="icon-btn"><i data-lucide="square-pen"></i></button>
+          </div>
+          <div class="modes"><div class="seg"><a><i data-lucide="sparkles"></i>Trợ lý</a><a class="on"><i data-lucide="user-round-search"></i>Tìm hồ sơ</a></div></div>
+          <div class="body"><div class="scroll"><div class="day">Hôm nay · 10:05</div><div class="msg me"><div class="bub">Tìm 3 CEO ngành công nghệ ở HCM</div></div></div></div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Bộ lọc tìm hồ sơ</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <div class="sh-sec">Ngành nghề</div>
+            <div class="chips wrap">
+              <span class="chip sel"><i data-lucide="check"></i>Công nghệ thông tin</span><span class="chip">Tài chính</span><span class="chip">Bán lẻ</span><span class="chip"><i data-lucide="plus"></i>Thêm</span>
+            </div>
+            <div class="sh-sec">Vai trò muốn gặp <span class="t-xs" style="font-weight:500">· chọn tối đa 2</span></div>
+            <div class="chips wrap">
+              <span class="chip sel"><i data-lucide="check"></i>CEO / Giám đốc</span><span class="chip">Nhà sáng lập</span><span class="chip">C-Level</span><span class="chip">Trưởng phòng</span><span class="chip">Chuyên viên</span>
+            </div>
+            <div class="sh-sec">Khu vực</div>
+            <div class="input" style="height:46px"><i data-lucide="map-pin"></i><span class="v">TP. Hồ Chí Minh</span><i data-lucide="chevron-down"></i></div>
+            <div class="sh-sec">Kinh nghiệm</div>
+            <div class="seg"><a>Mọi mức</a><a>3+ năm</a><a class="on">5+ năm</a><a>10+ năm</a></div>
+            <div class="sh-sec">Chỉ hiện</div>
+            <div class="chips wrap">
+              <span class="chip">Đang tìm đối tác</span><span class="chip">Chưa kết nối</span><span class="chip">Có Portfolio</span>
+            </div>
+            <div class="btn-row mt24">
+              <button class="btn outline">Đặt lại</button>
+              <button class="btn primary" style="flex:1.6">Áp dụng · 3 bộ lọc</button>
+            </div>
+          </div>
+        </div>
+        <div class="cap">B3 · Bộ lọc tìm hồ sơ (sheet)<small>Bổ sung từ bản cũ (AI Search Filters) nhưng gọn hơn: chỉ giữ 5 nhóm thực sự dùng để tìm người — ngành, vai trò (tối đa 2), khu vực, kinh nghiệm, và các cờ "Đang tìm đối tác / Chưa kết nối / Có Portfolio". Bỏ Kỹ năng và Học vấn vì hồ sơ InCard không có dữ liệu đó. Mở bằng cách chạm chip tiêu chí trong câu trả lời của Inka (B1); chip đang chọn sẵn là những gì Inka đã hiểu từ câu hỏi, nên người dùng chỉ cần chỉnh. Áp dụng xong Inka trả lời lại với tiêu chí mới, không phải gõ lại câu hỏi.</small></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== C. History & voice ===================== -->
+  <section class="rd-section">
+    <h2>C · Lịch sử chat &amp; nhập bằng giọng nói</h2>
+    <div class="rd-row">
+
+      <!-- C1 history drawer -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ibar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="tb"><img src="assets/inka.png" alt="" /><div><b>Inka</b><span>Trợ lý AI</span></div></div>
+            <button class="icon-btn"><i data-lucide="history"></i></button>
+          </div>
+          <div class="body"><div class="scroll"><div class="wel"><img class="ava" src="assets/inka.png" alt="" /><h2>Chào Minh Anh</h2></div></div></div>
+          <div class="scrim"></div>
+          <div class="drawer">
+            <div class="statusbar"><span>9:41</span><span></span></div>
+            <div class="dh"><h3>Lịch sử chat</h3><button class="icon-btn"><i data-lucide="x"></i></button></div>
+            <div style="padding: 4px 16px 0">
+              <div class="search" style="height:42px"><i data-lucide="search"></i><span class="ph">Tìm cuộc trò chuyện</span></div>
+              <button class="btn tonal md mt12"><i data-lucide="square-pen"></i>Cuộc trò chuyện mới</button>
+            </div>
+            <div style="padding: 0 8px; flex:1; overflow:hidden">
+              <div class="dlabel">Hôm nay</div>
+              <div class="hitem on"><span class="hi"><i data-lucide="sparkles"></i></span><div class="tx"><b>Nhắc gọi anh Tâm 3h chiều mai</b><span>Trợ lý · 9:38</span></div><span class="more act"><i data-lucide="ellipsis"></i></span>
+                <div class="menu"><a class="hl"><i data-lucide="pencil"></i>Đổi tên</a><a><i data-lucide="pin"></i>Ghim lên đầu</a><a class="red" data-go="07-C4"><i data-lucide="trash-2"></i>Xoá</a></div>
+              </div>
+              <div class="hitem"><span class="hi"><i data-lucide="user-round-search"></i></span><div class="tx"><b>3 CEO ngành công nghệ ở HCM</b><span>Tìm hồ sơ · 10:05</span></div><span class="more"><i data-lucide="ellipsis"></i></span></div>
+              <div class="dlabel">7 ngày trước</div>
+              <div class="hitem"><span class="hi"><i data-lucide="sparkles"></i></span><div class="tx"><b>Email cảm ơn chị Phương – Sunnycare</b><span>Trợ lý · 08/11</span></div><span class="more"><i data-lucide="ellipsis"></i></span></div>
+              <div class="hitem"><span class="hi"><i data-lucide="sparkles"></i></span><div class="tx"><b>Lịch hẹn tuần tới</b><span>Trợ lý · 07/11</span></div><span class="more"><i data-lucide="ellipsis"></i></span></div>
+              <div class="hitem"><span class="hi"><i data-lucide="user-round-search"></i></span><div class="tx"><b>Đối tác phân phối ở Đà Nẵng</b><span>Tìm hồ sơ · 06/11</span></div><span class="more"><i data-lucide="ellipsis"></i></span></div>
+            </div>
+            <div class="home-ind"></div>
+          </div>
+        </div>
+        <div class="cap">C1 · Lịch sử chat (drawer)<small>Thay menu hamburger bằng icon lịch sử dễ hiểu. Có tìm kiếm, nhóm Hôm nay / 7 ngày trước, biểu tượng phân biệt Trợ lý và Tìm hồ sơ. Menu “…” cho Đổi tên, Ghim, Xoá (xoá sẽ hỏi xác nhận).</small></div>
+      </div>
+
+      <!-- C2 voice -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ibar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="tb"><img src="assets/inka.png" alt="" /><div><b>Inka</b><span>Trợ lý AI</span></div></div>
+            <button class="icon-btn" style="margin-right:-8px"><i data-lucide="history"></i></button>
+            <button class="icon-btn"><i data-lucide="square-pen"></i></button>
+          </div>
+          <div class="modes"><div class="seg"><a class="on"><i data-lucide="sparkles"></i>Trợ lý</a><a><i data-lucide="user-round-search"></i>Tìm hồ sơ</a></div></div>
+          <div class="body">
+            <div class="scroll" style="opacity:.45">
+              <div class="wel">
+                <img class="ava" src="assets/inka.png" alt="" />
+                <h2>Chào Minh Anh, mình là Inka</h2>
+                <p>Mình giúp bạn đặt lịch, nhắc việc, soạn email và quản lý danh bạ.</p>
+              </div>
+              <div class="sg-grid">
+                <div class="sg"><span class="ic"><i data-lucide="calendar-plus"></i></span><b>Tạo lịch hẹn</b><span>“Hẹn chị Phương 10h thứ Hai”</span></div>
+                <div class="sg"><span class="ic"><i data-lucide="bell-ring"></i></span><b>Nhắc việc &amp; follow-up</b><span>“Nhắc tôi gọi anh Tâm chiều mai”</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="listen">
+            <div class="live">Đặt lịch gặp chị Phương bên Sunnycare thứ Hai <span>lúc 10 giờ sáng…</span></div>
+            <div class="ctl">
+              <button class="icon-btn soft"><i data-lucide="x"></i></button>
+              <div>
+                <div class="wave">
+                  <span style="height:14px;animation-delay:0s"></span><span style="height:24px;animation-delay:.1s"></span><span style="height:34px;animation-delay:.2s"></span><span style="height:20px;animation-delay:.3s"></span><span style="height:38px;animation-delay:.15s"></span><span style="height:28px;animation-delay:.25s"></span><span style="height:16px;animation-delay:.05s"></span><span style="height:30px;animation-delay:.35s"></span><span style="height:36px;animation-delay:.2s"></span><span style="height:22px;animation-delay:.1s"></span><span style="height:12px;animation-delay:.3s"></span><span style="height:26px;animation-delay:.4s"></span><span style="height:18px;animation-delay:.05s"></span>
+                </div>
+                <div class="lab">Đang nghe… 0:04</div>
+              </div>
+              <span class="stopbtn"><i data-lucide="square"></i></span>
+            </div>
+            <p class="t-xs t-center mt8">Bấm ■ để gửi · bấm ✕ để huỷ</p>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">C2 · Đang nghe giọng nói<small>FAB giọng nói to đè lên màn được bỏ; chạm mic trong ô nhập sẽ mở khu vực nghe ngay chỗ ô nhập, hiện chữ đang nhận dạng theo thời gian thực, có nút Huỷ và Dừng rõ ràng.</small></div>
+      </div>
+
+      <!-- C3 rename chat (bổ sung từ screens/home/11-inka-edit-title) -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ibar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="tb"><img src="assets/inka.png" alt="" /><div><b>Inka</b><span>Trợ lý AI</span></div></div>
+            <button class="icon-btn"><i data-lucide="history"></i></button>
+          </div>
+          <div class="body"><div class="scroll"><div class="wel"><img class="ava" src="assets/inka.png" alt="" /><h2>Chào Minh Anh</h2></div></div></div>
+          <div class="scrim"></div>
+          <div class="dialog" style="text-align:left">
+            <h3>Đổi tên cuộc trò chuyện</h3>
+            <div class="field" style="margin:14px 0 6px">
+              <div class="input focus"><span class="v">Nhắc gọi anh Tâm – báo giá NFC</span><i data-lucide="circle-x"></i></div>
+              <div class="hint"><i data-lucide="info"></i>Tối đa 40 ký tự · 30/40</div>
+            </div>
+            <div class="btn-row mt16">
+              <button class="btn outline">Huỷ</button>
+              <button class="btn primary" style="flex:1.6">Lưu tên</button>
+            </div>
+          </div>
+        </div>
+        <div class="cap">C3 · Đổi tên cuộc trò chuyện<small>Bổ sung từ bản cũ (Inka Edit Title). Mở từ "Đổi tên" trong menu "…" của lịch sử chat (C1). Ô nhập điền sẵn tên hiện tại, chọn sẵn toàn bộ chữ để gõ đè; có bộ đếm ký tự và nút ✕ xoá nhanh. Lưu xong quay lại drawer, tên mới hiện ngay. Tên tự động (Inka đặt theo câu hỏi đầu) vẫn dùng khi người dùng không đổi.</small></div>
+      </div>
+
+      <!-- C4 Delete chat confirm -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ibar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="tb"><img src="assets/inka.png" alt="" /><div><b>Inka</b><span>Trợ lý AI</span></div></div>
+            <button class="icon-btn"><i data-lucide="history"></i></button>
+          </div>
+          <div class="body"><div class="scroll"><div class="wel"><img class="ava" src="assets/inka.png" alt="" /><h2>Chào Minh Anh</h2></div></div></div>
+          <div class="drawer">
+            <div class="statusbar"><span>9:41</span><span></span></div>
+            <div class="dh"><h3>Lịch sử chat</h3><button class="icon-btn"><i data-lucide="x"></i></button></div>
+            <div style="padding: 0 8px; flex:1; overflow:hidden">
+              <div class="dlabel">Hôm nay</div>
+              <div class="hitem on"><span class="hi"><i data-lucide="sparkles"></i></span><div class="tx"><b>Nhắc gọi anh Tâm 3h chiều mai</b><span>Trợ lý · 9:38</span></div><span class="more"><i data-lucide="ellipsis"></i></span></div>
+              <div class="hitem"><span class="hi"><i data-lucide="user-round-search"></i></span><div class="tx"><b>3 CEO ngành công nghệ ở HCM</b><span>Tìm hồ sơ · 10:05</span></div><span class="more"><i data-lucide="ellipsis"></i></span></div>
+              <div class="dlabel">7 ngày trước</div>
+              <div class="hitem"><span class="hi"><i data-lucide="sparkles"></i></span><div class="tx"><b>Email cảm ơn chị Phương – Sunnycare</b><span>Trợ lý · 08/11</span></div><span class="more"><i data-lucide="ellipsis"></i></span></div>
+            </div>
+          </div>
+          <div class="scrim" style="z-index:22"></div>
+          <div class="dialog" style="z-index:23">
+            <div class="d-ic red"><i data-lucide="trash-2"></i></div>
+            <h3>Xoá cuộc trò chuyện "Nhắc gọi anh Tâm 3h chiều mai"?</h3>
+            <p>Toàn bộ tin nhắn trong cuộc trò chuyện này sẽ bị xoá. Nhắc việc Inka đã tạo vẫn được giữ trong Công việc.</p>
+            <button class="btn danger">Xoá</button>
+            <button class="btn ghost mt8" style="color:var(--ink)">Huỷ</button>
+          </div>
+        </div>
+        <div class="cap">C4 · Xác nhận xoá cuộc trò chuyện<small>Mở từ "Xoá" trong menu "…" của lịch sử chat (C1). Hộp thoại nằm trên drawer để người dùng thấy đang xoá đúng cuộc nào. Nói rõ nhắc việc đã tạo không bị mất. Xoá xong quay lại drawer kèm toast; Huỷ đóng hộp thoại.</small></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== D. Limit & AI filter ===================== -->
+  <section class="rd-section">
+    <h2>D · Giới hạn lượt AI &amp; lọc danh bạ bằng AI</h2>
+    <div class="rd-row">
+
+      <!-- D1 limit -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ibar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="tb"><img src="assets/inka.png" alt="" /><div><b>Inka</b><span>Trợ lý AI</span></div></div>
+            <button class="icon-btn" style="margin-right:-8px"><i data-lucide="history"></i></button>
+            <button class="icon-btn"><i data-lucide="square-pen"></i></button>
+          </div>
+          <div class="modes"><div class="seg"><a class="on"><i data-lucide="sparkles"></i>Trợ lý</a><a><i data-lucide="user-round-search"></i>Tìm hồ sơ</a></div></div>
+          <div class="body">
+            <div class="scroll">
+              <div class="day">Hôm nay · 16:12</div>
+              <div class="msg me"><div class="bub">Soạn email follow-up cho chị Phương</div></div>
+              <div class="limit">
+                <img class="ava" src="assets/inka.png" alt="" />
+                <h3>Bạn đã dùng 10/10 lượt AI hôm nay</h3>
+                <div class="progress"><span style="width:100%"></span></div>
+                <p>Lượt mới sẽ có lúc 00:00 (còn khoảng 8 giờ). Câu hỏi của bạn đã được lưu, mình sẽ trả lời ngay khi có lượt.</p>
+                <div class="perks">
+                  <div><i data-lucide="infinity"></i>Hỏi Inka không giới hạn</div>
+                  <div><i data-lucide="user-round-search"></i>Tìm hồ sơ không giới hạn</div>
+                  <div><i data-lucide="scan-line"></i>Quét danh thiếp không giới hạn</div>
+                </div>
+                <button class="btn gold"><i data-lucide="crown"></i>Nâng cấp Premium</button>
+                <button class="btn ghost mt4" style="height:44px">Để sau</button>
+              </div>
+            </div>
+          </div>
+          <div class="composer">
+            <div class="cbox off"><i data-lucide="lock" style="width:18px;height:18px;color:var(--slate-400);margin-right:6px"></i><span class="ph">Hết lượt hôm nay · mở lại lúc 00:00</span><span class="cbtn send dis"><i data-lucide="arrow-up"></i></span></div>
+            <div class="cmeta"><span>Lịch sử chat vẫn xem được bình thường</span><span><b>0/10</b></span></div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">D1 · Hết lượt AI<small>Báo hết lượt bằng thẻ thân thiện ngay trong chat thay vì lỗi. Nói rõ khi nào có lượt lại, giữ câu hỏi đã gõ, CTA vàng Premium và lối thoát “Để sau”. Ô nhập khoá có lý do.</small></div>
+      </div>
+
+      <!-- D2 AI filter in contacts -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><div class="title left">Danh bạ</div><button class="icon-btn"><i data-lucide="user-plus"></i></button></div>
+          <div class="body">
+            <div class="scroll">
+              <div class="search"><i data-lucide="search"></i><span class="ph">Tìm trong 312 liên hệ</span><span class="ai"><i data-lucide="sparkles"></i>AI</span></div>
+              <div class="chips mt12"><span class="chip">Kết nối</span><span class="chip">Danh thiếp</span><span class="chip on">Đã lưu</span><span class="chip">Điện thoại</span></div>
+              <div class="mt8">
+                <div class="ct"><img class="av" src="https://i.pravatar.cc/150?img=68" alt="" /><div class="f1"><b>Hồ Văn Tâm</b><span>Founder, CEO – InApps Technology</span></div></div>
+                <div class="ct"><img class="av" src="https://i.pravatar.cc/150?img=32" alt="" /><div class="f1"><b>Trần Thuỷ (Helen)</b><span>CRO – InCard Technology</span></div></div>
+                <div class="ct"><span class="av tb">LN</span><div class="f1"><b>Lê Nhật Nam</b><span>CEO · ICTGO</span></div></div>
+              </div>
+            </div>
+          </div>
+          <nav class="bnav">
+            <a><i data-lucide="house"></i>Trang chủ</a>
+            <a class="on"><i data-lucide="contact-round"></i>Danh bạ</a>
+            <a class="fab"><span class="c"><i data-lucide="scan-line"></i></span>Quét</a>
+            <a><i data-lucide="compass"></i>Khám phá</a>
+            <a><i data-lucide="circle-user-round"></i>Tài khoản</a>
+          </nav>
+          <div class="home-ind"></div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3 class="flex ac g8"><i data-lucide="sparkles" style="width:20px;height:20px;color:var(--green)"></i>Lọc liên hệ bằng AI</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <div class="field" style="margin-bottom:8px">
+              <div class="input area focus" style="position:relative;height:96px"><span class="v" style="white-space:normal">CEO ở Hà Nội</span><span class="counter"><b>12</b>/50</span></div>
+              <div class="hint"><i data-lucide="info"></i>Mô tả từ 10 đến 50 ký tự, VD: chức vụ, nơi làm việc, thời điểm gặp</div>
+            </div>
+            <div class="group-label" style="margin:16px 4px 4px">Gợi ý nhanh</div>
+            <div>
+              <div class="qask"><i data-lucide="calendar-days"></i>Người tôi đã gặp tuần này<i class="go" data-lucide="arrow-up-left"></i></div>
+              <div class="qask"><i data-lucide="building"></i>Liên hệ ngành bất động sản<i class="go" data-lucide="arrow-up-left"></i></div>
+              <div class="qask"><i data-lucide="hourglass"></i>Chưa follow-up hơn 30 ngày<i class="go" data-lucide="arrow-up-left"></i></div>
+              <div class="qask"><i data-lucide="cake"></i>Có sinh nhật trong tháng này<i class="go" data-lucide="arrow-up-left"></i></div>
+            </div>
+            <button class="btn primary mt16"><i data-lucide="filter"></i>Lọc danh bạ</button>
+          </div>
+        </div>
+        <div class="cap">D2 · Lọc danh bạ bằng AI (sheet)<small>Popup cũ chỉ báo lỗi khi gõ sai độ dài. Bản mới có bộ đếm 12/50 và gợi ý ngay từ đầu, câu hỏi nhanh chạm là điền vào ô. Mở từ pill AI trong ô tìm kiếm Danh bạ, đóng sheet là về đúng danh sách. Nền phía sau dùng đúng tab của Danh bạ 04 (Kết nối · Danh thiếp · Đã lưu · Điện thoại) và tổng 312 liên hệ đã lưu.</small></div>
+      </div>
+
+    </div>
+  </section>
+
+  <script>lucide.createIcons({ attrs: { 'stroke-width': 1.75 } });</script>
+</body>
+</html>

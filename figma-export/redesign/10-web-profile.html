@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard Redesign — 10 Hồ sơ web</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../button-system.css" />
+  <link rel="stylesheet" href="../design-system.css" />
+  <link rel="stylesheet" href="rd.css" />
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <style>
+    /* Brand colors of third-party platforms (only hardcoded hex allowed) */
+    :root {
+      --zalo: #0068ff; --messenger: #0084ff; --fb: #1877f2; --li: #0a66c2; --wa: #25d366;
+      --yt: #ff0000; --tt: #111827; --ig: #e1306c;
+    }
+
+    /* ---------- Profile page frame ---------- */
+    .pf { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+    .phone.tall .pf { overflow: visible; }
+    .cover { position: relative; height: 190px; flex-shrink: 0; overflow: hidden;
+      background: linear-gradient(165deg, var(--green-100) 0%, var(--green-50) 55%, var(--app-bg) 100%); }
+    .cover .wm { position: absolute; right: -36px; top: 18px; width: 210px; height: 210px; object-fit: contain; opacity: .12; }
+    .cover .wm2 { position: absolute; left: -40px; bottom: -70px; width: 150px; height: 150px; object-fit: contain; opacity: .07; }
+    .cover .appbar { position: relative; z-index: 1; }
+    .cover .icon-btn.soft { background: rgba(255,255,255,0.85); }
+    .cover .cv-edit { position: absolute; right: 16px; bottom: 74px; z-index: 1; height: 30px; padding: 0 10px; border-radius: var(--r-pill); background: rgba(255,255,255,0.85); border: 1px solid var(--green-100); font-size: 12px; font-weight: 700; color: var(--green-dark); display: inline-flex; align-items: center; gap: 5px; }
+    .cover .cv-edit i, .cover .cv-edit svg { width: 14px; height: 14px; }
+    .pf-top { text-align: center; margin-top: -72px; position: relative; z-index: 2; padding: 0 20px; }
+    .av-wrap { position: relative; display: inline-block; }
+    .pf-name { font-size: 24px; font-weight: 700; letter-spacing: -0.3px; margin-top: 10px; }
+    .pf-role { font-size: 14px; color: var(--slate-600); margin-top: 3px; }
+    .pf-stats { display: inline-flex; gap: 14px; margin-top: 10px; font-size: 12.5px; color: var(--slate-500); }
+    .pf-stats span { display: inline-flex; align-items: center; gap: 5px; }
+    .pf-stats i, .pf-stats svg { width: 14px; height: 14px; color: var(--green); }
+    .pf-body { padding: 16px 20px 20px; }
+
+    /* completion meter */
+    .meter .m-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+    .meter .m-top b { font-size: 15px; }
+    .meter .m-top b em { font-style: normal; color: var(--green); }
+    .meter .m-top a { font-size: 13px; }
+    .meter .todo { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+    .meter .todo span { height: 28px; padding: 0 10px; border-radius: var(--r-pill); border: 1px dashed var(--green-200); background: var(--white); color: var(--green-dark); font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
+    .meter .todo i, .meter .todo svg { width: 13px; height: 13px; }
+
+    /* NFC banner */
+    .nfc-ban { display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: var(--r-lg); background: linear-gradient(135deg, var(--green-light), var(--green)); color: var(--white); box-shadow: var(--shadow-green); position: relative; overflow: hidden; }
+    .nfc-ban .ic { width: 44px; height: 44px; border-radius: 12px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .nfc-ban .ic i, .nfc-ban .ic svg { width: 24px; height: 24px; }
+    .nfc-ban b { display: block; font-size: 15px; }
+    .nfc-ban span { font-size: 12.5px; opacity: .9; }
+    .nfc-ban .go { margin-left: auto; height: 36px; padding: 0 14px; border-radius: 10px; background: var(--white); color: var(--green); font-weight: 700; font-size: 13.5px; display: inline-flex; align-items: center; flex-shrink: 0; }
+
+    /* contact circles */
+    .cc-row { display: flex; justify-content: space-between; padding: 4px 2px; }
+    .cc { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; color: var(--slate-600); }
+    .cc .c { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--green-50); color: var(--green); border: 1px solid var(--green-100); }
+    .cc .c i, .cc .c svg { width: 22px; height: 22px; }
+    .cc .c.zalo { background: var(--zalo); border-color: var(--zalo); color: var(--white); font-weight: 800; font-size: 12.5px; letter-spacing: -0.2px; }
+    .cc .c.wa { background: var(--wa); border-color: var(--wa); color: var(--white); }
+    .cc .c.fb { background: var(--fb); border-color: var(--fb); color: var(--white); }
+    .cc .c.li { background: var(--li); border-color: var(--li); color: var(--white); }
+    .cc-row.six .c { width: 48px; height: 48px; }
+
+    /* profile section cards */
+    .ps { background: var(--white); border-radius: var(--r-lg); border: 1px solid var(--slate-200); padding: 16px; margin-top: 12px; box-shadow: var(--shadow-sm); }
+    .ps-h { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .ps-h .ic { width: 32px; height: 32px; border-radius: 9px; background: var(--green-50); color: var(--green); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ps-h .ic i, .ps-h .ic svg { width: 17px; height: 17px; }
+    .ps-h h4 { flex: 1; font-size: 15.5px; font-weight: 700; }
+    .ps-h .ed { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--slate-400); }
+    .ps-h .ed i, .ps-h .ed svg { width: 17px; height: 17px; }
+    .ps-h .cnt { font-size: 12.5px; color: var(--slate-400); font-weight: 600; }
+    .add-pr { display: flex; align-items: center; gap: 12px; padding: 13px 14px; border: 1.5px dashed var(--green-200); border-radius: 14px; background: var(--green-50); }
+    .add-pr .plus { width: 36px; height: 36px; border-radius: 50%; background: var(--white); color: var(--green); border: 1px solid var(--green-200); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .add-pr .plus i, .add-pr .plus svg { width: 18px; height: 18px; }
+    .add-pr b { display: block; font-size: 14px; color: var(--green-dark); }
+    .add-pr span { display: block; font-size: 12.5px; color: var(--slate-500); margin-top: 1px; }
+    .add-mini { display: inline-flex; align-items: center; gap: 4px; margin-top: 12px; font-size: 13px; font-weight: 700; color: var(--green); }
+    .add-mini i, .add-mini svg { width: 16px; height: 16px; }
+
+    .prod { display: flex; gap: 12px; align-items: center; }
+    .prod + .prod { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--slate-100); }
+    .prod .th { width: 56px; height: 56px; border-radius: 14px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--green); background: linear-gradient(135deg, var(--green-100), var(--green-50)); }
+    .prod .th i, .prod .th svg { width: 24px; height: 24px; }
+    .prod b { display: block; font-size: 14.5px; }
+    .prod span { display: block; font-size: 12.5px; color: var(--slate-500); margin-top: 2px; }
+    .prod .pr { font-size: 13px; font-weight: 700; color: var(--green); margin-top: 3px; }
+
+    .lnk { display: flex; align-items: center; gap: 12px; padding: 10px 0; }
+    .lnk + .lnk { border-top: 1px solid var(--slate-100); }
+    .lnk .b { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--white); flex-shrink: 0; }
+    .lnk .b i, .lnk .b svg { width: 18px; height: 18px; }
+    .lnk .b.web { background: var(--green-50); color: var(--green); }
+    .lnk .b.li { background: var(--li); } .lnk .b.fb { background: var(--fb); }
+    .lnk .tx { flex: 1; min-width: 0; }
+    .lnk .tx b { display: block; font-size: 14px; }
+    .lnk .tx span { display: block; font-size: 12.5px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .lnk > i, .lnk > svg { width: 17px; height: 17px; color: var(--slate-400); }
+
+    .mgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .mgrid > div { aspect-ratio: 1; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--white); position: relative; }
+    .mgrid > div i, .mgrid > div svg { width: 22px; height: 22px; opacity: .9; }
+    .mgrid .m1 { background: linear-gradient(135deg, var(--green-light), var(--green)); }
+    .mgrid .m2 { background: linear-gradient(135deg, var(--slate-600), var(--slate-800)); }
+    .mgrid .m3 { background: linear-gradient(135deg, var(--green-200), var(--brand)); }
+    .mgrid .more { background: var(--slate-100); color: var(--slate-600); font-weight: 700; font-size: 14px; }
+
+    .pchips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pchips .chip { height: 32px; font-size: 13px; }
+    .chip.dash { border: 1.5px dashed var(--green-200); background: var(--white); color: var(--green); }
+
+    .web-row { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 14px; background: var(--white); border: 1px solid var(--slate-200); margin-top: 12px; }
+    .web-row i, .web-row svg { width: 18px; height: 18px; color: var(--green); flex-shrink: 0; }
+    .web-row span { flex: 1; font-size: 13.5px; font-weight: 600; color: var(--slate-700); }
+    .web-row em { font-style: normal; font-size: 12.5px; font-weight: 700; color: var(--green); }
+
+    .status-chip { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px; border-radius: var(--r-pill); background: var(--green-100); color: var(--green-dark); font-size: 12.5px; font-weight: 700; margin-top: 10px; }
+    .status-chip i, .status-chip svg { width: 14px; height: 14px; }
+    .note { background: var(--white); border: 1px solid var(--slate-200); border-left: 4px solid var(--brand); }
+    .note p { font-size: 14px; color: var(--slate-700); line-height: 1.5; }
+    .about { font-size: 14px; color: var(--slate-600); line-height: 1.55; }
+    .about a { color: var(--green); font-weight: 700; text-decoration: none; }
+    .meta-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--slate-500); padding: 14px 4px 0; }
+    .meta-row b { color: var(--slate-700); font-weight: 600; }
+
+    /* preview banner */
+    .pv-ban { flex-shrink: 0; display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: var(--ink); color: var(--white); font-size: 13px; font-weight: 600; }
+    .pv-ban i, .pv-ban svg { width: 18px; height: 18px; color: var(--green-200); }
+    .pv-ban a { margin-left: auto; color: var(--green-200); font-weight: 700; }
+
+    /* dimmed background content for sheets/dialogs */
+    .dim { opacity: 1; }
+
+    /* ---------- Edit hub ---------- */
+    .hub-me { display: flex; align-items: center; gap: 14px; }
+    .hub-me .av-wrap .av { width: 64px; height: 64px; }
+    .hub-me .av-edit { width: 26px; height: 26px; right: -2px; bottom: -2px; border-width: 2px; }
+    .hub-me .av-edit i, .hub-me .av-edit svg { width: 12px; height: 12px; }
+    .badge.warn { background: var(--slate-100); color: var(--slate-500); }
+    .badge.todo { background: var(--green-50); color: var(--green); border: 1px dashed var(--green-200); }
+    .row .tx span.ok { color: var(--green); }
+
+    .cnt-row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 12px; color: var(--slate-500); }
+    .ta { height: 220px; align-items: flex-start; padding: 14px; line-height: 1.55; font-size: 14.5px; white-space: normal; }
+    .ta .v { white-space: normal; }
+    .ai-mark { background: var(--green-50); border-radius: 4px; box-shadow: 0 0 0 2px var(--green-50); }
+    .tip { display: flex; gap: 10px; padding: 12px 14px; border-radius: 14px; background: var(--slate-50); border: 1px solid var(--slate-200); font-size: 13px; color: var(--slate-600); line-height: 1.45; }
+    .tip i, .tip svg { width: 18px; height: 18px; color: var(--green); flex-shrink: 0; margin-top: 1px; }
+
+    .tag-box { border: 1.5px solid var(--slate-200); border-radius: 14px; background: var(--white); padding: 10px; }
+    .tag-box.focus { border-color: var(--green); box-shadow: 0 0 0 4px var(--green-bg); }
+    .tag-box .pchips .chip.on i, .tag-box .pchips .chip.on svg { width: 14px; height: 14px; }
+    .tag-in { display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 4px; margin-top: 8px; font-size: 14px; color: var(--slate-400); border-top: 1px solid var(--slate-100); padding-top: 8px; height: 46px; }
+    .tag-in i, .tag-in svg { width: 18px; height: 18px; }
+    .tag-in .v { color: var(--ink); }
+    .tag-in .caret { width: 1.5px; height: 18px; background: var(--green); margin-left: -6px; }
+    .sugg { margin-top: 10px; }
+    .sugg .lbl { font-size: 12px; font-weight: 600; color: var(--slate-400); margin-bottom: 8px; display: block; }
+    .sugg .chip { height: 32px; font-size: 13px; }
+    .sec-lbl { display: flex; justify-content: space-between; align-items: baseline; margin: 18px 0 8px; }
+    .sec-lbl b { font-size: 14.5px; }
+    .sec-lbl span { font-size: 12px; color: var(--slate-400); }
+
+    /* platform grid */
+    .pgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px 8px; }
+    .pg { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; color: var(--slate-600); text-align: center; }
+    .pg .t { width: 54px; height: 54px; border-radius: 16px; display: flex; align-items: center; justify-content: center; background: var(--slate-100); color: var(--slate-700); position: relative; }
+    .pg .t i, .pg .t svg { width: 24px; height: 24px; }
+    .pg .t.zalo { background: var(--zalo); color: var(--white); font-weight: 800; font-size: 13px; }
+    .pg .t.fb { background: var(--fb); color: var(--white); }
+    .pg .t.li { background: var(--li); color: var(--white); }
+    .pg .t.wa { background: var(--wa); color: var(--white); }
+    .pg .t.yt { background: var(--yt); color: var(--white); }
+    .pg .t.tt { background: var(--tt); color: var(--white); }
+    .pg .t.ig { background: var(--ig); color: var(--white); }
+    .pg .t.gr { background: var(--green-50); color: var(--green); }
+    .pg.sel .t { box-shadow: 0 0 0 3px var(--white), 0 0 0 5px var(--green); }
+    .pg.sel { color: var(--ink); }
+    .pg .added { position: absolute; top: -4px; right: -4px; width: 18px; height: 18px; border-radius: 50%; background: var(--green); color: var(--white); border: 2px solid var(--white); display: flex; align-items: center; justify-content: center; }
+    .pg .added i, .pg .added svg { width: 10px; height: 10px; }
+
+    /* ---------- NFC flow ---------- */
+    .big-card { width: 290px; height: 178px; margin: 0 auto; border-radius: 22px; background: var(--card-graphite); color: var(--white); padding: 20px; position: relative; box-shadow: var(--card-shadow); overflow: hidden; }
+    .big-card::before { content: ""; position: absolute; right: -60px; top: -60px; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,0.10); }
+    .big-card::after { content: ""; position: absolute; right: 20px; bottom: -90px; width: 180px; height: 180px; border-radius: 50%; background: rgba(255,255,255,0.07); }
+    .big-card .lm { width: 34px; height: 34px; object-fit: contain; }
+    .big-card .nfc { position: absolute; right: 20px; top: 20px; width: 26px; height: 26px; opacity: .9; }
+    .big-card .nm { position: absolute; left: 20px; bottom: 34px; font-size: 18px; font-weight: 700; }
+    .big-card .rl { position: absolute; left: 20px; bottom: 16px; font-size: 12.5px; opacity: .85; }
+    .card-stage { position: relative; padding: 30px 0 26px; border-radius: 28px; background: radial-gradient(90% 80% at 50% 40%, var(--green-50), var(--white) 75%); }
+    .step-prev { display: flex; justify-content: space-between; gap: 6px; margin-top: 22px; }
+    .step-prev > div { flex: 1; text-align: center; font-size: 12px; color: var(--slate-600); font-weight: 600; }
+    .step-prev .n { width: 30px; height: 30px; margin: 0 auto 6px; border-radius: 50%; background: var(--green-50); color: var(--green); border: 1px solid var(--green-100); font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+
+    .cam { flex: 1; position: relative; display: flex; flex-direction: column; align-items: center; overflow: hidden;
+      background: radial-gradient(70% 45% at 50% 38%, rgba(69,185,118,0.16), transparent 70%), linear-gradient(180deg, var(--ink), var(--slate-800)); }
+    .cam .steps span { background: rgba(255,255,255,0.18); }
+    .cam .steps span.on { background: var(--brand); }
+    .vf { width: 250px; height: 250px; position: relative; margin-top: 46px; }
+    .vf .cn { position: absolute; width: 44px; height: 44px; border-color: var(--brand); border-style: solid; border-width: 0; }
+    .vf .tl { top: 0; left: 0; border-top-width: 4px; border-left-width: 4px; border-top-left-radius: 18px; }
+    .vf .tr { top: 0; right: 0; border-top-width: 4px; border-right-width: 4px; border-top-right-radius: 18px; }
+    .vf .bl { bottom: 0; left: 0; border-bottom-width: 4px; border-left-width: 4px; border-bottom-left-radius: 18px; }
+    .vf .br { bottom: 0; right: 0; border-bottom-width: 4px; border-right-width: 4px; border-bottom-right-radius: 18px; }
+    .vf .qr-card { position: absolute; inset: 34px; border-radius: 16px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); display: flex; align-items: center; justify-content: center; transform: rotate(-4deg); }
+    .vf .qr-card i, .vf .qr-card svg { width: 110px; height: 110px; color: rgba(255,255,255,0.75); }
+    .vf .line { position: absolute; left: 14px; right: 14px; top: 46%; height: 3px; border-radius: 2px; background: linear-gradient(90deg, transparent, var(--brand), transparent); box-shadow: 0 0 18px var(--brand); }
+    .cam .hint-d { margin-top: 28px; text-align: center; padding: 0 40px; }
+    .cam .hint-d b { display: block; font-size: 17px; }
+    .cam .hint-d span { display: block; font-size: 13.5px; color: var(--slate-300); margin-top: 6px; line-height: 1.45; }
+    .cam-ctrl { display: flex; align-items: center; justify-content: center; gap: 36px; margin-top: auto; padding-bottom: 18px; }
+    .cam-ctrl .r { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 11.5px; color: var(--slate-300); font-weight: 600; }
+    .cam-ctrl .r span { width: 54px; height: 54px; border-radius: 50%; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; color: var(--white); }
+    .cam-ctrl .r span.on { background: var(--white); color: var(--ink); }
+    .cam-ctrl .r i, .cam-ctrl .r svg { width: 22px; height: 22px; }
+    .btn.on-dark { background: rgba(255,255,255,0.12); color: var(--white); border: 1px solid rgba(255,255,255,0.18); }
+    .phone.dark .icon-btn { color: var(--white); }
+
+    .tap-ill { position: relative; height: 330px; display: flex; justify-content: center; align-items: flex-end; overflow: hidden; }
+    .tap-ill .ring { position: absolute; left: 50%; top: 92px; transform: translate(-50%, -50%); border-radius: 50%; border: 2px solid var(--green-200); }
+    .tap-ill .ring.r1 { width: 120px; height: 120px; background: var(--green-bg); }
+    .tap-ill .ring.r2 { width: 200px; height: 200px; opacity: .7; }
+    .tap-ill .ring.r3 { width: 290px; height: 290px; opacity: .35; }
+    .tap-ill .ph-out { width: 160px; height: 250px; border-radius: 30px 30px 0 0; border: 3px solid var(--slate-300); border-bottom: 0; background: var(--white); position: relative; z-index: 1; }
+    .tap-ill .ph-out::before { content: ""; position: absolute; left: 50%; top: 10px; transform: translateX(-50%); width: 54px; height: 6px; border-radius: 3px; background: var(--slate-200); }
+    .tap-ill .tcard { position: absolute; z-index: 2; left: 50%; top: 40px; width: 172px; height: 106px; margin-left: -86px; border-radius: 14px; transform: rotate(-9deg); background: var(--card-graphite); box-shadow: var(--shadow-green); padding: 12px; color: var(--white); }
+    .tap-ill .tcard img { width: 22px; height: 22px; }
+    .tap-ill .tcard i, .tap-ill .tcard svg { position: absolute; right: 12px; top: 12px; width: 18px; height: 18px; }
+    .tap-ill .tcard b { position: absolute; left: 12px; bottom: 12px; font-size: 12px; }
+    .searching { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13.5px; font-weight: 700; color: var(--green); margin-top: 16px; }
+    .searching i, .searching svg { width: 16px; height: 16px; }
+
+    .linked { display: flex; align-items: center; gap: 14px; }
+    .linked .mc { width: 74px; height: 46px; border-radius: 9px; background: var(--card-graphite); position: relative; flex-shrink: 0; box-shadow: var(--card-shadow); }
+    .linked .mc img { position: absolute; left: 7px; top: 7px; width: 14px; height: 14px; }
+    .linked .mc i, .linked .mc svg { position: absolute; right: 7px; top: 7px; width: 12px; height: 12px; color: var(--white); }
+    .linked b { display: block; font-size: 15px; }
+    .linked span { display: block; font-size: 12.5px; color: var(--slate-500); margin-top: 2px; }
+    .kv { display: flex; justify-content: space-between; font-size: 13.5px; padding: 9px 0; }
+    .kv + .kv { border-top: 1px solid var(--slate-100); }
+    .kv span { color: var(--slate-500); } .kv b { font-weight: 600; }
+
+    .reason { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; text-align: left; }
+    .reason + .reason { border-top: 1px solid var(--slate-100); }
+    .reason .n { width: 32px; height: 32px; border-radius: 10px; background: var(--red-50); color: var(--red-600); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .reason .n i, .reason .n svg { width: 17px; height: 17px; }
+    .reason b { display: block; font-size: 14px; }
+    .reason span { display: block; font-size: 12.5px; color: var(--slate-500); margin-top: 2px; line-height: 1.4; }
+
+    /* success ring (same as 01) */
+    .success-ring { width: 112px; height: 112px; border-radius: 50%; background: var(--green-50); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 0 0 14px rgba(0,144,55,0.05); }
+    .success-ring span { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--green-light), var(--green)); color: var(--white); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-green); }
+    .success-ring i, .success-ring svg { width: 36px; height: 36px; }
+
+    /* ---------- My cards ---------- */
+    .cd-item { background: var(--white); border-radius: var(--r-lg); border: 1px solid var(--slate-200); padding: 12px; box-shadow: var(--shadow-sm); }
+    .cd-item + .cd-item { margin-top: 14px; }
+    .cd-vis { height: 128px; border-radius: 16px; background: var(--card-graphite); color: var(--white); position: relative; overflow: hidden; padding: 16px; }
+    .cd-vis::before { content: ""; position: absolute; right: -50px; top: -50px; width: 170px; height: 170px; border-radius: 50%; background: rgba(255,255,255,0.05); }
+    .cd-vis .lm { width: 28px; height: 28px; }
+    .cd-vis .nfc { position: absolute; right: 16px; top: 16px; width: 22px; height: 22px; }
+    .cd-vis .nm { position: absolute; left: 16px; bottom: 30px; font-size: 16px; font-weight: 700; }
+    .cd-vis .rl { position: absolute; left: 16px; bottom: 13px; font-size: 12px; opacity: .85; }
+    .cd-vis .qr { position: absolute; right: 16px; bottom: 14px; width: 50px; height: 50px; border-radius: 10px; background: var(--white); color: var(--ink); display: flex; align-items: center; justify-content: center; }
+    .cd-vis .qr i, .cd-vis .qr svg { width: 38px; height: 38px; }
+    .cd-vis.light { background: var(--card-stone); color: var(--ink); border: 1px solid var(--slate-200); }
+    .cd-vis.light::before { background: rgba(15,23,42,0.03); }
+    .cd-vis.light .lm { filter: none; }
+    .cd-vis.light .qr { background: var(--ink); color: var(--white); }
+    .cd-meta { display: flex; align-items: center; gap: 10px; padding: 12px 4px 2px; }
+    .cd-meta .tx { flex: 1; min-width: 0; }
+    .cd-meta b { display: block; font-size: 15px; }
+    .cd-meta span.lk { display: block; font-size: 14px; font-weight: 600; color: var(--slate-800); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cd-meta span.s { display: block; font-size: 12.5px; color: var(--slate-500); margin-top: 3px; }
+    .cd-meta .icon-btn { width: 36px; height: 36px; color: var(--slate-500); }
+    .cd-meta .icon-btn i, .cd-meta .icon-btn svg { width: 20px; height: 20px; }
+    .cd-vis.dark { background: var(--card-pearl); color: var(--ink); border: 1px solid var(--slate-200); }
+    .cd-vis.dark::before { background: rgba(15,23,42,0.03); }
+    .cd-pos { display: flex; flex-direction: column; gap: 4px; padding: 8px 4px 2px; border-top: 1px dashed var(--slate-200); margin-top: 8px; }
+    .cd-pos span { font-size: 12.5px; color: var(--slate-600); }
+    .card-scope { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 12px; background: var(--green-50); border: 1px solid var(--green-100); font-size: 13px; color: var(--slate-700); }
+    .card-scope i, .card-scope svg { width: 18px; height: 18px; color: var(--green); }
+    .card-scope .link { font-size: 13px; }
+    .card-scope .scope-lock { display: inline-flex; color: var(--slate-400); }
+    .card-scope .scope-lock svg { width: 15px; height: 15px; color: var(--slate-400); }
+    .new-card { margin-top: 14px; border: 2px dashed var(--green-200); border-radius: var(--r-lg); background: var(--green-50); padding: 20px; text-align: center; }
+    .new-card .pl { width: 52px; height: 52px; border-radius: 50%; margin: 0 auto 10px; background: var(--white); color: var(--green); border: 1px solid var(--green-200); display: flex; align-items: center; justify-content: center; }
+    .new-card .pl i, .new-card .pl svg { width: 24px; height: 24px; }
+    .new-card b { display: block; font-size: 15px; }
+    .new-card p { font-size: 13px; color: var(--slate-500); margin: 4px 0 14px; line-height: 1.45; }
+
+    /* ---------- Thành viên (members tab) ---------- */
+    .mb-team { background: var(--white); border: 1px solid var(--slate-200); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); padding: 14px; }
+    .mb-team .hd { display: flex; align-items: center; gap: 12px; }
+    .mb-team .lg { width: 44px; height: 44px; border-radius: 12px; background: var(--card-graphite); color: var(--white); font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .mb-team .hd b { display: block; font-size: 15.5px; }
+    .mb-team .hd span { display: block; font-size: 12.5px; color: var(--slate-500); margin-top: 2px; }
+    .mb-team .sw { height: 32px; padding: 0 10px; border-radius: 16px; background: var(--slate-100); color: var(--slate-600); font-size: 12.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; }
+    .mb-team .sw i, .mb-team .sw svg { width: 15px; height: 15px; }
+    .mb-stats { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--slate-100); }
+    .mb-stats div { text-align: center; }
+    .mb-stats div + div { border-left: 1px solid var(--slate-100); }
+    .mb-stats b { display: block; font-size: 18px; font-weight: 800; color: var(--ink); }
+    .mb-stats span { display: block; font-size: 11.5px; color: var(--slate-500); margin-top: 2px; }
+    .mb-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; }
+    .mb-row + .mb-row { border-top: 1px solid var(--slate-100); }
+    .mb-row .av { width: 44px; height: 44px; }
+    .mb-row .tx { flex: 1; min-width: 0; }
+    .mb-row .tx b { display: flex; align-items: center; gap: 6px; font-size: 14.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mb-row .tx b em { font-style: normal; font-size: 10.5px; font-weight: 700; color: var(--green-dark); background: var(--green-100); padding: 1px 6px; border-radius: 8px; }
+    .mb-row .tx span { display: block; font-size: 12.5px; color: var(--slate-500); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mb-row .tx small { display: flex; align-items: center; gap: 4px; font-size: 11.5px; color: var(--slate-400); margin-top: 3px; }
+    .mb-row .tx small i, .mb-row .tx small svg { width: 12px; height: 12px; }
+    .footer-cta.mb-foot { padding: 14px 20px 20px; }
+    .mb-row .ed { width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--slate-200); background: var(--white); color: var(--slate-600); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .mb-row .ed i, .mb-row .ed svg { width: 18px; height: 18px; }
+    .mb-row .chev { width: 18px; height: 18px; color: var(--slate-400); flex-shrink: 0; }
+    .mb-row.off .av { filter: grayscale(1); opacity: .6; }
+    .mb-row.off .tx b { color: var(--slate-500); }
+    .mb-head { display: flex; align-items: center; gap: 14px; }
+    .mb-head .tx { flex: 1; min-width: 0; }
+    .mb-head .tx b { display: block; font-size: 18px; font-weight: 700; }
+    .mb-head .tx span { display: block; font-size: 13px; color: var(--slate-500); margin: 2px 0 6px; }
+    .mb-kpi { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 14px 0; }
+    .mb-kpi div { background: var(--slate-50); border: 1px solid var(--slate-100); border-radius: 12px; padding: 10px 6px; text-align: center; }
+    .mb-kpi b { display: block; font-size: 17px; font-weight: 800; }
+    .mb-kpi span { display: block; font-size: 11.5px; color: var(--slate-500); margin-top: 1px; }
+    .mb-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .mb-tags .tg { height: 30px; padding: 0 6px 0 12px; border-radius: 15px; background: var(--green-50); border: 1px solid var(--green-100); color: var(--green-dark); font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+    .mb-tags .tg i, .mb-tags .tg svg { width: 15px; height: 15px; color: var(--slate-400); }
+    .mb-link { display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 14px; border-radius: 12px; background: var(--slate-50); border: 1px dashed var(--slate-300); }
+    .mb-link .u { flex: 1; min-width: 0; font-size: 13.5px; font-weight: 600; color: var(--slate-700); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mb-link .icon-btn { width: 36px; height: 36px; background: var(--white); border: 1px solid var(--slate-200); color: var(--slate-600); }
+    .mb-link .icon-btn i, .mb-link .icon-btn svg { width: 18px; height: 18px; }
+    .mb-opt { display: flex; align-items: center; gap: 12px; padding: 12px 14px; }
+    .mb-opt .tx { flex: 1; }
+    .mb-opt .tx b { display: block; font-size: 14.5px; font-weight: 600; }
+    .mb-opt .tx span { display: block; font-size: 12.5px; color: var(--slate-500); margin-top: 2px; line-height: 1.4; }
+
+    /* ---- Digital-profile layout (redesign v2) ---- */
+    .body.pf { overflow: hidden; }
+    .phone.tall .body.pf { overflow: visible; }
+    .card-sw { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border-radius: 17px; background: var(--green-50); border: 1px solid var(--green-100); color: var(--green-dark); font-size: 14px; font-weight: 700; }
+    .card-sw i, .card-sw svg { width: 16px; height: 16px; }
+    .pf-cover { height: 132px; margin: 0 16px; border-radius: 20px; background-size: cover; background-position: center; background-color: var(--green-100); position: relative; flex-shrink: 0; }
+    .pf-cover .cv-edit { position: absolute; right: 10px; top: 10px; width: 34px; height: 34px; border-radius: 50%; background: rgba(15,23,42,.55); color: var(--white); display: flex; align-items: center; justify-content: center; }
+    .pf-cover .cv-edit i, .pf-cover .cv-edit svg { width: 17px; height: 17px; }
+    .pf-head { display: flex; align-items: flex-end; justify-content: space-between; padding: 0 28px; margin-top: -48px; flex-shrink: 0; position: relative; }
+    .pf-avw { position: relative; }
+    .pf-av { width: 104px; height: 104px; border-radius: 50%; object-fit: cover; border: 4px solid var(--white); box-shadow: 0 0 0 2px var(--green-200), var(--shadow-md); display: block; background: var(--green-100); }
+    .pf-avw .av-edit { right: 0; bottom: 4px; }
+    .pf-stats { display: flex; gap: 16px; padding-bottom: 8px; }
+    .pf-stats span { display: flex; align-items: center; gap: 3px; font-size: 9.5px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--slate-400); }
+    .pf-stats span i, .pf-stats span svg { width: 11px; height: 11px; }
+    .pf-stats b { font-size: 14px; font-weight: 700; color: var(--slate-800); }
+    .pf-stats .st-i { display: flex; align-items: center; gap: 5px; }
+    .pf-stats .st-i i, .pf-stats .st-i svg { width: 16px; height: 16px; color: var(--slate-400); }
+    .pf-stats .st-i b { font-size: 15px; }
+    .pf-in { padding: 0 20px 24px; }
+    .pf-name { display: flex; align-items: center; gap: 6px; font-size: 24px; font-weight: 800; letter-spacing: -0.3px; margin-top: 12px; }
+    .pf-name i, .pf-name svg { width: 20px; height: 20px; color: var(--green); }
+    .pf-pos { margin-top: 10px; border: 1px solid var(--slate-200); border-radius: 14px; overflow: hidden; }
+    .pf-pos .p { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
+    .pf-pos .p + .p { border-top: 1px solid var(--slate-100); }
+    .pf-pos .lg { width: 34px; height: 34px; border-radius: 9px; background: var(--green-50); color: var(--green); font-weight: 800; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .pf-pos .lg.c2 { background: var(--slate-100); color: var(--slate-700); }
+    .pf-pos .lg.c3 { background: var(--gold-bg); color: var(--gold); }
+    .pf-pos b { display: block; font-size: 14px; }
+    .pf-pos .f1 span { display: block; font-size: 12.5px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pf-conn { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px 0 9px; margin-top: 8px; border-radius: 14px; background: var(--green-50); color: var(--green-dark); font-size: 12.5px; font-weight: 700; }
+    .pf-conn i, .pf-conn svg { width: 15px; height: 15px; }
+    .appbar .title .pf-conn { display: flex; justify-content: center; height: auto; padding: 0; margin: 1px 0 0; gap: 3px; background: none; border-radius: 0; font-size: 11px; font-weight: 600; letter-spacing: 0; }
+    .appbar .title .pf-conn i, .appbar .title .pf-conn svg { width: 11px; height: 11px; }
+    .appbar .title .pf-conn.pend { color: var(--slate-500); }
+    .pf-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 12px; }
+    .pf-tags > i, .pf-tags > svg { width: 14px; height: 14px; color: var(--slate-400); margin-right: 2px; }
+    .pf-tags .tg { display: inline-flex; align-items: center; gap: 3px; height: 24px; padding: 0 10px; border-radius: 12px; background: var(--slate-100); color: var(--slate-700); font-size: 12px; font-weight: 600; }
+    .pf-tags .tg.add { background: transparent; border: 1px dashed var(--slate-300); color: var(--green-dark); padding: 0 9px 0 7px; }
+    .pf-tags .tg.add i, .pf-tags .tg.add svg { width: 12px; height: 12px; }
+    .btn.connected { background: var(--green-bg); color: var(--green-dark); border: 1.5px solid rgba(0,144,55,.3); }
+    .pf-cta2 { display: flex; gap: 10px; margin-top: 14px; }
+    .pf-cta2 .btn { height: 54px; }
+    .pf-cta2 .btn.primary { flex: 1.5; }
+    .pf-cta2 .btn.outline { flex: 1; }
+    .sh-who { display: flex; align-items: center; gap: 10px; padding: 10px 12px; margin-bottom: 12px; border-radius: 14px; background: var(--slate-50); border: 1px solid var(--slate-200); }
+    .sh-who b { display: block; font-size: 15px; }
+    .sh-who span { display: block; font-size: 12.5px; color: var(--slate-500); }
+    .sh-note { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px; color: var(--slate-500); margin-top: 4px; }
+    .sh-note i, .sh-note svg { width: 14px; height: 14px; }
+    /* chức vụ khi xem hồ sơ người khác: không khung, không nhãn "Chính" */
+    .pf-pos.view { border: 0; border-radius: 0; overflow: visible; margin-top: 6px; display: flex; flex-direction: column; gap: 8px; }
+    .pf-pos.view .p { padding: 0; }
+    .pf-pos.view .p + .p { border-top: 0; }
+    .pf-pos.view .lg { display: none; }
+    .pf-pos.view b { font-size: 15px; }
+    .pf-pos.view .p + .p b { font-size: 14px; font-weight: 600; }
+    .pf-cta { margin-top: 14px; height: 54px; }
+    .pf-acts { display: flex; justify-content: space-around; margin-top: 12px; }
+    .pf-acts a { display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; color: var(--slate-600); }
+    .pf-acts a i, .pf-acts a svg { width: 22px; height: 22px; color: var(--green); }
+    .pf-lbl { text-align: center; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--slate-400); margin: 20px 0 10px; }
+    .pf-soc { display: flex; justify-content: center; gap: 10px; }
+    .pf-soc span { width: 42px; height: 42px; border-radius: 50%; color: var(--white); display: flex; align-items: center; justify-content: center; }
+    .pf-soc span i, .pf-soc span svg { width: 19px; height: 19px; }
+    .pf-soc .zl { font-size: 11px; font-weight: 800; }
+    .pf-sec { margin-top: 22px; }
+    .pf-sec h4 { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+    .acc { border-bottom: 1px solid var(--slate-200); padding: 14px 0; }
+    .acc .ah { display: flex; justify-content: space-between; align-items: center; font-size: 15px; font-weight: 700; }
+    .acc .ah i, .acc .ah svg { width: 18px; height: 18px; color: var(--slate-400); }
+    .acc .ah[data-js="acc"] { cursor: pointer; user-select: none; }
+    .acc .ah[data-js="acc"] svg { transition: transform .2s; }
+    .acc:not(.open) .ah[data-js="acc"] svg { transform: rotate(180deg); }
+    .acc:not(.open) > :not(.ah) { display: none; }
+    .acc p { font-size: 13.5px; color: var(--slate-600); line-height: 1.55; margin-top: 8px; }
+    .chk { list-style: none; margin-top: 8px; }
+    .chk li { display: flex; gap: 8px; align-items: center; font-size: 13.5px; color: var(--slate-700); padding: 4px 0; }
+    .chk li i, .chk li svg { width: 17px; height: 17px; color: var(--green); flex-shrink: 0; }
+    .pdots { display: flex; gap: 4px; }
+    .pdots i { width: 6px; height: 6px; border-radius: 3px; background: var(--slate-300); }
+    .pdots i.on { width: 16px; background: var(--green); }
+    .prod-rail { display: flex; gap: 12px; overflow: hidden; margin-right: -20px; }
+    .pcard2 { flex: 0 0 260px; border-radius: 24px; border: 1px solid var(--slate-200); overflow: hidden; background: var(--white); box-shadow: var(--shadow-sm); }
+    .pcard2 .img { height: 130px; background-size: cover; background-position: center; background-color: var(--slate-100); }
+    .pcard2 .pb { padding: 14px 16px; }
+    .pcard2 b { font-size: 15px; display: block; }
+    .pcard2 p { font-size: 12.5px; color: var(--slate-500); margin: 4px 0 10px; }
+    .pcard2 .link { font-size: 13px; }
+    .pcard2 .go { width: 30px; height: 30px; border-radius: 50%; background: var(--green-50); color: var(--green); display: flex; align-items: center; justify-content: center; }
+    .pcard2 .go i, .pcard2 .go svg { width: 16px; height: 16px; }
+    .feat { height: 170px; border-radius: 24px; background-size: cover; background-position: center; background-color: var(--slate-800); position: relative; color: var(--white); padding: 14px 16px; display: flex; flex-direction: column; justify-content: space-between; }
+    .feat .tag { align-self: flex-start; font-size: 10px; font-weight: 800; letter-spacing: 1px; background: var(--white); color: var(--ink); border-radius: 10px; padding: 3px 9px; }
+    .feat .play { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,.25); border: 1.5px solid rgba(255,255,255,.7); display: flex; align-items: center; justify-content: center; }
+    .feat .play i, .feat .play svg { width: 20px; height: 20px; }
+    .feat b { font-size: 15px; }
+    .feat .dur { position: absolute; right: 14px; top: 14px; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 10px; background: rgba(15,23,42,.6); color: var(--white); }
+    .tile { position: relative; }
+    .tile .vb { position: absolute; right: 8px; top: 8px; display: inline-flex; align-items: center; gap: 3px; height: 22px; padding: 0 7px 0 5px; border-radius: 11px; background: rgba(15,23,42,.6); color: var(--white); font-size: 11px; font-weight: 700; }
+    .tile .vb i, .tile .vb svg { width: 11px; height: 11px; fill: currentColor; }
+    .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .g3p { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .g3p .tile { height: 100px; padding: 10px; }
+    .g3p .tile b { font-size: 12px; line-height: 1.25; }
+    .sec-cnt { font-size: 11.5px; font-weight: 600; color: var(--slate-400); margin-right: 4px; }
+    .ed-feat { height: 140px; }
+    .ed-feat .xb { right: 10px; top: auto; bottom: 10px; }
+    .ed-feat .dur { right: 14px; }
+    /* F13 · tab Video YouTube */
+    .pf-seg { margin-top: 2px; }
+    .pf-pane[hidden] { display: none !important; }
+    .yt-ic { width: 26px; height: 18px; border-radius: 5px; background: var(--yt); color: var(--white); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .yt-ic i, .yt-ic svg { width: 14px !important; height: 14px !important; }
+    .pf-clr { margin-left: auto; width: 20px; height: 20px; border-radius: 50%; background: var(--slate-300); color: var(--white); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .pf-clr i, .pf-clr svg { width: 12px !important; height: 12px !important; }
+    .yt-prev { display: flex; gap: 12px; align-items: center; padding: 10px; border: 1px solid var(--slate-200); border-radius: 14px; background: var(--white); margin-bottom: 12px; }
+    .yt-th { position: relative; width: 112px; aspect-ratio: 16/9; border-radius: 10px; background-size: cover; background-position: center; flex-shrink: 0; }
+    .yt-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 34px; height: 24px; border-radius: 7px; background: var(--yt); color: var(--white); display: flex; align-items: center; justify-content: center; }
+    .yt-play i, .yt-play svg { width: 13px; height: 13px; fill: currentColor; }
+    .yt-th .dur { position: absolute; right: 5px; bottom: 5px; font-size: 10px; font-weight: 700; color: var(--white); background: rgba(15,23,42,.75); padding: 1px 5px; border-radius: 4px; }
+    .yt-meta { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .yt-meta b { font-size: 13.5px; line-height: 1.3; color: var(--slate-900); }
+    .yt-meta span { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 600; color: var(--green-dark); }
+    .yt-meta span i, .yt-meta span svg { width: 13px; height: 13px; }
+    .yt-warn { display: flex; gap: 8px; align-items: flex-start; padding: 10px 12px; border-radius: 12px; background: var(--slate-50); font-size: 12.5px; color: var(--slate-600); margin-bottom: 14px; }
+    .yt-warn i, .yt-warn svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--slate-500); margin-top: 1px; }
+    /* Nút thêm ảnh / video trong Portfolio nổi bật (chế độ sửa) */
+    .pf-add { background: var(--green-50) !important; border: 1.5px dashed var(--green-200); color: var(--slate-800) !important; flex-direction: column; align-items: center !important; justify-content: center; gap: 4px; text-align: center; cursor: pointer; transition: background .15s, border-color .15s, transform .1s; }
+    .pf-add:hover { border-color: var(--green); }
+    .pf-add:active { transform: scale(.98); background: var(--green-100) !important; }
+    .pf-add:focus-visible { outline: 3px solid rgba(0,144,55,.4); outline-offset: 2px; }
+    .pf-add .pa-ic { width: 40px; height: 40px; border-radius: 50%; background: var(--white); border: 1px solid var(--green-200); color: var(--green); display: flex; align-items: center; justify-content: center; margin-bottom: 4px; box-shadow: 0 2px 6px rgba(0,144,55,.12); }
+    .pf-add .pa-ic i, .pf-add .pa-ic svg { width: 20px; height: 20px; }
+    .pf-add b { font-size: 13px; font-weight: 700; color: var(--green-dark); }
+    .pf-add .pa-q { font-size: 11px; font-weight: 600; color: var(--slate-500); line-height: 1.3; }
+    .add-tile small { font-size: 11px; font-weight: 600; color: var(--slate-400); }
+    .tile { height: 130px; border-radius: 20px; background-size: cover; background-position: center; background-color: var(--slate-700); color: var(--white); display: flex; align-items: flex-end; padding: 12px; }
+    .tile b { font-size: 13px; }
+    .pv-banner { display: flex; align-items: center; gap: 8px; margin: 4px 16px 10px; padding: 10px 14px; border-radius: 12px; background: var(--ink); color: var(--white); font-size: 13px; font-weight: 600; }
+    .pv-banner i, .pv-banner svg { width: 17px; height: 17px; }
+    .pv-banner a { color: #4ade80; font-weight: 700; }
+    .pick { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1.5px solid var(--slate-200); border-radius: 14px; margin-bottom: 10px; }
+    .pick.on { border-color: var(--green); background: var(--green-50); }
+    .pick .sw { width: 52px; height: 34px; border-radius: 7px; background: var(--card-graphite); flex-shrink: 0; }
+    .pick .sw.dk { background: var(--card-pearl); border: 1px solid var(--slate-200); }
+    .pick .sw.lt { background: var(--card-stone); border: 1px solid var(--slate-200); }
+    .pick b { display: block; font-size: 14.5px; margin-bottom: 2px; }
+    .pick .f1 span { display: block; font-size: 12.5px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pick .rd { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--slate-300); flex-shrink: 0; }
+    .pick.on .rd { border: 6px solid var(--green); }
+    .pos-row { display: flex; align-items: center; gap: 10px; padding: 12px; }
+    .pos-row + .pos-row { border-top: 1px solid var(--slate-100); }
+    .pos-row .grip { width: 18px; height: 18px; color: var(--slate-300); flex-shrink: 0; }
+    .pos-row .lg { width: 38px; height: 38px; border-radius: 10px; background: var(--green-50); color: var(--green); font-weight: 800; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .pos-row .lg.c2 { background: var(--slate-100); color: var(--slate-700); }
+    .pos-row b { display: block; font-size: 14.5px; }
+    .pos-row .f1 span { display: block; font-size: 12.5px; color: var(--slate-500); }
+    .pos-row .more { width: 18px; height: 18px; color: var(--slate-400); }
+    .cardchips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    /* ---- WYSIWYG edit mode ---- */
+    .edbar .title { font-size: 16px; }
+    .phone.tall > .edbar { position: sticky; top: 44px; z-index: 39; background: var(--white); border-bottom: 1px solid var(--slate-100); }
+    .ed-hint { display: flex; align-items: center; gap: 8px; margin-top: 12px; padding: 9px 12px; border-radius: 10px; background: var(--slate-100); font-size: 12.5px; color: var(--slate-700); font-weight: 600; }
+    .ed-hint i, .ed-hint svg { width: 16px; height: 16px; color: var(--green); }
+    .ed { position: relative; border: 1.5px dashed var(--slate-300); border-radius: 12px; padding: 8px 10px; margin-top: 10px; }
+    .ed.on { border: 2px solid var(--green); box-shadow: 0 0 0 4px var(--green-bg); }
+    .ed .pen { position: absolute; right: -8px; top: -9px; width: 24px; height: 24px; border-radius: 50%; background: var(--white); border: 1px solid var(--slate-200); box-shadow: var(--shadow-sm); color: var(--slate-700); display: flex; align-items: center; justify-content: center; }
+    .ed .pen i, .ed .pen svg { width: 12px; height: 12px; }
+    .ed-name .pf-name { font-size: 22px; }
+    .caret { display: inline-block; width: 2px; height: 22px; background: var(--green); margin-left: 2px; vertical-align: middle; animation: blink 1s step-end infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+    .ed-pos { padding: 0; overflow: hidden; }
+    .ed-pos .p .grip, .ro .grip, .sec-tool .grip { width: 16px; height: 16px; color: var(--slate-300); flex-shrink: 0; }
+    .rm { width: 18px; height: 18px; color: var(--red-600); flex-shrink: 0; }
+    .add-row { display: flex; align-items: center; justify-content: center; gap: 6px; height: 40px; border-top: 1px dashed var(--slate-200); color: var(--green-dark); font-size: 13.5px; font-weight: 700; }
+    .add-row.sm { border: 1.5px dashed var(--slate-300); border-radius: 10px; margin-top: 8px; }
+    .add-row i, .add-row svg { width: 16px; height: 16px; }
+    .ed-sec > .add-row { border: 1.5px dashed var(--slate-300); border-radius: 10px; }
+    .xb { position: absolute; right: -6px; top: -6px; width: 18px; height: 18px; border-radius: 50%; background: var(--slate-700); color: var(--white); border: 2px solid var(--white); display: flex; align-items: center; justify-content: center; }
+    .xb i, .xb svg { width: 9px !important; height: 9px !important; }
+    .ed-soc span { position: relative; }
+    .ed-soc .soc-add { background: var(--white); border: 1.5px dashed var(--slate-300); color: var(--slate-600); }
+    .chip { position: relative; }
+    .chip .xb { right: -5px; top: -6px; }
+    /* E3 Tạo thẻ mới (3 bước giống tạo tài khoản) */
+    .photo-pick { width: 104px; height: 104px; border-radius: 50%; background: var(--green-50); border: 2px dashed var(--green-200); display: flex; align-items: center; justify-content: center; color: var(--green); position: relative; margin: 4px auto 6px; }
+    .photo-pick img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+    .photo-pick .av-edit i, .photo-pick .av-edit svg { width: 15px; height: 15px; }
+    .next-step { display: flex; gap: 12px; align-items: center; padding: 14px; border-radius: 14px; border: 1px solid var(--slate-200); background: var(--white); margin-bottom: 10px; }
+    .next-step .ic { width: 40px; height: 40px; border-radius: 12px; background: var(--green-50); color: var(--green); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .next-step .ic i, .next-step .ic svg { width: 20px; height: 20px; }
+    .next-step b { font-size: 14.5px; display: block; }
+    .next-step span { font-size: 12.5px; color: var(--slate-500); }
+    .next-step .chev { width: 18px; height: 18px; color: var(--slate-400); margin-left: auto; }
+    .nc-prog { padding: 14px; border-radius: 14px; background: var(--green-50); margin-bottom: 12px; }
+    .nc-prog b { font-size: 14.5px; color: var(--green-dark); }
+    /* E3b nhiều chức danh & công ty */
+    .pos-blk { border: 1px solid var(--slate-200); border-radius: 14px; padding: 14px; margin-bottom: 12px; background: var(--white); }
+    .pos-blk .field { margin-bottom: 12px; }
+    .pos-del { width: 32px; height: 32px; border-radius: 10px; border: 0; background: var(--red-100); color: var(--red-600); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .pos-del i, .pos-del svg { width: 16px; height: 16px; }
+    .pos-add { display: flex; align-items: center; justify-content: center; gap: 6px; height: 44px; border: 1.5px dashed var(--green-200); border-radius: 12px; color: var(--green-dark); font-size: 14px; font-weight: 700; margin-bottom: 20px; cursor: pointer; }
+    .pos-add i, .pos-add svg { width: 18px; height: 18px; }
+    .pos-blk .pv-in { flex:1; min-width:0; align-self:stretch; border:0; outline:0; background:transparent; font:inherit; color:inherit; padding:0; margin:0; }
+    .pos-blk .pv-in::placeholder { color:var(--slate-400); opacity:1; }
+    .pos-hd { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .pos-hd b { flex: 1; font-size: 12px; font-weight: 700; color: var(--slate-400); text-transform: uppercase; letter-spacing: .04em; }
+    .body.pos-scroll { overflow-y: auto; scrollbar-width: none; }
+    .body.pos-scroll::-webkit-scrollbar { display: none; }
+    .phone .mb8 { margin-bottom: 8px; }
+    /* E3c hoàn thiện hồ sơ = bố cục trang hồ sơ (F1) */
+    .nc-need { font-size: 11.5px; font-weight: 700; color: var(--slate-500); background: var(--slate-100); padding: 2px 8px; border-radius: 8px; }
+    .ed-p.nc-ph { color: var(--slate-400); }
+    .nc-tip { margin: 8px 0 0; color: var(--slate-500); }
+    .add-chip { border-style: dashed; color: var(--green-dark); background: var(--white); }
+    /* Ngành nghề: ~100 lựa chọn → ô tìm + chip đã chọn + gợi ý, chọn đầy đủ trong sheet D2b */
+    .ind-pick { cursor: pointer; }
+    .ind-pick .ph { color: var(--slate-400); }
+    .ind-sel { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .ind-sel .chip { height: 32px; padding: 0 10px 0 12px; font-size: 13px; gap: 5px; }
+    .ind-sel .chip.on i, .ind-sel .chip.on svg { width: 14px; height: 14px; opacity: .85; }
+    .ind-sheet { top: 96px; display: flex; flex-direction: column; padding-bottom: 0; }
+    .ind-sheet .ind-scroll { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; margin: 0 -20px; padding: 0 20px; }
+    .ind-sheet .ind-scroll::-webkit-scrollbar { display: none; }
+    .ind-row[data-js] { cursor: pointer; user-select: none; }
+    .ind-row[data-js]:active { background: var(--slate-50); }
+    .ind-row.dis { opacity: .4; }
+    .ind-sel .chip[data-js] { cursor: pointer; }
+    .hint.ind-ai { margin-top: 10px; }
+    .hint.ind-ai i, .hint.ind-ai svg { color: var(--green); }
+    .ind-empty { display: none; padding: 24px 0 8px; text-align: center; font-size: 14px; color: var(--slate-500); }
+    .ind-empty.show { display: block; }
+    .ind-sheet .sec { font-size: 12px; font-weight: 700; color: var(--slate-400); text-transform: uppercase; letter-spacing: .04em; margin: 16px 0 4px; display: flex; justify-content: space-between; }
+    .ind-sheet .sec span { text-transform: none; letter-spacing: 0; font-weight: 600; }
+    .ind-row { display: flex; align-items: center; gap: 12px; height: 48px; border-bottom: 1px solid var(--slate-100); font-size: 15px; color: var(--ink); }
+    .ind-row .tx { flex: 1; }
+    .ind-row .box { width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid var(--slate-300); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ind-row .box.on { background: var(--green); border-color: var(--green); color: var(--white); }
+    .ind-row .box i, .ind-row .box svg { width: 15px; height: 15px; }
+    .ind-row.add { color: var(--green); font-weight: 600; border-bottom: 0; border-top: 1px solid var(--slate-200); margin: 0 -20px; padding: 0 20px; height: 52px; }
+    .ind-row.add i, .ind-row.add svg { width: 20px; height: 20px; }
+    .ind-foot { margin: 0 -20px; padding: 12px 20px 30px; border-top: 1px solid var(--slate-100); background: var(--white); }
+    .ed-sec .chips, .ed .chips { overflow: visible; padding-top: 6px; }
+    .ed-sec { margin-top: 18px; padding: 12px; border: 1.5px dashed var(--slate-300); border-radius: 14px; }
+    .ed-sec.muted { opacity: .55; }
+    .ed-sec .ed { margin-top: 8px; }
+    .sec-tool { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .sec-tool b { font-size: 15px; }
+    .sec-tool > i:last-child, .sec-tool > svg:last-child { width: 18px; height: 18px; color: var(--slate-500); }
+    .ed-p { font-size: 13.5px; color: var(--slate-600); line-height: 1.55; }
+    .ai-chip { display: inline-flex; align-items: center; gap: 5px; margin-top: 8px; height: 30px; padding: 0 10px; border-radius: 15px; background: var(--slate-100); color: var(--slate-700); font-size: 12.5px; font-weight: 700; }
+    .ai-chip i, .ai-chip svg { width: 14px; height: 14px; color: var(--green); }
+    /* Đổi ảnh bìa / avatar */
+    .cv-tpls { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .cv-tpl { display: block; aspect-ratio: 3 / 1; border-radius: 10px; background-size: cover; background-position: center; cursor: pointer; }
+    .phone.crop { background: #0b0f0e; color: var(--white); }
+    .crop-bar { height: 52px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 15px; }
+    .crop-bar a { color: var(--slate-300); font-weight: 600; cursor: pointer; }
+    .crop-bar a.ok { color: #4ade80; font-weight: 700; }
+    .crop-stage { position: relative; flex: 1; overflow: hidden; }
+    .crop-img { position: absolute; inset: 0; background-size: cover; background-position: center; }
+    .crop-win { position: absolute; left: 20px; right: 20px; top: 50%; transform: translateY(-50%); border: 2px solid var(--white); box-shadow: 0 0 0 999px rgba(11,15,14,.62); }
+    .crop-win.rect { aspect-ratio: 3 / 1; border-radius: 6px; }
+    .crop-win.circle { left: 50%; right: auto; width: 290px; height: 290px; border-radius: 50%; transform: translate(-50%, -50%); }
+    .crop-win i { position: absolute; background: rgba(255,255,255,.45); }
+    .crop-win .g1, .crop-win .g2 { top: 0; bottom: 0; width: 1px; }
+    .crop-win .g1 { left: 33.33%; } .crop-win .g2 { left: 66.66%; }
+    .crop-win .g3, .crop-win .g4 { left: 0; right: 0; height: 1px; }
+    .crop-win .g3 { top: 33.33%; } .crop-win .g4 { top: 66.66%; }
+    .crop-tools { padding: 18px 24px 34px; text-align: center; }
+    .crop-tools p { font-size: 12.5px; color: var(--slate-400); margin: 10px 0 14px; }
+    .crop-zoom { display: flex; align-items: center; gap: 12px; color: var(--slate-300); }
+    .crop-zoom i, .crop-zoom svg { width: 18px; height: 18px; }
+    .crop-zoom .trk { flex: 1; height: 4px; border-radius: 2px; background: rgba(255,255,255,.2); position: relative; }
+    .crop-zoom .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 2px; background: #4ade80; }
+    .crop-zoom .knob { position: absolute; top: 50%; width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 50%; background: var(--white); box-shadow: 0 2px 6px rgba(0,0,0,.4); }
+    .crop-acts { display: flex; justify-content: center; gap: 28px; font-size: 13px; font-weight: 600; color: var(--slate-300); }
+    .crop-acts span { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+    .crop-acts i, .crop-acts svg { width: 18px; height: 18px; }
+    .ai-chip.busy { background: var(--green-50); color: var(--green-dark); }
+    .spin { animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .sk-line { height: 12px; border-radius: 6px; margin-top: 10px; background: linear-gradient(90deg, var(--slate-100) 0%, var(--green-50) 50%, var(--slate-100) 100%); background-size: 200% 100%; animation: sk 1.2s linear infinite; }
+    @keyframes sk { to { background-position: -200% 0; } }
+    .ai-box { padding: 14px 16px; border: 1px solid var(--slate-200); background: var(--slate-50); border-radius: 12px; }
+    .ai-box.busy { padding-top: 6px; }
+    .ai-box:not(.busy) { border-color: var(--green-200); background: var(--green-50); }
+    .ai-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 700; color: var(--green-dark); margin-bottom: 6px; }
+    .ai-tag i, .ai-tag svg { width: 13px; height: 13px; }
+    .ai-box .ed-p { margin: 0; }
+    .ai-bar { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+    .ai-bar .btn.sm { height: 36px; padding: 0 14px; font-size: 13.5px; gap: 5px; }
+    .ai-bar .btn.sm i, .ai-bar .btn.sm svg { width: 15px; height: 15px; }
+    .ai-bar .link { font-size: 13.5px; }
+    .ai-st { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--green-dark); }
+    .ai-st i, .ai-st svg { width: 16px; height: 16px; }
+    .ai-lbl { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; color: var(--green-dark); margin-bottom: 6px; }
+    .ai-lbl i, .ai-lbl svg { width: 14px; height: 14px; }
+    .ed-p.ai-new { background: var(--green-50); border-radius: 10px; padding: 10px 12px; margin: 0; }
+    .ed-list li .rm { margin-left: auto; }
+    .rel { position: relative; }
+    .pcard2 .xb { right: 8px; top: 8px; }
+    .pcard2 .pen { position: absolute; right: 8px; bottom: 8px; width: 26px; height: 26px; border-radius: 50%; background: var(--white); border: 1px solid var(--slate-200); display: flex; align-items: center; justify-content: center; }
+    .pcard2 .pen i, .pcard2 .pen svg { width: 13px; height: 13px; }
+    .add-card { flex: 0 0 130px !important; border: 1.5px dashed var(--slate-300) !important; box-shadow: none !important; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: var(--green-dark); background: var(--slate-50) !important; }
+    .add-card i, .add-card svg { width: 22px; height: 22px; }
+    .add-card b { font-size: 13px; }
+    .tile .xb { right: 8px; top: 8px; }
+    .add-tile { background: var(--slate-50) !important; border: 1.5px dashed var(--slate-300); color: var(--green-dark) !important; flex-direction: column; align-items: center !important; justify-content: center; gap: 6px; }
+    .add-tile i, .add-tile svg { width: 24px; height: 24px; }
+    .ed-foot { display: flex; align-items: center; gap: 12px; background: var(--white) !important; border-top: 1px solid var(--slate-200) !important; }
+    .kb { position: absolute; left: 0; right: 0; bottom: 0; z-index: 30; background: var(--slate-300); padding: 6px 4px 26px; }
+    .kb-sug { display: flex; justify-content: space-around; padding: 6px 0 8px; font-size: 14px; color: var(--slate-700); }
+    .kb-sug .on { font-weight: 700; color: var(--ink); }
+    .kr { display: flex; justify-content: center; gap: 6px; margin-bottom: 9px; }
+    .k { min-width: 31px; height: 40px; border-radius: 6px; background: var(--white); box-shadow: 0 1px 0 rgba(15,23,42,.25); display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--ink); }
+    .k.w { min-width: 46px; background: var(--slate-200); font-size: 13px; }
+    .k.sp { flex: 1; max-width: 220px; font-size: 13px; color: var(--slate-500); }
+    .k.ok { background: var(--green); color: var(--white); font-weight: 700; }
+    .typing { display: inline-flex; align-items: center; font-size: 14px; color: var(--ink); padding: 0 4px; }
+    .sugg { margin-top: 10px; border: 1px solid var(--slate-200); border-radius: 12px; padding: 10px 12px; background: var(--white); box-shadow: var(--shadow-md); }
+    .srow { display: flex; align-items: center; gap: 8px; padding: 8px 0; font-size: 14px; color: var(--ink); }
+    .srow + .srow { border-top: 1px solid var(--slate-100); }
+    .srow i, .srow svg { width: 16px; height: 16px; color: var(--green); }
+    .srow.new { color: var(--green-dark); font-weight: 700; }
+    .ro { display: flex; align-items: center; gap: 10px; padding: 0 14px; height: 52px; background: var(--white); }
+    .ro + .ro { border-top: 1px solid var(--slate-100); }
+    .ro b { font-size: 14.5px; }
+    .ro > i:last-child, .ro > svg:last-child { width: 18px; height: 18px; color: var(--slate-500); }
+    .ro.drag { position: relative; z-index: 2; margin: 0 -6px; border-radius: 12px; box-shadow: var(--shadow-lg); border: 1.5px solid var(--green); transform: rotate(-1.5deg); }
+    .ro.ph { height: 10px; background: var(--slate-100); border-top: 0; }
+    .ro.off b { color: var(--slate-400); }
+    .cv-btn { position: absolute; right: 10px; bottom: 10px; display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 16px; background: rgba(15,23,42,.6); color: var(--white); font-size: 12.5px; font-weight: 700; }
+    .cv-btn i, .cv-btn svg { width: 15px; height: 15px; }
+    .ed-cover { outline: 1.5px dashed var(--slate-300); outline-offset: 3px; }
+    .pf-soc.ed-soc span.xb { position: absolute; width: 18px; height: 18px; right: -4px; top: -4px; border-radius: 50%; background: var(--slate-700); }
+    .nc-prev { height: 150px; }
+    .sw-row { display: flex; gap: 10px; }
+    .swc { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 6px; border: 1.5px solid var(--slate-200); border-radius: 12px; font-size: 13px; font-weight: 600; position: relative; }
+    .swc .s { width: 54px; height: 34px; border-radius: 7px; border: 1px solid var(--slate-200); }
+    .swc .s.g { background: var(--card-graphite); border: 0; }
+    .swc .s.p { background: var(--card-pearl); }
+    .swc .s.st { background: var(--card-stone); }
+    .swc.on { border-color: var(--green); box-shadow: 0 0 0 3px var(--green-bg); }
+    .swc em { position: absolute; top: -9px; right: 6px; font-style: normal; font-size: 10px; font-weight: 700; background: var(--green); color: var(--white); border-radius: 8px; padding: 1px 6px; }
+
+    /* ---- Multi-card scope (per-card stats, link, completion, share) ---- */
+    .pf-sw { height: 34px; max-width: 260px; font-size: 13.5px; }
+    .pf-sw .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pf-statw { display: flex; flex-direction: column; align-items: flex-end; padding-bottom: 8px; }
+    .pf-statw .pf-stats { padding-bottom: 2px; }
+    .pf-statw small { font-size: 10.5px; font-weight: 600; color: var(--slate-400); }
+    .pf-cmeta { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+    .pf-link { flex: 1; min-width: 0; display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border-radius: var(--r-pill); background: var(--slate-50); border: 1px solid var(--slate-200); font-size: 12.5px; font-weight: 600; color: var(--slate-700); }
+    .pf-link span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pf-link i, .pf-link svg { width: 14px; height: 14px; color: var(--green); flex-shrink: 0; }
+    .pf-done { display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; color: var(--green-dark); white-space: nowrap; }
+    .pf-done .progress { width: 52px; height: 6px; }
+    .pf-cmeta .pf-done { flex: 1; } .pf-cmeta .pf-done .progress { flex: 1; width: auto; }
+    .ab-sp { width: 40px; flex-shrink: 0; }
+
+    /* ---- Chức vụ tối đa 2 + Xem thêm; Giới thiệu tối đa 3 dòng ---- */
+    .pf-pos .p.xtra { display: none; }
+    .pf-pos.open .p.xtra { display: flex; }
+    .pf-more { width: 100%; height: 38px; border: 0; border-top: 1px solid var(--slate-100); background: var(--white); display: flex; align-items: center; justify-content: center; gap: 4px; font: inherit; font-size: 13px; font-weight: 700; color: var(--green-dark); cursor: pointer; }
+    .pf-more i, .pf-more svg { width: 15px; height: 15px; transition: transform .2s; }
+    .pf-more .m2 { display: none; }
+    .pf-pos.open > .pf-more .m1, .pf-more.on .m1 { display: none; }
+    .pf-pos.open > .pf-more .m2, .pf-more.on .m2 { display: inline; }
+    .pf-pos.open > .pf-more svg, .pf-more.on svg { transform: rotate(180deg); }
+    .pf-more.ln { width: auto; height: 28px; border: 0; padding: 0; margin-top: 4px; justify-content: flex-start; }
+    /* ---- P · Xem portfolio / video / web sản phẩm ---- */
+    .vw { display: flex; flex-direction: column; }
+    .vw-top { display: flex; align-items: center; justify-content: space-between; padding: 4px 8px; }
+    .vw-cnt { font-size: 14px; font-weight: 700; color: rgba(255,255,255,.85); }
+    .vw-stage { position: relative; height: 420px; margin-top: 12px; }
+    .vw-img { position: absolute; inset: 0; background-size: cover; background-position: center; }
+    .vw-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 34px; height: 34px; border-radius: 50%; background: rgba(15,23,42,.45); color: var(--white); display: flex; align-items: center; justify-content: center; }
+    .vw-nav.l { left: 10px; } .vw-nav.r { right: 10px; }
+    .vw-nav i, .vw-nav svg { width: 18px; height: 18px; }
+    .vw-dots { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
+    .vw-dots i { width: 6px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.3); }
+    .vw-dots i.on { width: 18px; background: var(--white); }
+    .vw-info { padding: 18px 20px 0; }
+    .vw-info b { display: block; font-size: 18px; font-weight: 700; }
+    .vw-info p { margin-top: 8px; font-size: 14px; line-height: 1.55; color: rgba(255,255,255,.78); }
+    .vw-meta { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; font-size: 12.5px; color: rgba(255,255,255,.55); }
+    .vw-meta i, .vw-meta svg { width: 14px; height: 14px; }
+    .vw-video { position: relative; height: 219px; margin-top: 60px; background: #000; }
+    .yt-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 64px; height: 44px; border-radius: 12px; background: #ff0033; color: var(--white); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,.4); }
+    .yt-play i, .yt-play svg { width: 22px; height: 22px; fill: currentColor; }
+    .yt-dur { position: absolute; right: 10px; bottom: 10px; font-size: 11.5px; font-weight: 700; padding: 2px 6px; border-radius: 5px; background: rgba(0,0,0,.75); color: var(--white); }
+    .yt-mark { position: absolute; left: 10px; bottom: 10px; display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 700; color: var(--white); }
+    .yt-mark i, .yt-mark svg { width: 15px; height: 15px; }
+    .vw-yt { margin-top: 22px; height: 48px; width: 100%; border-radius: 14px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.25); color: var(--white); font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .vw-yt i, .vw-yt svg { width: 18px; height: 18px; color: #ff4d4d; }
+    .wb-bar { display: flex; align-items: center; gap: 4px; padding: 4px 8px; border-bottom: 1px solid var(--slate-100); }
+    .wb-url { flex: 1; min-width: 0; height: 34px; border-radius: 10px; background: var(--slate-100); display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 13px; color: var(--slate-700); }
+    .wb-url span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .wb-url i, .wb-url svg { width: 13px; height: 13px; color: var(--green); flex-shrink: 0; }
+    .wb-prog { height: 2px; background: var(--slate-100); } .wb-prog span { display: block; width: 72%; height: 100%; background: var(--green); }
+    .wb-page { flex: 1; overflow: hidden; }
+    .wb-hero { height: 210px; background-size: cover; background-position: center; }
+    .wb-in { padding: 18px 20px; }
+    .wb-kicker { font-size: 11.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--green); }
+    .wb-in h3 { font-size: 22px; font-weight: 800; margin-top: 4px; letter-spacing: -.3px; }
+    .wb-in p { margin-top: 8px; font-size: 14px; line-height: 1.55; color: var(--slate-600); }
+    .wb-tools { display: flex; justify-content: space-around; align-items: center; height: 48px; border-top: 1px solid var(--slate-100); color: var(--slate-600); }
+    .wb-tools i, .wb-tools svg { width: 20px; height: 20px; }
+    .tile[data-go], .feat[data-go], .pcard2[data-go] { cursor: pointer; }
+    /* ---- Chế độ sửa · phần nội dung dạng form: dải xám ngăn mục, tiêu đề in hoa, ô nhập + ✕ đỏ, link "+ Thêm" ---- */
+    .ed-sec { margin: 20px -20px 0; padding: 20px 20px 22px; border: 0; border-top: 8px solid var(--slate-100); border-radius: 0; }
+    .ed-sec + .ed-sec { margin-top: 0; }
+    .ed-sec + .btn { margin-top: 0; }
+    .ed-sec .sec-tool { margin-bottom: 12px; }
+    .ed-sec [hidden] { display: none !important; }
+    .eye-btn { width: 36px; height: 36px; margin: -9px -9px -9px 0; border: 0; background: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--slate-500); cursor: pointer; flex-shrink: 0; }
+    .eye-btn:active { background: var(--slate-100); }
+    .eye-btn i, .eye-btn svg { width: 18px; height: 18px; }
+    .ed-sec.muted .eye-btn { color: var(--slate-400); }
+    .ed-sec .sec-tool b { font-size: 11.5px; font-weight: 700; letter-spacing: 1.1px; text-transform: uppercase; color: var(--slate-400); }
+    .ed-sec.muted { opacity: 1; }
+    .ed-sec.muted .sec-tool b, .ed-sec.muted .t-xs { opacity: .6; }
+    .ed-sec .chip.soft { position: relative; display: inline-flex; align-items: center; gap: 6px; padding-right: 8px; }
+    .ed-sec .chip .xb { position: static; width: 18px; height: 18px; border: 0; background: var(--slate-300); color: var(--white); flex-shrink: 0; cursor: pointer; }
+    .ed-sec .chip .xb i, .ed-sec .chip .xb svg { width: 11px !important; height: 11px !important; stroke-width: 2.5; }
+    .ed-sec .ed:not(.ed-list) { margin-top: 0; padding: 14px 16px; border: 1px solid var(--slate-200); background: var(--slate-50); border-radius: 12px; }
+    .ed-sec .ed:not(.ed-list) .pen { display: none; }
+    .ed-sec .ed .ed-p { font-size: 14.5px; color: var(--slate-700); line-height: 1.6; }
+    .ed-list.ed { border: 0; padding: 0; margin: 0; border-radius: 0; display: flex; flex-direction: column; gap: 10px; list-style: none; }
+    .ed-list li { display: flex; align-items: center; gap: 12px; }
+    .ed-list .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+    .ed-list .fin { flex: 1; min-width: 0; min-height: 46px; display: flex; align-items: center; padding: 0 14px; border: 1px solid var(--slate-200); background: var(--slate-50); border-radius: 12px; font-size: 14px; color: var(--slate-700); }
+    .ed-list .fin:focus { border-color: var(--green); background: var(--white); box-shadow: 0 0 0 3px var(--green-bg); }
+    .ed-list .rmx { width: 34px; height: 34px; border-radius: 50%; background: var(--red-100); color: var(--red-600); display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer; }
+    .ed-list .rmx i, .ed-list .rmx svg { width: 17px; height: 17px; stroke-width: 2.25; }
+    .ed-sec .add-row, .ed-sec > .add-row, .ed-sec .add-row.sm { justify-content: flex-start; height: 34px; margin-top: 10px; padding: 0; border: 0; border-radius: 0; font-size: 14px; }
+    .ed-sec .add-row i, .ed-sec .add-row svg { width: 18px; height: 18px; }
+    .ed-sec > .sec-tool + .add-row { margin-top: -4px; }
+    .ed-sec .ai-chip { margin-top: 10px; }
+
+    /* ---- Chức vụ – công ty gọn (hồ sơ của tôi): 1 dòng/chức vụ, không khung ---- */
+    .pf-pos.cmp { border: 0; border-radius: 0; overflow: visible; margin-top: 4px; display: flex; flex-direction: column; gap: 3px; }
+    .pf-pos.cmp .p { padding: 0; gap: 8px; min-width: 0; }
+    .pf-pos.cmp .p + .p { border-top: 0; }
+    .pf-pos.cmp .f1 { display: block; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 13.5px; color: var(--slate-500); }
+    .pf-pos.cmp b { display: inline; font-size: 14.5px; font-weight: 700; color: var(--slate-800); }
+    .pf-pos.cmp .p + .p b { font-size: 13.5px; font-weight: 600; color: var(--slate-700); }
+    .pf-pos.cmp .f1 span { display: inline; font-size: inherit; }
+    .pf-pos.cmp .f1 span::before { content: "·"; margin: 0 5px; color: var(--slate-400); }
+    .pf-pos.cmp .badge { display: none; }
+    .pf-pos.cmp .pf-more { width: auto; height: 24px; padding: 0; border: 0; background: none; justify-content: flex-start; font-size: 12.5px; }
+
+    /* ---- % hoàn thiện = thẻ nhắc gọn dưới hàng hành động, kèm việc nên làm tiếp; đủ 100% thì ẩn ---- */
+    .pf-done-card { display: flex; align-items: center; gap: 8px; height: 40px; margin-top: 12px; padding: 0 10px 0 6px; border-radius: 12px; background: var(--gold-bg); border: 1px solid var(--gold-border); cursor: pointer; }
+    .pdc-ic { width: 28px; height: 28px; border-radius: 8px; background: var(--amber-500); color: var(--white); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .pdc-ic i, .pdc-ic svg { width: 15px; height: 15px; }
+    .pdc-t { flex: 1; min-width: 0; font-size: 12.5px; color: var(--slate-600); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pdc-t b { font-weight: 700; color: var(--slate-800); }
+    .pdc-bar { width: 44px; height: 5px; border-radius: 3px; background: var(--gold-border); overflow: hidden; flex-shrink: 0; }
+    .pdc-bar span { display: block; height: 100%; border-radius: 3px; background: var(--amber-500); }
+    .pdc-ch { width: 16px; height: 16px; color: var(--gold); flex-shrink: 0; }
+    /* ---- % hoàn thiện = chỉ số thứ 3 cạnh Lượt xem / Lượt quét ---- */
+    .pf-statw .pf-stats:has(.pf-st-done) { gap: 16px; }
+    .pf-stats:has(.pf-st-done) span { white-space: nowrap; letter-spacing: .4px; }
+    .pf-stats:has(.pf-st-done) span i, .pf-stats:has(.pf-st-done) span svg { display: none; }
+    .pf-stats:has(.pf-st-done) b { font-size: 15px; }
+    .pf-st-done { position: relative; cursor: pointer; }
+    .pf-st-done b { color: var(--green-dark); }
+    .pf-st-done .progress { display: block; width: 100%; height: 4px; margin-top: 3px; }
+
+    .clamp3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .about.more .clamp3 { -webkit-line-clamp: unset; display: block; }
+
+    /* ---- Mục trống trên hồ sơ của tôi (Dịch vụ chính / Đang tìm kiếm / Hợp tác) ---- */
+    .acc.acc-empty { cursor: pointer; }
+    .acc.acc-empty .ah { gap: 12px; }
+    .acc.acc-empty .ah .f1 { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left; }
+    .acc.acc-empty .ah small { font-size: 12px; font-weight: 400; color: var(--slate-500); line-height: 1.4; }
+    .add-pill { display: inline-flex; align-items: center; gap: 4px; height: 32px; padding: 0 12px; border-radius: var(--r-pill); border: 1.5px dashed var(--green); color: var(--green-dark); font-size: 13px; font-weight: 700; flex-shrink: 0; }
+    .acc .ah .add-pill i, .acc .ah .add-pill svg { width: 15px; height: 15px; color: var(--green); }
+
+    /* ---- Sheet thêm dịch vụ / đang tìm kiếm / hợp tác ---- */
+    .sh-scope { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--slate-500); margin: -6px 0 14px; }
+    .sh-scope .sw-mini { width: 22px; height: 14px; border-radius: 3px; background: var(--card-graphite); flex-shrink: 0; }
+    .sh-scope b { color: var(--slate-700); }
+    .up-zone { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1.5px dashed var(--slate-300); border-radius: 14px; background: var(--slate-50); }
+    .up-zone .ic { width: 52px; height: 52px; border-radius: 12px; background: var(--green-bg); color: var(--green); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .up-zone .ic i, .up-zone .ic svg { width: 22px; height: 22px; }
+    .up-zone b { display: block; font-size: 14px; }
+    .up-zone span { font-size: 12px; color: var(--slate-500); }
+    .price-seg { display: flex; gap: 8px; margin-bottom: 8px; }
+    .pick-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pick-chips .chip i, .pick-chips .chip svg { width: 14px; height: 14px; }
+    .pick-chips .chip.add { border-style: dashed; color: var(--green-dark); }
+    .cnt { font-size: 12px; color: var(--slate-400); text-align: right; margin-top: 4px; }
+
+    /* ---- Mục đã có nội dung ---- */
+    .svc { display: flex; gap: 12px; padding: 12px; border: 1px solid var(--slate-200); border-radius: 16px; margin-top: 10px; }
+    .svc .im { width: 64px; height: 64px; border-radius: 12px; background-size: cover; background-position: center; flex-shrink: 0; }
+    .svc b { display: block; font-size: 14px; }
+    .svc p { margin-top: 2px !important; font-size: 12.5px !important; line-height: 1.45 !important; }
+    .svc .pr { display: inline-block; margin-top: 4px; font-size: 12.5px; font-weight: 700; color: var(--green-dark); }
+    .acc .ah .ed { width: 32px; height: 32px; border-radius: 50%; background: var(--slate-100); display: flex; align-items: center; justify-content: center; }
+    .acc .ah .ed i, .acc .ah .ed svg { width: 15px; height: 15px; color: var(--slate-600); }
+    .acc .chips { margin-top: 10px; flex-wrap: wrap; }
+
+    .pf-pos.view .pf-more { justify-content: flex-start; border-top: 0; height: 24px; padding: 0; }
+    .shc img.av-sw { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+    .pf-collab { margin-top: 12px; height: 40px; padding: 0 16px; border-radius: var(--r-pill); border: 1.5px solid var(--green); background: var(--white); color: var(--green-dark); font: inherit; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+    .pf-collab i, .pf-collab svg { width: 16px; height: 16px; }
+    /* ---- Hồ sơ đối tác: chi tiết dịch vụ, giúp đỡ, đề xuất hợp tác ---- */
+    .svc[data-go] { cursor: pointer; }
+    .svc-hero { height: 150px; border-radius: 16px; background-color: var(--slate-100); background-size: cover; background-position: center; position: relative; }
+    .cnt-badge { position: absolute; right: 10px; bottom: 10px; padding: 2px 8px; border-radius: var(--r-pill); background: rgba(15,23,42,.6); color: var(--white); font-size: 11.5px; font-weight: 700; }
+    .svc-t { font-size: 18px; font-weight: 700; margin-top: 14px; }
+    .svc-pr { font-size: 15px; font-weight: 800; color: var(--green-dark); margin-top: 4px; }
+    .svc-pr small { font-size: 12.5px; font-weight: 500; color: var(--slate-500); }
+    .svc-d { font-size: 13.5px; color: var(--slate-600); line-height: 1.55; margin-top: 8px; }
+    .sh-who { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 12.5px; color: var(--slate-500); }
+    .sh-who img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; }
+    .note-box { display: flex; gap: 8px; padding: 10px 12px; border-radius: 12px; background: var(--slate-50); border: 1px solid var(--slate-200); font-size: 12.5px; color: var(--slate-600); line-height: 1.45; margin: -4px 0 16px; }
+    .note-box i, .note-box svg { width: 16px; height: 16px; color: var(--slate-400); flex-shrink: 0; margin-top: 1px; }
+    .mb12 { margin-bottom: 12px; }
+    .upd-bn { display: flex; gap: 10px; align-items: flex-start; padding: 12px; margin-top: 12px; border-radius: 14px; background: var(--green-bg); font-size: 12.5px; color: var(--slate-600); }
+    .upd-bn i, .upd-bn svg { width: 18px; height: 18px; color: var(--green); flex-shrink: 0; }
+    .upd-bn b { display: block; font-size: 13.5px; color: var(--ink); }
+    .new-dot { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: var(--r-pill); background: var(--green); color: var(--white); font-size: 10.5px; font-weight: 700; vertical-align: 2px; }
+    /* ---- Sheet chia sẻ thẻ: đồng bộ 02-home D1 ---- */
+    .shc { display: flex; align-items: center; gap: 10px; height: 44px; margin-top: 12px; padding: 0 6px 0 10px; border-radius: 12px; background: var(--slate-50); border: 1px solid var(--slate-200); font-size: 13.5px; }
+    .shc .sw { width: 30px; height: 20px; border-radius: 4px; flex-shrink: 0; }
+    .shc .sw.graphite { background: var(--card-graphite); } .shc .sw.pearl { background: var(--card-pearl); border: 1px solid var(--slate-200); } .shc .sw.stone { background: var(--card-stone); }
+    .shc b { flex: 1; min-width: 0; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .shc b small { font-weight: 500; color: var(--slate-500); font-size: 12px; margin-right: 4px; }
+    .shc a { height: 32px; padding: 0 12px; border-radius: 9px; background: var(--white); border: 1px solid var(--slate-200); font-size: 13px; font-weight: 700; color: var(--green); display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+    .shc a i, .shc a svg { width: 14px; height: 14px; }
+    .qrbox { width: 212px; height: 212px; margin: 4px auto 0; padding: 14px; border-radius: 20px; background: var(--white); border: 1px solid var(--slate-200); box-shadow: var(--shadow-md); position: relative; color: var(--ink); }
+    .qrbox svg { width: 100%; height: 100%; display: block; }
+    .qrbox .lg { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 42px; height: 42px; border-radius: 10px; background: var(--white); padding: 4px; }
+    .qrbox .lg.av-lg { width: 46px; height: 46px; padding: 0; border-radius: 50%; object-fit: cover; border: 3px solid var(--white); box-shadow: 0 0 0 1px var(--slate-200); }
+    .linkbox { display: flex; align-items: center; gap: 10px; height: 48px; border-radius: 12px; background: var(--slate-50); border: 1px solid var(--slate-200); padding: 0 6px 0 14px; font-size: 14px; }
+    .linkbox i.l, .linkbox svg.l { width: 18px; height: 18px; color: var(--slate-400); flex-shrink: 0; }
+    .linkbox .u { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--slate-700); }
+    .linkbox .cp { height: 36px; padding: 0 12px; border-radius: 9px; background: var(--white); border: 1px solid var(--slate-200); font-size: 13px; font-weight: 700; color: var(--green); display: inline-flex; align-items: center; gap: 5px; }
+    .linkbox .cp i, .linkbox .cp svg { width: 15px; height: 15px; }
+    .targets { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+    .targets a { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; color: var(--slate-600); text-decoration: none; }
+    .targets a span { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--slate-100); color: var(--slate-700); }
+    .targets a span i, .targets a span svg { width: 22px; height: 22px; }
+    .targets a span.zalo { background: var(--zalo); color: var(--white); font-weight: 800; font-size: 13px; }
+    .targets a span.msg { background: var(--messenger); color: var(--white); }
+    .scope-tag { display: inline-flex; align-items: center; gap: 5px; margin-top: 6px; font-size: 11.5px; font-weight: 600; color: var(--slate-500); }
+    .scope-tag i, .scope-tag svg { width: 13px; height: 13px; }
+    .scope-tag.card { color: var(--green-dark); }
+    .sw-mini { width: 34px; height: 22px; border-radius: 5px; background: var(--card-graphite); flex-shrink: 0; }
+    .sw-mini.dk { background: var(--card-pearl); border: 1px solid var(--slate-200); }
+    .sw-mini.lt { background: var(--card-stone); border: 1px solid var(--slate-200); }
+    .pick .f1 span.pk-l { color: var(--green-dark); font-weight: 600; }
+    .share-qr { width: 172px; height: 172px; margin: 16px auto 4px; border-radius: 20px; border: 1px solid var(--slate-200); background: var(--white); box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: center; color: var(--ink); }
+    .share-qr i, .share-qr svg { width: 138px; height: 138px; }
+    .cd-done { display: flex; align-items: center; gap: 8px; padding: 10px 4px 2px; font-size: 12.5px; color: var(--slate-500); }
+    .cd-done .progress { flex: 1; height: 6px; }
+    .cd-done b { color: var(--slate-800); font-size: 12.5px; }
+    .cd-done .link { font-size: 12.5px; }
+    .row .ic.sw { background: transparent; width: 36px; }
+    .slug .pre { color: var(--slate-400); font-weight: 500; flex-shrink: 0; }
+    .ok-t { color: var(--green); }
+    /* sheet "Gửi thẻ nào?" bản gọn: danh sách chữ, không hình thẻ */
+    .sh-sub { font-size: 13px; color: var(--slate-500); margin: -6px 0 12px; }
+    .sh-sub b { color: var(--slate-800); font-weight: 600; }
+    .cpick { border: 1px solid var(--slate-200); border-radius: 14px; overflow: hidden; margin-bottom: 10px; }
+    .cpick .ci { display: flex; align-items: center; gap: 10px; padding: 11px 14px; }
+    .cpick .ci + .ci { border-top: 1px solid var(--slate-100); }
+    .cpick .ci b { display: block; font-size: 14.5px; }
+    .cpick .ci span { display: block; font-size: 12.5px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cpick .ci > i, .cpick .ci > svg { width: 18px; height: 18px; color: var(--slate-400); flex-shrink: 0; }
+    /* B15 · Đặt lịch hẹn với hồ sơ khác */
+    .bk-sheet { display: flex; flex-direction: column; padding-bottom: 28px; }
+    .bk-sub { font-size: 13px; color: var(--slate-500); margin: -8px 0 14px; }
+    .bk-sub b { color: var(--slate-800); font-weight: 600; }
+    .bk-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+    .bk-days span { height: 52px; border-radius: 12px; border: 1.5px solid var(--slate-200); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--slate-800); }
+    .bk-days small { font-size: 11px; font-weight: 600; color: var(--slate-400); }
+    .bk-days b { font-size: 16px; font-weight: 700; line-height: 1; }
+    .bk-days .today small { color: var(--green); }
+    .bk-days .so.on { background: var(--green); border-color: var(--green); color: var(--white); box-shadow: 0 4px 12px rgba(0,144,55,0.28); }
+    .bk-days .so.on small { color: rgba(255,255,255,0.85); }
+    .bk-lbl { font-size: 13px; font-weight: 600; color: var(--slate-700); margin: 16px 0 8px; }
+    .bk-me { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 14px; background: var(--slate-50); border: 1px solid var(--slate-200); }
+    .bk-me img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+    .bk-me .f1 { min-width: 0; flex: 1; }
+    .bk-me b { display: block; font-size: 14.5px; }
+    .bk-me span { display: block; font-size: 12.5px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bk-me a { font-size: 13px; font-weight: 700; color: var(--green); flex-shrink: 0; }
+    .bk-msg { height: 76px !important; margin-top: 10px; }
+    .bk-sheet .btn.primary { margin-top: 18px; }
+    /* B16 · Đã đặt lịch */
+    .bk-done { text-align: center; padding-top: 8px; }
+    .bk-done h3 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .bk-done p { font-size: 14px; color: var(--slate-500); line-height: 1.5; margin: 0 8px 18px; }
+    .bk-sum { text-align: left; border: 1px solid var(--slate-200); border-radius: 16px; background: var(--slate-50); margin-bottom: 18px; }
+    .bk-sum .r { display: flex; align-items: center; gap: 12px; padding: 12px 14px; }
+    .bk-sum .r + .r { border-top: 1px solid var(--slate-200); }
+    .bk-sum .ic { width: 36px; height: 36px; border-radius: 10px; background: var(--green-bg); color: var(--green); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .bk-sum .ic i, .bk-sum .ic svg { width: 18px; height: 18px; }
+    .bk-sum small { display: block; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--slate-400); }
+    .bk-sum b { font-size: 14.5px; }
+    .bk-done .btn + .btn { margin-top: 10px; }
+    /* Đặt lịch: 1 tuần/lần, xem tới 3 tuần + bộ chọn giờ : phút */
+    .bk-mon { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .bk-mon b { font-size: 15px; }
+    .bk-nav { display: flex; align-items: center; gap: 6px; }
+    .bk-rng { min-width: 104px; text-align: center; font-size: 13px; font-weight: 600; color: var(--slate-600); }
+    .bk-arw { width: 30px; height: 30px; border: 0; border-radius: 9px; background: var(--slate-100); color: var(--slate-700); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+    .bk-arw i, .bk-arw svg { width: 16px; height: 16px; }
+    .bk-arw.dis { opacity: .35; cursor: default; }
+    .bk-wk { display: none !important; }
+    .bk-wk.on { display: grid !important; }
+    .bk-days span { cursor: pointer; }
+    .bk-dots { display: flex; justify-content: center; gap: 5px; margin-top: 8px; }
+    .bk-dots i { width: 6px; height: 6px; border-radius: 3px; background: var(--slate-200); transition: width .2s; }
+    .bk-dots i.on { width: 16px; background: var(--green); }
+    .bk-lbl small { float: right; font-size: 12.5px; font-weight: 500; color: var(--slate-400); }
+    .bk-wheel { position: relative; display: flex; align-items: center; justify-content: center; gap: 4px; height: 112px; border: 1.5px solid var(--slate-200); border-radius: 14px; background: var(--white); overflow: hidden; }
+    .bk-wheel::before { content: ""; position: absolute; left: 10px; right: 10px; top: 50%; height: 40px; margin-top: -20px; border-radius: 10px; background: var(--green-bg); }
+    .bk-col { position: relative; width: 96px; display: flex; flex-direction: column; align-items: center; user-select: none; }
+    .bk-col span { height: 32px; line-height: 32px; font-size: 16px; font-weight: 500; color: var(--slate-400); cursor: pointer; padding: 0 16px; }
+    .bk-col b { height: 40px; line-height: 40px; font-size: 24px; font-weight: 800; color: var(--green-dark); letter-spacing: .02em; }
+    .bk-col em { position: absolute; top: 50%; right: 4px; margin-top: -8px; font-style: normal; font-size: 12px; font-weight: 600; color: var(--green); }
+    .bk-colon { position: relative; font-size: 24px; font-weight: 800; color: var(--green-dark); margin-top: -3px; }
+  
+    /* ======== 10 · Hồ sơ web ======== */
+    .sso { display: flex; flex-direction: column; gap: 10px; }
+    .sso-btn { height: 50px; width: 100%; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 16px; cursor: pointer; }
+    .sso-btn .sso-logo { width: 20px; height: 20px; flex-shrink: 0; }
+    .sso-btn.apple { background: var(--apple-black); color: var(--white); border: 0; font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif; font-weight: 600; }
+    .sso-btn.apple .sso-logo { width: 19px; height: 19px; margin-top: -2px; }
+    .sso-btn.google { background: var(--white); color: var(--google-text); border: 1px solid var(--google-border); font-family: 'Roboto', Arial, sans-serif; font-weight: 500; }
+    :root { --apple-black: #000000; --google-border: #747775; --google-text: #1f1f1f; --google-y: #FFC107; --google-r: #FF3D00; --google-g: #4CAF50; --google-b: #1976D2; }
+    .sso-btn.mail { background: var(--white); color: var(--slate-800); border: 1px solid var(--slate-200); font-weight: 600; }
+    .sso-btn.mail i, .sso-btn.mail svg { width: 19px; height: 19px; color: var(--slate-600); }
+    .wb-bar { flex-shrink: 0; display: flex; align-items: center; gap: 10px; margin: 0 12px 6px; height: 36px; padding: 0 12px; border-radius: 12px; background: var(--slate-100); color: var(--slate-500); }
+    .wb-bar .u { flex: 1; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 13.5px; font-weight: 500; color: var(--slate-700); }
+    .wb-bar .u span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .wb-bar i, .wb-bar svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .wb-head { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; height: 48px; padding: 0 16px; border-bottom: 1px solid var(--slate-100); background: var(--white); }
+    .wb-logo { display: flex; align-items: center; gap: 6px; }
+    .wb-logo img { height: 26px; }
+    .wb-logo img.w { height: 16px; }
+    .wb-login { height: 34px; padding: 0 14px; border-radius: var(--r-pill); border: 1.5px solid var(--green); color: var(--green-dark); font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; cursor: pointer; }
+    .wb-me { display: inline-flex; align-items: center; gap: 2px; color: var(--slate-500); }
+    .wb-me img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--green-100); }
+    .wb-me i, .wb-me svg { width: 16px; height: 16px; }
+    .body.pf.wb { padding-top: 12px; }
+    .wb-promo { display: flex; align-items: center; gap: 12px; margin-top: 28px; padding: 14px; border-radius: 16px 16px 0 0; background: var(--green-50); border: 1px solid var(--green-100); border-bottom: 0; }
+    .wb-promo img { width: 40px; height: 40px; flex-shrink: 0; }
+    .wb-promo b { display: block; font-size: 14.5px; }
+    .wb-promo span { display: block; font-size: 12.5px; color: var(--slate-600); margin-top: 2px; }
+    .wb-promo-btn { width: 100%; height: 48px; border-radius: 0 0 16px 16px; }
+    .wb-foot { margin-top: 20px; text-align: center; font-size: 12px; color: var(--slate-400); }
+    .wb-foot b { color: var(--green-dark); }
+    .wb-foot span { display: block; margin-top: 4px; }
+    .wb-foot a { color: var(--slate-500); }
+    .wb-sheet { text-align: left; }
+    .wb-who { position: relative; width: 64px; margin: 4px auto 10px; }
+    .wb-who img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 3px solid var(--white); box-shadow: 0 0 0 2px var(--green-200); display: block; }
+    .wb-who i, .wb-who svg { position: absolute; right: -4px; bottom: -2px; width: 26px; height: 26px; padding: 5px; border-radius: 50%; background: var(--green); color: var(--white); border: 2px solid var(--white); }
+    .wb-st { font-size: 19px; font-weight: 800; text-align: center; letter-spacing: -0.2px; }
+    .wb-ss { font-size: 13.5px; color: var(--slate-500); text-align: center; margin: 6px 0 18px; line-height: 1.45; }
+    .wb-alt { font-size: 13.5px; color: var(--slate-500); text-align: center; margin-top: 14px; }
+    .wb-alt a { color: var(--green-dark); font-weight: 700; }
+    .wb-otp { display: flex; gap: 8px; }
+    .wb-otp span { flex: 1; height: 52px; border-radius: 12px; border: 1.5px solid var(--slate-200); background: var(--slate-50); display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; }
+    .wb-otp span.on { border-color: var(--green); background: var(--white); box-shadow: 0 0 0 3px var(--green-bg); }
+    .wb-sent { display: flex; align-items: center; gap: 12px; }
+    .wb-sent .pf-cta { flex: 1; color: var(--slate-600); cursor: default; }
+    .wb-sent .pf-cta i, .wb-sent .pf-cta svg { color: var(--slate-400); }
+    .wb-undo { margin-top: 14px; font-size: 14px; font-weight: 700; color: var(--red-600); cursor: pointer; }
+    .wb-conn { margin-top: 2px; }
+    .wb-own { display: flex; align-items: center; gap: 10px; margin: 0 16px 12px; padding: 10px 12px; border-radius: 14px; background: var(--green-50); border: 1px solid var(--green-100); }
+    .wb-own > i, .wb-own > svg { width: 20px; height: 20px; color: var(--green); flex-shrink: 0; }
+    .wb-own .f1 { flex: 1; min-width: 0; }
+    .wb-own b { display: block; font-size: 13.5px; }
+    .wb-own span { display: block; font-size: 12px; color: var(--slate-500); }
+    .wb-own a { font-size: 12.5px; font-weight: 700; color: var(--green-dark); white-space: nowrap; }
+    .wb-vcf { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 14px; background: var(--slate-50); border: 1px solid var(--slate-200); }
+    .wb-vcf img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+    .wb-vcf .f1 { min-width: 0; }
+    .wb-vcf b { display: block; font-size: 15px; }
+    .wb-vcf span { display: block; font-size: 12.5px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .wb-vrows { list-style: none; margin: 12px 0 16px; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .wb-vrows li { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--slate-700); }
+    .wb-vrows i, .wb-vrows svg { width: 17px; height: 17px; color: var(--green); }
+    .wb-gone { align-items: center; justify-content: center; text-align: center; padding: 0 32px 80px; }
+    .wb-gone .ic { width: 84px; height: 84px; border-radius: 50%; background: var(--slate-100); color: var(--slate-500); display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+    .wb-gone .ic i, .wb-gone .ic svg { width: 38px; height: 38px; }
+    .wb-gone h3 { font-size: 20px; font-weight: 800; }
+    .wb-gone p { font-size: 14px; color: var(--slate-500); line-height: 1.5; margin: 8px 0 24px; }
+    /* desktop */
+    .wb-desk { width: 1280px; border-radius: 16px; overflow: hidden; background: var(--white); box-shadow: var(--shadow-lg); border: 1px solid var(--slate-200); }
+    .wb-dbar { display: flex; align-items: center; gap: 16px; padding: 10px 16px; background: var(--slate-50); border-bottom: 1px solid var(--slate-200); }
+    .wb-dbar .dots { display: flex; gap: 6px; }
+    .wb-dbar .dots i { width: 11px; height: 11px; border-radius: 50%; background: var(--slate-300); display: block; }
+    .wb-dbar .wb-bar { flex: 1; margin: 0 120px 0 0; }
+    .wb-desk .wb-head { padding: 0 40px; height: 60px; }
+    .wb-dgrid { display: grid; grid-template-columns: 380px 1fr; gap: 40px; padding: 28px 40px 40px; background: var(--app-bg); }
+    .wb-dcard { align-self: start; position: sticky; top: 20px; background: var(--white); border-radius: 24px; border: 1px solid var(--slate-200); padding: 16px 0 4px; }
+    .wb-dmain { background: var(--white); border-radius: 24px; border: 1px solid var(--slate-200); padding: 4px 8px 24px; }
+    .wb-dmain .g2, .wb-dmain .g3p { max-width: none; }
+    .wb-dmain .prod-rail { display: grid; grid-template-columns: repeat(3, 1fr); margin-right: 0; }
+    .wb-dmain .pcard2 { flex: none; }
+    .wb-dmain .pdots { display: none; }
+  </style>
+</head>
+<body class="rd-canvas">
+  <div class="rd-head">
+    <a class="back" href="index.html">← Tất cả flow</a>
+    <h1>10 · Hồ sơ web</h1>
+    <p>Trang công khai incard.biz/… của từng thẻ, mở khi quét QR, chạm thẻ NFC hoặc bấm link; người xem không cần cài app. Chưa đăng nhập vẫn lưu danh bạ, đặt lịch, nhắn tin được; chỉ "Kết nối" cần đăng nhập, đăng nhập ngay trên web và lời mời tự gửi sau khi đăng nhập.</p>
+  </div>
+
+  <section class="rd-section">
+    <h2>A · Người xem chưa đăng nhập</h2>
+    <div class="rd-row">
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="wb-bar"><span class="u"><i data-lucide="lock"></i><span>incard.biz/minhanh</span></span><i data-lucide="rotate-cw"></i></div>
+          <div class="wb-head"><a class="wb-logo"><img src="assets/logo-mark.png" alt="" /><img class="w" src="assets/logo-word.png" alt="InCard" /></a><a class="wb-login">Đăng nhập</a></div>
+          <div class="body pf wb">
+<div class="pf-cover" style="background-image:url(assets/covers/office.jpg)"></div>
+<div class="pf-head"><span class="pf-avw"><img class="pf-av" src="https://i.pravatar.cc/150?img=47" alt="" /></span></div>
+<div class="pf-in">
+<div class="pf-name">Nguyễn Minh Anh<i data-lucide="badge-check"></i></div>
+<div class="pf-pos cmp"><div class="p"><div class="f1"><b>Giám đốc kinh doanh</b><span>InApps Technology</span></div><span class="badge green">Chính</span></div><div class="p"><div class="f1"><b>Cố vấn chiến lược</b><span>InCard Technology</span></div></div><div class="p xtra"><div class="f1"><b>Thành viên Hội đồng cố vấn</b><span>Hiệp hội Phần mềm VINASA</span></div></div><button class="pf-more" data-js data-more="pos"><span class="m1">Xem thêm 1 chức vụ</span><span class="m2">Thu gọn</span><i data-lucide="chevron-down"></i></button></div>
+<button class="btn primary pf-cta"><i data-lucide="user-plus"></i>Kết nối</button>
+<div class="pf-acts"><a><i data-lucide="contact-round"></i>Lưu danh bạ</a><a><i data-lucide="calendar-days"></i>Đặt lịch</a><a><i data-lucide="message-circle"></i>Nhắn tin</a></div>
+<div class="pf-lbl">Kết nối với tôi</div><div class="pf-soc"><span style="background:var(--wa)" data-go="toast:Gọi 0909 123 456"><i data-lucide="phone"></i></span><span style="background:var(--zalo)" class="zl" data-go="toast:Mở Zalo của Minh Anh">Zalo</span><span style="background:var(--slate-700)" data-go="toast:Mở email tới minhanh@inapps.net"><i data-lucide="mail"></i></span><span style="background:var(--fb)" data-go="toast:Mở Facebook của Minh Anh"><i data-lucide="facebook"></i></span><span style="background:var(--li)" data-go="toast:Mở LinkedIn của Minh Anh"><i data-lucide="linkedin"></i></span><span style="background:var(--yt)" data-go="toast:Mở kênh YouTube của Minh Anh"><i data-lucide="youtube"></i></span></div>
+<div class="pf-sec"><h4>Ngành nghề</h4><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Công nghệ thông tin</span><span class="chip soft">Phần mềm &amp; SaaS</span><span class="chip soft">Tư vấn quản lý</span><span class="chip soft">Kinh doanh – Bán hàng</span></div></div>
+<div class="acc open about"><div class="ah" data-js="acc" role="button" aria-expanded="true">Giới thiệu<i data-lucide="chevron-up"></i></div><p class="clamp3">Hơn 10 năm phát triển kinh doanh công nghệ cho doanh nghiệp vừa và lớn. Kết nối doanh nghiệp Việt với giải pháp phần mềm và thẻ NFC thông minh, từ tư vấn chuyển đổi số đến triển khai thực tế. Đã dẫn dắt đội ngũ 25 người bán hàng B2B, ký hơn 120 hợp đồng với khách hàng tại Việt Nam, Singapore và Nhật Bản. Hiện tập trung vào giải pháp danh thiếp số cho đội ngũ bán hàng và sự kiện.</p><button class="pf-more ln" data-js data-more="about"><span class="m1">Xem thêm</span><span class="m2">Thu gọn</span><i data-lucide="chevron-down"></i></button></div>
+<div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Thế mạnh<i data-lucide="chevron-up"></i></div><ul class="chk"><li><i data-lucide="circle-check"></i>Phát triển kinh doanh B2B</li><li><i data-lucide="circle-check"></i>Xây dựng đội ngũ bán hàng</li><li><i data-lucide="circle-check"></i>Tư vấn chuyển đổi số</li><li><i data-lucide="circle-check"></i>Đàm phán hợp đồng lớn</li></ul></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Dịch vụ chính<i data-lucide="chevron-up"></i></div><ul class="chk"><li><i data-lucide="circle-check"></i>Tư vấn chuyển đổi số</li><li><i data-lucide="circle-check"></i>Triển khai thẻ NFC cho đội ngũ</li><li><i data-lucide="circle-check"></i>Phát triển phần mềm theo yêu cầu</li><li><i data-lucide="circle-check"></i>Đào tạo kỹ năng bán hàng B2B</li></ul></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Đang tìm kiếm<i data-lucide="chevron-up"></i></div><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Khách hàng doanh nghiệp</span><span class="chip soft">Đối tác phân phối</span><span class="chip soft">Đơn vị tổ chức sự kiện</span></div></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Hợp tác<i data-lucide="chevron-up"></i></div><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Đại lý / Reseller</span><span class="chip soft">Giới thiệu khách hàng</span><span class="chip soft">Co-marketing</span></div></div>
+</div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">W1 · Hồ sơ web — chưa đăng nhập (màn đầu)<small>Trang công khai incard.biz/minhanh, mở khi quét QR, chạm thẻ NFC hoặc bấm link; không cần app. Thanh địa chỉ trình duyệt ở trên, header web có logo InCard và "Đăng nhập". Bố cục giữ như "Xem như người khác" (03-A3), bỏ lượt xem / lượt quét (chỉ chủ thẻ thấy) và bỏ logo công ty trước chức danh. Nút chính "Kết nối": chưa đăng nhập thì mở sheet đăng nhập (W3). "Đăng nhập" ở header mở cùng sheet nhưng tiêu đề trung tính "Đăng nhập InCard" và không gửi lời mời; đăng nhập xong về W6. Lưu danh bạ, Đặt lịch, Nhắn tin và các kênh mạng xã hội dùng được ngay, không cần đăng nhập.</small></div>
+      </div>
+      <div class="rd-shot">
+        <div class="phone white tall">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="wb-bar"><span class="u"><i data-lucide="lock"></i><span>incard.biz/minhanh</span></span><i data-lucide="rotate-cw"></i></div>
+          <div class="wb-head"><a class="wb-logo"><img src="assets/logo-mark.png" alt="" /><img class="w" src="assets/logo-word.png" alt="InCard" /></a><a class="wb-login">Đăng nhập</a></div>
+          <div class="body pf wb">
+<div class="pf-cover" style="background-image:url(assets/covers/office.jpg)"></div>
+<div class="pf-head"><span class="pf-avw"><img class="pf-av" src="https://i.pravatar.cc/150?img=47" alt="" /></span></div>
+<div class="pf-in">
+<div class="pf-name">Nguyễn Minh Anh<i data-lucide="badge-check"></i></div>
+<div class="pf-pos cmp"><div class="p"><div class="f1"><b>Giám đốc kinh doanh</b><span>InApps Technology</span></div><span class="badge green">Chính</span></div><div class="p"><div class="f1"><b>Cố vấn chiến lược</b><span>InCard Technology</span></div></div><div class="p xtra"><div class="f1"><b>Thành viên Hội đồng cố vấn</b><span>Hiệp hội Phần mềm VINASA</span></div></div><button class="pf-more" data-js data-more="pos"><span class="m1">Xem thêm 1 chức vụ</span><span class="m2">Thu gọn</span><i data-lucide="chevron-down"></i></button></div>
+<button class="btn primary pf-cta"><i data-lucide="user-plus"></i>Kết nối</button>
+<div class="pf-acts"><a><i data-lucide="contact-round"></i>Lưu danh bạ</a><a><i data-lucide="calendar-days"></i>Đặt lịch</a><a><i data-lucide="message-circle"></i>Nhắn tin</a></div>
+<div class="pf-lbl">Kết nối với tôi</div><div class="pf-soc"><span style="background:var(--wa)" data-go="toast:Gọi 0909 123 456"><i data-lucide="phone"></i></span><span style="background:var(--zalo)" class="zl" data-go="toast:Mở Zalo của Minh Anh">Zalo</span><span style="background:var(--slate-700)" data-go="toast:Mở email tới minhanh@inapps.net"><i data-lucide="mail"></i></span><span style="background:var(--fb)" data-go="toast:Mở Facebook của Minh Anh"><i data-lucide="facebook"></i></span><span style="background:var(--li)" data-go="toast:Mở LinkedIn của Minh Anh"><i data-lucide="linkedin"></i></span><span style="background:var(--yt)" data-go="toast:Mở kênh YouTube của Minh Anh"><i data-lucide="youtube"></i></span></div>
+<div class="pf-sec"><h4>Ngành nghề</h4><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Công nghệ thông tin</span><span class="chip soft">Phần mềm &amp; SaaS</span><span class="chip soft">Tư vấn quản lý</span><span class="chip soft">Kinh doanh – Bán hàng</span></div></div>
+<div class="acc open about"><div class="ah" data-js="acc" role="button" aria-expanded="true">Giới thiệu<i data-lucide="chevron-up"></i></div><p class="clamp3">Hơn 10 năm phát triển kinh doanh công nghệ cho doanh nghiệp vừa và lớn. Kết nối doanh nghiệp Việt với giải pháp phần mềm và thẻ NFC thông minh, từ tư vấn chuyển đổi số đến triển khai thực tế. Đã dẫn dắt đội ngũ 25 người bán hàng B2B, ký hơn 120 hợp đồng với khách hàng tại Việt Nam, Singapore và Nhật Bản. Hiện tập trung vào giải pháp danh thiếp số cho đội ngũ bán hàng và sự kiện.</p><button class="pf-more ln" data-js data-more="about"><span class="m1">Xem thêm</span><span class="m2">Thu gọn</span><i data-lucide="chevron-down"></i></button></div>
+<div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Thế mạnh<i data-lucide="chevron-up"></i></div><ul class="chk"><li><i data-lucide="circle-check"></i>Phát triển kinh doanh B2B</li><li><i data-lucide="circle-check"></i>Xây dựng đội ngũ bán hàng</li><li><i data-lucide="circle-check"></i>Tư vấn chuyển đổi số</li><li><i data-lucide="circle-check"></i>Đàm phán hợp đồng lớn</li></ul></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Dịch vụ chính<i data-lucide="chevron-up"></i></div><ul class="chk"><li><i data-lucide="circle-check"></i>Tư vấn chuyển đổi số</li><li><i data-lucide="circle-check"></i>Triển khai thẻ NFC cho đội ngũ</li><li><i data-lucide="circle-check"></i>Phát triển phần mềm theo yêu cầu</li><li><i data-lucide="circle-check"></i>Đào tạo kỹ năng bán hàng B2B</li></ul></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Đang tìm kiếm<i data-lucide="chevron-up"></i></div><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Khách hàng doanh nghiệp</span><span class="chip soft">Đối tác phân phối</span><span class="chip soft">Đơn vị tổ chức sự kiện</span></div></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Hợp tác<i data-lucide="chevron-up"></i></div><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Đại lý / Reseller</span><span class="chip soft">Giới thiệu khách hàng</span><span class="chip soft">Co-marketing</span></div></div>
+<div class="pf-sec"><div class="flex jb ac"><h4>Sản phẩm nổi bật</h4><span class="pdots"><i class="on"></i><i></i><i></i></span></div><div class="prod-rail"><div class="pcard2" data-go="03-P3"><div class="img" style="background-image:url(assets/img/nfccard.jpg)"></div><div class="pb"><b>Thẻ NFC InCard cho doanh nghiệp</b><p>Danh thiếp số cho cả đội ngũ</p><div class="flex jb ac"><a class="link">Tìm hiểu thêm</a><span class="go"><i data-lucide="arrow-right"></i></span></div></div></div><div class="pcard2" data-go="03-P3"><div class="img" style="background-image:url(assets/img/software.jpg)"></div><div class="pb"><b>Phần mềm theo yêu cầu</b><p>Đội ngũ 300+ kỹ sư InApps</p><div class="flex jb ac"><a class="link">Tìm hiểu thêm</a><span class="go"><i data-lucide="arrow-right"></i></span></div></div></div><div class="pcard2" data-go="03-P3"><div class="img" style="background-image:url(assets/img/consult.jpg)"></div><div class="pb"><b>Gói tư vấn chuyển đổi số</b><p>Khảo sát · lộ trình · triển khai 3 tháng</p><div class="flex jb ac"><a class="link">Tìm hiểu thêm</a><span class="go"><i data-lucide="arrow-right"></i></span></div></div></div></div></div>
+<div class="pf-sec"><h4>Portfolio nổi bật</h4>
+<div class="feat" data-go="03-P2" style="background-image:linear-gradient(180deg,rgba(15,23,42,.25),rgba(15,23,42,.8)),url(assets/img/meeting.jpg)"><span class="tag">NỔI BẬT</span><span class="play"><i data-lucide="play"></i></span><span class="dur">2:14</span><b>Dự án chuyển đổi số Masan 2026</b></div>
+<div class="g2"><div class="tile" data-go="03-P1" style="background-image:linear-gradient(180deg,rgba(15,23,42,0) 40%,rgba(15,23,42,.75)),url(assets/img/conf.jpg)"><b>Techfest 2026</b></div><div class="tile" data-go="03-P1" style="background-image:linear-gradient(180deg,rgba(15,23,42,0) 40%,rgba(15,23,42,.75)),url(assets/img/team.jpg)"><b>Đội ngũ InApps</b></div></div><div class="g3p"><div class="tile" data-go="03-P1" style="background-image:linear-gradient(180deg,rgba(15,23,42,0) 40%,rgba(15,23,42,.75)),url(assets/img/office.jpg)"><b>Văn phòng Q.3</b></div><div class="tile" data-go="03-P1" style="background-image:linear-gradient(180deg,rgba(15,23,42,0) 40%,rgba(15,23,42,.75)),url(assets/img/phone.jpg)"><b>Demo thẻ NFC</b></div><div class="tile" data-go="03-P1" style="background-image:linear-gradient(180deg,rgba(15,23,42,0) 40%,rgba(15,23,42,.75)),url(assets/img/handshake.jpg)"><b>Ký kết đối tác</b></div></div></div>
+<div class="wb-promo"><img src="assets/logo-mark.png" alt="" /><div class="f1"><b>Bạn cũng muốn có hồ sơ như thế này?</b><span>Tạo danh thiếp số và thẻ NFC của riêng bạn.</span></div></div><button class="btn primary wb-promo-btn">Tạo thẻ InCard miễn phí</button>
+<div class="wb-foot">Được tạo bằng <b>InCard</b><span><a>Điều khoản</a> · <a>Quyền riêng tư</a> · <a>Báo cáo hồ sơ</a></span></div>
+</div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">W2 · Hồ sơ web — toàn trang<small>Toàn trang khi chưa đăng nhập. Thứ tự như hồ sơ trong app: Kết nối với tôi → Ngành nghề → Giới thiệu → Thế mạnh → Dịch vụ chính → Đang tìm kiếm → Hợp tác → Sản phẩm nổi bật → Portfolio. Mục trống không hiện. Cuối trang có dải "Tạo thẻ InCard miễn phí" để người xem tạo thẻ của mình (dẫn tới đăng ký), và chân trang: Điều khoản · Quyền riêng tư · Báo cáo hồ sơ.</small></div>
+      </div>
+      <!-- W11 Report profile sheet -->
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="wb-bar"><span class="u"><i data-lucide="lock"></i><span>incard.biz/minhanh</span></span><i data-lucide="rotate-cw"></i></div>
+          <div class="wb-head"><a class="wb-logo"><img src="assets/logo-mark.png" alt="" /><img class="w" src="assets/logo-word.png" alt="InCard" /></a><a class="wb-login">Đăng nhập</a></div>
+          <div class="body pf wb">
+<div class="pf-cover" style="background-image:url(assets/covers/office.jpg)"></div>
+<div class="pf-head"><span class="pf-avw"><img class="pf-av" src="https://i.pravatar.cc/150?img=47" alt="" /></span></div>
+<div class="pf-in">
+<div class="pf-name">Nguyễn Minh Anh<i data-lucide="badge-check"></i></div>
+<button class="btn primary pf-cta"><i data-lucide="user-plus"></i>Kết nối</button>
+<div class="pf-acts"><a><i data-lucide="contact-round"></i>Lưu danh bạ</a><a><i data-lucide="calendar-days"></i>Đặt lịch</a><a><i data-lucide="message-circle"></i>Nhắn tin</a></div>
+</div>
+          </div>
+          <div class="scrim"></div>
+          <div class="sheet wb-sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Báo cáo hồ sơ này</h3><button class="icon-btn" data-go="back"><i data-lucide="x"></i></button></div>
+            <p class="wb-ss" style="text-align:left;margin:-6px 0 6px">Không cần đăng nhập. Minh Anh sẽ không biết ai đã báo cáo.</p>
+            <div class="sortlist">
+              <div class="so on"><i data-lucide="user-x"></i>Giả mạo người khác<span class="rd"></span></div>
+              <div class="so"><i data-lucide="shield-alert"></i>Spam / lừa đảo<span class="rd"></span></div>
+              <div class="so"><i data-lucide="eye-off"></i>Nội dung không phù hợp<span class="rd"></span></div>
+              <div class="so"><i data-lucide="message-square-more"></i>Lý do khác<span class="rd"></span></div>
+            </div>
+            <div class="field mt12"><label>Email của bạn (để nhận phản hồi) <span class="opt">(không bắt buộc)</span></label><div class="input"><i data-lucide="mail"></i><span class="ph">ban@email.com</span></div></div>
+            <div class="btn-row">
+              <button class="btn outline" data-go="back">Huỷ</button>
+              <button class="btn primary" style="flex:1.6" data-go="back|Đã gửi báo cáo, cảm ơn bạn">Gửi báo cáo</button>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">W11 · Báo cáo hồ sơ (sheet)<small>Mở từ link "Báo cáo hồ sơ" ở chân trang hồ sơ web (W2). Không cần đăng nhập: chọn một lý do, để lại email nếu muốn nhận phản hồi. "Gửi báo cáo" đóng sheet, quay lại hồ sơ kèm thông báo cảm ơn.</small></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="rd-section">
+    <h2>B · Kết nối → đăng nhập trên web → đã gửi lời mời</h2>
+    <div class="rd-row">
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="wb-bar"><span class="u"><i data-lucide="lock"></i><span>incard.biz/minhanh</span></span><i data-lucide="rotate-cw"></i></div>
+          <div class="wb-head"><a class="wb-logo"><img src="assets/logo-mark.png" alt="" /><img class="w" src="assets/logo-word.png" alt="InCard" /></a><a class="wb-login">Đăng nhập</a></div>
+          <div class="body pf wb">
+<div class="pf-cover" style="background-image:url(assets/covers/office.jpg)"></div>
+<div class="pf-head"><span class="pf-avw"><img class="pf-av" src="https://i.pravatar.cc/150?img=47" alt="" /></span></div>
+<div class="pf-in">
+<div class="pf-name">Nguyễn Minh Anh<i data-lucide="badge-check"></i></div>
+<div class="pf-pos cmp"><div class="p"><div class="f1"><b>Giám đốc kinh doanh</b><span>InApps Technology</span></div><span class="badge green">Chính</span></div><div class="p"><div class="f1"><b>Cố vấn chiến lược</b><span>InCard Technology</span></div></div><div class="p xtra"><div class="f1"><b>Thành viên Hội đồng cố vấn</b><span>Hiệp hội Phần mềm VINASA</span></div></div><button class="pf-more" data-js data-more="pos"><span class="m1">Xem thêm 1 chức vụ</span><span class="m2">Thu gọn</span><i data-lucide="chevron-down"></i></button></div>
+<button class="btn primary pf-cta"><i data-lucide="user-plus"></i>Kết nối</button>
+<div class="pf-acts"><a><i data-lucide="contact-round"></i>Lưu danh bạ</a><a><i data-lucide="calendar-days"></i>Đặt lịch</a><a><i data-lucide="message-circle"></i>Nhắn tin</a></div>
+<div class="pf-lbl">Kết nối với tôi</div><div class="pf-soc"><span style="background:var(--wa)" data-go="toast:Gọi 0909 123 456"><i data-lucide="phone"></i></span><span style="background:var(--zalo)" class="zl" data-go="toast:Mở Zalo của Minh Anh">Zalo</span><span style="background:var(--slate-700)" data-go="toast:Mở email tới minhanh@inapps.net"><i data-lucide="mail"></i></span><span style="background:var(--fb)" data-go="toast:Mở Facebook của Minh Anh"><i data-lucide="facebook"></i></span><span style="background:var(--li)" data-go="toast:Mở LinkedIn của Minh Anh"><i data-lucide="linkedin"></i></span><span style="background:var(--yt)" data-go="toast:Mở kênh YouTube của Minh Anh"><i data-lucide="youtube"></i></span></div>
+<div class="pf-sec"><h4>Ngành nghề</h4><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Công nghệ thông tin</span><span class="chip soft">Phần mềm &amp; SaaS</span><span class="chip soft">Tư vấn quản lý</span><span class="chip soft">Kinh doanh – Bán hàng</span></div></div>
+<div class="acc open about"><div class="ah" data-js="acc" role="button" aria-expanded="true">Giới thiệu<i data-lucide="chevron-up"></i></div><p class="clamp3">Hơn 10 năm phát triển kinh doanh công nghệ cho doanh nghiệp vừa và lớn. Kết nối doanh nghiệp Việt với giải pháp phần mềm và thẻ NFC thông minh, từ tư vấn chuyển đổi số đến triển khai thực tế. Đã dẫn dắt đội ngũ 25 người bán hàng B2B, ký hơn 120 hợp đồng với khách hàng tại Việt Nam, Singapore và Nhật Bản. Hiện tập trung vào giải pháp danh thiếp số cho đội ngũ bán hàng và sự kiện.</p><button class="pf-more ln" data-js data-more="about"><span class="m1">Xem thêm</span><span class="m2">Thu gọn</span><i data-lucide="chevron-down"></i></button></div>
+<div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Thế mạnh<i data-lucide="chevron-up"></i></div><ul class="chk"><li><i data-lucide="circle-check"></i>Phát triển kinh doanh B2B</li><li><i data-lucide="circle-check"></i>Xây dựng đội ngũ bán hàng</li><li><i data-lucide="circle-check"></i>Tư vấn chuyển đổi số</li><li><i data-lucide="circle-check"></i>Đàm phán hợp đồng lớn</li></ul></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Dịch vụ chính<i data-lucide="chevron-up"></i></div><ul class="chk"><li><i data-lucide="circle-check"></i>Tư vấn chuyển đổi số</li><li><i data-lucide="circle-check"></i>Triển khai thẻ NFC cho đội ngũ</li><li><i data-lucide="circle-check"></i>Phát triển phần mềm theo yêu cầu</li><li><i data-lucide="circle-check"></i>Đào tạo kỹ năng bán hàng B2B</li></ul></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Đang tìm kiếm<i data-lucide="chevron-up"></i></div><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Khách hàng doanh nghiệp</span><span class="chip soft">Đối tác phân phối</span><span class="chip soft">Đơn vị tổ chức sự kiện</span></div></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Hợp tác<i data-lucide="chevron-up"></i></div><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Đại lý / Reseller</span><span class="chip soft">Giới thiệu khách hàng</span><span class="chip soft">Co-marketing</span></div></div>
+</div>
+          </div>
+          <div class="scrim"></div>
+          <div class="sheet wb-sheet">
+            <div class="grab"></div>
+            <div class="wb-who"><img src="https://i.pravatar.cc/150?img=47" alt="" /><i data-lucide="user-plus"></i></div>
+            <h3 class="wb-st">Đăng nhập để kết nối với Minh Anh</h3>
+            <p class="wb-ss">Lời mời kết nối sẽ được gửi ngay sau khi bạn đăng nhập.</p>
+            <div class="sso"><button class="sso-btn google"><svg class="sso-logo" viewBox="0 0 48 48"><path style="fill:var(--google-y)" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path style="fill:var(--google-r)" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path style="fill:var(--google-g)" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path style="fill:var(--google-b)" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>Tiếp tục với Google</button><button class="sso-btn apple"><svg class="sso-logo" viewBox="0 0 24 24" fill="currentColor"><path d="M16.37 1.43c0 1.14-.49 2.27-1.18 3.08-.74.9-1.99 1.57-2.99 1.57-.12 0-.23-.02-.3-.03-.01-.06-.04-.22-.04-.39 0-1.15.57-2.27 1.21-2.98.8-.94 2.14-1.64 3.25-1.68.03.13.05.28.05.43zm4.56 15.71c-.03.07-.46 1.58-1.52 3.12-.94 1.34-1.94 2.71-3.43 2.71-1.52 0-1.9-.88-3.63-.88-1.7 0-2.3.91-3.67.91-1.38 0-2.33-1.26-3.43-2.8C4 18.38 2.96 15.57 2.96 12.92c0-4.28 2.8-6.55 5.55-6.55 1.45 0 2.68.95 3.6.95.87 0 2.22-1.01 3.9-1.01.61 0 2.89.06 4.37 2.19-.13.09-2.38 1.37-2.38 4.19 0 3.26 2.85 4.42 2.96 4.45z"/></svg>Tiếp tục với Apple</button><button class="sso-btn mail"><i data-lucide="mail"></i>Tiếp tục với Email</button></div>
+            <p class="wb-alt">Chưa có tài khoản? <a>Đăng ký</a></p>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">W3 · Đăng nhập để kết nối<small>Bấm "Kết nối" khi chưa đăng nhập: trang mờ đi, sheet đăng nhập trượt lên ngay trên web, không chuyển sang app. Tiêu đề nói rõ mục đích (kết nối với Minh Anh) và hứa gửi lời mời ngay sau khi đăng nhập, người xem không phải bấm lại. Google / Apple đăng nhập một chạm; Email mở W4. "Đăng ký" mở W4: email chưa có tài khoản thì tạo luôn tài khoản, rồi tự gửi lời mời. Bấm vùng mờ hoặc vuốt xuống để đóng, quay lại hồ sơ.</small></div>
+      </div>
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="wb-bar"><span class="u"><i data-lucide="lock"></i><span>incard.biz/minhanh</span></span><i data-lucide="rotate-cw"></i></div>
+          <div class="wb-head"><a class="wb-logo"><img src="assets/logo-mark.png" alt="" /><img class="w" src="assets/logo-word.png" alt="InCard" /></a><a class="wb-login">Đăng nhập</a></div>
+          <div class="body pf wb">
+<div class="pf-cover" style="background-image:url(assets/covers/office.jpg)"></div>
+<div class="pf-head"><span class="pf-avw"><img class="pf-av" src="https://i.pravatar.cc/150?img=47" alt="" /></span></div>
+<div class="pf-in">
+<div class="pf-name">Nguyễn Minh Anh<i data-lucide="badge-check"></i></div>
+<div class="pf-pos cmp"><div class="p"><div class="f1"><b>Giám đốc kinh doanh</b><span>InApps Technology</span></div><span class="badge green">Chính</span></div><div class="p"><div class="f1"><b>Cố vấn chiến lược</b><span>InCard Technology</span></div></div><div class="p xtra"><div class="f1"><b>Thành viên Hội đồng cố vấn</b><span>Hiệp hội Phần mềm VINASA</span></div></div><button class="pf-more" data-js data-more="pos"><span class="m1">Xem thêm 1 chức vụ</span><span class="m2">Thu gọn</span><i data-lucide="chevron-down"></i></button></div>
+<button class="btn primary pf-cta"><i data-lucide="user-plus"></i>Kết nối</button>
+<div class="pf-acts"><a><i data-lucide="contact-round"></i>Lưu danh bạ</a><a><i data-lucide="calendar-days"></i>Đặt lịch</a><a><i data-lucide="message-circle"></i>Nhắn tin</a></div>
+<div class="pf-lbl">Kết nối với tôi</div><div class="pf-soc"><span style="background:var(--wa)" data-go="toast:Gọi 0909 123 456"><i data-lucide="phone"></i></span><span style="background:var(--zalo)" class="zl" data-go="toast:Mở Zalo của Minh Anh">Zalo</span><span style="background:var(--slate-700)" data-go="toast:Mở email tới minhanh@inapps.net"><i data-lucide="mail"></i></span><span style="background:var(--fb)" data-go="toast:Mở Facebook của Minh Anh"><i data-lucide="facebook"></i></span><span style="background:var(--li)" data-go="toast:Mở LinkedIn của Minh Anh"><i data-lucide="linkedin"></i></span><span style="background:var(--yt)" data-go="toast:Mở kênh YouTube của Minh Anh"><i data-lucide="youtube"></i></span></div>
+<div class="pf-sec"><h4>Ngành nghề</h4><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Công nghệ thông tin</span><span class="chip soft">Phần mềm &amp; SaaS</span><span class="chip soft">Tư vấn quản lý</span><span class="chip soft">Kinh doanh – Bán hàng</span></div></div>
+<div class="acc open about"><div class="ah" data-js="acc" role="button" aria-expanded="true">Giới thiệu<i data-lucide="chevron-up"></i></div><p class="clamp3">Hơn 10 năm phát triển kinh doanh công nghệ cho doanh nghiệp vừa và lớn. Kết nối doanh nghiệp Việt với giải pháp phần mềm và thẻ NFC thông minh, từ tư vấn chuyển đổi số đến triển khai thực tế. Đã dẫn dắt đội ngũ 25 người bán hàng B2B, ký hơn 120 hợp đồng với khách hàng tại Việt Nam, Singapore và Nhật Bản. Hiện tập trung vào giải pháp danh thiếp số cho đội ngũ bán hàng và sự kiện.</p><button class="pf-more ln" data-js data-more="about"><span class="m1">Xem thêm</span><span class="m2">Thu gọn</span><i data-lucide="chevron-down"></i></button></div>
+<div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Thế mạnh<i data-lucide="chevron-up"></i></div><ul class="chk"><li><i data-lucide="circle-check"></i>Phát triển kinh doanh B2B</li><li><i data-lucide="circle-check"></i>Xây dựng đội ngũ bán hàng</li><li><i data-lucide="circle-check"></i>Tư vấn chuyển đổi số</li><li><i data-lucide="circle-check"></i>Đàm phán hợp đồng lớn</li></ul></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Dịch vụ chính<i data-lucide="chevron-up"></i></div><ul class="chk"><li><i data-lucide="circle-check"></i>Tư vấn chuyển đổi số</li><li><i data-lucide="circle-check"></i>Triển khai thẻ NFC cho đội ngũ</li><li><i data-lucide="circle-check"></i>Phát triển phần mềm theo yêu cầu</li><li><i data-lucide="circle-check"></i>Đào tạo kỹ năng bán hàng B2B</li></ul></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Đang tìm kiếm<i data-lucide="chevron-up"></i></div><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Khách hàng doanh nghiệp</span><span class="chip soft">Đối tác phân phối</span><span class="chip soft">Đơn vị tổ chức sự kiện</span></div></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Hợp tác<i data-lucide="chevron-up"></i></div><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Đại lý / Reseller</span><span class="chip soft">Giới thiệu khách hàng</span><span class="chip soft">Co-marketing</span></div></div>
+</div>
+          </div>
+          <div class="scrim"></div>
+          <div class="sheet wb-sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Đăng nhập bằng email</h3><button class="icon-btn"><i data-lucide="x"></i></button></div>
+            <div class="field"><label>Email</label><div class="input"><i data-lucide="mail"></i><span class="v">lan.pham@gmail.com</span></div></div>
+            <p class="wb-ss" style="text-align:left;margin:4px 0 10px">Nhập mã 6 số vừa gửi tới email của bạn</p>
+            <div class="wb-otp"><span>4</span><span>8</span><span>2</span><span class="on">7</span><span></span><span></span></div>
+            <p class="wb-alt" style="text-align:left">Chưa nhận được? <span class="t-muted">Gửi lại mã sau 0:42</span></p>
+            <button class="btn primary" style="width:100%;margin-top:14px">Xác nhận</button>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">W4 · Đăng nhập bằng email<small>Đăng nhập không mật khẩu: nhập email → nhận mã 6 số → Xác nhận. Email chưa có tài khoản thì tạo luôn tài khoản mới với email đó (không cần màn đăng ký riêng). Mã dán từ email tự điền đủ 6 ô. Xác nhận xong về W5 và lời mời được gửi.</small></div>
+      </div>
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="wb-bar"><span class="u"><i data-lucide="lock"></i><span>incard.biz/minhanh</span></span><i data-lucide="rotate-cw"></i></div>
+          <div class="wb-head"><a class="wb-logo"><img src="assets/logo-mark.png" alt="" /><img class="w" src="assets/logo-word.png" alt="InCard" /></a><span class="wb-me"><img src="https://i.pravatar.cc/80?img=32" alt="" /><i data-lucide="chevron-down"></i></span></div>
+          <div class="body pf wb">
+<div class="pf-cover" style="background-image:url(assets/covers/office.jpg)"></div>
+<div class="pf-head"><span class="pf-avw"><img class="pf-av" src="https://i.pravatar.cc/150?img=47" alt="" /></span></div>
+<div class="pf-in">
+<div class="pf-name">Nguyễn Minh Anh<i data-lucide="badge-check"></i></div>
+<div class="pf-pos cmp"><div class="p"><div class="f1"><b>Giám đốc kinh doanh</b><span>InApps Technology</span></div><span class="badge green">Chính</span></div><div class="p"><div class="f1"><b>Cố vấn chiến lược</b><span>InCard Technology</span></div></div><div class="p xtra"><div class="f1"><b>Thành viên Hội đồng cố vấn</b><span>Hiệp hội Phần mềm VINASA</span></div></div><button class="pf-more" data-js data-more="pos"><span class="m1">Xem thêm 1 chức vụ</span><span class="m2">Thu gọn</span><i data-lucide="chevron-down"></i></button></div>
+<div class="wb-sent"><button class="btn outline pf-cta"><i data-lucide="clock"></i>Đã gửi lời mời</button><a class="wb-undo">Huỷ</a></div>
+<div class="pf-acts"><a><i data-lucide="contact-round"></i>Lưu danh bạ</a><a><i data-lucide="calendar-days"></i>Đặt lịch</a><a><i data-lucide="message-circle"></i>Nhắn tin</a></div>
+<div class="pf-lbl">Kết nối với tôi</div><div class="pf-soc"><span style="background:var(--wa)" data-go="toast:Gọi 0909 123 456"><i data-lucide="phone"></i></span><span style="background:var(--zalo)" class="zl" data-go="toast:Mở Zalo của Minh Anh">Zalo</span><span style="background:var(--slate-700)" data-go="toast:Mở email tới minhanh@inapps.net"><i data-lucide="mail"></i></span><span style="background:var(--fb)" data-go="toast:Mở Facebook của Minh Anh"><i data-lucide="facebook"></i></span><span style="background:var(--li)" data-go="toast:Mở LinkedIn của Minh Anh"><i data-lucide="linkedin"></i></span><span style="background:var(--yt)" data-go="toast:Mở kênh YouTube của Minh Anh"><i data-lucide="youtube"></i></span></div>
+<div class="pf-sec"><h4>Ngành nghề</h4><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Công nghệ thông tin</span><span class="chip soft">Phần mềm &amp; SaaS</span><span class="chip soft">Tư vấn quản lý</span><span class="chip soft">Kinh doanh – Bán hàng</span></div></div>
+<div class="acc open about"><div class="ah" data-js="acc" role="button" aria-expanded="true">Giới thiệu<i data-lucide="chevron-up"></i></div><p class="clamp3">Hơn 10 năm phát triển kinh doanh công nghệ cho doanh nghiệp vừa và lớn. Kết nối doanh nghiệp Việt với giải pháp phần mềm và thẻ NFC thông minh, từ tư vấn chuyển đổi số đến triển khai thực tế. Đã dẫn dắt đội ngũ 25 người bán hàng B2B, ký hơn 120 hợp đồng với khách hàng tại Việt Nam, Singapore và Nhật Bản. Hiện tập trung vào giải pháp danh thiếp số cho đội ngũ bán hàng và sự kiện.</p><button class="pf-more ln" data-js data-more="about"><span class="m1">Xem thêm</span><span class="m2">Thu gọn</span><i data-lucide="chevron-down"></i></button></div>
+<div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Thế mạnh<i data-lucide="chevron-up"></i></div><ul class="chk"><li><i data-lucide="circle-check"></i>Phát triển kinh doanh B2B</li><li><i data-lucide="circle-check"></i>Xây dựng đội ngũ bán hàng</li><li><i data-lucide="circle-check"></i>Tư vấn chuyển đổi số</li><li><i data-lucide="circle-check"></i>Đàm phán hợp đồng lớn</li></ul></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Dịch vụ chính<i data-lucide="chevron-up"></i></div><ul class="chk"><li><i data-lucide="circle-check"></i>Tư vấn chuyển đổi số</li><li><i data-lucide="circle-check"></i>Triển khai thẻ NFC cho đội ngũ</li><li><i data-lucide="circle-check"></i>Phát triển phần mềm theo yêu cầu</li><li><i data-lucide="circle-check"></i>Đào tạo kỹ năng bán hàng B2B</li></ul></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Đang tìm kiếm<i data-lucide="chevron-up"></i></div><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Khách hàng doanh nghiệp</span><span class="chip soft">Đối tác phân phối</span><span class="chip soft">Đơn vị tổ chức sự kiện</span></div></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Hợp tác<i data-lucide="chevron-up"></i></div><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Đại lý / Reseller</span><span class="chip soft">Giới thiệu khách hàng</span><span class="chip soft">Co-marketing</span></div></div>
+</div>
+          </div>
+          <div class="toast"><i data-lucide="circle-check"></i><span>Đã gửi lời mời kết nối tới Minh Anh</span></div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">W5 · Đã gửi lời mời<small>Đăng nhập xong quay lại đúng hồ sơ: header đổi thành avatar người xem, nút chính thành "Đã gửi lời mời" (không bấm được nữa) kèm "Huỷ", thông báo nhỏ xác nhận đã gửi. Minh Anh nhận lời mời trong app; khi chấp nhận, trang này hiện "Đã kết nối" (W6).</small></div>
+      </div>
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="wb-bar"><span class="u"><i data-lucide="lock"></i><span>incard.biz/minhanh</span></span><i data-lucide="rotate-cw"></i></div>
+          <div class="wb-head"><a class="wb-logo"><img src="assets/logo-mark.png" alt="" /><img class="w" src="assets/logo-word.png" alt="InCard" /></a><span class="wb-me"><img src="https://i.pravatar.cc/80?img=32" alt="" /><i data-lucide="chevron-down"></i></span></div>
+          <div class="body pf wb">
+<div class="pf-cover" style="background-image:url(assets/covers/office.jpg)"></div>
+<div class="pf-head"><span class="pf-avw"><img class="pf-av" src="https://i.pravatar.cc/150?img=47" alt="" /></span></div>
+<div class="pf-in">
+<div class="pf-name">Nguyễn Minh Anh<i data-lucide="badge-check"></i></div>
+<div class="pf-pos cmp"><div class="p"><div class="f1"><b>Giám đốc kinh doanh</b><span>InApps Technology</span></div><span class="badge green">Chính</span></div><div class="p"><div class="f1"><b>Cố vấn chiến lược</b><span>InCard Technology</span></div></div><div class="p xtra"><div class="f1"><b>Thành viên Hội đồng cố vấn</b><span>Hiệp hội Phần mềm VINASA</span></div></div><button class="pf-more" data-js data-more="pos"><span class="m1">Xem thêm 1 chức vụ</span><span class="m2">Thu gọn</span><i data-lucide="chevron-down"></i></button></div>
+<button class="btn primary pf-cta"><i data-lucide="user-plus"></i>Kết nối</button>
+<div class="pf-acts"><a><i data-lucide="contact-round"></i>Lưu danh bạ</a><a><i data-lucide="calendar-days"></i>Đặt lịch</a><a><i data-lucide="message-circle"></i>Nhắn tin</a></div>
+<div class="pf-lbl">Kết nối với tôi</div><div class="pf-soc"><span style="background:var(--wa)" data-go="toast:Gọi 0909 123 456"><i data-lucide="phone"></i></span><span style="background:var(--zalo)" class="zl" data-go="toast:Mở Zalo của Minh Anh">Zalo</span><span style="background:var(--slate-700)" data-go="toast:Mở email tới minhanh@inapps.net"><i data-lucide="mail"></i></span><span style="background:var(--fb)" data-go="toast:Mở Facebook của Minh Anh"><i data-lucide="facebook"></i></span><span style="background:var(--li)" data-go="toast:Mở LinkedIn của Minh Anh"><i data-lucide="linkedin"></i></span><span style="background:var(--yt)" data-go="toast:Mở kênh YouTube của Minh Anh"><i data-lucide="youtube"></i></span></div>
+<div class="pf-sec"><h4>Ngành nghề</h4><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Công nghệ thông tin</span><span class="chip soft">Phần mềm &amp; SaaS</span><span class="chip soft">Tư vấn quản lý</span><span class="chip soft">Kinh doanh – Bán hàng</span></div></div>
+<div class="acc open about"><div class="ah" data-js="acc" role="button" aria-expanded="true">Giới thiệu<i data-lucide="chevron-up"></i></div><p class="clamp3">Hơn 10 năm phát triển kinh doanh công nghệ cho doanh nghiệp vừa và lớn. Kết nối doanh nghiệp Việt với giải pháp phần mềm và thẻ NFC thông minh, từ tư vấn chuyển đổi số đến triển khai thực tế. Đã dẫn dắt đội ngũ 25 người bán hàng B2B, ký hơn 120 hợp đồng với khách hàng tại Việt Nam, Singapore và Nhật Bản. Hiện tập trung vào giải pháp danh thiếp số cho đội ngũ bán hàng và sự kiện.</p><button class="pf-more ln" data-js data-more="about"><span class="m1">Xem thêm</span><span class="m2">Thu gọn</span><i data-lucide="chevron-down"></i></button></div>
+<div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Thế mạnh<i data-lucide="chevron-up"></i></div><ul class="chk"><li><i data-lucide="circle-check"></i>Phát triển kinh doanh B2B</li><li><i data-lucide="circle-check"></i>Xây dựng đội ngũ bán hàng</li><li><i data-lucide="circle-check"></i>Tư vấn chuyển đổi số</li><li><i data-lucide="circle-check"></i>Đàm phán hợp đồng lớn</li></ul></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Dịch vụ chính<i data-lucide="chevron-up"></i></div><ul class="chk"><li><i data-lucide="circle-check"></i>Tư vấn chuyển đổi số</li><li><i data-lucide="circle-check"></i>Triển khai thẻ NFC cho đội ngũ</li><li><i data-lucide="circle-check"></i>Phát triển phần mềm theo yêu cầu</li><li><i data-lucide="circle-check"></i>Đào tạo kỹ năng bán hàng B2B</li></ul></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Đang tìm kiếm<i data-lucide="chevron-up"></i></div><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Khách hàng doanh nghiệp</span><span class="chip soft">Đối tác phân phối</span><span class="chip soft">Đơn vị tổ chức sự kiện</span></div></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Hợp tác<i data-lucide="chevron-up"></i></div><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Đại lý / Reseller</span><span class="chip soft">Giới thiệu khách hàng</span><span class="chip soft">Co-marketing</span></div></div>
+</div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">W6 · Đã đăng nhập<small>Người xem đã đăng nhập InCard trên trình duyệt (header có avatar), chưa kết nối: bấm "Kết nối" là gửi lời mời ngay, không qua sheet, chuyển sang W5. Cũng là màn sau khi bấm "Đăng nhập" ở header (đăng nhập không kèm lời mời) hoặc sau khi huỷ lời mời ở W5.</small></div>
+      </div>
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="wb-bar"><span class="u"><i data-lucide="lock"></i><span>incard.biz/minhanh</span></span><i data-lucide="rotate-cw"></i></div>
+          <div class="wb-head"><a class="wb-logo"><img src="assets/logo-mark.png" alt="" /><img class="w" src="assets/logo-word.png" alt="InCard" /></a><span class="wb-me"><img src="https://i.pravatar.cc/80?img=32" alt="" /><i data-lucide="chevron-down"></i></span></div>
+          <div class="body pf wb">
+<div class="pf-cover" style="background-image:url(assets/covers/office.jpg)"></div>
+<div class="pf-head"><span class="pf-avw"><img class="pf-av" src="https://i.pravatar.cc/150?img=47" alt="" /></span></div>
+<div class="pf-in">
+<div class="pf-name">Nguyễn Minh Anh<i data-lucide="badge-check"></i></div>
+<div class="pf-pos cmp"><div class="p"><div class="f1"><b>Giám đốc kinh doanh</b><span>InApps Technology</span></div><span class="badge green">Chính</span></div><div class="p"><div class="f1"><b>Cố vấn chiến lược</b><span>InCard Technology</span></div></div><div class="p xtra"><div class="f1"><b>Thành viên Hội đồng cố vấn</b><span>Hiệp hội Phần mềm VINASA</span></div></div><button class="pf-more" data-js data-more="pos"><span class="m1">Xem thêm 1 chức vụ</span><span class="m2">Thu gọn</span><i data-lucide="chevron-down"></i></button></div>
+<div class="wb-conn"><span class="pf-conn"><i data-lucide="user-check"></i>Đã kết nối</span></div><button class="btn primary pf-cta"><i data-lucide="message-circle"></i>Nhắn tin</button>
+<div class="pf-acts"><a><i data-lucide="contact-round"></i>Lưu danh bạ</a><a><i data-lucide="calendar-days"></i>Đặt lịch</a><a><i data-lucide="phone"></i>Gọi</a></div>
+<div class="pf-lbl">Kết nối với tôi</div><div class="pf-soc"><span style="background:var(--wa)" data-go="toast:Gọi 0909 123 456"><i data-lucide="phone"></i></span><span style="background:var(--zalo)" class="zl" data-go="toast:Mở Zalo của Minh Anh">Zalo</span><span style="background:var(--slate-700)" data-go="toast:Mở email tới minhanh@inapps.net"><i data-lucide="mail"></i></span><span style="background:var(--fb)" data-go="toast:Mở Facebook của Minh Anh"><i data-lucide="facebook"></i></span><span style="background:var(--li)" data-go="toast:Mở LinkedIn của Minh Anh"><i data-lucide="linkedin"></i></span><span style="background:var(--yt)" data-go="toast:Mở kênh YouTube của Minh Anh"><i data-lucide="youtube"></i></span></div>
+<div class="pf-sec"><h4>Ngành nghề</h4><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Công nghệ thông tin</span><span class="chip soft">Phần mềm &amp; SaaS</span><span class="chip soft">Tư vấn quản lý</span><span class="chip soft">Kinh doanh – Bán hàng</span></div></div>
+<div class="acc open about"><div class="ah" data-js="acc" role="button" aria-expanded="true">Giới thiệu<i data-lucide="chevron-up"></i></div><p class="clamp3">Hơn 10 năm phát triển kinh doanh công nghệ cho doanh nghiệp vừa và lớn. Kết nối doanh nghiệp Việt với giải pháp phần mềm và thẻ NFC thông minh, từ tư vấn chuyển đổi số đến triển khai thực tế. Đã dẫn dắt đội ngũ 25 người bán hàng B2B, ký hơn 120 hợp đồng với khách hàng tại Việt Nam, Singapore và Nhật Bản. Hiện tập trung vào giải pháp danh thiếp số cho đội ngũ bán hàng và sự kiện.</p><button class="pf-more ln" data-js data-more="about"><span class="m1">Xem thêm</span><span class="m2">Thu gọn</span><i data-lucide="chevron-down"></i></button></div>
+<div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Thế mạnh<i data-lucide="chevron-up"></i></div><ul class="chk"><li><i data-lucide="circle-check"></i>Phát triển kinh doanh B2B</li><li><i data-lucide="circle-check"></i>Xây dựng đội ngũ bán hàng</li><li><i data-lucide="circle-check"></i>Tư vấn chuyển đổi số</li><li><i data-lucide="circle-check"></i>Đàm phán hợp đồng lớn</li></ul></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Dịch vụ chính<i data-lucide="chevron-up"></i></div><ul class="chk"><li><i data-lucide="circle-check"></i>Tư vấn chuyển đổi số</li><li><i data-lucide="circle-check"></i>Triển khai thẻ NFC cho đội ngũ</li><li><i data-lucide="circle-check"></i>Phát triển phần mềm theo yêu cầu</li><li><i data-lucide="circle-check"></i>Đào tạo kỹ năng bán hàng B2B</li></ul></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Đang tìm kiếm<i data-lucide="chevron-up"></i></div><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Khách hàng doanh nghiệp</span><span class="chip soft">Đối tác phân phối</span><span class="chip soft">Đơn vị tổ chức sự kiện</span></div></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Hợp tác<i data-lucide="chevron-up"></i></div><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Đại lý / Reseller</span><span class="chip soft">Giới thiệu khách hàng</span><span class="chip soft">Co-marketing</span></div></div>
+</div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">W6b · Đã kết nối<small>Minh Anh đã chấp nhận lời mời: chip "Đã kết nối" dưới chức danh, nút chính đổi thành "Nhắn tin" (mở Tin nhắn trên web hoặc app), hành động thứ ba thành "Gọi".</small></div>
+      </div>
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="wb-bar"><span class="u"><i data-lucide="lock"></i><span>incard.biz/minhanh</span></span><i data-lucide="rotate-cw"></i></div>
+          <div class="wb-head"><a class="wb-logo"><img src="assets/logo-mark.png" alt="" /><img class="w" src="assets/logo-word.png" alt="InCard" /></a><a class="wb-login">Đăng nhập</a></div>
+          <div class="body pf wb">
+<div class="pf-cover" style="background-image:url(assets/covers/office.jpg)"></div>
+<div class="pf-head"><span class="pf-avw"><img class="pf-av" src="https://i.pravatar.cc/150?img=47" alt="" /></span></div>
+<div class="pf-in">
+<div class="pf-name">Nguyễn Minh Anh<i data-lucide="badge-check"></i></div>
+<div class="pf-pos cmp"><div class="p"><div class="f1"><b>Giám đốc kinh doanh</b><span>InApps Technology</span></div><span class="badge green">Chính</span></div><div class="p"><div class="f1"><b>Cố vấn chiến lược</b><span>InCard Technology</span></div></div><div class="p xtra"><div class="f1"><b>Thành viên Hội đồng cố vấn</b><span>Hiệp hội Phần mềm VINASA</span></div></div><button class="pf-more" data-js data-more="pos"><span class="m1">Xem thêm 1 chức vụ</span><span class="m2">Thu gọn</span><i data-lucide="chevron-down"></i></button></div>
+<button class="btn primary pf-cta"><i data-lucide="user-plus"></i>Kết nối</button>
+<div class="pf-acts"><a><i data-lucide="contact-round"></i>Lưu danh bạ</a><a><i data-lucide="calendar-days"></i>Đặt lịch</a><a><i data-lucide="message-circle"></i>Nhắn tin</a></div>
+<div class="pf-lbl">Kết nối với tôi</div><div class="pf-soc"><span style="background:var(--wa)" data-go="toast:Gọi 0909 123 456"><i data-lucide="phone"></i></span><span style="background:var(--zalo)" class="zl" data-go="toast:Mở Zalo của Minh Anh">Zalo</span><span style="background:var(--slate-700)" data-go="toast:Mở email tới minhanh@inapps.net"><i data-lucide="mail"></i></span><span style="background:var(--fb)" data-go="toast:Mở Facebook của Minh Anh"><i data-lucide="facebook"></i></span><span style="background:var(--li)" data-go="toast:Mở LinkedIn của Minh Anh"><i data-lucide="linkedin"></i></span><span style="background:var(--yt)" data-go="toast:Mở kênh YouTube của Minh Anh"><i data-lucide="youtube"></i></span></div>
+<div class="pf-sec"><h4>Ngành nghề</h4><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Công nghệ thông tin</span><span class="chip soft">Phần mềm &amp; SaaS</span><span class="chip soft">Tư vấn quản lý</span><span class="chip soft">Kinh doanh – Bán hàng</span></div></div>
+<div class="acc open about"><div class="ah" data-js="acc" role="button" aria-expanded="true">Giới thiệu<i data-lucide="chevron-up"></i></div><p class="clamp3">Hơn 10 năm phát triển kinh doanh công nghệ cho doanh nghiệp vừa và lớn. Kết nối doanh nghiệp Việt với giải pháp phần mềm và thẻ NFC thông minh, từ tư vấn chuyển đổi số đến triển khai thực tế. Đã dẫn dắt đội ngũ 25 người bán hàng B2B, ký hơn 120 hợp đồng với khách hàng tại Việt Nam, Singapore và Nhật Bản. Hiện tập trung vào giải pháp danh thiếp số cho đội ngũ bán hàng và sự kiện.</p><button class="pf-more ln" data-js data-more="about"><span class="m1">Xem thêm</span><span class="m2">Thu gọn</span><i data-lucide="chevron-down"></i></button></div>
+<div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Thế mạnh<i data-lucide="chevron-up"></i></div><ul class="chk"><li><i data-lucide="circle-check"></i>Phát triển kinh doanh B2B</li><li><i data-lucide="circle-check"></i>Xây dựng đội ngũ bán hàng</li><li><i data-lucide="circle-check"></i>Tư vấn chuyển đổi số</li><li><i data-lucide="circle-check"></i>Đàm phán hợp đồng lớn</li></ul></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Dịch vụ chính<i data-lucide="chevron-up"></i></div><ul class="chk"><li><i data-lucide="circle-check"></i>Tư vấn chuyển đổi số</li><li><i data-lucide="circle-check"></i>Triển khai thẻ NFC cho đội ngũ</li><li><i data-lucide="circle-check"></i>Phát triển phần mềm theo yêu cầu</li><li><i data-lucide="circle-check"></i>Đào tạo kỹ năng bán hàng B2B</li></ul></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Đang tìm kiếm<i data-lucide="chevron-up"></i></div><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Khách hàng doanh nghiệp</span><span class="chip soft">Đối tác phân phối</span><span class="chip soft">Đơn vị tổ chức sự kiện</span></div></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Hợp tác<i data-lucide="chevron-up"></i></div><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Đại lý / Reseller</span><span class="chip soft">Giới thiệu khách hàng</span><span class="chip soft">Co-marketing</span></div></div>
+</div>
+          </div>
+          <div class="scrim"></div>
+          <div class="sheet wb-sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Lưu vào danh bạ</h3><button class="icon-btn"><i data-lucide="x"></i></button></div>
+            <div class="wb-vcf"><img src="https://i.pravatar.cc/150?img=47" alt="" /><div class="f1"><b>Nguyễn Minh Anh</b><span>Giám đốc kinh doanh · InApps Technology</span></div></div>
+            <ul class="wb-vrows"><li><i data-lucide="phone"></i>0909 123 456</li><li><i data-lucide="mail"></i>minhanh@inapps.net</li><li><i data-lucide="globe"></i>incard.biz/minhanh</li></ul>
+            <button class="btn primary" style="width:100%"><i data-lucide="download"></i>Tải tệp danh bạ (.vcf)</button>
+            <button class="btn ghost" style="width:100%;margin-top:6px">Huỷ</button>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">W7 · Lưu danh bạ<small>Không cần đăng nhập. Sheet xem trước những gì sẽ lưu (tên, chức danh, SĐT, email, link hồ sơ) rồi tải tệp .vcf; trên iPhone / Android máy tự mở màn "Thêm liên hệ". Tải xong hiện thông báo "Đã tải danh bạ Minh Anh".</small></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="rd-section">
+    <h2>C · Chủ thẻ, máy tính, link hết hiệu lực</h2>
+    <div class="rd-row">
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="wb-bar"><span class="u"><i data-lucide="lock"></i><span>incard.biz/minhanh</span></span><i data-lucide="rotate-cw"></i></div>
+          <div class="wb-head"><a class="wb-logo"><img src="assets/logo-mark.png" alt="" /><img class="w" src="assets/logo-word.png" alt="InCard" /></a><span class="wb-me"><img src="https://i.pravatar.cc/80?img=47" alt="" /><i data-lucide="chevron-down"></i></span></div>
+          <div class="body pf wb">
+<div class="pf-cover" style="background-image:url(assets/covers/office.jpg)"></div>
+<div class="pf-head"><span class="pf-avw"><img class="pf-av" src="https://i.pravatar.cc/150?img=47" alt="" /></span></div>
+<div class="pf-in">
+<div class="pf-name">Nguyễn Minh Anh<i data-lucide="badge-check"></i></div>
+<div class="pf-pos cmp"><div class="p"><div class="f1"><b>Giám đốc kinh doanh</b><span>InApps Technology</span></div><span class="badge green">Chính</span></div><div class="p"><div class="f1"><b>Cố vấn chiến lược</b><span>InCard Technology</span></div></div><div class="p xtra"><div class="f1"><b>Thành viên Hội đồng cố vấn</b><span>Hiệp hội Phần mềm VINASA</span></div></div><button class="pf-more" data-js data-more="pos"><span class="m1">Xem thêm 1 chức vụ</span><span class="m2">Thu gọn</span><i data-lucide="chevron-down"></i></button></div>
+
+<div class="pf-acts"><a><i data-lucide="link"></i>Sao chép link</a><a><i data-lucide="qr-code"></i>QR của tôi</a><a><i data-lucide="share-2"></i>Chia sẻ</a></div>
+<div class="pf-lbl">Kết nối với tôi</div><div class="pf-soc"><span style="background:var(--wa)" data-go="toast:Gọi 0909 123 456"><i data-lucide="phone"></i></span><span style="background:var(--zalo)" class="zl" data-go="toast:Mở Zalo của Minh Anh">Zalo</span><span style="background:var(--slate-700)" data-go="toast:Mở email tới minhanh@inapps.net"><i data-lucide="mail"></i></span><span style="background:var(--fb)" data-go="toast:Mở Facebook của Minh Anh"><i data-lucide="facebook"></i></span><span style="background:var(--li)" data-go="toast:Mở LinkedIn của Minh Anh"><i data-lucide="linkedin"></i></span><span style="background:var(--yt)" data-go="toast:Mở kênh YouTube của Minh Anh"><i data-lucide="youtube"></i></span></div>
+<div class="pf-sec"><h4>Ngành nghề</h4><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Công nghệ thông tin</span><span class="chip soft">Phần mềm &amp; SaaS</span><span class="chip soft">Tư vấn quản lý</span><span class="chip soft">Kinh doanh – Bán hàng</span></div></div>
+<div class="acc open about"><div class="ah" data-js="acc" role="button" aria-expanded="true">Giới thiệu<i data-lucide="chevron-up"></i></div><p class="clamp3">Hơn 10 năm phát triển kinh doanh công nghệ cho doanh nghiệp vừa và lớn. Kết nối doanh nghiệp Việt với giải pháp phần mềm và thẻ NFC thông minh, từ tư vấn chuyển đổi số đến triển khai thực tế. Đã dẫn dắt đội ngũ 25 người bán hàng B2B, ký hơn 120 hợp đồng với khách hàng tại Việt Nam, Singapore và Nhật Bản. Hiện tập trung vào giải pháp danh thiếp số cho đội ngũ bán hàng và sự kiện.</p><button class="pf-more ln" data-js data-more="about"><span class="m1">Xem thêm</span><span class="m2">Thu gọn</span><i data-lucide="chevron-down"></i></button></div>
+<div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Thế mạnh<i data-lucide="chevron-up"></i></div><ul class="chk"><li><i data-lucide="circle-check"></i>Phát triển kinh doanh B2B</li><li><i data-lucide="circle-check"></i>Xây dựng đội ngũ bán hàng</li><li><i data-lucide="circle-check"></i>Tư vấn chuyển đổi số</li><li><i data-lucide="circle-check"></i>Đàm phán hợp đồng lớn</li></ul></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Dịch vụ chính<i data-lucide="chevron-up"></i></div><ul class="chk"><li><i data-lucide="circle-check"></i>Tư vấn chuyển đổi số</li><li><i data-lucide="circle-check"></i>Triển khai thẻ NFC cho đội ngũ</li><li><i data-lucide="circle-check"></i>Phát triển phần mềm theo yêu cầu</li><li><i data-lucide="circle-check"></i>Đào tạo kỹ năng bán hàng B2B</li></ul></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Đang tìm kiếm<i data-lucide="chevron-up"></i></div><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Khách hàng doanh nghiệp</span><span class="chip soft">Đối tác phân phối</span><span class="chip soft">Đơn vị tổ chức sự kiện</span></div></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Hợp tác<i data-lucide="chevron-up"></i></div><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Đại lý / Reseller</span><span class="chip soft">Giới thiệu khách hàng</span><span class="chip soft">Co-marketing</span></div></div>
+</div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">W8 · Chủ thẻ xem link của mình<small>Mở từ nút "Hồ sơ web" trong Hồ sơ của tôi (03-A1/A2/A5/A6), hoặc khi chủ thẻ tự mở link của mình. Hiện đúng như người khác thấy; header là avatar chủ thẻ. Không có nút Kết nối; 3 hành động thành Sao chép link / QR của tôi / Chia sẻ. Mỗi thẻ có link riêng (vd. /minhanh/clb-dnt, /minhanh/mentor) và trang hiện đúng thẻ đó.</small></div>
+      </div>
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="wb-bar"><span class="u"><i data-lucide="lock"></i><span>incard.biz/minhanh-cu</span></span><i data-lucide="rotate-cw"></i></div>
+          <div class="wb-head"><a class="wb-logo"><img src="assets/logo-mark.png" alt="" /><img class="w" src="assets/logo-word.png" alt="InCard" /></a><a class="wb-login">Đăng nhập</a></div>
+          <div class="body wb-gone">
+            <span class="ic"><i data-lucide="link-2-off"></i></span>
+            <h3>Hồ sơ này không còn hoạt động</h3>
+            <p>Chủ thẻ đã tắt hồ sơ hoặc đổi đường dẫn. Hãy hỏi lại link mới từ người đã gửi cho bạn.</p>
+            <button class="btn primary" style="width:100%">Tạo thẻ InCard của bạn</button>
+            <button class="btn outline" style="width:100%;margin-top:10px">Về trang chủ InCard</button>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">W10 · Link không còn hiệu lực<small>Thẻ đã bị tắt, xoá hoặc chủ thẻ đổi đường dẫn. Không lộ thông tin cũ của chủ thẻ. Gợi ý người xem tạo thẻ của mình (kênh thu hút người dùng mới) hoặc về trang chủ incard.biz.</small></div>
+      </div>
+    </div>
+    <div class="rd-row" style="margin-top:40px">
+      <div class="rd-shot" data-pv="skip">
+        <div class="wb-desk">
+          <div class="wb-dbar"><span class="dots"><i></i><i></i><i></i></span><div class="wb-bar"><span class="u"><i data-lucide="lock"></i><span>incard.biz/minhanh</span></span><i data-lucide="rotate-cw"></i></div></div>
+          <div class="wb-head"><a class="wb-logo"><img src="assets/logo-mark.png" alt="" /><img class="w" src="assets/logo-word.png" alt="InCard" /></a><a class="wb-login">Đăng nhập</a></div>
+          <div class="wb-dgrid">
+            <aside class="wb-dcard pf">
+              <div class="pf-cover" style="background-image:url(assets/covers/office.jpg)"></div>
+              <div class="pf-head"><span class="pf-avw"><img class="pf-av" src="https://i.pravatar.cc/150?img=47" alt="" /></span></div>
+              <div class="pf-in"><div class="pf-name">Nguyễn Minh Anh<i data-lucide="badge-check"></i></div><div class="pf-pos cmp"><div class="p"><div class="f1"><b>Giám đốc kinh doanh</b><span>InApps Technology</span></div><span class="badge green">Chính</span></div><div class="p"><div class="f1"><b>Cố vấn chiến lược</b><span>InCard Technology</span></div></div><div class="p xtra"><div class="f1"><b>Thành viên Hội đồng cố vấn</b><span>Hiệp hội Phần mềm VINASA</span></div></div><button class="pf-more" data-js data-more="pos"><span class="m1">Xem thêm 1 chức vụ</span><span class="m2">Thu gọn</span><i data-lucide="chevron-down"></i></button></div><button class="btn primary pf-cta"><i data-lucide="user-plus"></i>Kết nối</button><div class="pf-acts"><a><i data-lucide="contact-round"></i>Lưu danh bạ</a><a><i data-lucide="calendar-days"></i>Đặt lịch</a><a><i data-lucide="message-circle"></i>Nhắn tin</a></div><div class="pf-lbl">Kết nối với tôi</div><div class="pf-soc"><span style="background:var(--wa)" data-go="toast:Gọi 0909 123 456"><i data-lucide="phone"></i></span><span style="background:var(--zalo)" class="zl" data-go="toast:Mở Zalo của Minh Anh">Zalo</span><span style="background:var(--slate-700)" data-go="toast:Mở email tới minhanh@inapps.net"><i data-lucide="mail"></i></span><span style="background:var(--fb)" data-go="toast:Mở Facebook của Minh Anh"><i data-lucide="facebook"></i></span><span style="background:var(--li)" data-go="toast:Mở LinkedIn của Minh Anh"><i data-lucide="linkedin"></i></span><span style="background:var(--yt)" data-go="toast:Mở kênh YouTube của Minh Anh"><i data-lucide="youtube"></i></span></div></div>
+            </aside>
+            <main class="wb-dmain pf">
+              <div class="pf-in">
+<div class="pf-sec"><h4>Ngành nghề</h4><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Công nghệ thông tin</span><span class="chip soft">Phần mềm &amp; SaaS</span><span class="chip soft">Tư vấn quản lý</span><span class="chip soft">Kinh doanh – Bán hàng</span></div></div>
+<div class="acc open about"><div class="ah" data-js="acc" role="button" aria-expanded="true">Giới thiệu<i data-lucide="chevron-up"></i></div><p class="clamp3">Hơn 10 năm phát triển kinh doanh công nghệ cho doanh nghiệp vừa và lớn. Kết nối doanh nghiệp Việt với giải pháp phần mềm và thẻ NFC thông minh, từ tư vấn chuyển đổi số đến triển khai thực tế. Đã dẫn dắt đội ngũ 25 người bán hàng B2B, ký hơn 120 hợp đồng với khách hàng tại Việt Nam, Singapore và Nhật Bản. Hiện tập trung vào giải pháp danh thiếp số cho đội ngũ bán hàng và sự kiện.</p><button class="pf-more ln" data-js data-more="about"><span class="m1">Xem thêm</span><span class="m2">Thu gọn</span><i data-lucide="chevron-down"></i></button></div>
+<div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Thế mạnh<i data-lucide="chevron-up"></i></div><ul class="chk"><li><i data-lucide="circle-check"></i>Phát triển kinh doanh B2B</li><li><i data-lucide="circle-check"></i>Xây dựng đội ngũ bán hàng</li><li><i data-lucide="circle-check"></i>Tư vấn chuyển đổi số</li><li><i data-lucide="circle-check"></i>Đàm phán hợp đồng lớn</li></ul></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Dịch vụ chính<i data-lucide="chevron-up"></i></div><ul class="chk"><li><i data-lucide="circle-check"></i>Tư vấn chuyển đổi số</li><li><i data-lucide="circle-check"></i>Triển khai thẻ NFC cho đội ngũ</li><li><i data-lucide="circle-check"></i>Phát triển phần mềm theo yêu cầu</li><li><i data-lucide="circle-check"></i>Đào tạo kỹ năng bán hàng B2B</li></ul></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Đang tìm kiếm<i data-lucide="chevron-up"></i></div><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Khách hàng doanh nghiệp</span><span class="chip soft">Đối tác phân phối</span><span class="chip soft">Đơn vị tổ chức sự kiện</span></div></div><div class="acc open"><div class="ah" data-js="acc" role="button" aria-expanded="true">Hợp tác<i data-lucide="chevron-up"></i></div><div class="chips" style="flex-wrap:wrap"><span class="chip soft">Đại lý / Reseller</span><span class="chip soft">Giới thiệu khách hàng</span><span class="chip soft">Co-marketing</span></div></div>
+<div class="pf-sec"><div class="flex jb ac"><h4>Sản phẩm nổi bật</h4><span class="pdots"><i class="on"></i><i></i><i></i></span></div><div class="prod-rail"><div class="pcard2" data-go="03-P3"><div class="img" style="background-image:url(assets/img/nfccard.jpg)"></div><div class="pb"><b>Thẻ NFC InCard cho doanh nghiệp</b><p>Danh thiếp số cho cả đội ngũ</p><div class="flex jb ac"><a class="link">Tìm hiểu thêm</a><span class="go"><i data-lucide="arrow-right"></i></span></div></div></div><div class="pcard2" data-go="03-P3"><div class="img" style="background-image:url(assets/img/software.jpg)"></div><div class="pb"><b>Phần mềm theo yêu cầu</b><p>Đội ngũ 300+ kỹ sư InApps</p><div class="flex jb ac"><a class="link">Tìm hiểu thêm</a><span class="go"><i data-lucide="arrow-right"></i></span></div></div></div><div class="pcard2" data-go="03-P3"><div class="img" style="background-image:url(assets/img/consult.jpg)"></div><div class="pb"><b>Gói tư vấn chuyển đổi số</b><p>Khảo sát · lộ trình · triển khai 3 tháng</p><div class="flex jb ac"><a class="link">Tìm hiểu thêm</a><span class="go"><i data-lucide="arrow-right"></i></span></div></div></div></div></div>
+<div class="pf-sec"><h4>Portfolio nổi bật</h4>
+<div class="feat" data-go="03-P2" style="background-image:linear-gradient(180deg,rgba(15,23,42,.25),rgba(15,23,42,.8)),url(assets/img/meeting.jpg)"><span class="tag">NỔI BẬT</span><span class="play"><i data-lucide="play"></i></span><span class="dur">2:14</span><b>Dự án chuyển đổi số Masan 2026</b></div>
+<div class="g2"><div class="tile" data-go="03-P1" style="background-image:linear-gradient(180deg,rgba(15,23,42,0) 40%,rgba(15,23,42,.75)),url(assets/img/conf.jpg)"><b>Techfest 2026</b></div><div class="tile" data-go="03-P1" style="background-image:linear-gradient(180deg,rgba(15,23,42,0) 40%,rgba(15,23,42,.75)),url(assets/img/team.jpg)"><b>Đội ngũ InApps</b></div></div><div class="g3p"><div class="tile" data-go="03-P1" style="background-image:linear-gradient(180deg,rgba(15,23,42,0) 40%,rgba(15,23,42,.75)),url(assets/img/office.jpg)"><b>Văn phòng Q.3</b></div><div class="tile" data-go="03-P1" style="background-image:linear-gradient(180deg,rgba(15,23,42,0) 40%,rgba(15,23,42,.75)),url(assets/img/phone.jpg)"><b>Demo thẻ NFC</b></div><div class="tile" data-go="03-P1" style="background-image:linear-gradient(180deg,rgba(15,23,42,0) 40%,rgba(15,23,42,.75)),url(assets/img/handshake.jpg)"><b>Ký kết đối tác</b></div></div></div>
+              </div>
+              <div class="wb-foot">Được tạo bằng <b>InCard</b><span><a>Điều khoản</a> · <a>Quyền riêng tư</a> · <a>Báo cáo hồ sơ</a></span></div>
+            </main>
+          </div>
+        </div>
+        <div class="cap">W9 · Desktop<small>Mở link trên máy tính (từ email, LinkedIn…): 2 cột. Cột trái là thẻ cố định khi cuộn (bìa, avatar, tên, chức danh, Kết nối, Lưu danh bạ / Đặt lịch / Nhắn tin, mạng xã hội); cột phải là nội dung: ngành nghề, giới thiệu, thế mạnh, dịch vụ, sản phẩm, portfolio. Kết nối khi chưa đăng nhập mở hộp thoại đăng nhập giữa màn hình (cùng nội dung sheet W3). Màn này không có trong prototype (khung 390px).</small></div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+  /* mở/đóng mục, Xem thêm (giống 03-profile-nfc) */
+  document.addEventListener('click', function (e) {
+    var ah = e.target.closest('.acc .ah'); if (ah) { ah.parentNode.classList.toggle('open'); return; }
+    var mr = e.target.closest('.pf-more'); if (!mr) return;
+    if (mr.dataset.more === 'pos') mr.closest('.pf-pos').classList.toggle('open');
+    else { mr.classList.toggle('on'); var a = mr.closest('.about'); if (a) a.classList.toggle('more'); }
+  });
+  lucide.createIcons({ attrs: { 'stroke-width': 1.75 } });
+  </script>
+</body>
+</html>

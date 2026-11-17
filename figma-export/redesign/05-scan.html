@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard Redesign — 05 Quét &amp; QR</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../button-system.css" />
+  <link rel="stylesheet" href="../design-system.css" />
+  <link rel="stylesheet" href="rd.css" />
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <style>
+    /* lucide swaps <i> for <svg>: mirror rd.css icon sizing onto svg */
+    .statusbar .sb-icons svg { width: 16px; height: 16px; }
+    .bnav a svg { width: 24px; height: 24px; }
+    .bnav a.fab span.c svg { width: 26px; height: 26px; }
+    .sec-title a svg { width: 16px; height: 16px; }
+    .row .ic svg { width: 19px; height: 19px; }
+    .av-edit svg { width: 15px; height: 15px; }
+    .input svg { width: 20px; height: 20px; color: var(--slate-400); flex-shrink: 0; }
+    .hint svg { width: 14px; height: 14px; }
+    .check .box svg { width: 15px; height: 15px; }
+    .btn svg { width: 20px; height: 20px; }
+    .chip svg { width: 16px; height: 16px; }
+    .seg a svg { width: 16px; height: 16px; }
+    .badge svg { width: 12px; height: 12px; }
+    .search svg { width: 20px; height: 20px; }
+    .search .ai svg { width: 15px; height: 15px; }
+    .empty .ill svg { width: 44px; height: 44px; }
+    .dialog .d-ic svg { width: 30px; height: 30px; }
+    .toast svg { width: 20px; height: 20px; color: #4ade80; flex-shrink: 0; }
+
+    /* ---------- permission screens ---------- */
+    .perm-ill { height: 210px; border-radius: 28px; background: linear-gradient(160deg, var(--green-50), var(--green-100)); position: relative; display: flex; align-items: center; justify-content: center; margin: 4px 0 24px; overflow: hidden; }
+    .perm-ill.off { background: linear-gradient(160deg, var(--slate-50), var(--slate-100)); }
+    .vf { width: 190px; height: 120px; position: relative; }
+    .vf b { position: absolute; width: 26px; height: 26px; border: 3.5px solid var(--green); }
+    .vf b:nth-child(1) { left: 0; top: 0; border-right: 0; border-bottom: 0; border-top-left-radius: 12px; }
+    .vf b:nth-child(2) { right: 0; top: 0; border-left: 0; border-bottom: 0; border-top-right-radius: 12px; }
+    .vf b:nth-child(3) { left: 0; bottom: 0; border-right: 0; border-top: 0; border-bottom-left-radius: 12px; }
+    .vf b:nth-child(4) { right: 0; bottom: 0; border-left: 0; border-top: 0; border-bottom-right-radius: 12px; }
+    .perm-ill.off .vf b { border-color: var(--slate-300); }
+    .vf .mc { position: absolute; inset: 18px 22px; border-radius: 10px; background: var(--white); box-shadow: var(--shadow-md); padding: 12px 14px; }
+    .vf .mc i, .vf .mc svg { display: block; height: 5px; border-radius: 3px; background: var(--slate-200); margin-bottom: 6px; }
+    .vf .mc i:nth-child(1) { width: 70px; height: 7px; background: var(--slate-600); }
+    .vf .mc i:nth-child(2) { width: 46px; }
+    .vf .mc i:nth-child(3) { width: 90px; margin-top: 14px; }
+    .vf .mc i:nth-child(4) { width: 76px; }
+    .perm-ill .cam-badge { position: absolute; right: 74px; bottom: 30px; width: 54px; height: 54px; border-radius: 50%; background: linear-gradient(135deg, var(--green-light), var(--green)); color: var(--white); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-green); border: 3px solid var(--white); }
+    .perm-ill .cam-badge i, .perm-ill .cam-badge svg { width: 24px; height: 24px; }
+    .perm-ill.off .cam-badge { background: var(--slate-500); box-shadow: var(--shadow-md); }
+    .feat { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
+    .feat .ic { width: 36px; height: 36px; border-radius: 10px; background: var(--green-50); color: var(--green); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .feat .ic i, .feat .ic svg { width: 18px; height: 18px; }
+    .feat b { font-size: 14.5px; display: block; }
+    .feat span { font-size: 13px; color: var(--slate-500); }
+    .steps-list { counter-reset: s; }
+    .steps-list div { display: flex; gap: 12px; align-items: center; font-size: 14px; color: var(--slate-700); padding: 7px 0; }
+    .steps-list div::before { counter-increment: s; content: counter(s); width: 26px; height: 26px; border-radius: 50%; background: var(--green-50); color: var(--green); font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .steps-list b { color: var(--ink); }
+
+    /* ---------- camera ---------- */
+    .cam { position: absolute; inset: 0; background: radial-gradient(95% 55% at 50% 40%, rgba(186,166,132,.55) 0%, rgba(84,70,52,.65) 45%, rgba(8,10,9,.98) 100%); }
+    .over { position: relative; z-index: 3; }
+    .cam-top { position: relative; z-index: 3; height: 56px; display: flex; align-items: center; gap: 6px; padding: 0 12px; }
+    .cam-top .t { flex: 1; text-align: center; font-size: 17px; font-weight: 700; color: var(--white); }
+    .glass { background: rgba(255,255,255,.14); color: var(--white); }
+    .glass.on { background: var(--white); color: var(--ink); }
+    .frame { position: absolute; z-index: 1; left: 24px; right: 24px; top: 210px; height: 214px; border-radius: 18px; box-shadow: 0 0 0 9999px rgba(0,0,0,.52); }
+    .frame.sq { left: 70px; right: 70px; top: 196px; height: 250px; }
+    .frame .c { position: absolute; z-index: 2; width: 38px; height: 38px; border: 4px solid var(--white); }
+    .frame .c.tl { left: -3px; top: -3px; border-right: 0; border-bottom: 0; border-top-left-radius: 20px; }
+    .frame .c.tr { right: -3px; top: -3px; border-left: 0; border-bottom: 0; border-top-right-radius: 20px; }
+    .frame .c.bl { left: -3px; bottom: -3px; border-right: 0; border-top: 0; border-bottom-left-radius: 20px; }
+    .frame .c.br { right: -3px; bottom: -3px; border-left: 0; border-top: 0; border-bottom-right-radius: 20px; }
+    .frame.ok .c { border-color: var(--brand); }
+    .frame.ok { box-shadow: 0 0 0 9999px rgba(0,0,0,.52), inset 0 0 0 2px rgba(69,185,118,.7); }
+    .scanline { position: absolute; z-index: 2; left: 14px; right: 14px; top: 46%; height: 2px; border-radius: 2px; background: linear-gradient(90deg, rgba(69,185,118,0), var(--brand), rgba(69,185,118,0)); box-shadow: 0 0 14px var(--brand); }
+    .cam-hint { position: absolute; z-index: 3; left: 0; right: 0; top: 446px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .cam-hint span { display: inline-flex; align-items: center; gap: 7px; height: 38px; padding: 0 16px; border-radius: var(--r-pill); background: rgba(0,0,0,.62); color: var(--white); font-size: 14px; font-weight: 600; }
+    .cam-hint span i, .cam-hint span svg { width: 17px; height: 17px; }
+    .cam-hint.ok span { background: var(--green); }
+    .cam-hint small { font-size: 12.5px; color: rgba(255,255,255,.72); }
+    .frame.sq + .cam-hint, .cam-hint.lowq { top: 470px; }
+
+    .cam-bottom { position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; padding: 26px 20px 0; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.78) 32%); }
+    .pilltog { display: flex; justify-content: center; margin-bottom: 18px; }
+    .pilltog > div { display: inline-flex; padding: 3px; border-radius: var(--r-pill); background: rgba(255,255,255,.14); }
+    .pilltog a { height: 32px; padding: 0 16px; border-radius: var(--r-pill); display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,.8); }
+    .pilltog a i, .pilltog a svg { width: 15px; height: 15px; }
+    .pilltog a.on { background: var(--white); color: var(--ink); }
+    .shut-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin-bottom: 20px; }
+    .side { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; color: rgba(255,255,255,.85); }
+    .side.l { justify-self: start; margin-left: 12px; }
+    .side.r { justify-self: end; margin-right: 12px; }
+    .gal { width: 50px; height: 50px; border-radius: 14px; background: rgba(255,255,255,.14); color: var(--white); display: flex; align-items: center; justify-content: center; }
+    .gal i, .gal svg { width: 22px; height: 22px; }
+    .shutter { width: 80px; height: 80px; border-radius: 50%; border: 4px solid var(--white); display: flex; align-items: center; justify-content: center; }
+    .shutter span { width: 64px; height: 64px; border-radius: 50%; background: var(--white); display: flex; align-items: center; justify-content: center; color: var(--white); }
+    .shutter.busy { border-color: var(--brand); }
+    .shutter.busy span { background: linear-gradient(135deg, var(--green-light), var(--green)); }
+    .shutter span i, .shutter span svg { width: 26px; height: 26px; }
+    .auto-txt { width: 80px; text-align: center; font-size: 12px; color: rgba(255,255,255,.72); line-height: 1.4; }
+    .stack { position: relative; width: 50px; height: 50px; }
+    .stack .ci { position: absolute; width: 44px; height: 30px; border-radius: 5px; background: var(--white); box-shadow: 0 2px 6px rgba(0,0,0,.4); }
+    .stack .ci::before { content: ""; position: absolute; left: 6px; top: 7px; width: 18px; height: 3px; border-radius: 2px; background: var(--slate-600); box-shadow: 0 6px 0 -0.5px var(--slate-300), 6px 12px 0 -0.5px var(--slate-300); }
+    .stack .ci.a { left: 0; top: 14px; transform: rotate(-8deg); }
+    .stack .ci.b { left: 5px; top: 9px; transform: rotate(4deg); }
+    .stack .cnt { position: absolute; top: -4px; right: -8px; min-width: 24px; height: 24px; border-radius: 12px; background: var(--green); color: var(--white); font-size: 12.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; border: 2px solid rgba(0,0,0,.85); }
+    .cseg { display: flex; padding: 4px; gap: 4px; border-radius: 14px; background: rgba(255,255,255,.12); }
+    .cseg a { flex: 1; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13.5px; font-weight: 600; color: rgba(255,255,255,.78); white-space: nowrap; }
+    .cseg a i, .cseg a svg { width: 16px; height: 16px; }
+    .cseg a.on { background: var(--white); color: var(--ink); }
+    .cseg.light { background: var(--slate-100); }
+    .cseg.light a { color: var(--slate-500); }
+    .cseg.light a.on { color: var(--ink); box-shadow: var(--shadow-sm); }
+
+    /* business card (printed, seen by camera) */
+    .biz { position: absolute; width: 296px; height: 178px; border-radius: 10px; background: var(--white); color: var(--ink); padding: 16px 18px; box-shadow: 0 14px 30px rgba(0,0,0,.45); overflow: hidden; }
+    .biz.static { position: relative; }
+    .biz::after { content: ""; position: absolute; right: 0; top: 0; bottom: 0; width: 8px; background: var(--blue-500); }
+    .biz .co { display: flex; align-items: center; gap: 7px; font-size: 10.5px; font-weight: 800; letter-spacing: 1.6px; color: var(--slate-700); }
+    .biz .co span { width: 22px; height: 22px; border-radius: 6px; background: var(--blue-500); }
+    .biz .nm { font-size: 17px; font-weight: 800; margin-top: 16px; letter-spacing: -0.2px; }
+    .biz .ti { font-size: 10.5px; color: var(--slate-500); margin-top: 1px; }
+    .biz .ln { font-size: 9.5px; color: var(--slate-600); margin-top: 3px; display: flex; gap: 5px; align-items: center; }
+    .biz .ln:first-of-type { margin-top: 12px; }
+    .biz .ln i, .biz .ln svg { width: 10px; height: 10px; color: var(--slate-400); }
+    .biz .hl { outline: 2px solid var(--amber-500); outline-offset: 2px; border-radius: 3px; background: rgba(245,158,11,.12); }
+
+    /* review */
+    .photo { height: 176px; border-radius: 18px; background: linear-gradient(160deg, var(--slate-600), var(--slate-800)); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .photo .biz { transform: scale(.82) rotate(-1.5deg); }
+    .photo .ov { position: absolute; right: 10px; bottom: 10px; display: flex; gap: 6px; }
+    .photo .ov span { height: 30px; padding: 0 10px; border-radius: var(--r-pill); background: rgba(15,23,42,.6); color: var(--white); font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; }
+    .photo .ov span i, .photo .ov span svg { width: 14px; height: 14px; }
+    .field.sm { margin-bottom: 12px; }
+    .field.sm .input { height: 48px; font-size: 14.5px; }
+    .input.warn { border-color: var(--amber-500); box-shadow: 0 0 0 4px rgba(245,158,11,.14); }
+    .hint.warn { color: var(--slate-700); }
+    .hint.warn i, .hint.warn svg { color: var(--amber-500); }
+    .hint.warn a { margin-left: auto; }
+    .ocr-sum { display: flex; gap: 10px; align-items: center; padding: 12px 14px; border-radius: var(--r-md); background: var(--green-50); border: 1px solid var(--green-100); margin: 14px 0 16px; font-size: 13px; color: var(--slate-700); line-height: 1.4; }
+    .ocr-sum i, .ocr-sum svg { width: 20px; height: 20px; color: var(--green); flex-shrink: 0; }
+    .ld { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .ld.c1 { background: var(--green); } .ld.c2 { background: var(--blue-500); } .ld.c5 { background: var(--brand); }
+
+    /* list bits (shared look with 04) */
+    .thumb { width: 64px; height: 42px; border-radius: 6px; background: var(--white); border: 1px solid var(--slate-200); box-shadow: var(--shadow-sm); position: relative; overflow: hidden; flex-shrink: 0; padding: 6px 7px; }
+    .thumb::before { content: ""; position: absolute; right: 0; top: 0; bottom: 0; width: 4px; background: var(--tc, var(--green)); }
+    .thumb i, .thumb svg { display: block; height: 3px; border-radius: 2px; background: var(--slate-300); margin-bottom: 4px; }
+    .thumb i:nth-child(1) { width: 28px; background: var(--slate-600); height: 4px; }
+    .thumb i:nth-child(2) { width: 18px; }
+    .thumb i:nth-child(3) { width: 36px; }
+    .thumb.sm { width: 58px; height: 38px; padding: 5px 6px; }
+    .crow { display: flex; align-items: center; gap: 12px; padding: 11px 0; min-height: 64px; }
+    .crow + .crow { border-top: 1px solid var(--slate-100); }
+    .crow .tx { flex: 1; min-width: 0; }
+    .crow .tx .nm { display: flex; align-items: center; gap: 6px; }
+    .crow .tx b { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .crow .tx span.sub { display: block; font-size: 12.5px; color: var(--slate-500); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .crow .tx span.st { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; margin-top: 4px; color: var(--green-dark); }
+    .crow .tx span.st i, .crow .tx span.st svg { width: 13px; height: 13px; }
+    .crow .tx span.st.warn { color: var(--slate-700); }
+    .crow .tx span.st.warn i, .crow .tx span.st.warn svg { color: var(--amber-500); }
+    .crow .chev { width: 18px; height: 18px; color: var(--slate-400); flex-shrink: 0; }
+    .crow .badge { height: 20px; font-size: 10.5px; padding: 0 7px; flex-shrink: 0; }
+    .lgroup { background: var(--white); border: 1px solid var(--slate-200); border-radius: var(--r-md); padding: 0 12px; }
+    .letter { font-size: 12px; font-weight: 700; color: var(--slate-400); letter-spacing: .6px; margin: 12px 4px 6px; }
+    .badge.pending { background: var(--white); color: var(--slate-600); border: 1px solid var(--slate-200); }
+    .badge.pending::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--amber-500); }
+    .crow.new { background: linear-gradient(90deg, var(--green-50), rgba(240,250,244,0)); margin: 0 -12px; padding-left: 12px; padding-right: 12px; }
+    .ctabs { display: flex; border-bottom: 1px solid var(--slate-200); padding: 0 12px; }
+    .ctabs a { flex: 1; text-align: center; padding: 8px 0 9px; font-size: 14px; font-weight: 600; color: var(--slate-500); position: relative; line-height: 1.2; }
+    .ctabs a small { display: block; font-size: 11px; font-weight: 600; color: var(--slate-400); margin-top: 2px; }
+    .ctabs a.on { color: var(--green); font-weight: 700; }
+    .ctabs a.on small { color: var(--green); }
+    .ctabs a.on::after { content: ""; position: absolute; left: 16%; right: 16%; bottom: -1px; height: 3px; border-radius: 3px 3px 0 0; background: var(--green); }
+    .sync { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px 0 8px; border-radius: var(--r-pill); background: var(--white); border: 1px solid var(--slate-200); font-size: 12.5px; font-weight: 600; color: var(--slate-600); }
+    .sync .ok { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+    .scan-cta { display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: var(--r-lg); background: linear-gradient(135deg, var(--green-50), var(--green-100)); border: 1px solid var(--green-200); margin: 12px 20px 0; }
+    .scan-cta .ic { width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, var(--green-light), var(--green)); color: var(--white); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-green); flex-shrink: 0; }
+    .scan-cta .ic i, .scan-cta .ic svg { width: 22px; height: 22px; }
+    .scan-cta b { display: block; font-size: 15px; }
+    .scan-cta span { font-size: 12.5px; color: var(--slate-600); }
+    .scan-cta .chev { width: 20px; height: 20px; color: var(--green); margin-left: auto; flex-shrink: 0; }
+    .toast a { color: var(--brand); font-weight: 700; margin-left: auto; white-space: nowrap; }
+
+    /* QR */
+    .qr { fill: var(--ink); display: block; }
+    .qr-paper { position: absolute; z-index: 1; left: 50%; top: 50%; width: 200px; height: 200px; margin: -100px 0 0 -100px; background: var(--white); border-radius: 10px; padding: 14px; transform: rotate(-4deg); box-shadow: 0 14px 30px rgba(0,0,0,.45); }
+    .qr-box { position: relative; background: var(--white); border-radius: 22px; border: 1px solid var(--slate-200); box-shadow: var(--shadow-md); padding: 18px; display: flex; flex-direction: column; align-items: center; }
+    .qr-wrap { position: relative; width: 212px; height: 212px; }
+    .qr-wrap .qr { width: 212px; height: 212px; }
+    .qr-wrap .center { position: absolute; left: 50%; top: 50%; width: 48px; height: 48px; margin: -24px 0 0 -24px; border-radius: 12px; background: var(--white); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 4px var(--white); }
+    .qr-wrap .center img { width: 38px; height: 38px; object-fit: contain; }
+    .qr-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; font-size: 13.5px; font-weight: 600; color: var(--slate-600); }
+    .qr-link i, .qr-link svg { width: 15px; height: 15px; color: var(--slate-400); }
+    .mycard { display: flex; align-items: center; gap: 12px; padding: 12px 14px; }
+    .mycard .tx { flex: 1; min-width: 0; }
+    .mycard .tx b { display: block; font-size: 16px; font-weight: 700; }
+    .mycard .tx span { display: block; font-size: 13px; color: var(--slate-500); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .explain { display: flex; gap: 8px; align-items: flex-start; font-size: 12.5px; color: var(--slate-600); line-height: 1.45; margin: 10px 2px 14px; }
+    .explain i, .explain svg { width: 16px; height: 16px; color: var(--green); flex-shrink: 0; margin-top: 1px; }
+    .bright { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--slate-500); margin-top: 10px; }
+    .bright i, .bright svg { width: 14px; height: 14px; color: var(--amber-500); }
+    .found { display: flex; gap: 14px; align-items: center; padding: 14px; border-radius: var(--r-lg); border: 1px solid var(--slate-200); background: var(--slate-50); }
+    .found .tx b { display: block; font-size: 17px; font-weight: 700; color: var(--ink); }
+    .found .tx span { display: block; font-size: 13px; color: var(--slate-500); margin-top: 2px; }
+    .mutual { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 13px; color: var(--slate-600); }
+    .mutual .avs { display: flex; }
+    .mutual .avs img { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--white); margin-left: -6px; }
+    .mutual .avs img:first-child { margin-left: 0; }
+    .ct-head { height: auto; padding: 6px 12px 6px 20px; align-items: center; }
+    .ct-title { font-size: 26px; font-weight: 800; letter-spacing: -0.4px; }
+    .ct-meta { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--slate-500); margin-top: 2px; }
+    .ct-meta .d { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+    .ctabs { margin: 8px 20px 10px !important; padding: 4px !important; gap: 4px; border: 0 !important; background: var(--slate-100); border-radius: 12px; display: flex; }
+    .ctabs a { flex: 1; text-align: center; padding: 8px 0 !important; border-radius: 9px; font-size: 13.5px; font-weight: 600; color: var(--slate-500); }
+    .ctabs a small { display: none !important; }
+    .ctabs a.on { background: var(--white); color: var(--ink) !important; box-shadow: var(--shadow-sm); }
+    .ctabs a.on::after { display: none !important; }
+    /* ---- QR presenter ---- */
+    .qr-present { background: var(--white) !important; }
+    .body.qp { align-items: center; padding: 0 20px; }
+    .bright { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 15px; background: var(--slate-100); color: var(--slate-600); font-size: 12px; font-weight: 600; margin: 4px 0 18px; }
+    .bright i, .bright svg { width: 14px; height: 14px; color: var(--amber-500); }
+    .qr-big { position: relative; width: 322px; height: 322px; padding: 18px; background: var(--white); border-radius: 26px; border: 1px solid var(--slate-200); box-shadow: 0 8px 28px rgba(15,23,42,0.10); }
+    .qr-big .qr { width: 286px; height: 286px; display: block; }
+    .qr-big .center { position: absolute; left: 50%; top: 50%; width: 58px; height: 58px; margin: -29px 0 0 -29px; border-radius: 14px; background: var(--white); display: flex; align-items: center; justify-content: center; }
+    .qr-big .center img { width: 44px; height: 44px; object-fit: contain; }
+    .who { display: flex; align-items: center; gap: 10px; margin-top: 18px; width: 100%; justify-content: center; }
+    .who .av { width: 40px; height: 40px; }
+    .who .f1 { flex: 0 1 auto; }
+    .who b { display: block; font-size: 16px; }
+    .who span { font-size: 12.5px; color: var(--slate-500); }
+    .qp-seg { width: 100%; margin-top: 16px; }
+    .qp-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; font-size: 13.5px; font-weight: 600; color: var(--slate-600); }
+    .qp-link i, .qp-link svg { width: 15px; height: 15px; color: var(--slate-400); }
+    .qp-cards { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 14px; font-size: 12px; color: var(--slate-400); }
+    .qp-cards .cdots { display: flex; gap: 5px; }
+    .qp-cards .cdots i { width: 6px; height: 6px; border-radius: 3px; background: var(--slate-300); }
+    .qp-cards .cdots i.on { width: 18px; background: var(--ink); }
+    /* multi-card: card swatch, switcher chip, picker sheet (same pattern as 03-A4) */
+    .sw-mini { width: 26px; height: 17px; border-radius: 4px; background: var(--card-graphite); flex-shrink: 0; }
+    .sw-mini.dk { background: var(--card-pearl); border: 1px solid var(--slate-200); }
+    .sw-mini.lt { background: var(--card-stone); border: 1px solid var(--slate-200); }
+    .card-sw-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .card-sw { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 10px 0 6px; border-radius: var(--r-pill); border: 1px solid var(--slate-200); background: var(--white); font-size: 13px; font-weight: 700; color: var(--ink); }
+    .card-sw svg { width: 16px; height: 16px; color: var(--slate-500); }
+    .card-sw .chg { font-weight: 600; color: var(--green); margin-left: 2px; }
+    .card-sw-row .cdots { display: flex; gap: 5px; }
+    .card-sw-row .cdots i { width: 6px; height: 6px; border-radius: 3px; background: var(--slate-300); }
+    .card-sw-row .cdots i.on { width: 18px; background: var(--ink); }
+    .pick { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1.5px solid var(--slate-200); border-radius: 14px; margin-bottom: 10px; }
+    .pick .sw { width: 52px; height: 34px; border-radius: 7px; background: var(--card-graphite); flex-shrink: 0; }
+    .pick .sw.dk { background: var(--card-pearl); border: 1px solid var(--slate-200); }
+    .pick .sw.lt { background: var(--card-stone); border: 1px solid var(--slate-200); }
+    .pick b { display: block; font-size: 14.5px; margin-bottom: 2px; color: var(--ink); }
+    .pick .f1 { min-width: 0; }
+    .pick .f1 span { display: block; font-size: 12.5px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pick .f1 span.ln { color: var(--green); font-weight: 600; }
+    .pick > svg { width: 18px; height: 18px; color: var(--slate-400); flex-shrink: 0; }
+    .pick-note { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 6px; font-size: 12px; color: var(--slate-500); }
+    .pick-note svg { width: 14px; height: 14px; }
+    .tap-zoom { display: block; text-align: center; font-size: 12px; color: var(--slate-400); margin-top: 8px; }
+    /* sheet "Gửi thẻ nào?" bản gọn: danh sách chữ, không hình thẻ */
+    .sh-sub { font-size: 13px; color: var(--slate-500); margin: -6px 0 12px; }
+    .sh-sub b { color: var(--slate-800); font-weight: 600; }
+    .cpick { border: 1px solid var(--slate-200); border-radius: 14px; overflow: hidden; margin-bottom: 10px; }
+    .cpick .ci { display: flex; align-items: center; gap: 10px; padding: 11px 14px; }
+    .cpick .ci + .ci { border-top: 1px solid var(--slate-100); }
+    .cpick .ci b { display: block; font-size: 14.5px; }
+    .cpick .ci span { display: block; font-size: 12.5px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cpick .ci > i, .cpick .ci > svg { width: 18px; height: 18px; color: var(--slate-400); flex-shrink: 0; }
+  </style>
+</head>
+<body class="rd-canvas">
+  <div class="rd-head">
+    <a class="back" href="index.html">← Tất cả flow</a>
+    <h1>05 · Quét danh thiếp &amp; Mã QR</h1>
+    <p>Bấm nút Quét giữa thanh điều hướng → (lần đầu) màn giải thích quyền máy ảnh → camera toàn màn hình với 3 chế độ hiện đủ chữ: <b>Danh thiếp · Mã QR · QR của tôi</b>. Quét xong luôn có bước kiểm tra trước khi lưu, lưu xong về Danh bạ với thông báo và lối "Quét tiếp". Nút ✕ trên camera luôn đưa về tab trước đó.</p>
+  </div>
+
+  <!-- ===================== A. Permission ===================== -->
+  <section class="rd-section">
+    <h2>A · Quyền máy ảnh</h2>
+    <div class="rd-row">
+
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><div class="title left">Quét</div></div>
+          <div class="body" style="padding: 0 24px">
+            <div class="perm-ill"><div class="vf"><b></b><b></b><b></b><b></b><div class="mc"><i></i><i></i><i></i><i></i></div></div><span class="cam-badge"><i data-lucide="camera"></i></span></div>
+            <div class="h1">Cho phép dùng máy ảnh</div>
+            <p class="t-body mt4 mb16">InCard cần máy ảnh để:</p>
+            <div class="feat"><span class="ic"><i data-lucide="id-card"></i></span><div><b>Quét danh thiếp giấy</b><span>Tự điền tên, SĐT, email, công ty</span></div></div>
+            <div class="feat"><span class="ic"><i data-lucide="qr-code"></i></span><div><b>Quét mã QR</b><span>Kết nối ngay với người dùng InCard khác</span></div></div>
+            <div class="feat"><span class="ic"><i data-lucide="shield-check"></i></span><div><b>Ảnh chỉ dùng để nhận diện</b><span>Không chia sẻ cho bất kỳ ai</span></div></div>
+          </div>
+          <div style="padding: 0 24px 12px">
+            <button class="btn primary"><i data-lucide="camera"></i>Cho phép máy ảnh</button>
+            <button class="btn ghost mt8">Để sau</button>
+          </div>
+          <nav class="bnav">
+            <a><i data-lucide="house"></i>Trang chủ</a>
+            <a><i data-lucide="contact-round"></i>Danh bạ</a>
+            <a class="fab on"><span class="c"><i data-lucide="scan-line"></i></span>Quét</a>
+            <a><i data-lucide="compass"></i>Khám phá</a>
+            <a><i data-lucide="circle-user-round"></i>Tài khoản</a>
+          </nav>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">A1 · Giải thích trước khi xin quyền<small>Sửa lỗi bản cũ: dòng "vui lòng đến cài đặt…" hiện chồng lên hộp thoại hệ thống khi người dùng còn chưa kịp chọn. Nay app tự giải thích trước, hộp thoại hệ thống chỉ bật sau khi bấm "Cho phép máy ảnh". Chọn Cho phép → B1; Từ chối → A2. "Để sau" giữ người dùng ở tab, có thể chuyển tab khác bất cứ lúc nào.</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><div class="title left">Quét</div></div>
+          <div class="body" style="padding: 0 24px">
+            <div class="perm-ill off"><div class="vf"><b></b><b></b><b></b><b></b><div class="mc"><i></i><i></i><i></i><i></i></div></div><span class="cam-badge"><i data-lucide="camera-off"></i></span></div>
+            <div class="h1">Máy ảnh đang tắt</div>
+            <p class="t-body mt4 mb12">Bạn đã từ chối quyền máy ảnh. Bật lại chỉ mất vài giây:</p>
+            <div class="steps-list card flat" style="padding:8px 14px">
+              <div>Mở <b>Cài đặt</b> của điện thoại</div>
+              <div>Chọn <b>InCard</b></div>
+              <div>Bật <b>Máy ảnh</b> rồi quay lại app</div>
+            </div>
+          </div>
+          <div style="padding: 0 24px 12px">
+            <button class="btn primary"><i data-lucide="settings"></i>Mở Cài đặt</button>
+            <button class="btn secondary mt8"><i data-lucide="image"></i>Chọn ảnh từ thư viện</button>
+            <p class="t-sm t-center mt12">Hoặc <a class="link">nhập liên hệ thủ công</a></p>
+          </div>
+          <nav class="bnav">
+            <a><i data-lucide="house"></i>Trang chủ</a>
+            <a><i data-lucide="contact-round"></i>Danh bạ</a>
+            <a class="fab on"><span class="c"><i data-lucide="scan-line"></i></span>Quét</a>
+            <a><i data-lucide="compass"></i>Khám phá</a>
+            <a><i data-lucide="circle-user-round"></i>Tài khoản</a>
+          </nav>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">A2 · Đã từ chối quyền<small>Không bỏ người dùng ở ngõ cụt: hướng dẫn 3 bước bật lại, nút "Mở Cài đặt" đi thẳng tới trang quyền của InCard. Hai lối thay thế không cần máy ảnh: chọn ảnh danh thiếp có sẵn trong thư viện, hoặc nhập tay. Quay lại app sau khi bật quyền sẽ tự mở camera.</small></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== B. Business card scan ===================== -->
+  <section class="rd-section">
+    <h2>B · Quét danh thiếp</h2>
+    <div class="rd-row">
+
+      <!-- B1 scanner -->
+      <div class="rd-shot">
+        <div class="phone dark">
+          <div class="cam"></div>
+          <div class="frame">
+            <span class="c tl"></span><span class="c tr"></span><span class="c bl"></span><span class="c br"></span>
+            <div class="biz" style="left:46px;top:40px;transform:rotate(-9deg) scale(.86)">
+              <div class="co"><span></span>MASAN GROUP</div>
+              <div class="nm">Phạm Minh Thư</div><div class="ti">Giám đốc Nhân sự</div>
+              <div class="ln"><i data-lucide="phone"></i>0909 456 128</div>
+              <div class="ln"><i data-lucide="mail"></i>thu.pham@masangroup.com</div>
+              <div class="ln"><i data-lucide="globe"></i>masangroup.com</div>
+            </div>
+          </div>
+          <div class="statusbar over"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="cam-top"><button class="icon-btn glass"><i data-lucide="x"></i></button><div class="t">Quét danh thiếp</div><button class="icon-btn glass"><i data-lucide="zap-off"></i></button><button class="icon-btn glass"><i data-lucide="circle-help"></i></button></div>
+          <div class="cam-hint"><span><i data-lucide="scan"></i>Đưa danh thiếp vào khung</span><small>Ảnh sẽ tự chụp khi đủ rõ nét</small></div>
+          <div class="cam-bottom">
+            <div class="pilltog"><div><a class="on"><i data-lucide="square"></i>Một thẻ</a><a><i data-lucide="layers"></i>Nhiều thẻ</a></div></div>
+            <div class="shut-row">
+              <div class="side l"><span class="gal"><i data-lucide="image"></i></span>Thư viện</div>
+              <span class="shutter"><span></span></span>
+              <div class="side r"><span class="gal"><i data-lucide="keyboard"></i></span>Nhập tay</div>
+            </div>
+            <div class="cseg"><a class="on"><i data-lucide="id-card"></i>Danh thiếp</a><a><i data-lucide="qr-code"></i>Mã QR</a><a><i data-lucide="user-round"></i>QR của tôi</a></div>
+            <div class="home-ind" style="margin-top:8px"></div>
+          </div>
+        </div>
+        <div class="cap">B1 · Máy quét (chế độ Danh thiếp)<small>Camera toàn màn hình, ✕ để thoát về tab trước. Khung hình chữ nhật đúng tỉ lệ danh thiếp kèm gợi ý trực tiếp. Thanh chế độ cũ 4 mục bị cắt chữ → còn 3 mục hiện đủ: Danh thiếp · Mã QR · QR của tôi (QR Offline gộp vào QR của tôi). Công tắc Một thẻ / Nhiều thẻ đặt sát nút chụp. Có lối "Thư viện" và "Nhập tay" khi không chụp được.</small></div>
+      </div>
+
+
+      <!-- B2 detected, batch -->
+      <div class="rd-shot">
+        <div class="phone dark">
+          <div class="cam"></div>
+          <div class="frame ok">
+            <span class="c tl"></span><span class="c tr"></span><span class="c bl"></span><span class="c br"></span>
+            <div class="biz" style="left:23px;top:18px;transform:rotate(-0.8deg)">
+              <div class="co"><span style="background:var(--amber-500)"></span>NAM LONG GROUP</div>
+              <div class="nm">Đỗ Thanh Hải</div><div class="ti">Phó Giám đốc Phát triển dự án</div>
+              <div class="ln"><i data-lucide="phone"></i>0938 715 602</div>
+              <div class="ln"><i data-lucide="mail"></i>hai.do@namlongvn.com</div>
+              <div class="ln"><i data-lucide="map-pin"></i>6 Nguyễn Khắc Viện, Q.7, TP.HCM</div>
+            </div>
+          </div>
+          <div class="statusbar over"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="cam-top"><button class="icon-btn glass"><i data-lucide="x"></i></button><div class="t">Quét nhiều thẻ</div><button class="icon-btn glass on"><i data-lucide="zap"></i></button><button class="icon-btn glass"><i data-lucide="circle-help"></i></button></div>
+          <div class="cam-hint ok"><span><i data-lucide="loader"></i>Giữ yên… đang chụp</span><small>Thẻ thứ 3 · Tự chuyển sang thẻ tiếp theo</small></div>
+          <div class="cam-bottom">
+            <div class="pilltog"><div><a><i data-lucide="square"></i>Một thẻ</a><a class="on"><i data-lucide="layers"></i>Nhiều thẻ</a></div></div>
+            <div class="shut-row">
+              <div class="side l"><span class="gal"><i data-lucide="image"></i></span>Thư viện</div>
+              <span class="shutter busy"><span><i data-lucide="check"></i></span></span>
+              <div class="side r"><span class="stack"><span class="ci a"></span><span class="ci b"></span><span class="cnt">2</span></span>Xem &amp; lưu</div>
+            </div>
+            <div class="cseg"><a class="on"><i data-lucide="id-card"></i>Danh thiếp</a><a><i data-lucide="qr-code"></i>Mã QR</a><a><i data-lucide="user-round"></i>QR của tôi</a></div>
+            <div class="home-ind" style="margin-top:8px"></div>
+          </div>
+        </div>
+        <div class="cap">B2 · Đã nhận ra thẻ (Nhiều thẻ)<small>Khung chuyển xanh và báo "Giữ yên… đang chụp", không cần bấm. Ở chế độ Nhiều thẻ, các thẻ đã chụp xếp chồng góc phải với bộ đếm; bấm vào để sang bước kiểm tra (B4). Đèn flash có trạng thái bật/tắt rõ ràng.</small></div>
+      </div>
+
+      <!-- B3 review -->
+      <div class="rd-shot">
+        <div class="phone white tall">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title">Kiểm tra thông tin</div><div class="spacer44"></div></div>
+          <div style="padding: 0 20px 8px">
+            <div class="photo">
+              <div class="biz static">
+                <div class="co"><span></span>MASAN GROUP</div>
+                <div class="nm">Phạm Minh Thư</div><div class="ti">Giám đốc Nhân sự</div>
+                <div class="ln"><i data-lucide="phone"></i>0909 456 128</div>
+                <div class="ln"><span class="hl"><i data-lucide="mail"></i> thu.pham@masangroup.com</span></div>
+                <div class="ln"><i data-lucide="globe"></i>masangroup.com</div>
+              </div>
+              <div class="ov"><span><i data-lucide="flip-horizontal-2"></i>Mặt sau</span><span><i data-lucide="maximize-2"></i>Phóng to</span></div>
+            </div>
+            <div class="ocr-sum"><i data-lucide="sparkles"></i><span>Đã nhận diện <b>7 thông tin</b>. Có <b>1 mục</b> cần bạn xem lại trước khi lưu.</span></div>
+
+            <div class="field sm"><label>Họ và tên</label><div class="input"><i data-lucide="user-round"></i><span class="v">Phạm Minh Thư</span></div></div>
+            <div class="field sm"><label>Chức vụ</label><div class="input"><i data-lucide="briefcase"></i><span class="v">Giám đốc Nhân sự</span></div></div>
+            <div class="field sm"><label>Công ty</label><div class="input"><i data-lucide="building-2"></i><span class="v">Tập đoàn Masan (Masan Group)</span></div></div>
+            <div class="field sm"><label>Số điện thoại</label><div class="input"><i data-lucide="phone"></i><span class="v">0909 456 128</span></div></div>
+            <div class="field sm"><label>Email</label><div class="input warn"><i data-lucide="mail"></i><span class="v">thu.pharn@masangroup.com</span><i data-lucide="pencil" style="color:var(--slate-500)"></i></div>
+              <div class="hint warn"><i data-lucide="triangle-alert"></i>Kiểm tra lại: có thể là "pham"<a class="link" style="font-size:12.5px">Sửa thành pham</a></div></div>
+            <div class="field sm"><label>Website</label><div class="input"><i data-lucide="globe"></i><span class="v">masangroup.com</span></div></div>
+            <div class="field sm"><label>Địa chỉ</label><div class="input"><i data-lucide="map-pin"></i><span class="v">Tầng 8, Central Plaza, 17 Lê Duẩn, Q.1</span></div></div>
+
+            <div class="field sm"><label>Gặp qua thẻ</label><div class="input"><span class="sw-mini"></span><span class="v">Thẻ InApps Technology</span><i data-lucide="chevron-down"></i></div></div>
+            <div class="field sm"><label>Nhãn</label>
+              <div class="chips" style="flex-wrap:wrap">
+                <span class="chip on"><i data-lucide="check"></i>Techfest 2026</span><span class="chip"><span class="ld c1"></span>Khách hàng</span><span class="chip"><span class="ld c2"></span>Đối tác</span><span class="chip" style="border-style:dashed;color:var(--green)"><i data-lucide="plus"></i>Nhãn</span>
+              </div>
+            </div>
+            <div class="field sm" style="margin-bottom:4px"><label>Ghi chú <span class="opt">(không bắt buộc)</span></label><div class="input area" style="height:80px"><span class="ph">Gặp ở đâu, đã trao đổi gì…</span></div></div>
+          </div>
+          <div class="footer-cta">
+            <div class="btn-row"><button class="btn outline"><i data-lucide="rotate-ccw"></i>Quét lại</button><button class="btn primary" style="flex:1.6"><i data-lucide="user-plus"></i>Lưu liên hệ</button></div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">B3 · Kiểm tra kết quả nhận diện<small>Màn mới: không lưu mù. Ảnh gốc ở trên để đối chiếu, chỗ AI chưa chắc được khoanh vàng trên ảnh và trên ô nhập, kèm gợi ý sửa một chạm. Mọi trường sửa được ngay. Gắn nhãn và ghi chú ngay lúc lưu (nhãn sự kiện được nhớ từ lần quét trước). Trường "Gặp qua thẻ" ghi lại bạn đã đưa thẻ nào cho người này (chạm mở danh sách 3 thẻ, nhớ lựa chọn lần trước). Nút "Lưu liên hệ" luôn ở đáy; "Quét lại" về camera; mũi tên quay lại không làm mất ảnh.</small></div>
+      </div>
+
+      <!-- B4 batch -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title">Đã quét 3 danh thiếp</div><div class="spacer44"></div></div>
+          <div class="body" style="padding: 0 20px">
+            <p class="t-sm mb12">Chạm vào từng thẻ để xem và sửa thông tin.</p>
+            <div class="lgroup">
+              <div class="crow"><span class="thumb" style="--tc:var(--blue-500)"><i></i><i></i><i></i></span><div class="tx"><b>Phạm Minh Thư</b><span class="sub">Giám đốc Nhân sự · Masan Group</span><span class="st"><i data-lucide="circle-check"></i>Đã nhận diện</span></div><i class="chev" data-lucide="chevron-right"></i></div>
+              <div class="crow"><span class="thumb" style="--tc:var(--amber-500)"><i></i><i></i><i></i></span><div class="tx"><b>Đỗ Thanh Hải</b><span class="sub">Phó GĐ Phát triển dự án · Nam Long</span><span class="st warn"><i data-lucide="triangle-alert"></i>Cần kiểm tra · Email bị mờ</span></div><i class="chev" data-lucide="chevron-right"></i></div>
+              <div class="crow"><span class="thumb" style="--tc:var(--green)"><i></i><i></i><i></i></span><div class="tx"><b>Lê Hoàng Yến</b><span class="sub">Chuyên viên KHDN · Vietcombank</span><span class="st"><i data-lucide="circle-check"></i>Đã nhận diện</span></div><i class="chev" data-lucide="chevron-right"></i></div>
+            </div>
+            <div class="group-label">Áp dụng cho cả 3 thẻ</div>
+            <div class="group">
+              <div class="row"><span class="ic"><span class="sw-mini"></span></span><div class="tx"><b>Gặp qua thẻ</b><span>Thẻ InApps Technology</span></div><i class="chev" data-lucide="chevron-down"></i></div>
+              <div class="row"><span class="ic"><i data-lucide="tag"></i></span><div class="tx"><b>Nhãn</b><span>Techfest 2026</span></div><i class="chev" data-lucide="chevron-right"></i></div>
+              <div class="row"><span class="ic"><i data-lucide="notebook-pen"></i></span><div class="tx"><b>Ghi chú chung</b><span>Gặp tại Techfest 2026, gian hàng B12</span></div><i class="chev" data-lucide="chevron-right"></i></div>
+            </div>
+            <button class="btn secondary md mt16"><i data-lucide="plus"></i>Quét thêm thẻ</button>
+          </div>
+          <div class="footer-cta">
+            <p class="t-xs t-center mb8">1 thẻ cần kiểm tra, bạn vẫn có thể lưu và sửa sau.</p>
+            <button class="btn primary"><i data-lucide="save"></i>Lưu tất cả (3)</button>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">B4 · Xem lại nhiều thẻ<small>Danh sách các thẻ vừa quét, mỗi thẻ có trạng thái rõ: "Đã nhận diện" hoặc "Cần kiểm tra" kèm lý do. Gắn thẻ đã dùng để gặp ("Gặp qua thẻ"), nhãn và ghi chú chung một lần cho cả lô (rất hợp khi đi sự kiện). Có "Quét thêm thẻ" quay lại camera mà không mất các thẻ đã quét.</small></div>
+      </div>
+
+      <!-- B5 saved -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ct-head"><div class="f1"><div class="ct-title">Danh bạ</div><a class="ct-meta"><span class="d"></span>315 liên hệ · Đã đồng bộ Google · vừa xong</a></div><button class="icon-btn soft"><i data-lucide="user-plus"></i></button></div>
+          <div class="ctabs"><a>Kết nối<small>128</small></a><a class="on">Danh thiếp<small>27</small></a><a>Đã lưu<small>315</small></a><a>Điện thoại<small>Chưa nhập</small></a></div>
+          <div class="scan-cta"><span class="ic"><i data-lucide="scan-line"></i></span><div><b>Quét danh thiếp giấy</b><span>Tự điền tên, SĐT, email trong 3 giây</span></div><i class="chev" data-lucide="chevron-right"></i></div>
+          <div class="body" style="padding:0 20px">
+            <div class="letter">HÔM NAY</div>
+            <div class="lgroup">
+              <div class="crow new"><span class="thumb sm" style="--tc:var(--blue-500)"><i></i><i></i><i></i></span><div class="tx"><div class="nm"><b>Phạm Minh Thư</b><span class="badge green">Mới</span></div><span class="sub">Masan Group · Quét danh thiếp · Thẻ InApps</span></div></div>
+              <div class="crow new"><span class="thumb sm" style="--tc:var(--amber-500)"><i></i><i></i><i></i></span><div class="tx"><div class="nm"><b>Đỗ Thanh Hải</b><span class="badge green">Mới</span></div><span class="sub">Nam Long Group · Quét danh thiếp · Thẻ InApps</span></div></div>
+              <div class="crow new"><span class="thumb sm"><i></i><i></i><i></i></span><div class="tx"><div class="nm"><b>Lê Hoàng Yến</b><span class="badge green">Mới</span></div><span class="sub">Vietcombank · Quét danh thiếp · Thẻ InApps</span></div></div>
+            </div>
+            <div class="letter">TUẦN NÀY</div>
+            <div class="lgroup">
+              <div class="crow"><span class="thumb sm"><i></i><i></i><i></i></span><div class="tx"><b>Helen Thuỷ Trần</b><span class="sub">Công ty CP Công nghệ InCard · 09/11</span></div><span class="badge pending">Chưa lưu</span></div>
+            </div>
+          </div>
+          <div class="toast"><i data-lucide="circle-check"></i><span>Đã lưu 3 liên hệ vào Danh bạ</span><a>Quét tiếp</a></div>
+          <nav class="bnav">
+            <a><i data-lucide="house"></i>Trang chủ</a>
+            <a class="on"><i data-lucide="contact-round"></i>Danh bạ</a>
+            <a class="fab"><span class="c"><i data-lucide="scan-line"></i></span>Quét</a>
+            <a><i data-lucide="compass"></i>Khám phá</a>
+            <a><i data-lucide="circle-user-round"></i>Tài khoản</a>
+          </nav>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">B5 · Lưu thành công<small>Lưu xong đưa thẳng về Danh bạ › Danh thiếp để thấy ngay kết quả: 3 thẻ mới được tô sáng và gắn nhãn "Mới"; dòng phụ ghi nguồn và thẻ đã dùng để gặp ("Quét danh thiếp · Thẻ InApps"). Thông báo ngắn có lối "Quét tiếp" cho người đang ở sự kiện. Không có màn chúc mừng chặn đường.</small></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== C. QR ===================== -->
+  <section class="rd-section">
+    <h2>C · Mã QR</h2>
+    <div class="rd-row">
+
+      <!-- C1 QR scan -->
+      <div class="rd-shot">
+        <div class="phone dark">
+          <div class="cam"></div>
+          <div class="frame sq">
+            <span class="c tl"></span><span class="c tr"></span><span class="c bl"></span><span class="c br"></span>
+            <div class="qr-paper"><svg class="qr" data-n="25" data-seed="11" viewBox="0 0 25 25"></svg></div>
+            <div class="scanline"></div>
+          </div>
+          <div class="statusbar over"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="cam-top"><button class="icon-btn glass"><i data-lucide="x"></i></button><div class="t">Quét mã QR</div><button class="icon-btn glass"><i data-lucide="zap-off"></i></button><button class="icon-btn glass"><i data-lucide="circle-help"></i></button></div>
+          <div class="cam-hint lowq"><span><i data-lucide="qr-code"></i>Quét mã QR InCard hoặc vCard</span><small>Tự nhận diện, không cần bấm chụp</small></div>
+          <div class="cam-bottom">
+            <div class="shut-row" style="margin-bottom:22px">
+              <div class="side l"><span class="gal"><i data-lucide="image"></i></span>Ảnh có mã QR</div>
+              <span class="auto-txt"></span>
+              <div class="side r"><span class="gal"><i data-lucide="zoom-in"></i></span>Phóng to</div>
+            </div>
+            <div class="cseg"><a><i data-lucide="id-card"></i>Danh thiếp</a><a class="on"><i data-lucide="qr-code"></i>Mã QR</a><a><i data-lucide="user-round"></i>QR của tôi</a></div>
+            <div class="home-ind" style="margin-top:8px"></div>
+          </div>
+        </div>
+        <div class="cap">C1 · Quét mã QR<small>Khung vuông riêng cho mã QR, nói rõ loại mã đọc được (InCard và vCard). Không có nút chụp vì mã được nhận diện tự động, thay vào đó là lối chọn ảnh chụp màn hình có mã QR.</small></div>
+      </div>
+
+      <!-- C2 result -->
+      <div class="rd-shot">
+        <div class="phone dark">
+          <div class="cam"></div>
+          <div class="frame sq ok">
+            <span class="c tl"></span><span class="c tr"></span><span class="c bl"></span><span class="c br"></span>
+            <div class="qr-paper"><svg class="qr" data-n="25" data-seed="11" viewBox="0 0 25 25"></svg></div>
+          </div>
+          <div class="statusbar over"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="cam-top"><button class="icon-btn glass"><i data-lucide="x"></i></button><div class="t">Quét mã QR</div><button class="icon-btn glass"><i data-lucide="zap-off"></i></button><button class="icon-btn glass"><i data-lucide="circle-help"></i></button></div>
+          <div class="scrim" style="z-index:20"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="flex ac g8 mb12"><span class="badge green"><i data-lucide="badge-check"></i>Hồ sơ InCard</span><span class="t-xs">Mã QR hợp lệ</span></div>
+            <div class="found">
+              <img class="av lg" src="https://i.pravatar.cc/150?img=33" alt="" />
+              <div class="tx f1"><b>Phan Đức Thịnh</b><span>Giám đốc dự án · KMS Technology</span></div>
+            </div>
+            <div class="mutual"><span class="avs"><img src="https://i.pravatar.cc/150?img=68" alt="" /><img src="https://i.pravatar.cc/150?img=15" alt="" /><img src="https://i.pravatar.cc/150?img=12" alt="" /></span>3 kết nối chung, gồm Hồ Văn Tâm</div>
+            <button class="btn primary mt20"><i data-lucide="user-plus"></i>Kết nối</button>
+            <div class="btn-row mt8">
+              <button class="btn outline md"><i data-lucide="contact-round"></i>Lưu danh bạ</button>
+              <button class="btn outline md"><i data-lucide="eye"></i>Xem hồ sơ</button>
+            </div>
+            <button class="btn ghost mt8">Quét mã khác</button>
+          </div>
+        </div>
+        <div class="cap">C2 · Tìm thấy hồ sơ<small>Quét xong hiện sheet ngay trên camera thay vì nhảy sang trang khác: ai, làm gì, có kết nối chung không. "Kết nối" là hành động chính và luôn mở bước chọn thẻ C6 "Gửi thẻ nào?" trước khi gửi lời mời; "Lưu danh bạ" cho người chỉ muốn lưu số. Nếu là vCard (không phải InCard) thì chỉ có "Lưu danh bạ". "Quét mã khác" đóng sheet, camera vẫn chạy.</small></div>
+      </div>
+
+      <!-- C6 Send-card picker after scanning -->
+      <div class="rd-shot">
+        <div class="phone dark">
+          <div class="cam"></div>
+          <div class="statusbar over"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="cam-top"><button class="icon-btn glass"><i data-lucide="x"></i></button><div class="t">Quét mã QR</div><button class="icon-btn glass"><i data-lucide="zap-off"></i></button><button class="icon-btn glass"><i data-lucide="circle-help"></i></button></div>
+          <div class="scrim" style="z-index:20"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Gửi thẻ nào?</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <p class="sh-sub">Lời mời kết nối tới <b>Phan Đức Thịnh</b> sẽ kèm thẻ bạn chọn</p>
+            <div class="cpick">
+              <div class="ci" data-go="03-B6@thinh|Đã gửi lời mời kết nối"><div class="f1"><b>Nguyễn Minh Anh</b><span>Giám đốc kinh doanh · InApps Technology</span></div><i data-lucide="chevron-right"></i></div>
+              <div class="ci" data-go="03-B6@thinh|Đã gửi lời mời kết nối"><div class="f1"><b>Nguyễn Minh Anh</b><span>Phó Chủ tịch · CLB Doanh nhân trẻ Sài Gòn</span></div><i data-lucide="chevron-right"></i></div>
+              <div class="ci" data-go="03-B6@thinh|Đã gửi lời mời kết nối"><div class="f1"><b>Nguyễn Minh Anh</b><span>Diễn giả · Mentor khởi nghiệp</span></div><i data-lucide="chevron-right"></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="cap">C6 · Gửi thẻ nào? (sau khi bấm Kết nối)<small>Bước mới giữa C2 và việc gửi lời mời: người dùng có nhiều thẻ nên luôn chọn thẻ sẽ gửi kèm, không tự lấy thẻ mặc định. Mỗi dòng chỉ có tên thẻ và chức vụ chính · công ty — không hình thẻ cho gọn. Chạm một thẻ là gửi lời mời ngay; toast "Đã gửi lời mời kèm Thẻ …". Cùng mẫu sheet với 03-A4.</small></div>
+      </div>
+
+      <!-- C3 My QR online -->
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="x"></i></button><div class="title">QR của tôi</div><button class="icon-btn"><i data-lucide="pencil"></i></button></div>
+          <div class="body" style="padding: 0 20px">
+            <div class="card-sw-row"><span class="card-sw"><span class="sw-mini"></span>Thẻ InApps Technology<i data-lucide="chevron-down"></i></span><span class="cdots"><i class="on"></i><i></i><i></i></span></div>
+            <div class="card flat mycard">
+              <img class="av lg" src="https://i.pravatar.cc/150?img=47" alt="" />
+              <div class="tx"><b>Nguyễn Minh Anh</b><span>Giám đốc kinh doanh · InApps Technology</span></div>
+              <img src="assets/logo-mark.png" style="width:28px;height:28px;object-fit:contain" alt="InCard" />
+            </div>
+            <div class="seg mt12"><a class="on"><i data-lucide="globe"></i>Hồ sơ online</a><a><i data-lucide="wifi-off"></i>Danh bạ offline</a></div>
+            <div class="explain"><i data-lucide="info"></i><span>Người quét mở hồ sơ InCard đầy đủ của bạn và có thể bấm kết nối. Cần có mạng.</span></div>
+            <div class="qr-box">
+              <div class="qr-wrap"><span class="sr-only">Phóng to mã QR</span><svg class="qr" data-n="29" data-seed="3" data-hole="3" viewBox="0 0 29 29"></svg><span class="center"><img src="assets/logo-mark.png" alt="" /></span></div>
+              <span class="qr-link">incard.biz/minhanh<i data-lucide="copy"></i></span>
+              <span class="tap-zoom">Chạm vào mã để phóng to toàn màn hình</span>
+            </div>
+            <div class="t-center"><span class="bright"><i data-lucide="sun"></i>Đã tăng độ sáng màn hình để dễ quét</span></div>
+            <button class="btn primary mt12"><i data-lucide="share-2"></i>Chia sẻ</button>
+            <div class="btn-row mt8">
+              <button class="btn outline md"><i data-lucide="download"></i>Lưu ảnh</button>
+              <button class="btn outline md"><i data-lucide="link"></i>Sao chép liên kết</button>
+            </div>
+          </div>
+          <div style="padding: 10px 20px 0"><div class="cseg light"><a><i data-lucide="id-card"></i>Danh thiếp</a><a><i data-lucide="qr-code"></i>Mã QR</a><a class="on"><i data-lucide="user-round"></i>QR của tôi</a></div></div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">C3 · QR của tôi (Hồ sơ online)<small>Thẻ xem trước sửa lỗi lệch chữ: ảnh, tên, chức vụ thẳng hàng. Hai tab cũ "QR cá nhân" và "QR Offline" gộp thành một màn với công tắc, kèm một dòng nói rõ khác nhau ở đâu. Mã QR to, có logo InCard ở giữa. "Chia sẻ" là nút chính; lưu ảnh và sao chép liên kết đặt ngay dưới. Thanh chế độ ở đáy để quay lại quét. Chip tên thẻ ▾ trên cùng để đổi thẻ (hoặc vuốt ngang, chấm cho biết thẻ 1/3 thẻ); mã QR và link đi theo thẻ đang chọn: Thẻ InApps → incard.biz/minhanh, CLB DNT → incard.biz/minhanh/clb-dnt, Mentor → incard.biz/minhanh/mentor.</small></div>
+      </div>
+
+      <!-- C4 My QR offline -->
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="x"></i></button><div class="title">QR của tôi</div><button class="icon-btn"><i data-lucide="pencil"></i></button></div>
+          <div class="body" style="padding: 0 20px">
+            <div class="card-sw-row"><span class="card-sw"><span class="sw-mini dk"></span>Thẻ CLB Doanh nhân trẻ<i data-lucide="chevron-down"></i></span><span class="cdots"><i></i><i class="on"></i><i></i></span></div>
+            <div class="card flat mycard">
+              <img class="av lg" src="https://i.pravatar.cc/150?img=47" alt="" />
+              <div class="tx"><b>Nguyễn Minh Anh</b><span>Phó Chủ tịch · CLB Doanh nhân trẻ Sài Gòn</span></div>
+              <img src="assets/logo-mark.png" style="width:28px;height:28px;object-fit:contain" alt="InCard" />
+            </div>
+            <div class="seg mt12"><a><i data-lucide="globe"></i>Hồ sơ online</a><a class="on"><i data-lucide="wifi-off"></i>Danh bạ offline</a></div>
+            <div class="explain"><i data-lucide="info"></i><span>Lưu thẳng tên, SĐT, email, công ty vào danh bạ người quét. Không cần mạng, hợp khi ở nơi sóng yếu.</span></div>
+            <div class="qr-box">
+              <div class="qr-wrap"><svg class="qr" data-n="41" data-seed="19" viewBox="0 0 41 41"></svg></div>
+              <span class="qr-link" style="color:var(--slate-500)"><i data-lucide="contact-round"></i>vCard · 0908 112 333 · minhanh@clbdntsg.vn</span>
+            </div>
+            <div class="t-center"><span class="bright"><i data-lucide="sun"></i>Đã tăng độ sáng màn hình để dễ quét</span></div>
+            <button class="btn primary mt12"><i data-lucide="share-2"></i>Chia sẻ</button>
+            <div class="btn-row mt8">
+              <button class="btn outline md"><i data-lucide="download"></i>Lưu ảnh</button>
+              <button class="btn outline md"><i data-lucide="list-checks"></i>Chọn thông tin</button>
+            </div>
+          </div>
+          <div style="padding: 10px 20px 0"><div class="cseg light"><a><i data-lucide="id-card"></i>Danh thiếp</a><a><i data-lucide="qr-code"></i>Mã QR</a><a class="on"><i data-lucide="user-round"></i>QR của tôi</a></div></div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">C4 · QR của tôi (Danh bạ offline)<small>Cùng bố cục với C3 để người dùng chỉ phải hiểu một khác biệt: có cần mạng hay không. Mã dày hơn nên không đặt logo giữa (giữ độ chính xác khi quét). Thay "Sao chép liên kết" bằng "Chọn thông tin" để người dùng quyết định chia sẻ những gì. Ví dụ đang ở Thẻ CLB Doanh nhân trẻ: vCard chứa SĐT, email riêng của thẻ này (thông tin liên hệ tính theo từng thẻ).</small></div>
+      </div>
+
+          <!-- C5 QR presenter -->
+      <div class="rd-shot">
+        <div class="phone white qr-present">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="x"></i></button><div class="title" style="font-size:15px">Đưa mã cho người đối diện quét</div><div class="spacer44"></div></div>
+          <div class="body qp">
+            <div class="bright"><i data-lucide="sun"></i>Đã tăng độ sáng tối đa · màn hình không tự tắt</div>
+            <div class="qr-big"><svg class="qr" data-n="29" data-seed="3" data-hole="3" viewBox="0 0 29 29"></svg><span class="center"><img src="assets/logo-mark.png" alt="" /></span></div>
+            <div class="who"><img class="av" src="https://i.pravatar.cc/150?img=47" alt="" /><div class="f1"><b>Nguyễn Minh Anh</b><span>Thẻ InApps Technology · Giám đốc kinh doanh</span></div></div>
+            <div class="seg qp-seg"><a class="on"><i data-lucide="globe"></i>Hồ sơ online</a><a><i data-lucide="contact-round"></i>Danh bạ offline</a></div>
+            <div class="qp-link"><i data-lucide="link"></i>incard.biz/minhanh</div>
+            <div class="qp-cards"><span class="cdots"><i class="on"></i><i></i><i></i></span><span>Thẻ InApps Technology · vuốt ngang để đổi thẻ</span></div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">C5 · Trình chiếu QR (toàn màn hình)<small>Mở bằng một chạm vào mã QR ở Trang chủ, QR của tôi hoặc sheet Chia sẻ. Mã ~300px (≈4,5–5 cm trên máy thật) đen trên nền trắng, có viền trắng an toàn (quiet zone), logo nhỏ ở giữa (mức sửa lỗi Q). Tự tăng độ sáng tối đa và giữ màn hình sáng; luôn nền sáng kể cả chế độ tối. Mặc định mã "Hồ sơ online" (ít dữ liệu, dễ quét); có link dự phòng theo đúng thẻ đang chiếu (incard.biz/minhanh cho Thẻ InApps); tên thẻ hiện dưới ảnh và cạnh chấm; vuốt ngang để đổi thẻ, mã và link đổi theo.</small></div>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    /* deterministic placeholder QR patterns */
+    document.querySelectorAll('svg.qr').forEach(function (svg) {
+      var n = +svg.dataset.n, s = +svg.dataset.seed, hole = +(svg.dataset.hole || 0), c = (n - 1) / 2, h = '';
+      function r() { s = (s * 9301 + 49297) % 233280; return s / 233280; }
+      function finder(x, y) { return (x < 8 && y < 8) || (x >= n - 8 && y < 8) || (x < 8 && y >= n - 8); }
+      for (var y = 0; y < n; y++) for (var x = 0; x < n; x++) {
+        if (finder(x, y)) continue;
+        if (hole && Math.abs(x - c) <= hole && Math.abs(y - c) <= hole) continue;
+        if (r() < 0.5) h += '<rect x="' + x + '" y="' + y + '" width="1.02" height="1.02"/>';
+      }
+      [[0, 0], [n - 7, 0], [0, n - 7]].forEach(function (p) {
+        h += '<rect x="' + p[0] + '" y="' + p[1] + '" width="7" height="7" rx="1.4"/>' +
+             '<rect x="' + (p[0] + 1) + '" y="' + (p[1] + 1) + '" width="5" height="5" rx="0.9" style="fill:var(--white)"/>' +
+             '<rect x="' + (p[0] + 2) + '" y="' + (p[1] + 2) + '" width="3" height="3" rx="0.6"/>';
+      });
+      svg.innerHTML = h;
+    });
+  </script>
+  <script>lucide.createIcons({ attrs: { 'stroke-width': 1.75 } });</script>
+</body>
+</html>

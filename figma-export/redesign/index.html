@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard Redesign 2026</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../button-system.css" />
+  <link rel="stylesheet" href="../design-system.css" />
+  <link rel="stylesheet" href="rd.css" />
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <style>
+    body.rd-canvas { width: auto; padding: 0; background: var(--app-bg); }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 48px 32px 96px; }
+    .hero { display: flex; align-items: center; gap: 18px; margin-bottom: 14px; }
+    .hero img.m { width: 56px; height: 56px; }
+    .hero img.w { height: 30px; }
+    .hero-sub { font-size: 16px; color: var(--slate-600); max-width: 760px; line-height: 1.55; margin-bottom: 40px; }
+    h2.s { font-size: 13px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--slate-500); margin: 44px 0 16px; }
+    .grid { display: grid; gap: 16px; }
+    .g4 { grid-template-columns: repeat(4, 1fr); }
+    .g3 { grid-template-columns: repeat(3, 1fr); }
+    .g2 { grid-template-columns: repeat(2, 1fr); }
+    .flow-card { background: var(--white); border: 1px solid var(--slate-200); border-radius: 18px; padding: 18px; text-decoration: none; color: var(--ink); display: flex; flex-direction: column; gap: 10px; transition: box-shadow .15s, border-color .15s; }
+    .flow-card:hover { border-color: var(--green-200); box-shadow: var(--shadow-md); }
+    .flow-card .n { width: 40px; height: 40px; border-radius: 12px; background: var(--green-50); color: var(--green); display: flex; align-items: center; justify-content: center; }
+    .flow-card .n i, .flow-card .n svg { width: 20px; height: 20px; }
+    .flow-card b { font-size: 16px; }
+    .flow-card span { font-size: 13px; color: var(--slate-500); line-height: 1.45; }
+    .sw { border-radius: 14px; overflow: hidden; border: 1px solid var(--slate-200); background: var(--white); }
+    .sw .c { height: 72px; }
+    .sw .l { padding: 10px 12px; font-size: 12px; }
+    .sw .l b { display: block; font-size: 13px; }
+    .sw .l code { color: var(--slate-500); font-size: 11.5px; }
+    .pr { background: var(--white); border: 1px solid var(--slate-200); border-radius: 16px; padding: 18px; }
+    .pr .ic { width: 36px; height: 36px; border-radius: 10px; background: var(--green-50); color: var(--green); display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+    .pr .ic i, .pr .ic svg { width: 18px; height: 18px; }
+    .pr b { font-size: 15px; display: block; margin-bottom: 4px; }
+    .pr p { font-size: 13px; color: var(--slate-600); line-height: 1.5; }
+    table.ch { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 16px; overflow: hidden; border: 1px solid var(--slate-200); font-size: 13.5px; }
+    table.ch th { text-align: left; background: var(--slate-50); color: var(--slate-500); font-size: 12px; text-transform: uppercase; letter-spacing: .6px; padding: 10px 14px; }
+    table.ch td { padding: 11px 14px; border-top: 1px solid var(--slate-100); vertical-align: top; line-height: 1.45; }
+    table.ch td:first-child { font-weight: 600; white-space: nowrap; }
+    table.ch td.before { color: var(--slate-500); }
+    .map { background: var(--white); border: 1px solid var(--slate-200); border-radius: 18px; padding: 20px; overflow-x: auto; }
+    .map svg { display: block; width: 100%; min-width: 900px; }
+  </style>
+</head>
+<body class="rd-canvas">
+<div class="wrap">
+  <div class="hero"><img class="m" src="assets/logo-mark.png" alt="" /><img class="w" src="assets/logo-word.png" alt="InCard" /><span class="badge green" style="height:26px;font-size:12.5px">Redesign 2026</span></div>
+  <p class="hero-sub">Thiết kế lại toàn bộ UX/UI app InCard dựa trên flow production hiện tại (v3.2.0.231, scan ngày 12/11/2026). Giữ màu xanh thương hiệu và logo. Mọi luồng đều có lối tiến và lối lùi rõ ràng.</p>
+  <a class="btn primary" href="prototype.html" style="width:auto;padding:0 22px;text-decoration:none;margin:-16px 0 8px"><i data-lucide="play"></i>Mở prototype bấm thử</a>
+
+  <h2 class="s">Các flow</h2>
+  <div class="grid g4">
+    <a class="flow-card" href="01-auth-onboarding.html"><span class="n"><i data-lucide="log-in"></i></span><b>01 · Đăng nhập &amp; Onboarding</b><span>Splash, chào mừng, đăng nhập, quên mật khẩu, đăng ký, tạo hồ sơ 2 bước, nhập hồ sơ từ LinkedIn</span></a>
+    <a class="flow-card" href="02-home.html"><span class="n"><i data-lucide="house"></i></span><b>02 · Trang chủ</b><span>Thẻ của tôi (nhiều thẻ cho từng vai trò: vuốt xem, quản lý, tạo thẻ mới), gợi ý kết nối, thông báo, chia sẻ (chọn thẻ trước khi gửi), mời bạn, Premium, bảng xếp hạng</span></a>
+    <a class="flow-card" href="03-profile-nfc.html"><span class="n"><i data-lucide="id-card"></i></span><b>03 · Hồ sơ &amp; Thẻ NFC</b><span>Hồ sơ của tôi, hồ sơ người khác, sửa trực tiếp trên hồ sơ (WYSIWYG), kích hoạt thẻ, danh thiếp của tôi</span></a>
+    <a class="flow-card" href="04-network.html"><span class="n"><i data-lucide="contact-round"></i></span><b>04 · Danh bạ (CRM)</b><span>Kết nối, danh thiếp, danh bạ, điện thoại, lọc, AI lọc, chi tiết liên hệ, nhãn, sửa / xoá liên hệ</span></a>
+    <a class="flow-card" href="05-scan.html"><span class="n"><i data-lucide="scan-line"></i></span><b>05 · Quét</b><span>Xin quyền camera, quét danh thiếp, duyệt kết quả OCR, quét hàng loạt, QR</span></a>
+    <a class="flow-card" href="06-explore.html"><span class="n"><i data-lucide="compass"></i></span><b>06 · Khám phá</b><span>Bảng tin, tin tức, chi tiết bài, bài của tôi, tạo bài viết có AI hỗ trợ</span></a>
+    <a class="flow-card" href="07-ai-inka.html"><span class="n"><i data-lucide="sparkles"></i></span><b>07 · Trợ lý Inka AI</b><span>Gộp trợ lý và tìm hồ sơ vào một nơi, hội thoại, lịch sử, giọng nói, giới hạn lượt</span></a>
+    <a class="flow-card" href="08-account-settings.html"><span class="n"><i data-lucide="circle-user-round"></i></span><b>08 · Tài khoản &amp; Cài đặt</b><span>Cài đặt nhóm theo chủ đề, Google, lịch hẹn, công việc, giới thiệu, bảo mật, trợ giúp</span></a>
+    <a class="flow-card" href="09-chat.html"><span class="n"><i data-lucide="message-circle"></i></span><b>09 · Tin nhắn</b><span>Hộp thư, tin nhắn chờ, trò chuyện 1-1 gửi thẻ / đặt lịch / hợp tác ngay trong chat</span></a>
+    <a class="flow-card" href="10-web-profile.html"><span class="n"><i data-lucide="globe"></i></span><b>10 · Hồ sơ web</b><span>Trang công khai incard.biz/… mở từ QR / NFC / link, không cần app; đăng nhập trên web để kết nối</span></a>
+  </div>
+
+  <h2 class="s">Sơ đồ điều hướng</h2>
+  <div class="map">
+    <svg viewBox="0 0 1160 330" font-family="Public Sans, sans-serif" font-size="12">
+      <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/></marker></defs>
+      <g fill="#f0faf4" stroke="#b8e6cb" stroke-width="1.5">
+        <rect x="10" y="150" width="120" height="44" rx="12"/>
+        <rect x="170" y="150" width="140" height="44" rx="12"/>
+        <rect x="350" y="150" width="130" height="44" rx="12"/>
+      </g>
+      <g fill="#0f172a" font-weight="700" text-anchor="middle">
+        <text x="70" y="176">Splash / Chào mừng</text>
+        <text x="240" y="170">Đăng nhập</text><text x="240" y="184" font-weight="400" fill="#64748b">Đăng ký · Quên MK</text>
+        <text x="415" y="170">Tạo hồ sơ</text><text x="415" y="184" font-weight="400" fill="#64748b">2 bước → Hoàn tất</text>
+      </g>
+      <g stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#a)">
+        <path d="M130 172 H168"/><path d="M310 172 H348"/><path d="M480 172 H528"/>
+        <path d="M600 150 V60 H650"/><path d="M600 160 V125 H650"/><path d="M600 172 H650"/><path d="M600 184 V220 H650"/><path d="M600 194 V290 H650"/>
+      </g>
+      <rect x="530" y="140" width="70" height="64" rx="14" fill="#009037"/>
+      <text x="565" y="168" text-anchor="middle" fill="#fff" font-weight="700">Tab</text><text x="565" y="184" text-anchor="middle" fill="#fff" font-weight="700">bar</text>
+      <g fill="#fff" stroke="#e2e8f0" stroke-width="1.5">
+        <rect x="652" y="38" width="150" height="44" rx="12"/><rect x="652" y="103" width="150" height="44" rx="12"/><rect x="652" y="150" width="150" height="44" rx="12" stroke="#009037"/><rect x="652" y="198" width="150" height="44" rx="12"/><rect x="652" y="268" width="150" height="44" rx="12"/>
+      </g>
+      <g font-weight="700" fill="#0f172a">
+        <text x="666" y="65">Trang chủ</text><text x="666" y="130">Danh bạ</text><text x="666" y="177" fill="#009037">Quét (nút giữa)</text><text x="666" y="225">Khám phá</text><text x="666" y="295">Tài khoản</text>
+      </g>
+      <g stroke="#cbd5e1" stroke-width="1.2" fill="none" marker-end="url(#a)">
+        <path d="M802 60 H840"/><path d="M802 125 H840"/><path d="M802 172 H840"/><path d="M802 220 H840"/><path d="M802 290 H840"/>
+      </g>
+      <g fill="#475569">
+        <text x="846" y="52">Hồ sơ · Chia sẻ thẻ · Thông báo · Inka AI</text><text x="846" y="68">Kết nối tiềm năng · Mời bạn · Premium · Xếp hạng</text>
+        <text x="846" y="122">Kết nối · Danh thiếp · Danh bạ · Điện thoại</text><text x="846" y="138">Chi tiết liên hệ · Lọc · AI lọc · Nhãn</text>
+        <text x="846" y="169">Danh thiếp (1 / nhiều) → Duyệt OCR → Lưu</text><text x="846" y="185">Mã QR → Kết nối · QR của tôi</text>
+        <text x="846" y="217">Dành cho bạn · Tin tức · Của tôi</text><text x="846" y="233">Chi tiết bài · Tạo bài (AI viết)</text>
+        <text x="846" y="287">Thông tin TK · Thẻ · Nhóm · Lịch · Công việc</text><text x="846" y="303">Google · Bảo mật · Trợ giúp · Đăng xuất</text>
+      </g>
+    </svg>
+  </div>
+
+  <h2 class="s">Bảng màu (giữ màu thương hiệu)</h2>
+  <div class="grid" style="grid-template-columns: repeat(8,1fr)">
+    <div class="sw"><div class="c" style="background:var(--green)"></div><div class="l"><b>Xanh chủ đạo</b><code>--green #009037</code></div></div>
+    <div class="sw"><div class="c" style="background:linear-gradient(135deg,var(--green-light),var(--green))"></div><div class="l"><b>Gradient CTA</b><code>#2eb07a → #009037</code></div></div>
+    <div class="sw"><div class="c" style="background:var(--brand)"></div><div class="l"><b>Xanh logo</b><code>--brand #45b976</code></div></div>
+    <div class="sw"><div class="c" style="background:var(--green-50)"></div><div class="l"><b>Nền nhấn</b><code>--green-50</code></div></div>
+    <div class="sw"><div class="c" style="background:var(--app-bg)"></div><div class="l"><b>Nền app</b><code>--app-bg #f6f8f7</code></div></div>
+    <div class="sw"><div class="c" style="background:var(--ink)"></div><div class="l"><b>Chữ chính</b><code>--ink #0f172a</code></div></div>
+    <div class="sw"><div class="c" style="background:linear-gradient(135deg,#e3b74a,var(--gold))"></div><div class="l"><b>Premium</b><code>--gold (chỉ Premium)</code></div></div>
+    <div class="sw"><div class="c" style="background:var(--red-600)"></div><div class="l"><b>Huỷ / Xoá</b><code>--red-600</code></div></div>
+  </div>
+  <p class="t-sm mt12">Thay vì dùng lẫn cam, xanh dương và đen như hiện tại, app chỉ còn 1 màu chủ đạo (xanh) và 1 màu nhấn (vàng gold, chỉ dành cho Premium). Đỏ chỉ dùng cho thao tác huỷ hoặc xoá.</p>
+
+  <h2 class="s">Nguyên tắc thiết kế</h2>
+  <div class="grid g3">
+    <div class="pr"><span class="ic"><i data-lucide="route"></i></span><b>Không có ngõ cụt</b><p>Mọi màn đều có nút quay lại và một bước tiếp theo rõ ràng. Màn trống luôn có nút hành động. Lỗi luôn kèm cách xử lý.</p></div>
+    <div class="pr"><span class="ic"><i data-lucide="hand"></i></span><b>Một việc chính mỗi màn</b><p>Mỗi màn có 1 nút chính màu xanh, đặt ở vùng ngón cái. Thao tác nguy hiểm được chuyển vào menu ⋮ và luôn có hộp xác nhận.</p></div>
+    <div class="pr"><span class="ic"><i data-lucide="layers"></i></span><b>Chia nhỏ form dài</b><p>Tạo hồ sơ và chỉnh sửa hồ sơ được chia theo từng mục. Mỗi mục chỉ có 1 nút Lưu cố định ở dưới.</p></div>
+    <div class="pr"><span class="ic"><i data-lucide="eye-off"></i></span><b>Không che nội dung</b><p>Bỏ mascot Inka và bong bóng AI nổi trên màn hình. Inka chuyển lên header và vào thanh tìm kiếm.</p></div>
+    <div class="pr"><span class="ic"><i data-lucide="languages"></i></span><b>100% tiếng Việt</b><p>Bỏ các nhãn tiếng Anh còn sót (Network, List Group, Today) và các giá trị ngành nghề đang ở tiếng Anh.</p></div>
+    <div class="pr"><span class="ic"><i data-lucide="bell-off"></i></span><b>Không chặn người dùng</b><p>Paywall, đồng bộ Google, xin quyền: hiển thị dạng banner hoặc màn giải thích, không bật popup chặn ngay khi vào màn.</p></div>
+  </div>
+
+  <h2 class="s">Thay đổi chính so với app hiện tại</h2>
+  <table class="ch">
+    <tr><th>Khu vực</th><th>Hiện tại</th><th>Thiết kế mới</th></tr>
+    <tr><td>Tab bar</td><td class="before">Trang chủ · CRM của tôi · Quét thẻ · Khám Phá · Cài đặt</td><td>Trang chủ · Danh bạ · <b>Quét</b> · Khám phá · Tài khoản. Tên tab ngắn, dễ hiểu, không lẫn tiếng Anh</td></tr>
+    <tr><td>Sau đăng ký</td><td class="before">Coach mark che form, paywall bật ngay, màn thành công trống</td><td>Tạo hồ sơ 2 bước có tiến trình, bước 2 bỏ qua được, kết thúc bằng 3 việc nên làm tiếp. Không bật paywall</td></tr>
+    <tr><td>Trang chủ</td><td class="before">Nút AI cam và mascot nổi che nội dung; bảng xếp hạng bị trống</td><td>Inka nằm trên header, thanh tìm kiếm có nút AI, có lối tắt nhanh, nhắc hoàn thiện hồ sơ, bảng xếp hạng hiển thị dữ liệu</td></tr>
+    <tr><td>Kết nối tiềm năng</td><td class="before">Trống, không giải thích lý do</td><td>Nói rõ cần thêm ngành nghề và dịch vụ, có nút dẫn thẳng tới mục cần điền</td></tr>
+    <tr><td>Hồ sơ</td><td class="before">Mục trống chỉ có tiêu đề; nút "Huỷ kết nối" màu đỏ nằm ngay trên trang</td><td>Mục trống có gợi ý "+ Thêm", có thanh % hoàn thiện; Huỷ kết nối chuyển vào menu ⋮ và có hộp xác nhận</td></tr>
+    <tr><td>Chỉnh sửa hồ sơ</td><td class="before">Một form rất dài, 2 nút Lưu, nhiều nút đen</td><td>Sửa trực tiếp ngay trên trang hồ sơ (thấy gì sửa nấy): chạm vào phần nào sửa phần đó, thêm/xoá/ẩn/sắp xếp tại chỗ, 1 nút lưu cố định; hỏi lại khi thoát mà chưa lưu</td></tr>
+    <tr><td>Quét</td><td class="before">Thông báo "vào cài đặt bật camera" hiện trước khi người dùng kịp chọn; nhãn tab bị cắt</td><td>Màn giải thích trước khi xin quyền; 3 chế độ đặt tên rõ; có màn duyệt kết quả OCR, ô nhận diện chưa chắc được tô vàng</td></tr>
+    <tr><td>Danh bạ (CRM)</td><td class="before">Tiêu đề "Network", 4 tab bị cắt chữ, thanh đồng bộ chiếm nhiều chỗ</td><td>Tab dạng chip có số lượng, trạng thái đồng bộ gọn trong 1 dòng, lọc nhanh theo nhãn, chi tiết liên hệ có ghi chú và lịch hẹn</td></tr>
+    <tr><td>Inka AI</td><td class="before">Trợ lý và Tìm hồ sơ là 2 màn riêng; nút mic nổi che nội dung</td><td>Gộp thành 1 màn có 2 chế độ; mic nằm trong ô nhập; kết quả tìm hồ sơ hiển thị dạng thẻ</td></tr>
+    <tr><td>Khám phá</td><td class="before">Nút + xanh dương che bài viết; nút Xác nhận màu đen; tin tức cũ</td><td>Nút tạo bài trên header; bài có nhãn loại (Tìm đối tác, Sự kiện…); tạo bài theo loại, có AI viết hộ</td></tr>
+    <tr><td>Cài đặt</td><td class="before">19 dòng xám không icon; Xoá tài khoản nằm cạnh Đăng xuất</td><td>Nhóm theo chủ đề, có icon; Xoá tài khoản chuyển vào Bảo mật và cần gõ xác nhận; Lịch và Công việc dùng banner thay cho popup chặn</td></tr>
+    <tr><td>Màu sắc</td><td class="before">Xanh + cam + xanh dương + đen + teal</td><td>Xanh InCard làm chủ đạo, vàng gold chỉ dùng cho Premium, đỏ chỉ dùng cho thao tác huỷ</td></tr>
+  </table>
+</div>
+<script>lucide.createIcons({ attrs: { 'stroke-width': 1.75 } });</script>
+</body>
+</html>

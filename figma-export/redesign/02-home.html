@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard Redesign — 02 Trang chủ</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../button-system.css" />
+  <link rel="stylesheet" href="../design-system.css" />
+  <link rel="stylesheet" href="rd.css" />
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      /* third-party share-target brand tints (share sheet only) */
+      --zalo: #0068ff;
+      --messenger: #0084ff;
+    }
+    /* avatar tints */
+    .av.tb { background: rgba(59,130,246,0.12); color: var(--blue-500); }
+    .av.tg { background: var(--gold-bg); color: var(--gold); }
+    .av.ts { background: var(--slate-100); color: var(--slate-700); }
+    .av.tr { background: var(--red-50); color: var(--red-600); }
+
+    /* Home header */
+    .hh { height: 60px; flex-shrink: 0; display: flex; align-items: center; gap: 10px; padding: 0 20px; }
+    .hh .hi { font-size: 12.5px; color: var(--slate-500); }
+    .plan-pill { display: inline-flex; align-items: center; gap: 4px; margin-top: 3px; height: 22px; padding: 0 6px 0 7px; border-radius: 11px; background: var(--slate-100); border: 1px solid var(--slate-200); font-size: 11.5px; font-weight: 700; color: var(--slate-700); }
+    .plan-pill i, .plan-pill svg { width: 12px; height: 12px; }
+    .plan-pill.pro { background: var(--gold-bg); border-color: var(--gold-border); color: var(--gold); }
+    .hh .nm { font-size: 16px; font-weight: 700; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .hh .inka-btn { padding: 0; width: 42px; justify-content: center; position: relative; }
+    .hh .inka-btn img { width: 36px; height: 36px; }
+    .hh .inka-btn .spk { position: absolute; right: -2px; top: -2px; width: 16px; height: 16px; border-radius: 50%; background: var(--green); color: var(--white); display: flex; align-items: center; justify-content: center; border: 2px solid var(--white); }
+    .hh .inka-btn .spk svg, .hh .inka-btn .spk i { width: 9px; height: 9px; }
+
+    /* My card hero */
+    .hero { margin-top: 4px; padding: 12px; border-radius: var(--r-lg); background: var(--white); border: 1px solid var(--slate-200); box-shadow: var(--shadow-sm); }
+    .mycard { height: 168px; border-radius: 16px; background: var(--card-graphite); box-shadow: var(--card-shadow); color: var(--white); padding: 16px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; box-shadow: var(--shadow-green); }
+    .mycard::before { content: ""; position: absolute; width: 220px; height: 220px; border-radius: 50%; right: -80px; top: -90px; background: rgba(255,255,255,0.05); }
+    .mycard .accent { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--brand); }
+    .mycard::after { content: ""; position: absolute; width: 140px; height: 140px; border-radius: 50%; left: -50px; bottom: -70px; background: rgba(255,255,255,0.08); }
+    .mycard > * { position: relative; z-index: 1; }
+    .mycard .top { display: flex; align-items: center; justify-content: space-between; }
+    .mycard .top .brand { display: flex; align-items: center; gap: 6px; }
+    .mycard .top img.m { width: 24px; height: 24px; }
+    .mycard .top img.w { height: 15px; filter: brightness(0) invert(1); }
+    .mycard .top i, .mycard .top svg { width: 22px; height: 22px; opacity: .9; }
+    .mycard .bot { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+    .mycard .nm { font-size: 19px; font-weight: 700; letter-spacing: -0.2px; }
+    .mycard .tt { font-size: 13px; opacity: .92; margin-top: 2px; }
+    .mycard .co { font-size: 12.5px; opacity: .85; margin-top: 6px; display: flex; align-items: center; gap: 5px; }
+    .mycard .co i, .mycard .co svg { width: 14px; height: 14px; }
+    .qr-tile { width: 76px; height: 76px; border-radius: 12px; background: var(--white); padding: 6px; flex-shrink: 0; color: var(--ink); }
+    .qr-tile svg { width: 100%; height: 100%; display: block; }
+    .hero .btn-row { margin-top: 12px; }
+    .hero .btn-row .btn { height: 40px; font-size: 14px; border-radius: 11px; gap: 6px; box-shadow: none; }
+    .hero .btn-row .btn i, .hero .btn-row .btn svg { width: 16px; height: 16px; }
+    .cards-head { display: flex; align-items: center; gap: 8px; margin: 0 2px 10px; }
+    .cards-head b { font-size: 14px; }
+    .cards-head .cnt { font-size: 12px; font-weight: 700; color: var(--slate-500); background: var(--slate-100); border-radius: 10px; padding: 1px 8px; }
+    .cards-head .mng { margin-left: auto; font-size: 13px; font-weight: 700; color: var(--green); display: inline-flex; align-items: center; gap: 2px; }
+    .cards-head .mng i, .cards-head .mng svg { width: 15px; height: 15px; }
+    .card-rail { display: flex; gap: 10px; overflow: hidden; margin-right: -12px; }
+    .card-rail .mycard { flex: 0 0 calc(100% - 30px); }
+    .mycard.c2 { background: var(--card-pearl); color: var(--ink); border: 1px solid var(--slate-200); box-shadow: var(--shadow-sm); }
+    .mycard.c2::before, .mycard.c2::after { background: rgba(15,23,42,0.03); }
+    .mycard.c2 .ctag { background: var(--slate-100); color: var(--slate-700); }
+    .mycard .ctag { font-size: 11px; font-weight: 700; letter-spacing: .4px; background: rgba(255,255,255,0.18); border-radius: 10px; padding: 3px 9px; }
+    .mycard .pos { font-size: 12.5px; opacity: .92; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mycard .pos b { font-weight: 700; }
+    .mycard .bot .f1 { min-width: 0; }
+    .cdots { display: flex; justify-content: center; gap: 5px; margin-top: 10px; }
+    .cdots i { width: 6px; height: 6px; border-radius: 3px; background: var(--slate-300); }
+    .cdots i.on { width: 18px; background: var(--green); }
+
+    /* stats */
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
+    .stat { background: var(--white); border: 1px solid var(--slate-200); border-radius: var(--r-md); padding: 12px; }
+    .stat .si { width: 28px; height: 28px; border-radius: 8px; background: var(--green-50); color: var(--green); display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+    .stat .si i, .stat .si svg { width: 16px; height: 16px; }
+    .stat b { font-size: 20px; font-weight: 800; display: block; letter-spacing: -0.3px; }
+    .stat span { font-size: 12px; color: var(--slate-500); }
+    .stat em { font-style: normal; font-size: 11px; font-weight: 700; color: var(--green); margin-left: 4px; }
+
+    /* nudge */
+    .nudge { display: flex; gap: 12px; align-items: center; }
+    .ring { width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0; background: conic-gradient(var(--green) 0 60%, var(--green-100) 60% 100%); display: flex; align-items: center; justify-content: center; }
+    .ring span { width: 38px; height: 38px; border-radius: 50%; background: var(--green-50); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: var(--green-dark); }
+    .nudge b { font-size: 14px; display: block; }
+    .nudge p { font-size: 12.5px; color: var(--slate-600); margin-top: 2px; line-height: 1.4; }
+    .vc-pick { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--slate-200); text-decoration: none; color: var(--slate-500); }
+    .vc-pick b { display: block; font-size: 14px; color: var(--ink); } .vc-pick span { display: block; font-size: 12px; margin-top: 1px; }
+    .vc-pick svg, .vc-pick i { width: 18px; height: 18px; flex-shrink: 0; }
+    .vq-row { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 6px 0; }
+    .vq-row + .vq-row { border-top: 1px solid var(--slate-100); }
+    .vq-row .check { align-items: center; }
+    .vq-row .tx { flex: 1; min-width: 0; }
+    .vq-row .tx b { display: block; font-size: 14.5px; font-weight: 600; color: var(--ink); }
+    .vq-row .tx span { display: block; font-size: 12.5px; color: var(--slate-500); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .vq-row .tx span.warn { color: var(--amber-500); }
+    .vq-lock { width: 22px; height: 22px; border-radius: 6px; background: var(--slate-200); color: var(--slate-500); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .vq-lock i, .vq-lock svg { width: 13px; height: 13px; }
+    .invite-qr { display: flex; gap: 14px; align-items: center; padding: 12px; border-radius: 14px; border: 1px solid var(--slate-200); }
+    .invite-qr .qr-tile { width: 84px; height: 84px; border: 1px solid var(--slate-200); }
+    .invite-qr b { display: block; font-size: 14px; color: var(--ink); }
+    .invite-qr p { margin: 3px 0 0; font-size: 12.5px; line-height: 1.4; color: var(--slate-500); }
+
+
+    /* invite friends */
+    .invite { padding: 14px; display: flex; gap: 14px; align-items: center; }
+    .invite .qr-tile { border: 1px solid var(--slate-200); width: 92px; height: 92px; }
+    .qr-zoom { position: relative; cursor: zoom-in; font: inherit; transition: transform .15s, box-shadow .15s; }
+    .qr-zoom:hover { box-shadow: 0 4px 14px rgba(15,23,42,0.12); }
+    .qr-zoom:active { transform: scale(0.96); }
+    .qr-zoom:focus-visible { outline: 3px solid rgba(0,144,55,0.4); outline-offset: 2px; }
+    .qr-zoom .zoom { position: absolute; right: -7px; bottom: -7px; width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--white); border: 2px solid var(--white); display: flex; align-items: center; justify-content: center; }
+    .qr-zoom .zoom i, .qr-zoom .zoom svg { width: 13px; height: 13px; }
+    .invite .f1 { min-width: 0; }
+    .invite b { display: block; font-size: 15px; font-weight: 700; color: var(--slate-900); }
+    .invite .u { display: block; margin-top: 2px; font-size: 12.5px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .inv-actions { display: flex; gap: 8px; margin-top: 12px; }
+    .inv-actions .btn { height: 40px; font-size: 14px; }
+    .inv-actions .btn.primary { flex: 1; padding: 0 10px; }
+    .inv-actions .cp-btn { flex: 0 0 40px; width: 40px; padding: 0; }
+    /* D5 invite QR presenter */
+    .qr-present { background: var(--white) !important; }
+    .body.qp { align-items: center; padding: 0 20px; }
+    .qp .bright { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 15px; background: var(--slate-100); color: var(--slate-600); font-size: 12px; font-weight: 600; margin: 4px 0 18px; }
+    .qp .bright i, .qp .bright svg { width: 14px; height: 14px; color: var(--amber-500); }
+    .qr-big { position: relative; width: 322px; height: 322px; padding: 18px; background: var(--white); border-radius: 26px; border: 1px solid var(--slate-200); box-shadow: 0 8px 28px rgba(15,23,42,0.10); color: var(--ink); }
+    .qr-big .qr { width: 286px; height: 286px; display: block; }
+    .qr-big .center { position: absolute; left: 50%; top: 50%; width: 58px; height: 58px; margin: -29px 0 0 -29px; border-radius: 14px; background: var(--white); display: flex; align-items: center; justify-content: center; }
+    .qr-big .center img { width: 44px; height: 44px; object-fit: contain; }
+    .qp-who { display: flex; align-items: center; gap: 10px; margin-top: 18px; }
+    .qp-who .av { width: 40px; height: 40px; }
+    .qp-who b { display: block; font-size: 16px; }
+    .qp-who span { font-size: 12.5px; color: var(--slate-500); }
+    .qp-steps { display: flex; width: 100%; margin-top: 18px; border: 1px solid var(--slate-200); border-radius: 14px; }
+    .qp-steps div { flex: 1; padding: 10px 6px; text-align: center; font-size: 11.5px; line-height: 1.35; color: var(--slate-600); }
+    .qp-steps div + div { border-left: 1px solid var(--slate-200); }
+    .qp-steps i, .qp-steps svg { display: block; width: 18px; height: 18px; margin: 0 auto 4px; color: var(--green); }
+    .qp-code { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 14px; font-size: 13px; color: var(--slate-500); }
+
+
+    /* quick actions */
+    .qa { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .qa a { display: flex; flex-direction: column; align-items: center; gap: 7px; text-decoration: none; color: var(--slate-700); font-size: 12px; font-weight: 600; text-align: center; line-height: 1.25; }
+    .qa a span { width: 56px; height: 56px; border-radius: 18px; background: var(--white); border: 1px solid var(--slate-200); color: var(--green); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); }
+    .qa a span i, .qa a span svg { width: 24px; height: 24px; }
+
+    /* potential cards (horizontal) */
+    .hscroll { display: flex; gap: 10px; overflow: hidden; margin-right: -20px; }
+    .pc { width: 148px; flex-shrink: 0; background: var(--white); border: 1px solid var(--slate-200); border-radius: 18px; padding: 18px 12px 12px; text-align: center; position: relative; }
+    .pc .av { width: 72px; height: 72px; margin: 0 auto 10px; display: flex; box-shadow: 0 0 0 3px var(--white), 0 0 0 5px var(--green-200); }
+    .pc b { display: block; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pc .sub { font-size: 12px; color: var(--slate-500); line-height: 1.35; height: 32px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 2px; }
+    .pc-cta { margin-top: 12px; width: 100%; height: 36px; border: 0; border-radius: 9999px; background: var(--green-bg); color: var(--green); font-family: inherit; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; transition: background .15s, color .15s, transform .1s; }
+    .pc-cta i, .pc-cta svg { width: 16px; height: 16px; stroke-width: 2.25; }
+    .pc-cta:hover { background: var(--green); color: var(--white); }
+    .pc-cta:active { transform: scale(0.97); }
+    .pc-cta:focus-visible { outline: 3px solid rgba(0,144,55,0.4); outline-offset: 2px; }
+    .pc .x { position: absolute; top: 8px; right: 8px; width: 16px; height: 16px; color: var(--slate-400); }
+
+    /* leaderboard preview */
+    .lb-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; }
+    .lb-row + .lb-row { border-top: 1px solid var(--slate-100); }
+    .medal { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; }
+    .medal.m1 { background: var(--gold-bg); color: var(--gold); border: 1.5px solid var(--gold-border); }
+    .medal.m2 { background: var(--slate-100); color: var(--slate-600); border: 1.5px solid var(--slate-300); }
+    .medal.m3 { background: rgba(245,158,11,0.12); color: var(--gold); border: 1.5px solid rgba(245,158,11,0.35); }
+    .medal.mn { color: var(--slate-500); }
+    .pts { font-size: 13px; font-weight: 700; color: var(--green-dark); white-space: nowrap; }
+
+    /* premium banner */
+    .pstrip { display: flex; align-items: center; gap: 10px; height: 56px; padding: 0 8px 0 10px; border-radius: 14px; background: linear-gradient(100deg, var(--gold-bg), var(--white)); border: 1px solid var(--gold-border); color: inherit; text-decoration: none; cursor: pointer; }
+    .pstrip .pi { width: 36px; height: 36px; border-radius: 10px; background: var(--white); color: var(--gold); display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid var(--gold-border); }
+    .pstrip .pi i, .pstrip .pi svg { width: 18px; height: 18px; }
+    .pstrip .f1 { min-width: 0; }
+    .pstrip b { display: block; font-size: 14px; color: var(--gold); }
+    .pstrip .f1 > span { display: block; font-size: 12px; color: var(--slate-600); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pstrip .chev { width: 18px; height: 18px; color: var(--gold); flex-shrink: 0; }
+    .pstrip .cl { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: var(--slate-400); flex-shrink: 0; border-left: 1px solid var(--gold-border); }
+    .pstrip .cl i, .pstrip .cl svg { width: 15px; height: 15px; }
+    .pbanner { display: flex; gap: 12px; align-items: center; position: relative; padding-right: 36px; }
+    .pbanner .pi { width: 40px; height: 40px; border-radius: 12px; background: var(--white); color: var(--gold); display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid var(--gold-border); }
+    .pbanner .pi i, .pbanner .pi svg { width: 20px; height: 20px; }
+    .pbanner b { font-size: 14px; display: block; }
+    .pbanner p { font-size: 12.5px; color: var(--slate-600); margin-top: 2px; }
+    .pbanner .cl { position: absolute; top: 10px; right: 10px; width: 18px; height: 18px; color: var(--slate-400); }
+    .pbanner .go { font-size: 13px; font-weight: 700; color: var(--gold); margin-top: 6px; display: inline-flex; align-items: center; gap: 2px; }
+    .pbanner .go i, .pbanner .go svg { width: 15px; height: 15px; }
+
+    /* products */
+    .prod { width: 150px; flex-shrink: 0; }
+    .prod .pcard { height: 92px; border-radius: 12px; padding: 10px; color: var(--white); position: relative; display: flex; flex-direction: column; justify-content: space-between; }
+    .prod .pcard img { width: 20px; height: 20px; filter: brightness(0) invert(1); }
+    .prod .pcard i, .prod .pcard svg { position: absolute; right: 10px; top: 10px; width: 16px; height: 16px; }
+    .prod .pcard span { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+    .prod b { display: block; font-size: 13.5px; margin-top: 8px; }
+    .prod small { font-size: 12px; color: var(--slate-500); }
+    .pc-dia { background: linear-gradient(135deg, var(--slate-700), var(--ink)); }
+    .pc-gold { background: linear-gradient(135deg, var(--gold-border), var(--gold)); }
+    .pc-plat { background: linear-gradient(135deg, var(--slate-300), var(--slate-500)); }
+
+    /* list items */
+    .li { display: flex; align-items: center; gap: 12px; padding: 12px 14px; }
+    .vlist { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; padding-bottom: 24px; }
+    .vlist .group + .group { margin-top: 0; }
+    .li + .li { border-top: 1px solid var(--slate-100); }
+    .li .tx { flex: 1; min-width: 0; }
+    .li .tx b { display: block; font-size: 14.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .li .tx span { display: block; font-size: 12.5px; color: var(--slate-500); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .li .when { font-size: 12px; color: var(--slate-400); white-space: nowrap; }
+    .li .act { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+    .li .act .tg { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px; border-radius: 11px; background: var(--slate-100); color: var(--slate-600); font-size: 11.5px; font-weight: 700; }
+    .li .act .tg.scan { background: var(--green-100); color: var(--green-dark); }
+    .li .act .tg i, .li .act .tg svg { width: 12px; height: 12px; }
+
+    /* potential list (B2) */
+    .pl { background: var(--white); border: 1px solid var(--slate-200); border-radius: 16px; padding: 14px; }
+    .pl + .pl { margin-top: 10px; }
+    .pl .hd { display: flex; gap: 12px; align-items: center; }
+    .pl .hd b { font-size: 15px; display: block; }
+    .pl .hd span { font-size: 12.5px; color: var(--slate-500); }
+    .pl .why { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 12px; }
+    .pl .btn-row .btn { height: 40px; font-size: 14px; }
+
+    /* missing-data checklist */
+    .need { text-align: left; width: 100%; margin-bottom: 20px; }
+    .need .row { min-height: 52px; padding: 10px 14px; }
+    .need .row .st { font-size: 12px; font-weight: 700; }
+
+    /* notifications */
+    .nt { display: flex; gap: 12px; padding: 14px; position: relative; }
+    .nt + .nt { border-top: 1px solid var(--slate-100); }
+    .nt.unread { background: var(--green-50); }
+    .nt .tx { flex: 1; min-width: 0; }
+    .nt .tx p { font-size: 14px; line-height: 1.4; color: var(--slate-700); }
+    .nt .tx p b { color: var(--ink); }
+    .nt .tx .when { font-size: 12px; color: var(--slate-400); margin-top: 4px; display: block; }
+    .nt .btn-row { margin-top: 10px; }
+    .nt .btn-row .btn { height: 36px; font-size: 13.5px; border-radius: 10px; }
+    .nt .udot { position: absolute; right: 14px; top: 20px; width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+    .nt .ic-av { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--green-50); color: var(--green); }
+    .nt .ic-av i, .nt .ic-av svg { width: 20px; height: 20px; }
+
+    /* share sheet */
+    .qrbox { width: 212px; height: 212px; margin: 4px auto 0; padding: 14px; border-radius: 20px; background: var(--white); border: 1px solid var(--slate-200); box-shadow: var(--shadow-md); position: relative; color: var(--ink); }
+    .qrbox svg { width: 100%; height: 100%; display: block; }
+    .qrbox .lg { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 42px; height: 42px; border-radius: 10px; background: var(--white); padding: 4px; }
+    .qrbox .lg.av-lg { width: 46px; height: 46px; padding: 0; border-radius: 50%; object-fit: cover; border: 3px solid var(--white); box-shadow: 0 0 0 1px var(--slate-200); }
+    .linkbox { display: flex; align-items: center; gap: 10px; height: 48px; border-radius: 12px; background: var(--slate-50); border: 1px solid var(--slate-200); padding: 0 6px 0 14px; font-size: 14px; }
+    .linkbox i.l { width: 18px; height: 18px; color: var(--slate-400); flex-shrink: 0; }
+    .linkbox .u { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--slate-700); }
+    .linkbox .cp { height: 36px; padding: 0 12px; border-radius: 9px; background: var(--white); border: 1px solid var(--slate-200); font-size: 13px; font-weight: 700; color: var(--green); display: inline-flex; align-items: center; gap: 5px; }
+    .linkbox .cp i, .linkbox .cp svg { width: 15px; height: 15px; }
+    .targets { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+    .targets a { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; color: var(--slate-600); text-decoration: none; }
+    .targets a span { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--slate-100); color: var(--slate-700); }
+    .targets a span i, .targets a span svg { width: 22px; height: 22px; }
+    .targets a span.zalo { background: var(--zalo); color: var(--white); font-weight: 800; font-size: 13px; }
+    .inv-msg { border-radius: 14px; background: var(--slate-50); border: 1px solid var(--slate-200); padding: 12px 14px; font-size: 14px; line-height: 1.5; color: var(--slate-700); }
+    .inv-msg .u { display: block; color: var(--green); font-weight: 600; }
+    .inv-msg { cursor: text; transition: border-color .15s, box-shadow .15s; }
+    .inv-msg:focus-within { border: 1px solid var(--green); box-shadow: 0 0 0 4px var(--green-bg); background: var(--white); }
+    .inv-msg .inv-txt { outline: none; min-height: 42px; white-space: pre-wrap; }
+    .inv-msg .inv-txt:empty::before { content: 'Viết lời nhắn của bạn…'; color: var(--slate-400); }
+    .targets a span.msg { background: var(--messenger); color: var(--white); }
+
+    /* invite */
+    .gift-hero { border-radius: 18px; padding: 16px; background: linear-gradient(135deg, var(--green-50), var(--green-100)); display: flex; gap: 14px; align-items: center; }
+    .gift-hero .gi { width: 56px; height: 56px; border-radius: 16px; background: var(--white); color: var(--green); display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: var(--shadow-sm); }
+    .gift-hero .gi i, .gift-hero .gi svg { width: 28px; height: 28px; }
+    .gift-hero b { font-size: 16px; display: block; }
+    .gift-hero p { font-size: 13px; color: var(--slate-600); margin-top: 3px; line-height: 1.4; }
+    .inv-steps { display: flex; justify-content: space-between; margin-top: 10px; }
+    .inv-steps span { width: 34px; height: 34px; border-radius: 50%; border: 2px dashed var(--slate-300); display: flex; align-items: center; justify-content: center; color: var(--slate-400); background: var(--white); }
+    .inv-steps span.on { border: 2px solid var(--green); background: var(--green); color: var(--white); }
+    .inv-steps span i, .inv-steps span svg { width: 16px; height: 16px; }
+    .inv-track { position: relative; }
+    .inv-track::before { content: ""; position: absolute; left: 17px; right: 17px; top: 27px; height: 2px; background: var(--slate-200); }
+    .inv-track::after { content: ""; position: absolute; left: 17px; width: 22%; top: 27px; height: 2px; background: var(--green); }
+    .inv-track .inv-steps { position: relative; z-index: 1; }
+    .code-pill { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 8px; border: 1.5px dashed var(--green-200); color: var(--green-dark); font-weight: 800; letter-spacing: 1.5px; font-size: 14px; background: var(--white); }
+
+    /* paywall */
+    .pw-top { text-align: center; padding: 0 24px; }
+    .crown { width: 64px; height: 64px; border-radius: 20px; margin: 0 auto 12px; background: var(--gold-bg); border: 1px solid var(--gold-border); color: var(--gold); display: flex; align-items: center; justify-content: center; }
+    .crown i, .crown svg { width: 30px; height: 30px; }
+    .plan { border: 1.5px solid var(--slate-200); border-radius: 16px; padding: 14px; display: flex; gap: 12px; align-items: center; position: relative; background: var(--white); }
+    .plan + .plan { margin-top: 10px; }
+    .plan.on { border-color: var(--gold); background: var(--gold-bg); }
+    .radio { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--slate-300); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .plan.on .radio { border-color: var(--gold); }
+    .plan.on .radio::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--gold); }
+    .plan .pn { flex: 1; }
+    .plan .pn b { font-size: 15px; display: block; }
+    .plan .pn span { font-size: 12.5px; color: var(--slate-500); }
+    .plan .pp { text-align: right; }
+    .plan .pp b { font-size: 16px; display: block; }
+    .plan .pp s { font-size: 12px; color: var(--slate-400); }
+    .plan .tag { position: absolute; top: -11px; right: 14px; height: 22px; padding: 0 10px; border-radius: 11px; background: var(--gold); color: var(--white); font-size: 11px; font-weight: 800; display: flex; align-items: center; }
+    .cmp { border: 1px solid var(--slate-200); border-radius: 14px; overflow: hidden; background: var(--white); }
+    .cmp .r { display: grid; grid-template-columns: 1fr 72px 92px; align-items: center; padding: 10px 12px; font-size: 13px; }
+    .cmp .r + .r { border-top: 1px solid var(--slate-100); }
+    .cmp .r.h { background: var(--slate-50); font-size: 11.5px; font-weight: 700; color: var(--slate-500); text-transform: uppercase; letter-spacing: .5px; }
+    .cmp .r > span:nth-child(2) { text-align: center; color: var(--slate-500); }
+    .cmp .r > span:nth-child(3) { text-align: center; font-weight: 700; color: var(--gold); }
+    .cmp .r i, .cmp .r svg { width: 16px; height: 16px; }
+    .ex { display: inline-flex; height: 18px; padding: 0 6px; border-radius: 5px; background: rgba(255,255,255,0.25); font-size: 10.5px; font-weight: 700; align-items: center; margin-left: 4px; }
+    .legal { font-size: 11px; color: var(--slate-400); line-height: 1.5; text-align: center; }
+
+    /* ===== Bảng xếp hạng — Home (lbx) ===== */
+    .lbx { position: relative; border-radius: 20px; background: var(--lb-night); color: var(--white); padding: 16px 16px 14px; overflow: hidden; cursor: pointer; box-shadow: var(--card-shadow); }
+    .lbx::before { content: ""; position: absolute; left: 22px; top: -40px; width: 170px; height: 150px; background: radial-gradient(closest-side, var(--lb-glow), transparent); pointer-events: none; }
+    .lbx-top { position: relative; display: flex; align-items: flex-end; gap: 14px; }
+    .mini-pod { display: grid; grid-template-columns: repeat(3, 52px); align-items: end; gap: 4px; }
+    .mp { display: flex; flex-direction: column; align-items: center; }
+    .mp .av { width: 38px; height: 38px; font-size: 13px; border: 2px solid var(--medal-silver); }
+    .mp.p1 .av { width: 46px; height: 46px; border-color: var(--medal-gold); box-shadow: 0 0 0 3px rgba(224,180,74,0.22); }
+    .mp.p3 .av { border-color: var(--medal-bronze); }
+    .mp .crn { width: 16px; height: 16px; color: var(--medal-gold); margin-bottom: 1px; }
+    .mp .st { width: 100%; margin-top: 6px; border-radius: 8px 8px 2px 2px; display: flex; justify-content: center; padding-top: 3px; font-size: 13px; font-weight: 800; color: var(--lb-night-solid); }
+    .mp.p1 .st { height: 34px; background: linear-gradient(180deg, var(--medal-gold), var(--medal-gold-dk)); }
+    .mp.p2 .st { height: 24px; background: linear-gradient(180deg, var(--medal-silver), var(--medal-silver-dk)); }
+    .mp.p3 .st { height: 17px; background: linear-gradient(180deg, var(--medal-bronze), var(--medal-bronze-dk)); }
+    .lbx-me { flex: 1; min-width: 0; text-align: right; padding-bottom: 2px; }
+    .lbx-me .lbl { font-size: 12px; color: var(--slate-400); }
+    .lbx-me .rk { display: flex; justify-content: flex-end; align-items: baseline; gap: 6px; font-size: 40px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.05; }
+    .lbx-me .rk small { font-size: 20px; font-weight: 700; color: var(--slate-400); letter-spacing: 0; }
+    .lbx-me .pt { font-size: 13px; font-weight: 600; color: var(--slate-300); }
+    .mv { display: inline-flex; align-items: center; gap: 1px; height: 20px; padding: 0 6px 0 4px; border-radius: 999px; font-size: 11.5px; font-weight: 700; letter-spacing: 0; align-self: center; }
+    .mv i, .mv svg { width: 12px; height: 12px; }
+    .mv.up { background: rgba(46,176,122,0.18); color: var(--lb-up); }
+    .mv.dn { background: rgba(248,113,113,0.16); color: var(--lb-down); }
+    .mv.eq { background: rgba(148,163,184,0.16); color: var(--slate-400); }
+    .lbx-goal { position: relative; margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08); }
+    .lbx-goal .bar, .me-bar .bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.10); overflow: hidden; }
+    .lbx-goal .bar span, .me-bar .bar span { display: block; height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--green), var(--green-light)); }
+    .lbx-goal .gl { display: flex; justify-content: space-between; gap: 8px; margin-top: 8px; font-size: 12px; color: var(--slate-400); }
+    .lbx-goal .gl b { color: var(--white); font-weight: 700; }
+
+    /* ===== Bảng xếp hạng — màn E2 (lbp) ===== */
+    .phone.lbp { background: var(--white); color: var(--white); }
+    .phone.lbp .statusbar { color: var(--white); background: var(--lb-night-top) !important; }
+    .phone.lbp .icon-btn { color: var(--white); }
+    .lb-hero { position: relative; flex-shrink: 0; background: var(--lb-night); padding: 0 20px; overflow: hidden; }
+    .lb-hero::before { content: ""; position: absolute; left: 50%; top: 40px; width: 320px; height: 300px; transform: translateX(-50%); background: radial-gradient(closest-side, var(--lb-glow), transparent); pointer-events: none; }
+    .lb-hero .seg { position: relative; background: rgba(255,255,255,0.07); }
+    .lb-hero .seg a { color: var(--slate-400); }
+    .lb-hero .seg a.on { background: var(--white); color: var(--ink); }
+    .lb-when { position: relative; display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 12px; font-size: 12.5px; color: var(--slate-400); }
+    .lb-when i, .lb-when svg { width: 14px; height: 14px; }
+    .lb-when b { color: var(--white); font-weight: 600; }
+    .podium { position: relative; display: grid; grid-template-columns: 1fr 1.08fr 1fr; align-items: end; gap: 6px; margin-top: 14px; }
+    .pod { text-align: center; min-width: 0; }
+    .pod .av { width: 52px; height: 52px; font-size: 17px; margin: 0 auto; border: 2px solid var(--medal-silver); box-shadow: 0 0 0 3px var(--lb-night-solid); }
+    .pod.p1 .av { width: 64px; height: 64px; font-size: 21px; border-color: var(--medal-gold); box-shadow: 0 0 0 3px var(--lb-night-solid), 0 0 24px rgba(224,180,74,0.28); }
+    .pod.p3 .av { border-color: var(--medal-bronze); }
+    .pod .crn { display: block; width: 18px; height: 18px; margin: 0 auto 3px; color: var(--medal-gold); }
+    .pod b { display: block; margin-top: 8px; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 2px; }
+    .pod small { display: block; font-size: 11px; color: var(--slate-400); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pod .step { margin-top: 10px; border-radius: 10px 10px 0 0; display: flex; flex-direction: column; align-items: center; gap: 2px; padding-top: 9px; background: linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02)); border-top: 2px solid var(--medal-silver); transform-origin: bottom; animation: lb-rise .6s cubic-bezier(.2,.8,.2,1) both; }
+    .pod .step .n { font-size: 15px; font-weight: 800; line-height: 1; color: var(--medal-silver); }
+    .pod .step .pp { font-size: 12.5px; font-weight: 700; color: var(--white); }
+    .pod.p1 .step { height: 92px; border-top-color: var(--medal-gold); background: linear-gradient(180deg, rgba(224,180,74,0.16), rgba(224,180,74,0.02)); animation-delay: .2s; }
+    .pod.p1 .step .n { color: var(--medal-gold); }
+    .pod.p2 .step { height: 74px; animation-delay: .1s; }
+    .pod.p3 .step { height: 62px; border-top-color: var(--medal-bronze); }
+    .pod.p3 .step .n { color: var(--medal-bronze); }
+    @keyframes lb-rise { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+    @media (prefers-reduced-motion: reduce) { .pod .step { animation: none; } }
+
+    .phone.lbp > .body { background: var(--white); color: var(--ink); border-radius: 24px 24px 0 0; margin-top: -14px; position: relative; z-index: 2; }
+    .phone.lbp .scroll { padding: 18px 20px 20px; }
+    .lb-earn { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .lb-earn > div { border-radius: 12px; background: var(--slate-50); border: 1px solid var(--slate-100); padding: 10px; }
+    .lb-earn i, .lb-earn svg { width: 18px; height: 18px; color: var(--slate-500); }
+    .lb-earn b { display: block; margin-top: 6px; font-size: 15px; font-weight: 800; color: var(--green-dark); }
+    .lb-earn span { font-size: 12px; color: var(--slate-500); }
+    .lb-list { margin-top: 16px; }
+    .lr { display: flex; align-items: center; gap: 10px; padding: 10px 0; }
+    .lr + .lr { border-top: 1px solid var(--slate-100); }
+    .lr .n { width: 26px; text-align: center; font-size: 15px; font-weight: 800; color: var(--slate-500); flex-shrink: 0; }
+    .lr .tx { flex: 1; min-width: 0; }
+    .lr .tx b { display: block; font-size: 14.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .lr .tx span { font-size: 12px; color: var(--slate-500); }
+    .lr .r { text-align: right; flex-shrink: 0; }
+    .lr .r b { display: block; font-size: 14px; font-weight: 700; }
+    .lr .mv { height: 18px; margin-top: 2px; }
+    .lr .mv.up { background: rgba(0,144,55,0.10); color: var(--green-dark); }
+    .lr .mv.dn { background: var(--red-50); color: var(--red-600); }
+    .lr .mv.eq { background: var(--slate-100); color: var(--slate-500); }
+    .lr.me { margin: 0 -12px; padding: 10px 12px; border-radius: 14px; background: var(--green-50); border: 1px solid var(--green-200); }
+    .lr.me + .lr { border-top: 0; }
+    .lr.me .n { color: var(--green-dark); }
+    .lb-gap { display: flex; justify-content: center; gap: 4px; padding: 6px 0; }
+    .lb-gap span { width: 4px; height: 4px; border-radius: 50%; background: var(--slate-300); }
+    .me-bar { position: sticky; bottom: 26px; z-index: 30; flex-shrink: 0; margin: 0 12px 6px; padding: 12px 14px; border-radius: 18px; background: var(--lb-night); color: var(--white); display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow-lg); }
+    .me-bar .rk { font-size: 20px; font-weight: 800; letter-spacing: -.5px; }
+    .me-bar .tx { flex: 1; min-width: 0; }
+    .me-bar .tx > span { display: block; font-size: 12px; color: var(--slate-400); margin-top: 6px; }
+    .me-bar .tx > span b { color: var(--white); }
+    .me-bar .pts { font-weight: 800; font-size: 15px; color: var(--white); text-align: right; }
+    .me-bar .pts small { display: block; font-size: 11px; font-weight: 500; color: var(--slate-400); }
+    .phone.lbp .home-ind { background: var(--white); position: sticky; bottom: 0; z-index: 31; }
+    .phone.lbp .home-ind::after { background: var(--ink); }
+    /* ===== Home lbx v2 (điểm theo người, cộng mọi thẻ) ===== */
+    /* home leaderboard: top 3 first, then your rank */
+    .lbh-meta { position: relative; display: flex; justify-content: space-between; font-size: 12px; color: var(--slate-400); }
+    .lbh-pod { position: relative; display: grid; grid-template-columns: 1fr 1.15fr 1fr; align-items: end; gap: 6px; margin-top: 8px; text-align: center; }
+    .hp { min-width: 0; display: flex; flex-direction: column; align-items: center; }
+    .hp .crn { width: 20px; height: 20px; color: var(--medal-gold); margin-bottom: 2px; filter: drop-shadow(0 2px 6px rgba(224,180,74,0.5)); }
+    .hp .avw { position: relative; display: block; }
+    .hp .av { width: 52px; height: 52px; font-size: 17px; border: 3px solid var(--medal-silver); }
+    .hp.p1 .av { width: 66px; height: 66px; font-size: 22px; border-color: var(--medal-gold); box-shadow: 0 0 0 4px rgba(224,180,74,0.18), 0 0 26px rgba(224,180,74,0.3); }
+    .hp.p3 .av { border-color: var(--medal-bronze); }
+    .hp .rn { position: absolute; left: 50%; bottom: -8px; transform: translateX(-50%); width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: var(--lb-night-solid); background: var(--medal-silver); border: 2px solid var(--lb-night-solid); }
+    .hp.p1 .rn { background: var(--medal-gold); }
+    .hp.p3 .rn { background: var(--medal-bronze); }
+    .hp b { display: block; max-width: 100%; margin-top: 12px; font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hp .pt { font-size: 12px; font-weight: 700; color: var(--slate-300); margin-top: 1px; }
+    .hp.p1 .pt { color: var(--medal-gold); }
+    .lbh-me { position: relative; display: flex; align-items: center; gap: 12px; margin: 14px -16px -14px; padding: 12px 12px 12px 16px; background: rgba(255,255,255,0.06); border-top: 1px solid rgba(255,255,255,0.08); }
+    .lbh-me .rkc { display: flex; flex-direction: column; align-items: center; gap: 3px; flex-shrink: 0; }
+    .lbh-me .rk { font-size: 22px; font-weight: 800; letter-spacing: -.5px; line-height: 1; }
+    .lbh-me .f1 { min-width: 0; }
+    .lbh-me .l1 { display: flex; justify-content: space-between; font-size: 13px; }
+    .lbh-me .l1 span { font-weight: 700; color: var(--medal-gold); }
+    .lbh-me .bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.10); overflow: hidden; margin: 6px 0 5px; }
+    .lbh-me .bar span { display: block; height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--green), var(--green-light)); }
+    .lbh-me small { display: block; font-size: 11.5px; color: var(--slate-400); }
+    .lbh-me small b { color: var(--white); }
+    .lbh-me .chev { width: 18px; height: 18px; color: var(--slate-400); flex-shrink: 0; }
+    .lbx-head { position: relative; display: flex; align-items: flex-end; justify-content: space-between; }
+    .lbx-head .lbl { font-size: 12.5px; color: var(--slate-400); }
+    .lbx-head .rk { display: flex; align-items: center; gap: 8px; font-size: 40px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.05; }
+    .lbx-head .rk small { font-size: 20px; font-weight: 700; color: var(--slate-400); letter-spacing: 0; margin-right: -6px; }
+    .lbx-pt { text-align: right; }
+    .lbx-pt b { display: block; font-size: 24px; font-weight: 800; letter-spacing: -.5px; color: var(--medal-gold); }
+    .lbx-pt span { font-size: 12px; color: var(--slate-400); }
+    .lbx-src { position: relative; display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 12px; color: var(--slate-300); }
+    .lbx-src i, .lbx-src svg { width: 14px; height: 14px; color: var(--slate-400); }
+    .lbx-acts { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 14px; }
+    .lbx-acts > div { border-radius: 12px; background: rgba(255,255,255,0.06); padding: 8px 2px 7px; text-align: center; }
+    .lbx-acts i, .lbx-acts svg { width: 16px; height: 16px; }
+    .lbx-acts b { display: block; font-size: 16px; font-weight: 800; margin-top: 3px; }
+    .lbx-acts span { display: block; font-size: 10.5px; color: var(--slate-400); line-height: 1.25; }
+    .a-view, .lb-earn .a-view { color: var(--act-view); } .a-scan, .lb-earn .a-scan { color: var(--act-scan); } .a-conn, .lb-earn .a-conn { color: var(--act-conn); } .a-meet, .lb-earn .a-meet { color: var(--act-meet); } .a-ref, .lb-earn .a-ref { color: var(--act-ref); }
+    .lbx-lead { position: relative; display: flex; align-items: center; gap: 10px; margin: 12px -16px -14px; padding: 10px 16px; background: rgba(255,255,255,0.05); font-size: 12.5px; color: var(--slate-300); }
+    .lbx-lead b { color: var(--white); }
+    .lbx-lead .stk { display: flex; }
+    .lbx-lead .stk .av { width: 26px; height: 26px; font-size: 10px; border: 2px solid var(--lb-night-solid); }
+    .lbx-lead .stk .av + .av { margin-left: -8px; }
+    .lbx-lead .stk .av:first-child { border-color: var(--medal-gold); }
+    .lbx-lead > i:last-child, .lbx-lead > svg:last-child { width: 16px; height: 16px; margin-left: auto; color: var(--slate-400); }
+
+    /* ===== Home · Bảng xếp hạng tuần v5 (lbt): thẻ tối, mỗi người một ô ===== */
+    .lbt { position: relative; border-radius: 20px; background: var(--white); border: 1px solid var(--slate-200); color: var(--ink); padding-bottom: 12px; overflow: hidden; cursor: pointer; box-shadow: var(--card-shadow); }
+    .lbt-hd { position: relative; display: flex; align-items: center; gap: 10px; padding: 14px 16px 36px; background: linear-gradient(135deg, var(--amber-500) 0%, var(--medal-gold-dk) 100%); color: var(--white); overflow: hidden; }
+    .lbt-hd::before, .lbt-hd::after { content: ""; position: absolute; border-radius: 50%; background: rgba(255,255,255,0.10); pointer-events: none; }
+    .lbt-hd::before { width: 120px; height: 120px; right: -30px; top: -60px; }
+    .lbt-hd::after { width: 70px; height: 70px; right: 70px; top: 20px; background: rgba(255,255,255,0.07); }
+    .lbt-hd .ic { position: relative; width: 32px; height: 32px; border-radius: 10px; background: var(--white); color: var(--medal-gold-dk); display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 10px rgba(120,80,10,0.25); }
+    .lbt-hd .ic i, .lbt-hd .ic svg { width: 17px; height: 17px; }
+    .lbt-hd b { position: relative; font-size: 16px; font-weight: 800; text-shadow: 0 1px 2px rgba(120,80,10,0.3); }
+    .lbt-hd > span:last-child { position: relative; margin-left: auto; height: 24px; padding: 0 10px; border-radius: 999px; background: rgba(255,255,255,0.18); display: inline-flex; align-items: center; font-size: 12px; font-weight: 600; }
+    .lbt-r { position: relative; display: flex; align-items: center; gap: 12px; margin: 0 12px; padding: 10px 12px; border-radius: 14px; background: var(--white); border: 1px solid var(--slate-100); box-shadow: 0 4px 14px rgba(15,23,42,0.07); }
+    .lbt-hd + .lbt-r { margin-top: -24px; }
+    .lbt-r + .lbt-r { margin-top: 8px; }
+    .lbt-r .n { width: 16px; text-align: center; font-size: 17px; font-weight: 800; color: var(--medal-silver-dk); flex-shrink: 0; }
+    .lbt-r .av { width: 40px; height: 40px; font-size: 13px; border: 3px solid var(--medal-silver); }
+    .lbt-r .tx { flex: 1; min-width: 0; }
+    .lbt-r .tx b { display: block; font-size: 14.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .lbt-r .tx span { display: block; font-size: 12px; font-weight: 600; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    /* nhãn hạng: nền đặc theo màu huy chương, đồng xu trắng có sao màu */
+    .lbt-r .pill { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 11px 0 4px; border-radius: 999px; flex-shrink: 0; font-size: 12.5px; font-weight: 800; color: var(--white); text-shadow: 0 1px 1px rgba(15,23,42,0.25); background: linear-gradient(145deg, var(--medal-silver-dk), var(--slate-500)); box-shadow: 0 3px 8px rgba(100,116,139,0.35); }
+    .lbt-r .coin { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--white); color: var(--medal-silver-dk); }
+    .lbt-r .coin i, .lbt-r .coin svg { width: 12px; height: 12px; fill: currentColor; stroke-width: 1.5; }
+    .lbt-r.g { background: linear-gradient(120deg, var(--gold-bg) 0%, var(--white) 75%); border-color: var(--gold-border); box-shadow: 0 6px 18px rgba(200,150,46,0.22); }
+    .lbt-r.g::before { content: ""; position: absolute; left: -1px; top: 12px; bottom: 12px; width: 3px; border-radius: 0 3px 3px 0; background: var(--medal-gold-dk); }
+    .lbt-r.g .n { color: var(--medal-gold-dk); }
+    .lbt-r.g .av { border-color: var(--medal-gold); box-shadow: 0 0 0 3px rgba(232,193,101,0.25); }
+    .lbt-r.g .tx span { color: var(--gold); }
+    .lbt-r.g .pill { background: linear-gradient(145deg, var(--medal-gold), var(--medal-gold-dk)); box-shadow: 0 3px 10px rgba(200,150,46,0.45); }
+    .lbt-r.g .coin { color: var(--medal-gold-dk); }
+    .lbt-r.b .n { color: var(--medal-bronze-dk); }
+    .lbt-r.b .av { border-color: var(--medal-bronze); }
+    .lbt-r.b .pill { background: linear-gradient(145deg, var(--medal-bronze), var(--medal-bronze-dk)); box-shadow: 0 3px 8px rgba(168,105,63,0.35); }
+    .lbt-r.b .coin { color: var(--medal-bronze-dk); }
+
+    /* E2: 5 cách nhận điểm */
+    .lb-earn.five { grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    .lb-earn.five > div { padding: 8px 4px; text-align: center; }
+    .lb-earn.five i, .lb-earn.five svg { width: 16px; height: 16px; }
+    .lb-earn.five b { font-size: 13.5px; margin-top: 4px; }
+    .lb-earn.five span { display: block; font-size: 10.5px; line-height: 1.25; }
+    .lb-rule { display: flex; gap: 8px; align-items: flex-start; margin-top: 10px; font-size: 12px; color: var(--slate-500); line-height: 1.45; }
+    .lb-rule i, .lb-rule svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 1px; }
+    .me-bar > i, .me-bar > svg { width: 18px; height: 18px; color: var(--slate-400); flex-shrink: 0; }
+
+    /* ===== E3 · Điểm của tôi ===== */
+    .mysum { border-radius: 20px; background: var(--lb-night); color: var(--white); padding: 16px; position: relative; overflow: hidden; }
+    .mysum::before { content: ""; position: absolute; right: -30px; top: -50px; width: 200px; height: 170px; background: radial-gradient(closest-side, var(--lb-glow), transparent); }
+    .mysum .lbx-goal { margin-top: 12px; }
+    .stack { display: flex; height: 10px; border-radius: 5px; overflow: hidden; gap: 2px; margin-bottom: 12px; }
+    .stack span { display: block; height: 100%; }
+    .pr { display: flex; align-items: center; gap: 12px; padding: 12px 14px; }
+    .pr + .pr { border-top: 1px solid var(--slate-100); }
+    .pr .ai { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .pr .ai i, .pr .ai svg { width: 18px; height: 18px; }
+    .pr .tx { flex: 1; min-width: 0; }
+    .pr .tx b { display: block; font-size: 14.5px; font-weight: 600; line-height: 1.35; }
+    .pr .tx span { font-size: 12px; color: var(--slate-500); }
+    .pr .v { font-size: 15px; font-weight: 800; color: var(--ink); white-space: nowrap; }
+    .pr .v.z { color: var(--slate-400); font-weight: 600; }
+    .bg-view { background: var(--act-view-bg); color: var(--act-view); } .bg-scan { background: var(--act-scan-bg); color: var(--act-scan); } .bg-conn { background: var(--act-conn-bg); color: var(--act-conn); } .bg-meet { background: var(--act-meet-bg); color: var(--act-meet); } .bg-ref { background: var(--act-ref-bg); color: var(--act-ref); }
+    .sw { width: 36px; height: 24px; border-radius: 5px; flex-shrink: 0; box-shadow: 0 2px 6px rgba(15,23,42,0.18); }
+    .sw.graphite { background: var(--card-graphite); } .sw.pearl { background: var(--card-pearl); border: 1px solid var(--slate-200); } .sw.stone { background: var(--card-stone); }
+    .pr .share { height: 4px; border-radius: 2px; background: var(--slate-100); margin-top: 6px; overflow: hidden; }
+    .pr .share span { display: block; height: 100%; background: var(--green); border-radius: 2px; }
+    .pr .ai.acct { background: var(--slate-100); color: var(--slate-600); width: 36px; height: 24px; border-radius: 5px; }
+    .pr .ai.acct i, .pr .ai.acct svg { width: 15px; height: 15px; }
+    /* ===== Bảng xếp hạng v3: dữ liệu theo kỳ, sheet luật, điểm theo thẻ ===== */
+    .lb-howto { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; background: var(--slate-50); border: 1px solid var(--slate-100); text-decoration: none; color: var(--ink); }
+    .lb-howto .ic { width: 34px; height: 34px; border-radius: 10px; background: var(--act-ref-bg); color: var(--act-ref); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .lb-howto .ic svg, .lb-howto .ic i { width: 17px; height: 17px; }
+    .lb-howto .tx { flex: 1; min-width: 0; }
+    .lb-howto .tx b { display: block; font-size: 14px; font-weight: 700; }
+    .lb-howto .tx span { font-size: 12px; color: var(--slate-500); line-height: 1.4; }
+    .lb-howto > svg, .lb-howto > i { width: 18px; height: 18px; color: var(--slate-400); flex-shrink: 0; }
+    .lb-rules { color: var(--ink); padding-bottom: 34px; }
+    .rl { display: flex; align-items: center; gap: 12px; padding: 9px 0; }
+    .rl .ai { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .rl .ai svg, .rl .ai i { width: 18px; height: 18px; }
+    .rl .tx { flex: 1; min-width: 0; }
+    .rl .tx b { display: block; font-size: 14px; font-weight: 600; }
+    .rl .tx span { font-size: 12px; color: var(--slate-500); }
+    .rl .v { font-size: 15px; font-weight: 800; color: var(--green-dark); }
+    .rl-notes { margin-top: 10px; padding: 12px; border-radius: 12px; background: var(--slate-50); }
+    .rl-notes p { display: flex; gap: 8px; font-size: 12.5px; color: var(--slate-600); line-height: 1.45; }
+    .rl-notes p + p { margin-top: 8px; }
+    .rl-notes svg, .rl-notes i { width: 15px; height: 15px; flex-shrink: 0; margin-top: 2px; color: var(--slate-400); }
+    /* E3 · Theo thẻ: kiểu ví thẻ, điểm in trên mặt thẻ */
+    .wallet { display: flex; flex-direction: column; gap: 8px; }
+    .wcard { position: relative; display: flex; align-items: center; gap: 12px; height: 68px; padding: 0 14px 0 16px; border-radius: 14px; cursor: pointer; overflow: hidden; box-shadow: 0 2px 8px rgba(15,23,42,0.12); }
+    .wcard.graphite { background: var(--card-graphite); color: var(--white); }
+    .wcard.pearl { background: var(--card-pearl); color: var(--ink); border: 1px solid var(--slate-200); }
+    .wcard.stone { background: var(--card-stone); color: var(--ink); border: 1px solid var(--slate-200); }
+    .wcard::after { content: ""; position: absolute; right: -40px; top: -60px; width: 160px; height: 160px; border-radius: 50%; background: radial-gradient(closest-side, rgba(255,255,255,0.14), transparent); pointer-events: none; }
+    .wcard img { width: 22px; height: 22px; flex-shrink: 0; }
+    .wcard .tx { flex: 1; min-width: 0; }
+    .wcard .tx b { display: block; font-size: 14.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .wcard .tx span { display: block; font-size: 12px; opacity: .65; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .wcard .pt { text-align: right; line-height: 1.05; }
+    .wcard .pt b { display: block; font-size: 22px; font-weight: 800; letter-spacing: -.6px; }
+    .wcard .pt small { font-size: 11px; font-weight: 600; opacity: .6; }
+    .wcard > svg, .wcard > i { width: 16px; height: 16px; opacity: .5; flex-shrink: 0; margin-left: -4px; }
+    .wref { display: flex; align-items: center; gap: 12px; height: 52px; padding: 0 14px 0 16px; border-radius: 14px; background: var(--act-ref-bg); color: var(--ink); }
+    .wref > svg, .wref > i { width: 20px; height: 20px; color: var(--act-ref); flex-shrink: 0; }
+    .wref .tx { flex: 1; min-width: 0; font-size: 12px; color: var(--slate-500); }
+    .wref .tx b { display: block; font-size: 14px; font-weight: 600; color: var(--ink); }
+    .wref .pt { font-size: 16px; font-weight: 800; }
+    /* mặt thẻ thu nhỏ dùng chung (E5) */
+    .cpk .face b, .cpk .face small { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cpk .face small.co { opacity: .55; }
+    .pr.tap { cursor: pointer; }
+    .pr > .chev { width: 16px; height: 16px; color: var(--slate-400); flex-shrink: 0; margin-left: -4px; }
+    .cchips { display: flex; gap: 8px; padding: 0 20px 12px; overflow: hidden; flex-shrink: 0; }
+    .cchip { display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 12px 0 8px; border-radius: 999px; background: var(--white); border: 1px solid var(--slate-200); font-size: 13px; font-weight: 600; color: var(--slate-600); white-space: nowrap; cursor: pointer; }
+    .cchip .sw { width: 22px; height: 14px; border-radius: 3px; box-shadow: none; }
+    .cchip.on { border-color: var(--ink); color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
+    /* E5 · danh sách thẻ v2: dải mặt thẻ chọn được */
+    .cpicker { display: flex; gap: 10px; overflow-x: auto; padding: 4px 20px 14px; flex-shrink: 0; scrollbar-width: none; }
+    .cpicker::-webkit-scrollbar { display: none; }
+    .cpk { flex: 0 0 138px; min-width: 0; cursor: pointer; text-align: left; }
+    .cpk .face { position: relative; height: 80px; border-radius: 11px; padding: 8px 9px; display: flex; flex-direction: column; justify-content: flex-end; box-shadow: 0 2px 8px rgba(15,23,42,0.14); transition: transform .15s, box-shadow .15s, opacity .15s; opacity: .62; }
+    .cpk .face.graphite { background: var(--card-graphite); color: var(--white); }
+    .cpk .face.pearl { background: var(--card-pearl); color: var(--ink); border: 1px solid var(--slate-200); }
+    .cpk .face.stone { background: var(--card-stone); color: var(--ink); border: 1px solid var(--slate-200); }
+    .cpk .face img { position: absolute; top: 8px; left: 9px; width: 14px; height: 14px; }
+    .cpk .face b { font-size: 11px; font-weight: 700; line-height: 1.3; }
+    .cpk .face small { font-size: 9px; line-height: 1.35; opacity: .75; }
+    .cpk .face .ck { position: absolute; top: 6px; right: 6px; width: 20px; height: 20px; border-radius: 50%; background: var(--green); color: var(--white); display: none; align-items: center; justify-content: center; box-shadow: 0 0 0 2px var(--white); }
+    .cpk .face .ck svg, .cpk .face .ck i { width: 12px; height: 12px; stroke-width: 3; }
+    .cpk .meta { display: flex; align-items: baseline; justify-content: space-between; margin: 8px 2px 0; }
+    .cpk .meta b { font-size: 14px; font-weight: 800; color: var(--slate-500); }
+    .cpk .meta span { font-size: 11.5px; font-weight: 600; color: var(--slate-400); }
+    .cpk.on .face { opacity: 1; box-shadow: 0 0 0 2px var(--white), 0 0 0 4px var(--green), 0 6px 14px rgba(15,23,42,0.18); }
+    .cpk.on .face .ck { display: flex; }
+    .cpk.on .meta b { color: var(--ink); }
+    .cpk.on .meta span { color: var(--green-dark); }
+    .cpk.add .face { opacity: 1; box-shadow: none; background: var(--slate-50); border: 1.5px dashed var(--slate-300); color: var(--green-dark); align-items: center; justify-content: center; gap: 4px; font-size: 12px; font-weight: 700; }
+    .cpk.add .face svg, .cpk.add .face i { width: 18px; height: 18px; }
+    .cviz.nf { display: block; }
+    .cviz.nf .hd { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .cviz.nf .hd > span { font-size: 13px; font-weight: 600; color: var(--slate-600); }
+    .cviz.nf .pill { font-size: 12px; font-weight: 700; color: var(--green-dark); background: var(--green-bg); padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+    .cviz { display: flex; gap: 14px; align-items: center; padding: 14px; border-radius: 18px; background: var(--white); border: 1px solid var(--slate-200); }
+    .cviz .face { width: 104px; height: 64px; border-radius: 9px; flex-shrink: 0; position: relative; box-shadow: var(--card-shadow); padding: 8px 9px; display: flex; flex-direction: column; justify-content: flex-end; }
+    .cviz .face.graphite { background: var(--card-graphite); color: var(--white); }
+    .cviz .face.pearl { background: var(--card-pearl); color: var(--ink); border: 1px solid var(--slate-200); }
+    .cviz .face.stone { background: var(--card-stone); color: var(--ink); }
+    .cviz .face img { position: absolute; top: 8px; left: 9px; width: 16px; height: 16px; }
+    .cviz .face b { font-size: 8.5px; font-weight: 700; }
+    .cviz .face span { font-size: 7px; opacity: .7; }
+    .cviz .tx { flex: 1; min-width: 0; }
+    .cviz .tx > span { font-size: 12px; color: var(--slate-500); }
+    .cviz .tx .big { display: block; font-size: 28px; font-weight: 800; letter-spacing: -.8px; line-height: 1.15; }
+    .cviz .tx .big small { font-size: 13px; font-weight: 600; color: var(--slate-500); letter-spacing: 0; margin-left: 3px; }
+    .cviz .share { height: 5px; border-radius: 3px; background: var(--slate-100); margin-top: 8px; overflow: hidden; }
+    .cviz .share span { display: block; height: 100%; background: var(--green); }
+    .lb-empty { text-align: center; padding: 22px 16px; border-radius: 14px; background: var(--white); border: 1px dashed var(--slate-300); font-size: 13px; color: var(--slate-500); }
+    .lb-empty .btn { margin: 12px auto 0; height: 40px; font-size: 14px; padding: 0 18px; }
+    .card.flat.info { display: flex; gap: 10px; align-items: flex-start; }
+    .card.flat.info > i, .card.flat.info > svg { width: 18px; height: 18px; color: var(--green); flex-shrink: 0; margin-top: 1px; }
+    .st-head { display: flex; align-items: center; gap: 8px; margin: 14px 2px 8px; font-size: 13px; color: var(--slate-500); }
+    .st-head b { color: var(--ink); font-weight: 700; }
+    .st-head .f1 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+    .st-seg { padding: 3px; border-radius: 10px; gap: 2px; }
+    .st-seg a { height: 28px; padding: 0 10px; font-size: 12px; border-radius: 8px; flex: none; }
+    .stats { margin-top: 0 !important; }
+    /* số liệu gắn liền từng thẻ */
+    .cardwrap { flex: 0 0 calc(100% - 30px); border-radius: 18px; background: var(--slate-50); border: 1px solid var(--slate-200); overflow: hidden; }
+    .card-rail .cardwrap .mycard { flex: none; border-radius: 16px 16px 0 0; box-shadow: none; }
+    .hero > .cardwrap { margin: 0; }
+    .cstats { display: flex; justify-content: space-between; gap: 6px; padding: 10px 12px; }
+    .cstats span { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--slate-500); white-space: nowrap; }
+    .cstats span b { color: var(--ink); font-size: 13.5px; font-weight: 700; margin-right: 1px; }
+    .cstats i, .cstats svg { width: 14px; height: 14px; color: var(--slate-400); }
+  </style>
+  <style id="card-premium">
+    /* ===== Premium card ===== */
+    .card-rail .cardwrap, .hero > .cardwrap { background: var(--white); border-color: var(--slate-200); border-radius: 18px; box-shadow: 0 1px 2px rgba(15,23,42,0.04); }
+    .mycard, .card-rail .cardwrap .mycard { height: auto; aspect-ratio: 1.586 / 1; padding: 16px 16px 14px 18px; border-radius: 16px 16px 0 0;
+      background:
+        radial-gradient(120% 90% at 100% 0%, rgba(69,185,118,0.20) 0%, rgba(69,185,118,0) 55%),
+        radial-gradient(80% 60% at 0% 100%, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 60%),
+        linear-gradient(145deg, #1d2530 0%, #0e131a 60%, #0a0e13 100%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.07); }
+    .mycard::before { width: auto; height: auto; inset: 0; right: 0; top: 0; border-radius: 0;
+      background: repeating-linear-gradient(115deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 7px); }
+    .mycard::after { width: auto; height: 1px; left: 18px; right: 18px; top: 0; bottom: auto; border-radius: 0;
+      background: linear-gradient(90deg, rgba(69,185,118,0), rgba(69,185,118,0.9), rgba(69,185,118,0)); }
+    .mycard .accent { display: none; }
+    .mycard .top { align-items: flex-start; }
+    .mycard .top img.m { width: 22px; height: 22px; }
+    .mycard .top img.w { height: 14px; opacity: .95; }
+    .mycard .top .nfc { width: 20px; height: 20px; opacity: .55; transform: rotate(0deg); }
+    .mycard .nm { font-size: 19px; font-weight: 700; letter-spacing: -0.3px; line-height: 1.2; }
+    .mycard .pos { font-size: 11.5px; letter-spacing: .1px; opacity: .62; margin-top: 3px; }
+    .mycard .pos b { font-weight: 600; opacity: 1; color: rgba(255,255,255,0.95); }
+    .mycard .nm + .pos { margin-top: 7px; padding-top: 7px; border-top: 1px solid rgba(255,255,255,0.12); }
+    .mycard .qr-tile { width: 62px; height: 62px; padding: 5px; border-radius: 10px; box-shadow: 0 0 0 3px rgba(255,255,255,0.08); }
+    /* platinum variant */
+    .mycard.c2, .card-rail .cardwrap .mycard.c2 { color: var(--ink); border: 0;
+      background:
+        radial-gradient(120% 90% at 100% 0%, rgba(0,144,55,0.08) 0%, rgba(0,144,55,0) 55%),
+        linear-gradient(145deg, #ffffff 0%, #f1f4f7 55%, #e4e9ef 100%);
+      box-shadow: inset 0 0 0 1px rgba(15,23,42,0.08); }
+    .mycard.c2::before { background: repeating-linear-gradient(115deg, rgba(15,23,42,0.025) 0 1px, transparent 1px 7px); }
+    .mycard.c2::after { background: linear-gradient(90deg, rgba(0,144,55,0), rgba(0,144,55,0.6), rgba(0,144,55,0)); }
+    .mycard.c2 .pos { opacity: .7; }
+    .mycard.c2 .pos b { color: var(--ink); }
+    .mycard.c2 .nm + .pos { border-top-color: rgba(15,23,42,0.1); }
+    .mycard.c2 .top .nfc { color: var(--slate-500); }
+    /* stats strip under card */
+    .cstats { padding: 10px 14px; background: var(--white); }
+    .cstats span { flex: 1; justify-content: center; }
+    .cstats span + span { border-left: 1px solid var(--slate-200); }
+  </style>
+  <style id="potential-v2">
+    /* ===== B2 · Kết nối tiềm năng (thiết kế lại): theo thẻ, 1 gợi ý nổi bật + danh sách gọn ===== */
+        .pt-best { position: relative; margin-top: 6px; border-radius: 20px; background: var(--white); border: 1px solid var(--green-100); box-shadow: 0 6px 20px rgba(15,23,42,.06); overflow: hidden; }
+    .pt-best .lbl { display: flex; align-items: center; gap: 6px; padding: 10px 14px; background: var(--green-50); font-size: 11.5px; font-weight: 800; letter-spacing: .3px; text-transform: uppercase; color: var(--green-dark); }
+    .pt-best .lbl i, .pt-best .lbl svg { width: 14px; height: 14px; }
+    .pt-best .lbl .x { margin-left: auto; color: var(--slate-400); width: 18px; height: 18px; }
+    .pt-best .in { padding: 12px 14px 14px; }
+    .pt-best .hd { display: flex; gap: 12px; align-items: center; }
+    .pt-best .hd b { font-size: 16px; display: block; }
+    .pt-best .hd span { font-size: 13px; color: var(--slate-500); }
+    .pt-why { margin-top: 12px; padding: 10px 12px; border-radius: 12px; background: var(--slate-50); font-size: 13px; line-height: 1.45; color: var(--slate-700); display: flex; gap: 8px; }
+    .pt-why i, .pt-why svg { width: 16px; height: 16px; color: var(--green); flex-shrink: 0; margin-top: 1px; }
+    .pt-why b { color: var(--ink); }
+    .pt-best .btn { width: 100%; height: 44px; margin-top: 12px; font-size: 14.5px; }
+    .pt-sec { display: flex; align-items: baseline; justify-content: space-between; margin: 16px 0 8px; }
+    .pt-sec h3 { font-size: 15px; font-weight: 700; }
+    .pt-sec span { font-size: 12px; color: var(--slate-400); }
+    .pt-list { background: var(--white); border: 1px solid var(--slate-200); border-radius: 16px; padding: 0 12px; }
+    .pt-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; }
+    .pt-row + .pt-row { border-top: 1px solid var(--slate-100); }
+    .pt-row .tx { flex: 1; min-width: 0; }
+    .pt-row .tx b { font-size: 14.5px; display: block; }
+    .pt-row .tx .sub { font-size: 12.5px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pt-row .rs { display: inline-flex; align-items: center; gap: 4px; margin-top: 3px; font-size: 12px; font-weight: 600; color: var(--green-dark); }
+    .pt-row .rs i, .pt-row .rs svg { width: 13px; height: 13px; }
+    .pt-add { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--green); background: var(--white); color: var(--green); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .pt-add i, .pt-add svg { width: 18px; height: 18px; }
+    .pt-sent { height: 30px; padding: 0 10px; border-radius: 15px; background: var(--slate-100); color: var(--slate-500); font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; border: 0; flex-shrink: 0; }
+  </style>
+  <style id="multi-card">
+    /* ===== Nhiều thẻ: thẻ Stone, ô tạo thẻ, chọn thẻ khi chia sẻ ===== */
+    .mycard.c3, .card-rail .cardwrap .mycard.c3 { color: var(--ink); border: 0; background: var(--card-stone); box-shadow: inset 0 0 0 1px rgba(15,23,42,0.08); }
+    .mycard.c3::before { background: repeating-linear-gradient(115deg, rgba(15,23,42,0.025) 0 1px, transparent 1px 7px); }
+    .mycard.c3::after { background: linear-gradient(90deg, rgba(0,144,55,0), rgba(0,144,55,0.5), rgba(0,144,55,0)); }
+    .mycard.c3 .pos { opacity: .7; }
+    .mycard.c3 .pos b { color: var(--ink); }
+    .mycard.c3 .ctag { background: rgba(15,23,42,0.08); color: var(--slate-700); }
+    .ccomp { display: flex; align-items: center; gap: 8px; padding: 0 14px 10px; background: var(--white); font-size: 11.5px; color: var(--slate-500); white-space: nowrap; }
+    .ccomp .bar { flex: 1; height: 4px; border-radius: 2px; background: var(--slate-100); overflow: hidden; }
+    .ccomp .bar span { display: block; height: 100%; border-radius: 2px; background: var(--green); }
+    .ccomp b { color: var(--ink); font-weight: 700; }
+    .card-rail .cardwrap.newcard { flex: 0 0 132px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border: 1.5px dashed var(--slate-300); background: var(--slate-50); box-shadow: none; color: var(--green); font-size: 14px; font-weight: 700; cursor: pointer; text-align: center; }
+    .newcard .pl { width: 40px; height: 40px; border-radius: 50%; background: var(--green-bg); display: flex; align-items: center; justify-content: center; }
+    .newcard .pl i, .newcard .pl svg { width: 20px; height: 20px; }
+    .newcard small { font-size: 11.5px; font-weight: 500; color: var(--slate-500); padding: 0 10px; line-height: 1.35; }
+    .cards-hint { display: flex; align-items: center; gap: 6px; margin: 10px 2px 0; font-size: 12px; color: var(--slate-500); }
+    .cards-hint i, .cards-hint svg { width: 14px; height: 14px; color: var(--green); flex-shrink: 0; }
+  </style>
+  <style id="card-v3">
+    /* ===== Thẻ v3: navy tối, avatar + tên, chip vàng, nhãn CÔNG TY, nút QR nhỏ ===== */
+    .mycard, .mycard.c2, .mycard.c3,
+    .card-rail .cardwrap .mycard, .card-rail .cardwrap .mycard.c2, .card-rail .cardwrap .mycard.c3 {
+      color: var(--white); border: 0; padding: 20px 16px 18px 20px; border-radius: 22px; aspect-ratio: 1.72 / 1;
+      background:
+        radial-gradient(55% 70% at 100% 100%, rgba(0,144,55,0.85) 0%, rgba(0,144,55,0.35) 40%, rgba(0,144,55,0) 75%),
+        linear-gradient(150deg, #1f2a3e 0%, #141c2d 50%, #0f1626 100%);
+      box-shadow: 0 10px 24px rgba(15,23,42,0.28); }
+    .mycard::before, .mycard.c2::before, .mycard.c3::before { inset: auto; width: 170px; height: 170px; border-radius: 50%; right: -30px; top: -60px; left: auto; bottom: auto; background: rgba(255,255,255,0.06); }
+    .mycard::after, .mycard.c2::after, .mycard.c3::after { width: 130px; height: 130px; border-radius: 50%; left: 50px; right: auto; top: auto; bottom: -70px; background: rgba(255,255,255,0.06); }
+    /* thẻ đứng riêng, bo đủ 4 góc; số liệu nằm dưới, không khung */
+    .card-rail .cardwrap, .hero > .cardwrap { background: transparent; border: 0; box-shadow: none; overflow: visible; border-radius: 0; }
+    .card-rail { padding-bottom: 6px; }
+    .cardwrap .cstats { background: transparent; padding: 10px 4px 0; }
+    .mycard .top { align-items: flex-start; gap: 10px; }
+    .mycard .who { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .mycard .cav { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; flex-shrink: 0; box-shadow: 0 0 0 2px rgba(255,255,255,0.14); }
+    .mycard .id { min-width: 0; }
+    .mycard .id .nm { display: block; font-size: 16px; font-weight: 700; letter-spacing: -0.2px; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mycard .id .tt { display: block; font-size: 12.5px; opacity: .6; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mycard .emv { width: 30px; height: 22px; border-radius: 5px; flex-shrink: 0; margin-top: 10px;
+      background: linear-gradient(135deg, #e6c45f 0%, #d4a93a 55%, #c2952a 100%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.25); }
+    .mycard .ctag, .mycard.c3 .ctag { margin-top: 10px; background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.85); }
+    .mycard .bot { align-items: flex-end; }
+    .mycard .lb { display: block; font-size: 10px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; opacity: .5; }
+    .mycard .co { display: block; font-size: 15px; font-weight: 700; opacity: 1; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mycard .co .add { opacity: .6; font-weight: 600; }
+    .mycard .qrb { width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.16); }
+    .mycard .qrb i, .mycard .qrb svg { width: 20px; height: 20px; color: var(--white); }
+    /* chip thẻ đang chia sẻ */
+    .shc { display: flex; align-items: center; gap: 10px; height: 44px; margin-top: 12px; padding: 0 6px 0 10px; border-radius: 12px; background: var(--slate-50); border: 1px solid var(--slate-200); font-size: 13.5px; }
+    .shc .sw { width: 30px; height: 20px; border-radius: 4px; box-shadow: none; }
+    .shc b { flex: 1; min-width: 0; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .shc b small { font-weight: 500; color: var(--slate-500); font-size: 12px; margin-right: 4px; }
+    .shc a { height: 32px; padding: 0 12px; border-radius: 9px; background: var(--white); border: 1px solid var(--slate-200); font-size: 13px; font-weight: 700; color: var(--green); display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+    .shc a i, .shc a svg { width: 14px; height: 14px; }
+    /* sheet chọn thẻ (giống 03-A4) */
+    .cpick { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1.5px solid var(--slate-200); border-radius: 14px; margin-bottom: 10px; cursor: pointer; }
+    .cpick .sw { width: 52px; height: 34px; border-radius: 7px; }
+    .cpick .f1 { min-width: 0; }
+    .cpick b { display: block; font-size: 14.5px; margin-bottom: 2px; }
+    .cpick .f1 span { display: block; font-size: 12.5px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cpick .f1 .lk { color: var(--green-dark); font-weight: 600; }
+    .cpick > i, .cpick > svg { width: 18px; height: 18px; color: var(--slate-400); flex-shrink: 0; }
+    .cpick-note { display: flex; gap: 8px; align-items: center; font-size: 12px; color: var(--slate-500); margin-top: 4px; }
+    .cpick-note i, .cpick-note svg { width: 15px; height: 15px; flex-shrink: 0; }
+  </style>
+</head>
+<body class="rd-canvas">
+  <div class="rd-head">
+    <a class="back" href="index.html">← Tất cả flow</a>
+    <h1>02 · Trang chủ</h1>
+    <p>Trang chủ gom về một trục: thẻ của tôi → chỉ số → việc nên làm → kết nối. Inka vào từ nút “Hỏi Inka” trên header, không còn linh vật nổi che nội dung. Paywall chỉ mở khi người dùng chủ động bấm Nâng cấp hoặc banner Premium.</p>
+  </div>
+
+  <!-- ===================== A. Home ===================== -->
+  <section class="rd-section">
+    <h2>A · Trang chủ</h2>
+    <div class="rd-row">
+
+      <!-- A1 full page -->
+      <div class="rd-shot">
+        <div class="phone tall">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="hh">
+            <img class="av ring" src="https://i.pravatar.cc/150?img=47" alt="" />
+            <div class="f1"><div class="nm">Nguyễn Minh Anh</div><span class="plan-pill"><i data-lucide="sprout"></i>Gói Miễn phí<i data-lucide="chevron-right"></i></span></div>
+            <button class="icon-btn soft" data-go="09-A1" aria-label="Tin nhắn"><i data-lucide="message-circle-more"></i><span class="dot"></span></button><button class="icon-btn soft" aria-label="Thông báo"><i data-lucide="bell"></i><span class="dot"></span></button>
+          </div>
+          <div style="padding: 0 20px 24px">
+            <div class="hero">
+              <div class="cards-head"><b>Thẻ của tôi</b><span class="cnt">3 thẻ</span><a class="mng">Quản lý thẻ<i data-lucide="chevron-right"></i></a></div>
+              <div class="card-rail">
+                <div class="cardwrap" data-go="03-A2"><div class="mycard">
+                  <div class="top"><span class="who"><img class="cav" src="https://i.pravatar.cc/150?img=47" alt="" /><span class="id"><b class="nm">Nguyễn Minh Anh</b><span class="tt">Giám đốc kinh doanh</span></span></span><span class="emv" aria-hidden="true"></span></div>
+                  <div class="bot"><div class="f1"><small class="lb">Công ty</small><div class="co">InApps Technology</div></div><span class="qrb"><span class="sr-only">Phóng to mã QR</span><i data-lucide="qr-code"></i></span></div>
+                </div><div class="cstats"><span><i data-lucide="eye"></i><b>1.248</b>xem</span><span><i data-lucide="scan-line"></i><b>458</b>quét</span><span><i data-lucide="calendar-check"></i><b>5</b>hẹn</span></div></div>
+                <div class="cardwrap" data-go="02-A4"><div class="mycard c2">
+                  <div class="top"><span class="who"><img class="cav" src="https://i.pravatar.cc/150?img=47" alt="" /><span class="id"><b class="nm">Nguyễn Minh Anh</b><span class="tt">Phó Chủ tịch</span></span></span><span class="emv" aria-hidden="true"></span></div>
+                  <div class="bot"><div class="f1"><small class="lb">Tổ chức</small><div class="co">CLB Doanh nhân trẻ Sài Gòn</div></div><span class="qrb"><span class="sr-only">Phóng to mã QR</span><i data-lucide="qr-code"></i></span></div>
+                </div><div class="cstats"><span><i data-lucide="eye"></i><b>312</b>xem</span><span><i data-lucide="scan-line"></i><b>87</b>quét</span><span><i data-lucide="calendar-check"></i><b>2</b>hẹn</span></div></div>
+                <div class="cardwrap" data-go="toast:Mở hồ sơ Thẻ Mentor khởi nghiệp"><div class="mycard c3">
+                  <div class="top"><span class="who"><img class="cav" src="https://i.pravatar.cc/150?img=47" alt="" /><span class="id"><b class="nm">Nguyễn Minh Anh</b><span class="tt">Diễn giả</span></span></span><span class="ctag">Chỉ QR</span></div>
+                  <div class="bot"><div class="f1"><small class="lb">Cá nhân</small><div class="co">Mentor khởi nghiệp</div></div><span class="qrb"><span class="sr-only">Phóng to mã QR</span><i data-lucide="qr-code"></i></span></div>
+                </div><div class="cstats"><span><i data-lucide="eye"></i><b>96</b>xem</span><span><i data-lucide="scan-line"></i><b>21</b>quét</span><span><i data-lucide="calendar-check"></i><b>0</b>hẹn</span></div></div>
+                <div class="cardwrap newcard" data-go="03-E3"><span class="pl"><i data-lucide="plus"></i></span>Tạo thẻ mới<small>Mỗi vai trò một thẻ riêng</small></div>
+              </div>
+              <div class="btn-row"><button class="btn primary md"><i data-lucide="share-2"></i>Chia sẻ thẻ</button><button class="btn secondary md"><i data-lucide="eye"></i>Xem hồ sơ</button></div>
+              <div class="cdots"><i class="on"></i><i></i><i></i></div>
+            </div>
+
+            
+
+            <a class="pstrip mt12" data-go="02-E1">
+              <span class="pi"><i data-lucide="crown"></i></span>
+              <span class="f1"><b>Nâng cấp Premium</b><span>Quét không giới hạn · AI · đồng bộ Google</span></span>
+              <i class="chev" data-lucide="chevron-right"></i>
+              <span class="cl" data-go="toast:Đã ẩn, hiện lại sau 7 ngày"><i data-lucide="x"></i><span class="sr-only">Ẩn</span></span>
+            </a>
+
+
+
+            <div class="sec-title"><h3>Mời bạn bè</h3><a>Lịch sử<i data-lucide="chevron-right"></i></a></div>
+            <div class="card invite">
+              <button class="qr-tile qr-zoom" data-go="02-D5"><span class="sr-only">Phóng to QR mời</span><svg class="qr" data-seed="27"></svg><span class="zoom"><i data-lucide="maximize-2"></i></span></button>
+              <div class="f1">
+                <b>Mời bạn dùng InCard</b>
+                <span class="u">incard.biz/ref/nkax5v</span>
+                <div class="inv-actions">
+                  <button class="btn primary sm"><i data-lucide="share-2"></i>Chia sẻ lời mời</button>
+                  <button class="btn outline sm cp-btn" data-go="toast:Đã sao chép link mời incard.biz/ref/nkax5v"><i data-lucide="copy"></i><span class="sr-only">Sao chép link mời</span></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="sec-title"><h3>Kết nối tiềm năng</h3><a>Tất cả<i data-lucide="chevron-right"></i></a></div>
+            <div class="hscroll">
+              <div class="pc"><i class="x" data-lucide="x"></i><img class="av" src="https://i.pravatar.cc/150?img=49" alt="" /><b>Vũ Thanh Hà</b><div class="sub">Giám đốc Kinh doanh · Haravan</div><button class="pc-cta"><i data-lucide="user-plus"></i>Kết nối</button></div>
+              <div class="pc"><i class="x" data-lucide="x"></i><img class="av" src="https://i.pravatar.cc/150?img=12" alt="" /><b>Đinh Quang Huy</b><div class="sub">CTO · Base.vn</div><button class="pc-cta"><i data-lucide="user-plus"></i>Kết nối</button></div>
+              <div class="pc"><i class="x" data-lucide="x"></i><img class="av" src="https://i.pravatar.cc/150?img=26" alt="" /><b>Lý Ngọc Trâm</b><div class="sub">Trưởng phòng Đối tác · Sapo</div><button class="pc-cta"><i data-lucide="user-plus"></i>Kết nối</button></div>
+            </div>
+
+            <div class="sec-title"><h3>Đã xem gần đây</h3><a data-go="02-C3">Xem tất cả<i data-lucide="chevron-right"></i></a></div>
+            <div class="group">
+              <div class="li" data-go="03-B1@helen"><img class="av" src="https://i.pravatar.cc/150?img=32" alt="" /><div class="tx"><b>Trần Thuỷ (Helen)</b><span>CRO · Incard Technology</span></div></div>
+              <div class="li" data-go="03-B1@khoa"><span class="av tg">VK</span><div class="tx"><b>Võ Minh Khoa</b><span>Trưởng nhóm Sales · FPT Retail</span></div></div>
+              <div class="li" data-go="03-B1@lan"><span class="av ts">PL</span><div class="tx"><b>Phạm Thu Lan</b><span>Marketing Manager · VNG</span></div></div>
+            </div>
+
+            <div class="lbt" data-go="02-E2" style="margin:22px 0 56px">
+              <div class="lbt-hd"><span class="ic"><i data-lucide="trophy"></i></span><b>Bảng xếp hạng</b><span>Tuần 10–16/11</span></div>
+              <div class="lbt-r g"><span class="n">1</span><img class="av" src="https://i.pravatar.cc/150?img=32" alt="" /><div class="tx"><b>Trần Thuỷ (Helen)</b><span>20,75 điểm</span></div><span class="pill"><span class="coin"><i data-lucide="star"></i></span>Hạng 1</span></div>
+              <div class="lbt-r"><span class="n">2</span><img class="av" src="https://i.pravatar.cc/150?img=12" alt="" /><div class="tx"><b>Hồ Tâm</b><span>18,50 điểm</span></div><span class="pill"><span class="coin"><i data-lucide="star"></i></span>Hạng 2</span></div>
+              <div class="lbt-r b"><span class="n">3</span><span class="av tb">LN</span><div class="tx"><b>Lê Nhật Nam</b><span>15,25 điểm</span></div><span class="pill"><span class="coin"><i data-lucide="star"></i></span>Hạng 3</span></div>
+            </div>
+          </div>
+          <a class="inka-fab"><img src="assets/inka.png" alt="" /><span class="sr-only">Hỏi Inka</span><span class="spark"><i data-lucide="sparkles"></i></span></a>
+          <nav class="bnav">
+            <a class="on"><i data-lucide="house"></i>Trang chủ</a>
+            <a><i data-lucide="contact-round"></i>Danh bạ</a>
+            <a class="fab"><span class="c"><i data-lucide="scan-line"></i></span>Quét</a>
+            <a><i data-lucide="compass"></i>Khám phá</a>
+            <a><i data-lucide="circle-user-round"></i>Tài khoản</a>
+          </nav>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">A1 · Trang chủ (toàn trang)<small>Mỗi thẻ mang theo 3 thông số của riêng nó (lượt xem · lượt quét · cuộc hẹn) ngay dưới mặt thẻ; vuốt sang thẻ khác là thấy số của thẻ đó, không cần bấm nút. Bỏ nút Upgrade cam, nút “?” và nút AI cam đè lên thẻ. Dải thẻ vuốt ngang (1 người có nhiều thẻ, mỗi thẻ có thể nhiều chức vụ/công ty), 2 hành động rõ ràng, chỉ số tách thành ô. Bảng xếp hạng tính Bảng xếp hạng: dải đầu gradient vàng hổ phách (cúp trên ô trắng, tuần), 3 ô trắng nổi đè lên dải; tiêu đề + tuần ở trong thẻ, mỗi người một ô (số hạng, ảnh có viền vàng/bạc/đồng, tên, điểm, nhãn "Hạng 1/2/3" nền đặc vàng/bạc/đồng, đồng xu trắng có sao); ô hạng 1 nền vàng nhạt, vạch vàng bên trái, đổ bóng vàng. Bấm thẻ mở bảng đầy đủ E2. điểm) nên tên dài không bị cắt; bấm phần này hoặc "Xem bảng" mở bảng đầy đủ. Bấm thẻ mở “Điểm của tôi” (bản cũ bị trống). Premium là một dải gọn ngay dưới thẻ (màn đầu, user Miễn phí thấy ngay), bấm mở trang Premium, đóng được và hiện lại sau 7 ngày; user Premium không thấy dải này. Bỏ mục Sản phẩm InCard. Dải có đủ 3 thẻ (InApps · CLB Doanh nhân trẻ · Mentor khởi nghiệp, thẻ 3 chỉ QR) và ô "Tạo thẻ mới" ở cuối; nhãn "3 thẻ" chỉ là số lượng, không có giới hạn.</small></div>
+      </div>
+
+      <!-- A2 first fold -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="body">
+            <div class="hh">
+              <img class="av ring" src="https://i.pravatar.cc/150?img=47" alt="" />
+              <div class="f1"><div class="nm">Nguyễn Minh Anh</div><span class="plan-pill"><i data-lucide="sprout"></i>Gói Miễn phí<i data-lucide="chevron-right"></i></span></div>
+              <button class="icon-btn soft" data-go="09-A1" aria-label="Tin nhắn"><i data-lucide="message-circle-more"></i><span class="dot"></span></button><button class="icon-btn soft" aria-label="Thông báo"><i data-lucide="bell"></i><span class="dot"></span></button>
+            </div>
+            <div class="scroll">
+              <div class="hero">
+                <div class="cards-head"><b>Thẻ của tôi</b><span class="cnt">3 thẻ</span><a class="mng">Quản lý thẻ<i data-lucide="chevron-right"></i></a></div>
+                <div class="card-rail">
+                  <div class="cardwrap" data-go="03-A2"><div class="mycard">
+                    <div class="top"><span class="who"><img class="cav" src="https://i.pravatar.cc/150?img=47" alt="" /><span class="id"><b class="nm">Nguyễn Minh Anh</b><span class="tt">Giám đốc kinh doanh</span></span></span><span class="emv" aria-hidden="true"></span></div>
+                    <div class="bot"><div class="f1"><small class="lb">Công ty</small><div class="co">InApps Technology</div></div><span class="qrb"><span class="sr-only">Phóng to mã QR</span><i data-lucide="qr-code"></i></span></div>
+                  </div><div class="cstats"><span><i data-lucide="eye"></i><b>1.248</b>xem</span><span><i data-lucide="scan-line"></i><b>458</b>quét</span><span><i data-lucide="calendar-check"></i><b>5</b>hẹn</span></div></div>
+                  <div class="cardwrap" data-go="02-A4"><div class="mycard c2">
+                    <div class="top"><span class="who"><img class="cav" src="https://i.pravatar.cc/150?img=47" alt="" /><span class="id"><b class="nm">Nguyễn Minh Anh</b><span class="tt">Phó Chủ tịch</span></span></span><span class="emv" aria-hidden="true"></span></div>
+                    <div class="bot"><div class="f1"><small class="lb">Tổ chức</small><div class="co">CLB Doanh nhân trẻ Sài Gòn</div></div><span class="qrb"><span class="sr-only">Phóng to mã QR</span><i data-lucide="qr-code"></i></span></div>
+                  </div><div class="cstats"><span><i data-lucide="eye"></i><b>312</b>xem</span><span><i data-lucide="scan-line"></i><b>87</b>quét</span><span><i data-lucide="calendar-check"></i><b>2</b>hẹn</span></div></div>
+                  <div class="cardwrap" data-go="toast:Mở hồ sơ Thẻ Mentor khởi nghiệp"><div class="mycard c3">
+                    <div class="top"><span class="who"><img class="cav" src="https://i.pravatar.cc/150?img=47" alt="" /><span class="id"><b class="nm">Nguyễn Minh Anh</b><span class="tt">Diễn giả</span></span></span><span class="ctag">Chỉ QR</span></div>
+                    <div class="bot"><div class="f1"><small class="lb">Cá nhân</small><div class="co">Mentor khởi nghiệp</div></div><span class="qrb"><span class="sr-only">Phóng to mã QR</span><i data-lucide="qr-code"></i></span></div>
+                  </div><div class="cstats"><span><i data-lucide="eye"></i><b>96</b>xem</span><span><i data-lucide="scan-line"></i><b>21</b>quét</span><span><i data-lucide="calendar-check"></i><b>0</b>hẹn</span></div></div>
+                  <div class="cardwrap newcard" data-go="03-E3"><span class="pl"><i data-lucide="plus"></i></span>Tạo thẻ mới<small>Mỗi vai trò một thẻ riêng</small></div>
+                </div>
+                <div class="btn-row"><button class="btn primary md"><i data-lucide="share-2"></i>Chia sẻ thẻ</button><button class="btn secondary md"><i data-lucide="eye"></i>Xem hồ sơ</button></div>
+                <div class="cdots"><i class="on"></i><i></i><i></i></div>
+              </div>
+              
+              <div class="sec-title"><h3>Mời bạn bè</h3><a>Lịch sử<i data-lucide="chevron-right"></i></a></div>
+              <div class="card invite">
+                <button class="qr-tile qr-zoom" data-go="02-D5"><span class="sr-only">Phóng to QR mời</span><svg class="qr" data-seed="27"></svg><span class="zoom"><i data-lucide="maximize-2"></i></span></button>
+                <div class="f1">
+                  <b>Mời bạn dùng InCard</b>
+                  <span class="u">incard.biz/ref/nkax5v</span>
+                  <div class="inv-actions">
+                    <button class="btn primary sm"><i data-lucide="share-2"></i>Chia sẻ lời mời</button>
+                    <button class="btn outline sm cp-btn" data-go="toast:Đã sao chép link mời incard.biz/ref/nkax5v"><i data-lucide="copy"></i><span class="sr-only">Sao chép link mời</span></button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sec-title"><h3>Kết nối tiềm năng</h3><a>Tất cả<i data-lucide="chevron-right"></i></a></div>
+            </div>
+          </div>
+          <a class="inka-fab"><img src="assets/inka.png" alt="" /><span class="sr-only">Hỏi Inka</span><span class="spark"><i data-lucide="sparkles"></i></span></a>
+          <nav class="bnav">
+            <a class="on"><i data-lucide="house"></i>Trang chủ</a>
+            <a><i data-lucide="contact-round"></i>Danh bạ</a>
+            <a class="fab"><span class="c"><i data-lucide="scan-line"></i></span>Quét</a>
+            <a><i data-lucide="compass"></i>Khám phá</a>
+            <a><i data-lucide="circle-user-round"></i>Tài khoản</a>
+          </nav>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">A2 · Trang chủ (màn đầu)<small>Hiện đầy đủ họ tên (tối đa 2 dòng); Inka chuyển thành nút tròn 48px nổi góc phải trên tab bar, tự thu nhỏ khi cuộn để không che nội dung. Thẻ dùng màu Graphite chuyên nghiệp, logo giữ màu xanh thương hiệu. Nhãn "Gói Miễn phí" ngay dưới tên để người dùng luôn biết mình đang ở gói nào, bấm vào mở "Gói của tôi". Màn đầu tiên trả lời đủ 3 câu: thẻ của tôi, người tôi vừa xem/quét, việc nên làm tiếp. 4 tác vụ nhanh nằm trong tầm ngón cái, đều dẫn vào flow có sẵn.</small></div>
+      </div>
+
+      <!-- A3 coach mark -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="body">
+            <div class="hh">
+              <span class="av ring">MA</span>
+              <div class="f1"><div class="hi">Chào mừng bạn,</div><div class="nm">Nguyễn Minh Anh</div></div>
+              <button class="icon-btn soft" data-go="09-A1" aria-label="Tin nhắn"><i data-lucide="message-circle-more"></i></button><button class="icon-btn soft" aria-label="Thông báo"><i data-lucide="bell"></i></button>
+            </div>
+            <div class="scroll">
+              <div class="hero">
+                <div class="cards-head"><b>Thẻ của tôi</b><span class="cnt">1 thẻ</span><a class="mng">Quản lý thẻ<i data-lucide="chevron-right"></i></a></div>
+                <div class="cardwrap"><div class="mycard">
+                  <div class="top"><span class="who"><img class="cav" src="https://i.pravatar.cc/150?img=47" alt="" /><span class="id"><b class="nm">Nguyễn Minh Anh</b><span class="tt">Giám đốc kinh doanh</span></span></span><span class="emv" aria-hidden="true"></span></div>
+                  <div class="bot"><div class="f1"><small class="lb">Công ty</small><div class="co"><span class="add">+ Thêm công ty</span></div></div><span class="qrb"><span class="sr-only">Phóng to mã QR</span><i data-lucide="qr-code"></i></span></div>
+                </div><div class="cstats"><span><i data-lucide="eye"></i><b>0</b>xem</span><span><i data-lucide="scan-line"></i><b>0</b>quét</span><span><i data-lucide="calendar-check"></i><b>0</b>hẹn</span></div></div>
+                <div class="btn-row"><button class="btn primary md"><i data-lucide="share-2"></i>Chia sẻ thẻ</button><button class="btn secondary md"><i data-lucide="eye"></i>Xem hồ sơ</button></div>
+                <p class="cards-hint"><i data-lucide="layers"></i>Bạn có thể tạo nhiều thẻ cho từng vai trò</p>
+              </div>
+              
+            </div>
+          </div>
+          <a class="inka-fab"><img src="assets/inka.png" alt="" /><span class="sr-only">Hỏi Inka</span><span class="spark"><i data-lucide="sparkles"></i></span></a>
+          <nav class="bnav">
+            <a class="on"><i data-lucide="house"></i>Trang chủ</a>
+            <a><i data-lucide="contact-round"></i>Danh bạ</a>
+            <a class="fab"><span class="c"><i data-lucide="scan-line"></i></span>Quét</a>
+            <a><i data-lucide="compass"></i>Khám phá</a>
+            <a><i data-lucide="circle-user-round"></i>Tài khoản</a>
+          </nav>
+          <div class="home-ind"></div>
+          <!-- spotlight on "Chia sẻ thẻ" -->
+          <div class="spot" style="top:389px;left:27px;width:168px;height:52px;border-radius:16px"></div>
+          <div class="coach arrow-up" style="top:456px;left:24px;--ax:66px">
+            <p><b style="color:var(--white)">Chia sẻ thẻ ở đây</b><br/>Đưa mã QR hoặc gửi đường link hồ sơ qua Zalo, Messenger, Email.</p>
+            <div class="c-foot"><span>1/3</span><span class="acts"><span class="skip">Bỏ qua</span><b>Tiếp →</b></span></div>
+          </div>
+        </div>
+        <div class="cap">A3 · Hướng dẫn lần đầu (1/3)<small>Coach mark cũ không tắt được. Bản mới có bộ đếm 1/3, “Bỏ qua” tắt toàn bộ hướng dẫn và không hiện lại; chỉ 3 bước: Chia sẻ thẻ → Quét → Hỏi Inka. Người mới có đúng 1 thẻ (tạo ở bước đăng ký), số liệu đều 0; dòng gợi ý dưới nút cho biết có thể tạo thêm thẻ cho từng vai trò, không giới hạn.</small></div>
+      </div>
+
+    <!-- A4 card 2 selected -->
+      <div class="rd-shot">
+        <div class="phone tall">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="hh">
+            <img class="av ring" src="https://i.pravatar.cc/150?img=47" alt="" />
+            <div class="f1"><div class="nm">Nguyễn Minh Anh</div><span class="plan-pill"><i data-lucide="sprout"></i>Gói Miễn phí<i data-lucide="chevron-right"></i></span></div>
+            <button class="icon-btn soft" data-go="09-A1" aria-label="Tin nhắn"><i data-lucide="message-circle-more"></i><span class="dot"></span></button><button class="icon-btn soft" aria-label="Thông báo"><i data-lucide="bell"></i><span class="dot"></span></button>
+          </div>
+          <div style="padding: 0 20px 24px">
+            <div class="hero">
+              <div class="cards-head"><b>Thẻ của tôi</b><span class="cnt">3 thẻ</span><a class="mng">Quản lý thẻ<i data-lucide="chevron-right"></i></a></div>
+              <div class="card-rail">
+                <div class="cardwrap" data-go="03-A5"><div class="mycard c2">
+                  <div class="top"><span class="who"><img class="cav" src="https://i.pravatar.cc/150?img=47" alt="" /><span class="id"><b class="nm">Nguyễn Minh Anh</b><span class="tt">Phó Chủ tịch</span></span></span><span class="emv" aria-hidden="true"></span></div>
+                  <div class="bot"><div class="f1"><small class="lb">Tổ chức</small><div class="co">CLB Doanh nhân trẻ Sài Gòn</div></div><span class="qrb"><span class="sr-only">Phóng to mã QR</span><i data-lucide="qr-code"></i></span></div>
+                </div><div class="cstats"><span><i data-lucide="eye"></i><b>312</b>xem</span><span><i data-lucide="scan-line"></i><b>87</b>quét</span><span><i data-lucide="calendar-check"></i><b>2</b>hẹn</span></div></div>
+                <div class="cardwrap" data-go="02-A1"><div class="mycard">
+                  <div class="top"><span class="who"><img class="cav" src="https://i.pravatar.cc/150?img=47" alt="" /><span class="id"><b class="nm">Nguyễn Minh Anh</b><span class="tt">Giám đốc kinh doanh</span></span></span><span class="emv" aria-hidden="true"></span></div>
+                  <div class="bot"><div class="f1"><small class="lb">Công ty</small><div class="co">InApps Technology</div></div><span class="qrb"><span class="sr-only">Phóng to mã QR</span><i data-lucide="qr-code"></i></span></div>
+                </div><div class="cstats"><span><i data-lucide="eye"></i><b>1.248</b>xem</span><span><i data-lucide="scan-line"></i><b>458</b>quét</span><span><i data-lucide="calendar-check"></i><b>5</b>hẹn</span></div></div>
+                <div class="cardwrap" data-go="toast:Mở hồ sơ Thẻ Mentor khởi nghiệp"><div class="mycard c3">
+                  <div class="top"><span class="who"><img class="cav" src="https://i.pravatar.cc/150?img=47" alt="" /><span class="id"><b class="nm">Nguyễn Minh Anh</b><span class="tt">Diễn giả</span></span></span><span class="ctag">Chỉ QR</span></div>
+                  <div class="bot"><div class="f1"><small class="lb">Cá nhân</small><div class="co">Mentor khởi nghiệp</div></div><span class="qrb"><span class="sr-only">Phóng to mã QR</span><i data-lucide="qr-code"></i></span></div>
+                </div><div class="cstats"><span><i data-lucide="eye"></i><b>96</b>xem</span><span><i data-lucide="scan-line"></i><b>21</b>quét</span><span><i data-lucide="calendar-check"></i><b>0</b>hẹn</span></div></div>
+                <div class="cardwrap newcard" data-go="03-E3"><span class="pl"><i data-lucide="plus"></i></span>Tạo thẻ mới<small>Mỗi vai trò một thẻ riêng</small></div>
+              </div>
+              <div class="btn-row"><button class="btn primary md"><i data-lucide="share-2"></i>Chia sẻ thẻ</button><button class="btn secondary md"><i data-lucide="eye"></i>Xem hồ sơ</button></div>
+              <div class="cdots"><i></i><i class="on"></i><i></i></div>
+            </div>
+
+            
+
+            <a class="pstrip mt12" data-go="02-E1">
+              <span class="pi"><i data-lucide="crown"></i></span>
+              <span class="f1"><b>Nâng cấp Premium</b><span>Quét không giới hạn · AI · đồng bộ Google</span></span>
+              <i class="chev" data-lucide="chevron-right"></i>
+              <span class="cl" data-go="toast:Đã ẩn, hiện lại sau 7 ngày"><i data-lucide="x"></i><span class="sr-only">Ẩn</span></span>
+            </a>
+
+
+
+            <div class="sec-title"><h3>Mời bạn bè</h3><a>Lịch sử<i data-lucide="chevron-right"></i></a></div>
+            <div class="card invite">
+              <button class="qr-tile qr-zoom" data-go="02-D5"><span class="sr-only">Phóng to QR mời</span><svg class="qr" data-seed="27"></svg><span class="zoom"><i data-lucide="maximize-2"></i></span></button>
+              <div class="f1">
+                <b>Mời bạn dùng InCard</b>
+                <span class="u">incard.biz/ref/nkax5v</span>
+                <div class="inv-actions">
+                  <button class="btn primary sm"><i data-lucide="share-2"></i>Chia sẻ lời mời</button>
+                  <button class="btn outline sm cp-btn" data-go="toast:Đã sao chép link mời incard.biz/ref/nkax5v"><i data-lucide="copy"></i><span class="sr-only">Sao chép link mời</span></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="sec-title"><h3>Kết nối tiềm năng</h3><a>Tất cả<i data-lucide="chevron-right"></i></a></div>
+            <div class="hscroll">
+              <div class="pc"><i class="x" data-lucide="x"></i><img class="av" src="https://i.pravatar.cc/150?img=49" alt="" /><b>Vũ Thanh Hà</b><div class="sub">Giám đốc Kinh doanh · Haravan</div><button class="pc-cta"><i data-lucide="user-plus"></i>Kết nối</button></div>
+              <div class="pc"><i class="x" data-lucide="x"></i><img class="av" src="https://i.pravatar.cc/150?img=12" alt="" /><b>Đinh Quang Huy</b><div class="sub">CTO · Base.vn</div><button class="pc-cta"><i data-lucide="user-plus"></i>Kết nối</button></div>
+              <div class="pc"><i class="x" data-lucide="x"></i><img class="av" src="https://i.pravatar.cc/150?img=26" alt="" /><b>Lý Ngọc Trâm</b><div class="sub">Trưởng phòng Đối tác · Sapo</div><button class="pc-cta"><i data-lucide="user-plus"></i>Kết nối</button></div>
+            </div>
+
+            <div class="sec-title"><h3>Đã xem gần đây</h3><a data-go="02-C3">Xem tất cả<i data-lucide="chevron-right"></i></a></div>
+            <div class="group">
+              <div class="li" data-go="03-B1@helen"><img class="av" src="https://i.pravatar.cc/150?img=32" alt="" /><div class="tx"><b>Trần Thuỷ (Helen)</b><span>CRO · Incard Technology</span></div></div>
+              <div class="li" data-go="03-B1@khoa"><span class="av tg">VK</span><div class="tx"><b>Võ Minh Khoa</b><span>Trưởng nhóm Sales · FPT Retail</span></div></div>
+              <div class="li" data-go="03-B1@lan"><span class="av ts">PL</span><div class="tx"><b>Phạm Thu Lan</b><span>Marketing Manager · VNG</span></div></div>
+            </div>
+
+            <div class="lbt" data-go="02-E2" style="margin:22px 0 56px">
+              <div class="lbt-hd"><span class="ic"><i data-lucide="trophy"></i></span><b>Bảng xếp hạng</b><span>Tuần 10–16/11</span></div>
+              <div class="lbt-r g"><span class="n">1</span><img class="av" src="https://i.pravatar.cc/150?img=32" alt="" /><div class="tx"><b>Trần Thuỷ (Helen)</b><span>20,75 điểm</span></div><span class="pill"><span class="coin"><i data-lucide="star"></i></span>Hạng 1</span></div>
+              <div class="lbt-r"><span class="n">2</span><img class="av" src="https://i.pravatar.cc/150?img=12" alt="" /><div class="tx"><b>Hồ Tâm</b><span>18,50 điểm</span></div><span class="pill"><span class="coin"><i data-lucide="star"></i></span>Hạng 2</span></div>
+              <div class="lbt-r b"><span class="n">3</span><span class="av tb">LN</span><div class="tx"><b>Lê Nhật Nam</b><span>15,25 điểm</span></div><span class="pill"><span class="coin"><i data-lucide="star"></i></span>Hạng 3</span></div>
+            </div>
+          </div>
+          <a class="inka-fab"><img src="assets/inka.png" alt="" /><span class="sr-only">Hỏi Inka</span><span class="spark"><i data-lucide="sparkles"></i></span></a>
+          <nav class="bnav">
+            <a class="on"><i data-lucide="house"></i>Trang chủ</a>
+            <a><i data-lucide="contact-round"></i>Danh bạ</a>
+            <a class="fab"><span class="c"><i data-lucide="scan-line"></i></span>Quét</a>
+            <a><i data-lucide="compass"></i>Khám phá</a>
+            <a><i data-lucide="circle-user-round"></i>Tài khoản</a>
+          </nav>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">A4 · Trang chủ – vuốt sang thẻ thứ 2<small>Thẻ CLB Doanh nhân trẻ đứng đầu dải; 3 thông số gắn trên chính thẻ đổi theo (312 lượt xem · 87 lượt quét · 2 cuộc hẹn). Tổng của mọi thẻ xem ở trang Tài khoản.</small></div>
+      </div>
+
+      </div>
+  </section>
+
+  <!-- ===================== B. Potential connections ===================== -->
+  <section class="rd-section">
+    <h2>B · Kết nối tiềm năng</h2>
+    <div class="rd-row">
+
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title">Kết nối tiềm năng</div><div class="spacer44"></div></div>
+          <div class="body" style="padding: 0 20px">
+            <div class="empty" style="padding: 24px 4px 0">
+              <div class="ill"><i data-lucide="sparkles"></i></div>
+              <h3>Chưa có kết nối tiềm năng</h3>
+              <p>Gợi ý dựa trên <b>ngành nghề</b> và <b>sản phẩm / dịch vụ</b> trên thẻ của bạn. Cập nhật hồ sơ thẻ để Inka tìm đúng người, mất khoảng 1 phút.</p>
+              <div class="group need">
+                <div class="row"><span class="ic gray"><i data-lucide="layers"></i></span><div class="tx"><b>Ngành nghề</b><span>Chưa có</span></div><span class="badge red">Thiếu</span></div>
+                <div class="row"><span class="ic gray"><i data-lucide="package"></i></span><div class="tx"><b>Sản phẩm / Dịch vụ</b><span>Chưa có</span></div><span class="badge red">Thiếu</span></div>
+              </div>
+            </div>
+          </div>
+          <div style="padding: 0 20px 8px">
+            <button class="btn primary"><i data-lucide="pencil-line"></i>Cập nhật hồ sơ</button>
+            <p class="t-xs t-center mt12">Chưa trừ lượt gợi ý. Gói Miễn phí có 10 lượt gợi ý mỗi tháng.</p>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">B1 · Chưa có kết nối tiềm năng<small>Khi chưa có gợi ý nào, yêu cầu người dùng cập nhật hồ sơ thẻ: Ngành nghề và Sản phẩm / Dịch vụ (2 dữ liệu dùng để gợi ý). Mục đã có hiện dấu tích, mục thiếu hiện nhãn “Thiếu”; bấm từng mục mở thẳng form sửa, xong quay lại đây. Bản cũ chỉ có câu nhắc chung và nút “Tải lại 0/10” vô dụng; màn này không trừ lượt.</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title">Kết nối tiềm năng</div><div class="spacer44"></div></div>
+          <div class="body">
+            <div class="scroll">
+              <div class="pt-best">
+                <div class="lbl"><i data-lucide="sparkles"></i>Phù hợp nhất hôm nay<i class="x" data-lucide="x" data-go="toast:Đã ẩn gợi ý này"></i></div>
+                <div class="in">
+                  <div class="hd"><img class="av lg" src="https://i.pravatar.cc/150?img=26" alt="" /><div class="f1"><b>Lý Ngọc Trâm</b><span>Trưởng phòng Đối tác · Sapo</span></div></div>
+                  <div class="pt-why"><i data-lucide="target"></i><span>Đang tìm <b>đối tác phần mềm</b>, khớp dịch vụ <b>Tư vấn phần mềm</b> của bạn.</span></div>
+                  <button class="btn primary"><i data-lucide="user-plus"></i>Kết nối</button>
+                </div>
+              </div>
+              <div class="pt-sec"><h3>Gợi ý khác</h3><span>Vuốt trái để bỏ qua</span></div>
+              <div class="pt-list">
+                <div class="pt-row"><img class="av" src="https://i.pravatar.cc/150?img=49" alt="" /><div class="tx"><b>Vũ Thanh Hà</b><div class="sub">Giám đốc Kinh doanh · Haravan</div><span class="rs"><i data-lucide="layers"></i>Cùng ngành Công nghệ</span></div><button class="pt-add" aria-label="Kết nối"><i data-lucide="user-plus"></i></button></div>
+                <div class="pt-row"><img class="av" src="https://i.pravatar.cc/150?img=33" alt="" /><div class="tx"><b>Phan Đức Thịnh</b><div class="sub">Giám đốc dự án · KMS Technology</div><span class="rs"><i data-lucide="target"></i>Cần dịch vụ của bạn</span></div><button class="pt-add" aria-label="Kết nối"><i data-lucide="user-plus"></i></button></div>
+                <div class="pt-row"><span class="av tb">QH</span><div class="tx"><b>Đinh Quang Huy</b><div class="sub">CTO · Base.vn</div><span class="rs"><i data-lucide="map-pin"></i>Cùng TP.HCM</span></div><button class="pt-sent">Đã gửi lời mời</button></div>
+              </div>
+            </div>
+          </div>
+          <div class="footer-cta flex ac jb" style="padding:10px 20px">
+            <span class="t-xs">Đã dùng <b style="color:var(--ink)">4/10</b> lượt gợi ý · Miễn phí</span>
+            <button class="btn tonal sm"><i data-lucide="rotate-cw"></i>Gợi ý mới</button>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">B2 · Danh sách gợi ý<small>Không có ô chọn thẻ và dòng “Dựa trên”. Không có bộ lọc. Lý do gợi ý chỉ dùng dữ liệu có thật: cùng ngành, cần dịch vụ của bạn, cùng khu vực (không hiện bạn chung vì hệ thống không kiểm tra được). Người phù hợp nhất nổi lên đầu, lý do viết thành câu; các gợi ý còn lại là danh sách gọn với nút kết nối tròn, vuốt trái để bỏ qua; người đã mời đổi thành nhãn “Đã gửi lời mời” tại chỗ. Gói Miễn phí có 10 lượt gợi ý mỗi tháng, đếm số lượt đã dùng ở chân trang (trong prototype: mỗi lần bấm “Gợi ý mới” +1 lượt, danh sách đổi thứ tự); chạm 10/10 thì nút mờ đi và mở sheet Hết lượt B3, bấm tiếp vẫn mở B3.</small></div>
+      </div>
+
+      <!-- B3 Limit reached (bổ sung từ screens/home/06-connection-limit-reached) -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title">Kết nối tiềm năng</div><div class="spacer44"></div></div>
+          <div class="body">
+            <div class="scroll">
+              <div class="pt-sec"><h3>Gợi ý tháng này</h3><span>10/10 lượt đã dùng</span></div>
+              <div class="pt-list">
+                <div class="pt-row"><img class="av" src="https://i.pravatar.cc/150?img=49" alt="" /><div class="tx"><b>Vũ Thanh Hà</b><div class="sub">Giám đốc Kinh doanh · Haravan</div><span class="rs"><i data-lucide="layers"></i>Cùng ngành Công nghệ</span></div><button class="pt-sent">Đã gửi lời mời</button></div>
+                <div class="pt-row"><img class="av" src="https://i.pravatar.cc/150?img=33" alt="" /><div class="tx"><b>Phan Đức Thịnh</b><div class="sub">Giám đốc dự án · KMS Technology</div><span class="rs"><i data-lucide="target"></i>Cần dịch vụ của bạn</span></div><button class="pt-sent">Đã gửi lời mời</button></div>
+              </div>
+            </div>
+          </div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="t-center" style="padding:8px 4px 0">
+              <div style="width:64px;height:64px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;background:var(--amber-50, #fffbeb);color:var(--amber-500, #f59e0b)"><i data-lucide="gauge" style="width:30px;height:30px"></i></div>
+              <h3 style="font-size:19px;font-weight:700;margin-bottom:8px">Bạn đã dùng hết 10 lượt gợi ý tháng này</h3>
+              <p class="t-body" style="color:var(--slate-500)">Có lượt mới vào <b style="color:var(--ink)">01/12</b>. Chạm thẻ, QR và danh thiếp vẫn dùng bình thường.</p>
+            </div>
+            <div class="progress mt16"><span style="width:100%"></span></div>
+            <div class="flex jb mt4"><span class="t-xs">Đã dùng 10/10</span><span class="t-xs">Premium: 50 lượt/tháng</span></div>
+            <button class="btn gold mt20"><i data-lucide="crown"></i>Nâng cấp Premium</button>
+            <button class="btn ghost mt8" style="color:var(--ink)">Để sau</button>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">B3 · Hết lượt gợi ý (sheet)<small>Bổ sung từ bản cũ (Connection Limit Reached). Hiện khi bấm "Gợi ý mới" hoặc "Kết nối" lúc đã dùng hết lượt của gói Miễn phí. Nói rõ khi nào có lượt mới, khẳng định những gì vẫn dùng được (lời mời đã gửi, chạm thẻ, QR, danh thiếp) để người dùng không nghĩ app bị khoá. Nút vàng "Nâng cấp Premium" mở Paywall E1; "Để sau" đóng sheet. Số lượt 10/50 lấy theo bảng so sánh ở E1 (đang là số ví dụ).</small></div>
+      </div>
+
+          <!-- B3 filter suggestions -->
+
+    </div>
+  </section>
+
+  <!-- ===================== C. Notifications ===================== -->
+  <section class="rd-section">
+    <h2>C · Thông báo</h2>
+    <div class="rd-row">
+
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title">Thông báo</div><button class="icon-btn"><i data-lucide="check-check"></i></button></div>
+          <div style="padding: 0 20px 12px"><div class="seg"><a class="on">Tất cả</a><a>Lời mời <span class="badge green" style="height:20px">2</span></a></div></div>
+          <div class="body">
+            <div class="scroll" style="padding:0 20px">
+              <div class="group-label" style="margin-top:4px">Hôm nay</div>
+              <div class="group">
+                <div class="nt unread" data-no-person data-go="03-B8@tam"><img class="av" src="https://i.pravatar.cc/150?img=12" alt="" /><div class="tx"><p><b>Hồ Tâm</b> muốn kết nối với bạn</p><span class="when">Founder &amp; CEO · InApps · 10 phút trước</span>
+                  <div class="btn-row"><button class="btn outline" data-go="toast:Đã từ chối lời mời của Hồ Tâm">Từ chối</button><button class="btn primary" data-go="03-B9@tam">Chấp nhận</button></div></div></div>
+                <div class="nt unread" data-no-person data-go="03-B8@phuong"><img class="av" src="https://i.pravatar.cc/150?img=45" alt="" /><div class="tx"><p><b>Đặng Phương</b> muốn kết nối với bạn</p><span class="when">Sunnycare · 1 giờ trước</span>
+                  <div class="btn-row"><button class="btn outline" data-go="toast:Đã từ chối lời mời của Đặng Phương">Từ chối</button><button class="btn primary" data-go="03-B9@phuong">Chấp nhận</button></div></div></div>
+                <div class="nt unread"><span class="ic-av"><i data-lucide="eye"></i></span><div class="tx"><p><b>Lê Nhật Nam</b> đã xem hồ sơ của bạn</p><span class="when">3 giờ trước</span></div><span class="udot"></span></div>
+              </div>
+              <div class="group-label">Trước đó</div>
+              <div class="group">
+                <div class="nt"><img class="av" src="https://i.pravatar.cc/150?img=32" alt="" /><div class="tx"><p><b>Trần Thuỷ (Helen)</b> đã chấp nhận lời mời kết nối</p><span class="when">Hôm qua</span></div></div>
+                <div class="nt"><span class="ic-av"><i data-lucide="nfc"></i></span><div class="tx"><p><b>Thẻ InApps Technology</b> đã kích hoạt NFC thành công</p><span class="when">09/11</span></div></div>
+                <div class="nt"><span class="ic-av"><i data-lucide="trophy"></i></span><div class="tx"><p>Bạn lên <b>hạng 24</b> trong bảng xếp hạng tuần</p><span class="when">08/11</span></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">C1 · Thông báo<small>Từ chối ngay trong danh sách; "Chấp nhận" mở sheet "Gửi lại thẻ nào?" (03-B9) vì 1 người có nhiều thẻ. Chạm vào dòng lời mời mở hồ sơ người mời (03-B8) để xem trước khi quyết định. Nhóm theo Hôm nay / Trước đó, chưa đọc có nền xanh nhạt, nút “Đánh dấu đã đọc” trên app bar.</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title">Thông báo</div><div class="spacer44"></div></div>
+          <div style="padding: 0 20px 12px"><div class="seg"><a>Tất cả</a><a class="on">Lời mời</a></div></div>
+          <div class="body">
+            <div class="empty" style="padding-top:80px">
+              <div class="ill"><i data-lucide="user-round-plus"></i></div>
+              <h3>Chưa có lời mời kết nối</h3>
+              <p>Chia sẻ thẻ của bạn để mọi người tìm thấy và gửi lời mời. Lời mời mới sẽ hiện ở đây.</p>
+              <button class="btn primary md" style="width:auto;padding:0 22px" data-go="02-D0"><i data-lucide="share-2"></i>Chia sẻ thẻ của tôi</button>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">C2 · Thông báo trống<small>Bản cũ chỉ là một dòng chữ. Bản mới có minh hoạ, lời giải thích và một hành động để tạo ra lời mời đầu tiên. Nút "Chia sẻ thẻ của tôi" mở sheet D0 "Chia sẻ thẻ nào?" để chọn thẻ, không tự lấy thẻ mặc định.</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title">Đã xem gần đây</div><button class="icon-btn"><i data-lucide="trash-2"></i></button></div>
+          <div class="body">
+            <div class="scroll" style="padding:0 20px">
+              <div class="vlist">
+                <div class="group"><div class="li" data-go="03-B1@helen"><img class="av" src="https://i.pravatar.cc/150?img=32" alt="" /><div class="tx"><b>Trần Thuỷ (Helen)</b><span>CRO · Incard Technology</span></div></div></div>
+                <div class="group"><div class="li" data-go="03-B1@khoa"><span class="av tg">VK</span><div class="tx"><b>Võ Minh Khoa</b><span>Trưởng nhóm Sales · FPT Retail</span></div></div></div>
+                <div class="group"><div class="li" data-go="03-B1@lan"><span class="av ts">PL</span><div class="tx"><b>Phạm Thu Lan</b><span>Marketing Manager · VNG</span></div></div></div>
+                <div class="group"><div class="li" data-go="03-B1@nam"><span class="av tb">LN</span><div class="tx"><b>Lê Nhật Nam</b><span>Giám đốc · ICTGO</span></div></div></div>
+                <div class="group"><div class="li" data-go="03-B1@phuong"><img class="av" src="https://i.pravatar.cc/150?img=45" alt="" /><div class="tx"><b>Đặng Phương</b><span>Trưởng phòng Mua hàng · Sunnycare</span></div></div></div>
+                <div class="group"><div class="li" data-go="03-B1@tam"><img class="av" src="https://i.pravatar.cc/150?img=12" alt="" /><div class="tx"><b>Hồ Văn Tâm</b><span>Founder, CEO · InApps Technology</span></div></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">C3 · Đã xem gần đây<small>Mở từ "Xem tất cả" ở Trang chủ. Danh sách những người bạn đã xem hồ sơ hoặc quét thẻ, sắp xếp từ mới nhất đến cũ nhất. Mỗi người chỉ hiện 1 dòng: xem hoặc quét lại nhiều lần thì dòng đó được đưa lên đầu, không tạo dòng mới. Mỗi người là một thẻ riêng, chỉ có ảnh, tên và chức danh · công ty. Bấm một dòng để mở lại hồ sơ người đó. Icon thùng rác mở C4 để xác nhận xoá lịch sử xem.</small></div>
+      </div>
+
+<div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title">Đã xem gần đây</div><button class="icon-btn"><i data-lucide="trash-2"></i></button></div>
+          <div class="body">
+            <div class="scroll" style="padding:0 20px">
+              <div class="vlist">
+                <div class="group"><div class="li" data-go="03-B1@helen"><img class="av" src="https://i.pravatar.cc/150?img=32" alt="" /><div class="tx"><b>Trần Thuỷ (Helen)</b><span>CRO · Incard Technology</span></div></div></div>
+                <div class="group"><div class="li" data-go="03-B1@khoa"><span class="av tg">VK</span><div class="tx"><b>Võ Minh Khoa</b><span>Trưởng nhóm Sales · FPT Retail</span></div></div></div>
+                <div class="group"><div class="li" data-go="03-B1@lan"><span class="av ts">PL</span><div class="tx"><b>Phạm Thu Lan</b><span>Marketing Manager · VNG</span></div></div></div>
+                <div class="group"><div class="li" data-go="03-B1@nam"><span class="av tb">LN</span><div class="tx"><b>Lê Nhật Nam</b><span>Giám đốc · ICTGO</span></div></div></div>
+                <div class="group"><div class="li" data-go="03-B1@phuong"><img class="av" src="https://i.pravatar.cc/150?img=45" alt="" /><div class="tx"><b>Đặng Phương</b><span>Trưởng phòng Mua hàng · Sunnycare</span></div></div></div>
+                <div class="group"><div class="li" data-go="03-B1@tam"><img class="av" src="https://i.pravatar.cc/150?img=12" alt="" /><div class="tx"><b>Hồ Văn Tâm</b><span>Founder, CEO · InApps Technology</span></div></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Xoá lịch sử xem?</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <p class="t-sm mt4" style="margin-bottom:18px">Danh sách "Đã xem gần đây" sẽ trống. Không ảnh hưởng tới danh bạ, kết nối hay hồ sơ của những người này.</p>
+            <div class="btn-row"><button class="btn outline">Huỷ</button><button class="btn danger">Xoá lịch sử</button></div>
+          </div>
+        </div>
+        <div class="cap">C4 · Xác nhận xoá lịch sử xem (sheet)<small>Mở khi bấm icon thùng rác ở C3. Nói rõ chỉ xoá danh sách đã xem, không xoá danh bạ hay kết nối. "Huỷ" quay lại C3; "Xoá lịch sử" (chữ đỏ) xoá xong chuyển sang C5.</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title">Đã xem gần đây</div><div class="spacer44"></div></div>
+          <div class="body">
+            <div class="empty" style="padding-top:80px">
+              <div class="ill"><i data-lucide="history"></i></div>
+              <h3>Chưa xem hồ sơ nào</h3>
+              <p>Hồ sơ bạn xem hoặc thẻ bạn quét sẽ hiện ở đây, mới nhất ở trên.</p>
+              <button class="btn primary md" style="width:auto;padding:0 22px" data-go="05-B1"><i data-lucide="scan-line"></i>Quét thẻ</button>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">C5 · Đã xem gần đây – trống<small>Sau khi xoá lịch sử (C4) hoặc khi chưa xem ai. Icon thùng rác ẩn vì không còn gì để xoá. Nút "Quét thẻ" mở màn quét.</small></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== D. Share & invite ===================== -->
+  <section class="rd-section">
+    <h2>D · Chia sẻ thẻ &amp; mời bạn bè</h2>
+    <div class="rd-row">
+
+      <!-- D0 card picker before sharing -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="body"><div class="hh"><span class="av">MA</span><div class="f1"><div class="nm">Nguyễn Minh Anh</div></div></div></div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Chia sẻ thẻ nào?</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <p class="t-sm mt4" style="margin-bottom:14px">Mỗi thẻ có link, QR, số điện thoại và email riêng.</p>
+            <div class="cpick" data-go="02-D1"><span class="sw graphite"></span><div class="f1"><b>Thẻ InApps Technology</b><span>Giám đốc kinh doanh · InApps Technology</span><span class="lk">incard.biz/minhanh</span></div><i data-lucide="chevron-right"></i></div>
+            <div class="cpick" data-go="02-D4"><span class="sw pearl"></span><div class="f1"><b>Thẻ CLB Doanh nhân trẻ</b><span>Phó Chủ tịch · CLB Doanh nhân trẻ Sài Gòn</span><span class="lk">incard.biz/minhanh/clb-dnt</span></div><i data-lucide="chevron-right"></i></div>
+            <div class="cpick" data-go="toast:Mở chia sẻ Thẻ Mentor khởi nghiệp · incard.biz/minhanh/mentor"><span class="sw stone"></span><div class="f1"><b>Thẻ Mentor khởi nghiệp</b><span>Diễn giả · Mentor khởi nghiệp</span><span class="lk">incard.biz/minhanh/mentor</span></div><i data-lucide="chevron-right"></i></div>
+          </div>
+        </div>
+        <div class="cap">D0 · Chia sẻ thẻ nào? (sheet chọn thẻ)<small>Mở mỗi khi chia sẻ từ ngoài dải thẻ Trang chủ: "Chia sẻ thẻ của tôi" (C2), "QR của tôi", nút Chia sẻ ở các màn khác, và các nút Chia sẻ khác. Liệt kê đủ 3 thẻ (màu thẻ + tên + chức vụ chính · công ty + link), không chọn sẵn thẻ nào; chạm một dòng là mở sheet chia sẻ của đúng thẻ đó. Bố cục giống sheet Chọn thẻ 03-A4.</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="body"><div class="hh"><span class="av">MA</span><div class="f1"><div class="nm">Nguyễn Minh Anh</div></div></div></div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Chia sẻ thẻ</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <div class="seg mt12"><a class="on"><i data-lucide="globe"></i>Hồ sơ online</a><a><i data-lucide="contact-round"></i>Danh bạ (vCard)</a></div>
+            <div class="qrbox mt16"><span class="sr-only">Phóng to mã QR</span><svg class="qr" data-seed="42"></svg><img class="lg av-lg" src="https://i.pravatar.cc/150?img=47" alt="Ảnh hồ sơ thẻ" /></div>
+            <p class="t-xs t-center mt12">Người quét thấy ngay hồ sơ của bạn, không cần app</p>
+            <div class="linkbox mt16"><i class="l" data-lucide="link"></i><span class="u">incard.biz/minhanh</span><span class="cp"><i data-lucide="copy"></i>Sao chép</span></div>
+            <div class="targets mt20">
+              <a><span class="zalo">Zalo</span>Zalo</a>
+              <a><span class="msg"><i data-lucide="message-circle"></i></span>Messenger</a>
+              <a><span><i data-lucide="mail"></i></span>Email</a>
+              <a><span><i data-lucide="image-down"></i></span>Lưu ảnh QR</a>
+              <a><span><i data-lucide="ellipsis"></i></span>Khác</a>
+            </div>
+          </div>
+        </div>
+        <div class="cap">D1 · Chia sẻ thẻ (sheet)<small>QR và link dẫn tới hồ sơ web của bạn: người quét xem được ngay, không cần app. Sheet chia sẻ đúng thẻ đang hiện trên dải thẻ ở Trang chủ, không có dòng chọn thẻ trong sheet; muốn chia sẻ thẻ khác thì vuốt sang thẻ đó ở Trang chủ rồi bấm Chia sẻ. Giữa mã QR là ảnh hồ sơ của thẻ (thay logo InCard) để người quét nhận ra ngay. Mở từ nơi khác ngoài dải thẻ thì luôn qua D0 trước. Mỗi thẻ có link và QR riêng. Chạm QR để trình chiếu toàn màn hình. Bỏ nút "Chia sẻ" to ở cuối vì trùng với "Khác" (cùng mở bảng chia sẻ của máy). Đây là nơi chia sẻ thẻ duy nhất: "QR của tôi" mở D0 rồi tới sheet này.</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="body"><div class="hh"><span class="av">MA</span><div class="f1"><div class="nm">Nguyễn Minh Anh</div></div></div></div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Mời bạn bè</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <div class="gift-hero">
+              <span class="gi"><i data-lucide="user-plus"></i></span>
+              <div><b>Mời bạn bè dùng InCard</b><p>Cùng dùng InCard để trao đổi danh thiếp chỉ bằng một chạm hoặc một lần quét.</p></div>
+            </div>
+            <div class="flex jb ac mt20"><span class="h3" style="font-size:15px">Đã mời thành công</span><span class="t-sm"><b style="color:var(--ink)">2</b> bạn</span></div>
+            <div class="invite-qr mt20"><button class="qr-tile qr-zoom" data-go="02-D5"><span class="sr-only">Phóng to QR mời</span><svg class="qr" data-seed="27"></svg><span class="zoom"><i data-lucide="maximize-2"></i></span></button><div class="f1"><b>Mã QR mời</b><p>Chạm mã để phóng to. Đã có app: mở InCard ngay. Chưa có: tới App Store / Google Play, cài xong mã mời tự điền.</p></div></div>
+            <div class="field mt20" style="margin-bottom:10px"><label>Link giới thiệu của bạn</label>
+              <div class="linkbox"><i class="l" data-lucide="link"></i><span class="u">incard.biz/ref/nkax5v</span><span class="cp"><i data-lucide="copy"></i>Sao chép</span></div>
+            </div>
+            <div class="flex ac jb"><span class="t-sm">Hoặc đọc mã:</span><span class="code-pill">NKAX5V<i data-lucide="copy" style="width:14px;height:14px"></i></span></div>
+            <button class="btn primary mt20"><i data-lucide="send"></i>Gửi lời mời</button>
+            <button class="btn ghost mt4" style="height:44px;font-size:14px">Xem lịch sử giới thiệu</button>
+          </div>
+        </div>
+        <div class="cap">D2 · Mời bạn bè (sheet)<small>QR mời khác QR chia sẻ thẻ: QR mời là liên kết mở app InCard (deep link kèm mã giới thiệu), còn QR trên thẻ mở hồ sơ của bạn trên web. Chưa có chính sách thưởng nên không hứa quà hay mốc mời; chỉ hiện số bạn đã tham gia và lối vào lịch sử giới thiệu, thay cho modal chỉ có QR + link.</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone white qr-present">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="x"></i></button><div class="title" style="font-size:15px">Đưa mã cho bạn bè quét</div><div class="spacer44"></div></div>
+          <div class="body qp">
+            <div class="bright"><i data-lucide="sun"></i>Đã tăng độ sáng tối đa · màn hình không tự tắt</div>
+            <div class="qr-big"><span class="sr-only">Mã QR mời</span><svg class="qr" data-seed="27"></svg><span class="center"><img src="assets/logo-mark.png" alt="" /></span></div>
+            <div class="qp-who"><span class="av">MA</span><div><b>Minh Anh mời bạn dùng InCard</b><span>Quét để mở hoặc tải app InCard</span></div></div>
+            <div class="qp-steps">
+              <div><i data-lucide="scan-line"></i>Mở camera, quét mã</div>
+              <div><i data-lucide="download"></i>Tải InCard nếu chưa có</div>
+              <div><i data-lucide="ticket-check"></i>Mã mời tự điền</div>
+            </div>
+            <div class="qp-code"><span>Không quét được? Nhập mã</span><span class="code-pill">NKAX5V<i data-lucide="copy" style="width:14px;height:14px"></i></span></div>
+            <button class="btn outline md mt16" style="width:100%"><i data-lucide="share-2"></i>Gửi link mời</button>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">D5 · Trình chiếu QR mời (toàn màn hình)<small>Mở bằng một chạm vào QR ở mục "Mời bạn bè" (Trang chủ) hoặc trong sheet Mời bạn bè. Mã ~286px đen trên nền trắng, có viền trắng an toàn và logo giữa (mức sửa lỗi Q); tự tăng độ sáng, giữ màn hình sáng, luôn nền sáng kể cả chế độ tối. Khác C5 (QR thẻ): đây là QR mời, quét là mở/tải app InCard kèm mã giới thiệu, nên ghi rõ 3 bước và có mã đọc tay dự phòng.</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="body"><div class="hh"><span class="av">MA</span><div class="f1"><div class="nm">Nguyễn Minh Anh</div></div></div></div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Chia sẻ lời mời</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <p class="t-sm mt4">Tin nhắn dưới đây sẽ được gửi kèm link mời của bạn.</p>
+            <div class="inv-msg mt16" data-js="inv-edit">
+              <div class="inv-txt" contenteditable="true" spellcheck="false" aria-label="Lời nhắn mời">Chào bạn, mình đang dùng InCard để trao đổi danh thiếp chỉ bằng một chạm. Tải app qua link này, mã mời NKAX5V sẽ tự điền nhé:</div>
+              <span class="u">incard.biz/ref/nkax5v</span>
+            </div>
+            <div class="targets mt20">
+              <a data-go="toast:Mở Zalo, chọn người nhận · lời mời đã điền sẵn"><span class="zalo">Zalo</span>Zalo</a>
+              <a data-go="toast:Mở Messenger, chọn người nhận · lời mời đã điền sẵn"><span class="msg"><i data-lucide="message-circle"></i></span>Messenger</a>
+              <a data-go="toast:Mở Tin nhắn (SMS) với lời mời đã điền sẵn"><span><i data-lucide="message-square-text"></i></span>Tin nhắn</a>
+              <a data-go="toast:Mở ứng dụng Mail với lời mời đã điền sẵn"><span><i data-lucide="mail"></i></span>Email</a>
+              <a data-go="toast:Mở bảng chia sẻ của hệ điều hành"><span><i data-lucide="ellipsis"></i></span>Khác</a>
+            </div>
+            <div class="linkbox mt20"><i class="l" data-lucide="link"></i><span class="u">incard.biz/ref/nkax5v</span><span class="cp" data-go="toast:Đã sao chép lời mời kèm link incard.biz/ref/nkax5v"><i data-lucide="copy"></i>Sao chép</span></div>
+          </div>
+        </div>
+        <div class="cap">D6 · Chia sẻ lời mời (sheet)<small>Chạm vào khung lời nhắn để sửa ngay tại chỗ, không mở màn khác; link mời nằm ngoài vùng sửa nên không xoá nhầm được. Mở khi bấm "Chia sẻ lời mời" ở mục Mời bạn bè (Trang chủ), "Gửi lời mời" trong sheet D2, "Gửi link mời" ở D5 và "Chia sẻ lời mời" ở màn Mời bạn bè (Tài khoản). Lời nhắn soạn sẵn kèm link mời và mã mời. Chọn Zalo / Messenger / Tin nhắn / Email thì mở app đó với nội dung điền sẵn, người dùng chỉ cần chọn người nhận; "Khác" mở bảng chia sẻ của hệ điều hành; "Sao chép" chép cả lời nhắn lẫn link.</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="body"><div class="hh"><span class="av">MA</span><div class="f1"><div class="nm">Nguyễn Minh Anh</div></div></div></div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Chia sẻ thẻ</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <div class="seg mt12"><a><i data-lucide="globe"></i>Hồ sơ online</a><a class="on"><i data-lucide="contact-round"></i>Danh bạ (vCard)</a></div>
+            <div class="qrbox mt16"><span class="sr-only">Phóng to mã QR</span><svg class="qr" data-seed="142"></svg><img class="lg av-lg" src="https://i.pravatar.cc/150?img=47" alt="Ảnh hồ sơ thẻ" /></div>
+            <p class="t-xs t-center mt12">Quét là lưu ngay thông tin của Thẻ InApps Technology vào danh bạ, không cần mạng</p>
+            <a class="vc-pick mt16"><i data-lucide="list-checks"></i><div class="f1"><b>Thông tin trong vCard · Thẻ InApps</b><span>Tên, Giám đốc kinh doanh · InApps Technology, 0908 112 222, minhanh@inapps.net</span></div><i data-lucide="chevron-right"></i></a>
+            <div class="targets mt20">
+              <a><span class="zalo">Zalo</span>Zalo</a>
+              <a><span class="msg"><i data-lucide="message-circle"></i></span>Messenger</a>
+              <a><span><i data-lucide="user-round-plus"></i></span>Lưu danh bạ</a>
+              <a><span><i data-lucide="image-down"></i></span>Lưu ảnh QR</a>
+              <a><span><i data-lucide="ellipsis"></i></span>Khác</a>
+            </div>
+          </div>
+        </div>
+        <div class="cap">D3 · Chia sẻ thẻ – Danh bạ (vCard)<small>Đổi tab ngay trong sheet, không nhảy sang màn khác. vCard chứa dữ liệu trực tiếp nên không có link: ẩn ô link, thay bằng "Thông tin trong vCard" để chọn trường đưa vào mã. Hàng ứng dụng đổi "Email" thành "Lưu danh bạ" (gửi file .vcf). vCard lấy SĐT, email, chức vụ của thẻ đang chọn (Thẻ InApps: 0908 112 222 · minhanh@inapps.net), không phải thông tin chung của tài khoản. Giữa QR là ảnh hồ sơ của thẻ.</small></div>
+      </div>
+
+
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="body"><div class="hh"><span class="av">MA</span><div class="f1"><div class="nm">Nguyễn Minh Anh</div></div></div></div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Chia sẻ thẻ</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <div class="seg mt12"><a class="on"><i data-lucide="globe"></i>Hồ sơ online</a><a><i data-lucide="contact-round"></i>Danh bạ (vCard)</a></div>
+            <div class="qrbox mt16"><span class="sr-only">Phóng to mã QR</span><svg class="qr" data-seed="57"></svg><img class="lg av-lg" src="https://i.pravatar.cc/150?img=47" alt="Ảnh hồ sơ thẻ" /></div>
+            <p class="t-xs t-center mt12">Người quét thấy ngay hồ sơ của bạn, không cần app</p>
+            <div class="linkbox mt16"><i class="l" data-lucide="link"></i><span class="u">incard.biz/minhanh/clb-dnt</span><span class="cp"><i data-lucide="copy"></i>Sao chép</span></div>
+            <div class="targets mt20">
+              <a><span class="zalo">Zalo</span>Zalo</a>
+              <a><span class="msg"><i data-lucide="message-circle"></i></span>Messenger</a>
+              <a><span><i data-lucide="mail"></i></span>Email</a>
+              <a><span><i data-lucide="image-down"></i></span>Lưu ảnh QR</a>
+              <a><span><i data-lucide="ellipsis"></i></span>Khác</a>
+            </div>
+          </div>
+        </div>
+        <div class="cap">D4 · Chia sẻ thẻ – đang ở thẻ thứ 2<small>Mở từ Trang chủ khi dải thẻ đang ở thẻ CLB Doanh nhân trẻ: sheet nhận đúng thẻ đó, link và QR riêng của thẻ (incard.biz/minhanh/clb-dnt), giữa QR là ảnh hồ sơ của thẻ này.</small></div>
+      </div>
+
+
+    </div>
+  </section>
+
+  <!-- ===================== E. Premium & leaderboard ===================== -->
+  <section class="rd-section">
+    <h2>E · Premium &amp; bảng xếp hạng</h2>
+    <div class="rd-row">
+
+      <div class="rd-shot">
+        <div class="phone white tall">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn soft"><i data-lucide="x"></i></button><div class="title"></div><a class="link" style="font-size:14px;padding:0 10px">Khôi phục</a></div>
+          <div class="pw-top">
+            <div class="crown"><i data-lucide="crown"></i></div>
+            <div class="h1">InCard Premium</div>
+            <p class="t-body mt4">Kết nối nhiều hơn, làm việc ít hơn.</p>
+          </div>
+          <div style="padding: 18px 20px 0">
+            <div>
+              <div class="plan on"><span class="tag">Phổ biến nhất · −50%</span><span class="radio"></span><div class="pn"><b>Hàng năm</b><span>Chỉ ₫25.500/tháng</span></div><div class="pp"><s>₫612.000</s><b>₫306.000</b></div></div>
+              <div class="plan"><span class="radio"></span><div class="pn"><b>Hàng tháng</b><span>Huỷ bất cứ lúc nào</span></div><div class="pp"><b>₫51.000</b><span class="t-xs">/tháng</span></div></div>
+            </div>
+            <div class="cmp mt20">
+              <div class="r h"><span>Tính năng</span><span>Miễn phí</span><span>Premium</span></div>
+              <div class="r"><span>Quét danh thiếp giấy</span><span>10/tháng</span><span>Không giới hạn</span></div>
+              <div class="r"><span>Hỏi Inka (AI)</span><span>10/ngày</span><span>Không giới hạn</span></div>
+              <div class="r"><span>Đồng bộ danh bạ Google</span><span><i data-lucide="minus"></i></span><span><i data-lucide="check"></i></span></div>
+              <div class="r"><span>Kết nối tiềm năng</span><span>10/tháng</span><span>50/tháng</span></div>
+            </div>
+          </div>
+          <div style="padding: 20px 20px 8px">
+            <button class="btn gold">Dùng thử 7 ngày miễn phí<span class="ex">Ví dụ</span></button>
+            <p class="t-xs t-center mt8">Sau đó ₫306.000/năm · Huỷ trước 24 giờ để không bị trừ tiền</p>
+            <p class="legal mt12">Gói tự động gia hạn trừ khi bạn tắt ít nhất 24 giờ trước khi hết kỳ. Quản lý trong Cài đặt tài khoản App Store / Google Play. <a class="link" style="font-size:11px">Điều khoản</a> · <a class="link" style="font-size:11px">Quyền riêng tư</a></p>
+            <button class="btn ghost mt8" style="height:44px;font-size:14px">Khôi phục mua hàng</button>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">E1 · Paywall<small>Không còn bật ngay sau đăng ký; chỉ mở từ banner Premium hoặc khi chạm giới hạn. Có nút X rõ ràng, so sánh Miễn phí/Premium, chọn gói bằng radio. Màu vàng chỉ dùng cho Premium. Ưu đãi dùng thử là ví dụ.</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone lbp">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="lb-hero">
+            <div class="appbar" style="margin:0 -12px"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title">Bảng xếp hạng</div><button class="icon-btn" aria-label="Cách tính điểm"><i data-lucide="info"></i></button></div>
+            <div class="seg"><a class="on" data-js data-period="w">Tuần</a><a data-js data-period="m">Tháng</a><a data-js data-period="a">Tất cả</a></div>
+            <div class="lb-when" data-r="when"></div>
+            <div class="podium" data-r="podium"></div>
+          </div>
+          <div class="body">
+            <div class="scroll">
+              <a class="lb-howto"><span class="ic"><i data-lucide="sparkles"></i></span><span class="tx"><b>Cách tính điểm</b><span>Xem hồ sơ, quét thẻ, kết nối, lịch hẹn, giới thiệu. Mọi thẻ của một người cộng chung.</span></span><i data-lucide="chevron-right"></i></a>
+              <div class="lb-list" data-r="list"></div>
+            </div>
+          </div>
+          <div class="me-bar" data-go="02-E3" data-r="mebar"></div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">E2 · Bảng xếp hạng<small>Xếp hạng theo người: mỗi người một dòng, ai nhiều thẻ thì điểm mọi thẻ cộng chung. Tab Tuần / Tháng / Tất cả đổi toàn bộ số liệu (bục top 3, danh sách, hạng của bạn, mốc kế tiếp, thời gian làm mới). Top 3 trên bục thấp, viền vàng/bạc/đồng mảnh. Icon ⓘ và dòng “Cách tính điểm” mở sheet giải thích luật điểm. Thanh “Hạng của bạn” ghim đáy, bấm mở “Điểm của tôi” (số liệu là ví dụ).</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone lbp">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="lb-hero">
+            <div class="appbar" style="margin:0 -12px"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title">Bảng xếp hạng</div><button class="icon-btn"><i data-lucide="info"></i></button></div>
+            <div class="seg"><a class="on" data-js data-period="w">Tuần</a><a data-js data-period="m">Tháng</a><a data-js data-period="a">Tất cả</a></div>
+            <div class="lb-when" data-r="when"></div>
+            <div class="podium" data-r="podium"></div>
+          </div>
+          <div class="body"><div class="scroll"><div class="lb-list" data-r="list"></div></div></div>
+          <div class="scrim"></div>
+          <div class="sheet lb-rules">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Cách tính điểm</h3><button class="icon-btn" style="margin-right:-10px"><i data-lucide="x"></i></button></div>
+            <div class="rl"><span class="ai bg-view"><i data-lucide="eye"></i></span><div class="tx"><b>Có người xem hồ sơ của bạn</b><span>Mỗi người xem tính 1 lần/ngày</span></div><span class="v">+0,25</span></div>
+            <div class="rl"><span class="ai bg-scan"><i data-lucide="scan-line"></i></span><div class="tx"><b>Quét mã QR hoặc chạm thẻ NFC</b><span>Tự quét thẻ của mình không tính</span></div><span class="v">+0,5</span></div>
+            <div class="rl"><span class="ai bg-conn"><i data-lucide="user-plus"></i></span><div class="tx"><b>Kết nối mới</b><span>Khi hai bên cùng đồng ý kết nối</span></div><span class="v">+1</span></div>
+            <div class="rl"><span class="ai bg-meet"><i data-lucide="calendar-check"></i></span><div class="tx"><b>Có người đặt hẹn với bạn</b><span>Tính khi lịch hẹn được xác nhận</span></div><span class="v">+1</span></div>
+            <div class="rl"><span class="ai bg-ref"><i data-lucide="gift"></i></span><div class="tx"><b>Giới thiệu thành công</b><span>Người được mời tạo tài khoản và tạo thẻ</span></div><span class="v">+3</span></div>
+            <div class="rl-notes">
+              <p><i data-lucide="layers"></i>Mỗi người một hạng. Có nhiều thẻ thì điểm của mọi thẻ được cộng chung.</p>
+              <p><i data-lucide="timer"></i>Bảng tuần làm mới 0h thứ Hai, bảng tháng làm mới ngày 1. Tất cả là tổng từ khi bảng xếp hạng ra mắt.</p>
+            </div>
+            <button class="btn primary" style="width:100%;margin-top:16px">Đã hiểu</button>
+          </div>
+          <div class="home-ind" style="position:absolute;bottom:0;left:0;right:0;z-index:22"></div>
+        </div>
+        <div class="cap">E4 · Cách tính điểm<small>Mở từ icon ⓘ hoặc dòng “Cách tính điểm” ở Bảng xếp hạng. Mỗi hoạt động một dòng, kèm điều kiện để tránh gian lận (xem trùng, tự quét thẻ mình). Nói rõ cách cộng điểm khi có nhiều thẻ và lịch làm mới bảng (luật điểm là đề xuất, cần chốt).</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title">Điểm của tôi</div><button class="icon-btn"><i data-lucide="trophy"></i></button></div>
+          <div style="padding: 0 20px 12px"><div class="seg"><a class="on" data-js data-period="w">Tuần</a><a data-js data-period="m">Tháng</a><a data-js data-period="a">Tất cả</a></div></div>
+          <div class="body"><div class="scroll" data-r="mine"></div></div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">E3 · Điểm của tôi<small>Trả lời “điểm của tôi từ đâu ra”, đổi theo Tuần / Tháng / Tất cả: tách theo 5 hoạt động (số lượt × điểm mỗi lượt), nhật ký điểm gần đây có ghi thẻ nguồn, rồi đến Theo thẻ kiểu ví thẻ: mỗi thẻ là một dải mang đúng màu chất liệu thẻ (Graphite / Pearl / Stone), tên thẻ và chức danh bên trái, tổng điểm in to bên phải; bấm để mở E5. Giới thiệu tính cho tài khoản nên là dải tím nhạt riêng ở cuối, không thuộc thẻ nào (số liệu ví dụ, các tổng khớp nhau).</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title">Điểm theo thẻ</div><span style="width:44px"></span></div>
+          <div style="padding: 0 20px 12px"><div class="seg"><a class="on" data-js data-period="w">Tuần</a><a data-js data-period="m">Tháng</a><a data-js data-period="a">Tất cả</a></div></div>
+          <div class="cchips" data-r="cchips"></div>
+          <div class="body"><div class="scroll" data-r="card"></div></div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">E5 · Điểm theo thẻ<small>Mở khi bấm một thẻ ở “Điểm của tôi”. Chọn kỳ ở trên cùng, ngay dưới là danh sách thẻ dạng dải mặt thẻ thu nhỏ vuốt ngang (ghi họ tên, chức danh, công ty): mỗi thẻ ghi sẵn điểm và % của kỳ đang xem để so sánh nhanh, thẻ đang chọn sáng rõ có viền xanh và dấu ✓, các thẻ khác mờ đi; cuối dải có ô “Tạo thẻ mới”. Chọn kỳ Tuần / Tháng / Tất cả thì điểm trên các thẻ đổi theo. Hiện tổng điểm của thẻ, phần trăm đóng góp vào điểm của bạn, chi tiết 4 hoạt động của thẻ và nhật ký điểm riêng của thẻ. Kỳ chưa có điểm thì gợi ý chia sẻ thẻ.</small></div>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    // Pseudo-QR generator (decorative, deterministic per seed)
+    document.querySelectorAll('svg.qr').forEach(function (svg) {
+      var n = 25, seed = +svg.dataset.seed || 7;
+      function r() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
+      var s = '';
+      function finder(x, y) {
+        s += '<rect x="' + x + '" y="' + y + '" width="7" height="7"/>' +
+             '<rect x="' + (x + 1) + '" y="' + (y + 1) + '" width="5" height="5" style="fill:var(--white)"/>' +
+             '<rect x="' + (x + 2) + '" y="' + (y + 2) + '" width="3" height="3"/>';
+      }
+      for (var y = 0; y < n; y++) for (var x = 0; x < n; x++) {
+        if ((x < 8 && y < 8) || (x > 16 && y < 8) || (x < 8 && y > 16)) continue;
+        if (r() < 0.48) s += '<rect x="' + x + '" y="' + y + '" width="1" height="1"/>';
+      }
+      finder(0, 0); finder(18, 0); finder(0, 18);
+      svg.setAttribute('viewBox', '0 0 25 25');
+      svg.setAttribute('shape-rendering', 'crispEdges');
+      svg.setAttribute('fill', 'currentColor');
+      svg.innerHTML = s;
+    });
+    lucide.createIcons({ attrs: { 'stroke-width': 1.75 } });
+  </script>
+  <script>
+  /* ===== Bảng xếp hạng: dữ liệu mẫu theo kỳ + render (E2 / E3 / E4 / E5) ===== */
+  (function () {
+    const RATE = { view: .25, scan: .5, conn: 1, meet: 1, ref: 3 };
+    const ACT = { view: ['eye', 'Lượt xem hồ sơ', 'lượt'], scan: ['scan-line', 'Lượt quét QR, chạm thẻ', 'lượt'], conn: ['user-plus', 'Kết nối mới', 'người'], meet: ['calendar-check', 'Có người hẹn gặp bạn', 'lịch hẹn'], ref: ['gift', 'Giới thiệu thành công', 'người'] };
+    const SHORT = { view: 'xem', scan: 'quét', conn: 'kết nối', meet: 'lịch hẹn' };
+    const PP = {
+      helen: ['Trần Thuỷ (Helen)', 'Incard Technology', '<img class="av" src="https://i.pravatar.cc/150?img=32" alt="" />'],
+      tam: ['Hồ Tâm', 'InApps', '<img class="av" src="https://i.pravatar.cc/150?img=12" alt="" />'],
+      nam: ['Lê Nhật Nam', 'ICTGO', '<span class="av tb">LN</span>'],
+      phuong: ['Đặng Phương', 'Sunnycare', '<img class="av" src="https://i.pravatar.cc/150?img=45" alt="" />'],
+      khoa: ['Võ Minh Khoa', 'FPT Retail', '<span class="av tg">VK</span>'],
+      lan: ['Phạm Thu Lan', 'VNG', '<span class="av ts">PL</span>'],
+      bao: ['Nguyễn Gia Bảo', 'Tiki', '<span class="av tb">GB</span>'],
+      quocanh: ['Lê Quốc Anh', 'MoMo', '<span class="av ts">QA</span>'],
+      an: ['Trần Thị Hoài An', 'Vinamilk', '<span class="av tg">HA</span>'],
+      me: ['Bạn', 'Cộng từ 3 thẻ', '<img class="av" src="https://i.pravatar.cc/150?img=47" alt="" />'],
+    };
+    const CARDS = [
+      { n: 'Thẻ InApps Technology', s: 'InApps', sw: 'graphite', role: 'Giám đốc kinh doanh', co: 'InApps Technology' },
+      { n: 'Thẻ CLB Doanh nhân trẻ', s: 'CLB DNT', sw: 'pearl', role: 'Phó Chủ tịch', co: 'CLB Doanh nhân trẻ Sài Gòn' },
+      { n: 'Thẻ Mentor khởi nghiệp', s: 'Mentor', sw: 'stone', role: 'Diễn giả', co: 'Mentor khởi nghiệp' },
+    ];
+    const ME = 'Nguyễn Minh Anh';
+    /* mặt thẻ thu nhỏ: họ tên, chức danh, công ty */
+    const faceTx = C => `<b>${ME}</b><small>${C.role}</small><small class="co">${C.co}</small>`;
+    /* số lượt theo thẻ cho từng kỳ; ref = giới thiệu (tính cho tài khoản) */
+    const MINE = {
+      w: { cards: [{ view: 5, scan: 2, conn: 1, meet: 1 }, { view: 2, scan: 1, conn: 0, meet: 0 }, { view: 1, scan: 0, conn: 0, meet: 0 }], ref: 1 },
+      m: { cards: [{ view: 20, scan: 8, conn: 3, meet: 2 }, { view: 7, scan: 3, conn: 0, meet: 0 }, { view: 4, scan: 0, conn: 0, meet: 0 }], ref: 1 },
+      a: { cards: [{ view: 220, scan: 70, conn: 30, meet: 8 }, { view: 75, scan: 20, conn: 8, meet: 1 }, { view: 8, scan: 2, conn: 0, meet: 0 }], ref: 6 },
+    };
+    const BOARD = {
+      w: { when: 'Tuần 10–16/11, làm mới sau <b>3 ngày 14 giờ</b>', top: [['helen', 20.75], ['tam', 18.5], ['nam', 15.25]],
+           list: [[4, 'phuong', 14, 'up2'], [5, 'khoa', 12.75, 'dn1'], [6, 'lan', 11.5, 'eq'], [7, 'bao', 10.25, 'up4']],
+           near: [[23, 'quocanh', 8.75, 'dn2'], [24, 'me', 0, 'up3'], [25, 'an', 8.25, 'eq']], goal: ['1,5 điểm', 'để vào top 20', 85], reset: 'Làm mới sau 3 ngày', lbl: 'tuần này' },
+      m: { when: 'Tháng 11/2026, làm mới sau <b>18 ngày</b>', top: [['tam', 64.25], ['helen', 61], ['phuong', 48.5]],
+           list: [[4, 'nam', 45.75, 'dn1'], [5, 'bao', 40, 'up3'], [6, 'khoa', 37.25, 'eq'], [7, 'lan', 33.5, 'dn2']],
+           near: [[17, 'quocanh', 22, 'eq'], [18, 'me', 0, 'up5'], [19, 'an', 20.5, 'dn1']], goal: ['3,75 điểm', 'để vào top 15', 72], reset: 'Làm mới sau 18 ngày', lbl: 'tháng này' },
+      a: { when: 'Tổng từ khi bảng xếp hạng ra mắt (06/2026)', top: [['helen', 812.5], ['tam', 776], ['nam', 540.25]],
+           list: [[4, 'khoa', 498, 'eq'], [5, 'phuong', 455.75, 'up1'], [6, 'lan', 402, 'dn1'], [7, 'bao', 377.5, 'eq']],
+           near: [[40, 'quocanh', 190.25, 'eq'], [41, 'me', 0, 'up2'], [42, 'an', 181, 'dn2']], goal: ['3,5 điểm', 'để vượt hạng 40', 60], reset: 'So với tuần trước', lbl: 'từ trước tới nay' },
+    };
+    const HIST = [
+      ['meet', 'Hồ Văn Tâm đặt hẹn với bạn', 0, 'hôm nay 09:12', 1], ['ref', 'Phạm Thu Lan tạo tài khoản qua link mời', -1, 'hôm qua', 3],
+      ['conn', 'Kết nối với Trần Thuỷ (Helen)', 0, 'hôm qua', 1], ['scan', 'Lê Nhật Nam quét mã QR của bạn', 1, '10/11', .5],
+      ['view', 'Hồ sơ được xem 3 lần', 0, '10/11', .75], ['view', 'Hồ sơ được xem 2 lần', 1, '10/11', .5],
+      ['scan', 'Đặng Phương chạm thẻ NFC của bạn', 0, '09/11', .5], ['view', 'Hồ sơ được xem 1 lần', 2, '09/11', .25],
+    ];
+    const st = { p: 'w', c: 0 };
+    const fmt = n => n.toFixed(2).replace('.', ',');
+    const pts = c => c.view * RATE.view + c.scan * RATE.scan + c.conn * RATE.conn + c.meet * RATE.meet;
+    const total = p => MINE[p].cards.reduce((a, c) => a + pts(c), 0) + MINE[p].ref * RATE.ref;
+    const mv = k => { const t = k.slice(0, 2), n = k.slice(2); return `<span class="mv ${t}"><i data-lucide="${t === 'up' ? 'arrow-up' : t === 'dn' ? 'arrow-down' : 'minus'}"></i>${n}</span>`; };
+    const sm = h => h.replace('class="av', 'class="av sm');
+    const myRank = p => BOARD[p].near.find(r => r[1] === 'me');
+
+    function lr(r, p) {
+      const [n, id, v, k] = r, me = id === 'me', P = PP[id];
+      return `<div class="lr${me ? ' me' : ''}"><span class="n">${n}</span>${sm(P[2])}<div class="tx"><b>${P[0]}</b><span>${P[1]}</span></div><div class="r"><b>${fmt(me ? total(p) : v)}</b>${mv(k)}</div></div>`;
+    }
+    function board(root) {
+      const B = BOARD[st.p], me = myRank(st.p), ord = [1, 0, 2];
+      root.querySelectorAll('[data-r=when]').forEach(e => e.innerHTML = `<i data-lucide="timer"></i>${B.when}`);
+      root.querySelectorAll('[data-r=podium]').forEach(e => e.innerHTML = ord.map(i => { const [id, v] = B.top[i], P = PP[id];
+        return `<div class="pod p${i + 1}">${i === 0 ? '<i class="crn" data-lucide="crown"></i>' : ''}${P[2]}<b>${P[0]}</b><small>${P[1]}</small><div class="step"><span class="n">${i + 1}</span><span class="pp">${fmt(v)}</span></div></div>`; }).join(''));
+      root.querySelectorAll('[data-r=list]').forEach(e => e.innerHTML = B.list.map(r => lr(r, st.p)).join('') + '<div class="lb-gap"><span></span><span></span><span></span></div>' + B.near.map(r => lr(r, st.p)).join(''));
+      root.querySelectorAll('[data-r=mebar]').forEach(e => e.innerHTML = `<span class="rk">#${me[0]}</span><div class="tx"><div class="bar"><span style="width:${B.goal[2]}%"></span></div><span>Còn <b>${B.goal[0]}</b> ${B.goal[1]}</span></div><span class="pts">${fmt(total(st.p))}<small>điểm</small></span><i data-lucide="chevron-right"></i>`);
+    }
+    function summary(p) {
+      const B = BOARD[p], me = myRank(p);
+      return `<div class="mysum"><div class="lbx-head"><div><span class="lbl">Hạng ${B.lbl}</span><div class="rk"><small>#</small>${me[0]}${mv(me[3])}</div></div><div class="lbx-pt"><b>${fmt(total(p))}</b><span>điểm, cộng từ 3 thẻ</span></div></div>
+        <div class="lbx-goal"><div class="bar"><span style="width:${B.goal[2]}%"></span></div><div class="gl"><span>Còn <b>${B.goal[0]}</b> ${B.goal[1]}</span><span>${B.reset}</span></div></div></div>`;
+    }
+    const prow = (ai, t, sub, v, extra = '', attrs = '', chev = false) => `<div class="pr${attrs ? ' tap' : ''}"${attrs}>${ai}<div class="tx"><b>${t}</b><span>${sub}</span>${extra}</div><span class="v${v === 0 ? ' z' : ''}">${v === 0 ? '0' : '+' + fmt(v)}</span>${chev ? '<i class="chev" data-lucide="chevron-right"></i>' : ''}</div>`;
+    const aicon = k => `<span class="ai bg-${k}"><i data-lucide="${ACT[k][0]}"></i></span>`;
+    const hrow = h => prow(aicon(h[0]), h[1], (h[2] < 0 ? 'Giới thiệu' : CARDS[h[2]].n) + ', ' + h[3], h[4]);
+    function mine(root) {
+      const M = MINE[st.p], T = total(st.p), sum = { view: 0, scan: 0, conn: 0, meet: 0 };
+      M.cards.forEach(c => Object.keys(sum).forEach(k => sum[k] += c[k]));
+      const cnt = Object.assign({}, sum, { ref: M.ref });
+      const stack = Object.keys(ACT).map(k => `<span style="flex:${cnt[k] * RATE[k]};background:var(--act-${k})"></span>`).join('');
+      const acts = Object.keys(ACT).map(k => prow(aicon(k), ACT[k][1], `${cnt[k]} ${ACT[k][2]} × ${String(RATE[k]).replace('.', ',')}`, cnt[k] * RATE[k])).join('');
+      const cards = M.cards.map((c, i) => { const v = pts(c), C = CARDS[i];
+        return `<div class="wcard ${C.sw}" data-js data-card="${i}" data-go="02-E5"><img src="assets/logo-mark.png" alt="" onerror="this.remove()" /><div class="tx"><b>${C.n}</b><span>${C.role}</span></div><div class="pt"><b>${v === 0 ? '0' : '+' + fmt(v)}</b><small>điểm</small></div><i data-lucide="chevron-right"></i></div>`; }).join('')
+        + `<div class="wref"><i data-lucide="gift"></i><div class="tx"><b>Giới thiệu bạn bè</b>Tính cho tài khoản, không thuộc thẻ nào</div><span class="pt">+${fmt(M.ref * RATE.ref)}</span></div>`;
+      root.querySelectorAll('[data-r=mine]').forEach(e => e.innerHTML = summary(st.p)
+        + `<div class="sec-title"><h3>Theo hoạt động</h3></div><div class="stack">${stack}</div><div class="group">${acts}</div>`
+        + `<div class="sec-title"><h3>Điểm gần đây</h3></div><div class="group">${HIST.slice(0, 5).map(hrow).join('')}</div>`
+        + `<div class="sec-title"><h3>Theo thẻ</h3></div><div class="wallet">${cards}</div>`
+        + `<div class="lb-rule"><i data-lucide="info"></i><span>Điểm được ghi cho thẻ mà người kia đã dùng để xem, quét, kết nối hoặc hẹn gặp bạn.</span></div>`);
+    }
+    function card(root) {
+      const c = MINE[st.p].cards[st.c], C = CARDS[st.c], v = pts(c), T = total(st.p), pct = Math.round(v / T * 100);
+      root.querySelectorAll('[data-r=cchips]').forEach(e => { e.className = 'cpicker'; e.innerHTML = CARDS.map((k, i) => { const cv = pts(MINE[st.p].cards[i]);
+        return `<div class="cpk${i === st.c ? ' on' : ''}" data-js data-card="${i}"><div class="face ${k.sw}"><img src="assets/logo-mark.png" alt="" onerror="this.remove()" /><span class="ck"><i data-lucide="check"></i></span>${faceTx(k)}</div><div class="meta"><b>${cv === 0 ? '0' : '+' + fmt(cv)}</b><span>${Math.round(cv / T * 100)}%</span></div></div>`; }).join('')
+        + `<div class="cpk add" data-go="03-E3"><div class="face"><i data-lucide="plus"></i>Tạo thẻ mới</div></div>`; });
+      const acts = Object.keys(SHORT).map(k => prow(aicon(k), ACT[k][1], `${c[k]} ${ACT[k][2]} × ${String(RATE[k]).replace('.', ',')}`, c[k] * RATE[k])).join('');
+      const hs = HIST.filter(h => h[2] === st.c);
+      root.querySelectorAll('[data-r=card]').forEach(e => e.innerHTML =
+        `<div class="cviz nf"><div class="hd"><span>${C.n}</span><span class="pill">${pct}% điểm của bạn</span></div><div class="tx"><span class="big">${fmt(v)}<small>điểm ${BOARD[st.p].lbl}</small></span><div class="share"><span style="width:${pct}%"></span></div></div></div>`
+        + `<div class="sec-title"><h3>Theo hoạt động</h3></div><div class="group">${acts}</div>`
+        + `<div class="lb-rule"><i data-lucide="gift"></i><span>Lượt giới thiệu tính cho tài khoản nên không nằm trong điểm của thẻ.</span></div>`
+        + `<div class="sec-title"><h3>Điểm gần đây của thẻ</h3></div>`
+        + (v === 0 || !hs.length ? `<div class="lb-empty">Thẻ này chưa có điểm trong kỳ. Chia sẻ thẻ để có lượt xem đầu tiên.<button class="btn primary">Chia sẻ thẻ</button></div>` : `<div class="group">${hs.map(hrow).join('')}</div>`));
+    }
+    function render() {
+      document.querySelectorAll('[data-period]').forEach(a => a.classList.toggle('on', a.dataset.period === st.p));
+      board(document); mine(document); card(document);
+      if (window.lucide) lucide.createIcons({ attrs: { 'stroke-width': 1.75 } });
+    }
+    window.pageAct = el => {
+      if (el.dataset.js === 'inv-edit') {   // D6: đưa con trỏ vào cuối lời nhắn để sửa
+        const box = el.closest('.inv-msg').querySelector('.inv-txt'); box.focus();
+        const r = document.createRange(); r.selectNodeContents(box); r.collapse(false);
+        const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); return true;
+      }
+      if (el.dataset.period) st.p = el.dataset.period;
+      if (el.dataset.card) st.c = +el.dataset.card;
+      render();
+    };
+    document.addEventListener('click', e => { const j = e.target.closest && e.target.closest('[data-js]'); if (j) window.pageAct(j); });
+    render();
+  })();
+  </script>
+</body>
+</html>

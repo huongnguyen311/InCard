@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard Redesign — 04 Danh bạ (CRM)</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../button-system.css" />
+  <link rel="stylesheet" href="../design-system.css" />
+  <link rel="stylesheet" href="rd.css" />
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <style>
+    /* lucide swaps <i> for <svg>: mirror rd.css icon sizing onto svg */
+    .statusbar .sb-icons svg { width: 16px; height: 16px; }
+    .bnav a svg { width: 24px; height: 24px; }
+    .bnav a.fab span.c svg { width: 26px; height: 26px; }
+    .sec-title a svg { width: 16px; height: 16px; }
+    .row .ic svg { width: 19px; height: 19px; }
+    .av-edit svg { width: 15px; height: 15px; }
+    .input svg { width: 20px; height: 20px; color: var(--slate-400); flex-shrink: 0; }
+    .hint svg { width: 14px; height: 14px; }
+    .check .box svg { width: 15px; height: 15px; }
+    .btn svg { width: 20px; height: 20px; }
+    .chip svg { width: 16px; height: 16px; }
+    .seg a svg { width: 16px; height: 16px; }
+    .badge svg { width: 12px; height: 12px; }
+    .search svg { width: 20px; height: 20px; }
+    .search .ai svg { width: 15px; height: 15px; }
+    .empty .ill svg { width: 44px; height: 44px; }
+    .dialog .d-ic svg { width: 30px; height: 30px; }
+    .toast svg { width: 20px; height: 20px; color: #4ade80; flex-shrink: 0; }
+
+    /* header */
+    .hdr { padding: 0 20px 10px; }
+    .sync { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px 0 8px; border-radius: var(--r-pill); background: var(--white); border: 1px solid var(--slate-200); font-size: 12.5px; font-weight: 600; color: var(--slate-600); }
+    .sync .g-logo { width: 14px; height: 14px; }
+    .sync .ok { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+    .sync.off .ok { background: var(--slate-300); }
+    .sync b { color: var(--green); font-weight: 700; }
+    .g-btn .g-logo { width: 20px; height: 20px; }
+    .g-btn .gb { position: absolute; right: 5px; bottom: 5px; width: 15px; height: 15px; border-radius: 50%; background: var(--green); color: var(--white); border: 2px solid var(--white); display: flex; align-items: center; justify-content: center; }
+    .g-btn .gb i, .g-btn .gb svg { width: 9px; height: 9px; stroke-width: 3; }
+
+    /* tabs with count, all labels visible */
+    .ctabs { display: flex; border-bottom: 1px solid var(--slate-200); padding: 0 12px; }
+    .ctabs a { flex: 1; text-align: center; padding: 8px 0 9px; font-size: 14px; font-weight: 600; color: var(--slate-500); text-decoration: none; position: relative; line-height: 1.2; }
+    .ctabs a small { display: block; font-size: 11px; font-weight: 600; color: var(--slate-400); margin-top: 2px; }
+    .ctabs a.on { color: var(--green); font-weight: 700; }
+    .ctabs a.on small { color: var(--green); }
+    .ctabs a.on::after { content: ""; position: absolute; left: 16%; right: 16%; bottom: -1px; height: 3px; border-radius: 3px 3px 0 0; background: var(--green); }
+
+    .tools { display: flex; gap: 8px; padding: 12px 20px 0; }
+    .tools .search { flex: 1; }
+    .sq-btn { width: 46px; height: 46px; border-radius: 12px; background: var(--white); border: 1px solid var(--slate-200); display: flex; align-items: center; justify-content: center; color: var(--slate-600); position: relative; flex-shrink: 0; }
+    .sq-btn i, .sq-btn svg { width: 20px; height: 20px; }
+    .sq-btn .n { position: absolute; top: -5px; right: -5px; min-width: 18px; height: 18px; border-radius: 9px; background: var(--green); color: var(--white); font-size: 10.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 4px; border: 2px solid var(--app-bg); }
+    .fchips { padding: 10px 20px 0; }
+    .fchips .chip { height: 32px; font-size: 13px; padding: 0 12px; }
+
+    /* contact list */
+    .list { flex: 1; overflow: hidden; padding: 4px 20px 16px; position: relative; }
+    .list.idx { padding-right: 30px; }
+    .letter { font-size: 12px; font-weight: 700; color: var(--slate-400); letter-spacing: .6px; margin: 12px 4px 6px; }
+    .lgroup { background: var(--white); border: 1px solid var(--slate-200); border-radius: var(--r-md); padding: 0 12px; }
+    .crow { display: flex; align-items: center; gap: 12px; padding: 10px 0; min-height: 64px; }
+    .crow + .crow { border-top: 1px solid var(--slate-100); }
+    .crow .tx { flex: 1; min-width: 0; }
+    .crow .tx .nm { display: flex; align-items: center; gap: 6px; }
+    .crow .tx b { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .crow .tx span.sub { display: block; font-size: 12.5px; color: var(--slate-500); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .crow .tx span.why { display: flex; align-items: center; gap: 4px; font-size: 11.5px; color: var(--green-dark); margin-top: 3px; }
+    .crow .tx span.why i, .crow .tx span.why svg { width: 12px; height: 12px; }
+    .crow .badge { height: 20px; font-size: 10.5px; padding: 0 7px; flex-shrink: 0; }
+    .qa { width: 36px; height: 36px; border-radius: 50%; background: var(--green-50); color: var(--green); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .qa i, .qa svg { width: 17px; height: 17px; }
+    .qa.gray { background: var(--slate-100); color: var(--slate-600); }
+    .src { width: 18px; height: 18px; color: var(--slate-400); flex-shrink: 0; }
+    .az { position: absolute; right: 8px; top: 18px; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 9.5px; font-weight: 700; color: var(--green); }
+    .az span.dim { color: var(--slate-300); }
+
+    /* avatar tints */
+    .av.t1 { background: var(--green-100); color: var(--green-dark); }
+    .av.t2 { background: var(--slate-100); color: var(--slate-600); }
+    .av.t3 { background: var(--gold-bg); color: var(--gold); }
+    .av.t4 { background: var(--green-50); color: var(--green); box-shadow: inset 0 0 0 1px var(--green-200); }
+    .av.t5 { background: var(--slate-200); color: var(--slate-700); }
+
+    /* scanned card thumbnail */
+    .thumb { width: 58px; height: 38px; border-radius: 6px; background: var(--white); border: 1px solid var(--slate-200); box-shadow: var(--shadow-sm); position: relative; overflow: hidden; flex-shrink: 0; padding: 5px 6px; }
+    .thumb::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--tc, var(--green)); }
+    .thumb i, .thumb svg { display: block; height: 3px; border-radius: 2px; background: var(--slate-300); margin: 0 0 3px 4px; }
+    .thumb i:nth-child(1) { width: 26px; background: var(--slate-600); height: 4px; }
+    .thumb i:nth-child(2) { width: 18px; }
+    .thumb i:nth-child(3) { width: 32px; }
+    .scan-cta { display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: var(--r-lg); background: linear-gradient(135deg, var(--green-50), var(--green-100)); border: 1px solid var(--green-200); margin: 12px 20px 0; }
+    .scan-cta .ic { width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, var(--green-light), var(--green)); color: var(--white); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-green); flex-shrink: 0; }
+    .scan-cta .ic i, .scan-cta .ic svg { width: 22px; height: 22px; }
+    .scan-cta b { display: block; font-size: 15px; }
+    .scan-cta span { font-size: 12.5px; color: var(--slate-600); }
+    .scan-cta .chev { width: 20px; height: 20px; color: var(--green); margin-left: auto; flex-shrink: 0; }
+    .unsaved { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--slate-600); margin: 12px 4px 0; }
+    .unsaved .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--amber-500); }
+    .unsaved a { margin-left: auto; }
+    .badge.pending { background: var(--white); color: var(--slate-600); border: 1px solid var(--slate-200); }
+    .badge.pending::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--amber-500); }
+
+    /* label colour dots */
+    .ld { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .ld.c1 { background: var(--green); } .ld.c2 { background: var(--blue-500); } .ld.c3 { background: var(--amber-500); } .ld.c4 { background: var(--slate-500); } .ld.c5 { background: var(--brand); }
+
+    /* sheet sections */
+    .sh-sec { font-size: 13px; font-weight: 700; color: var(--slate-700); margin: 16px 0 10px; }
+    .sh-sec:first-of-type { margin-top: 4px; }
+    .wrap { flex-wrap: wrap; }
+    .chip.sel { background: var(--green-50); border-color: var(--green); color: var(--green-dark); }
+
+    /* AI search */
+    .search.ai-on { border: 1.5px solid var(--green); box-shadow: 0 0 0 4px var(--green-bg); color: var(--ink); }
+    .search.ai-on .q { flex: 1; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ai-note { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: var(--r-md); background: var(--green-50); border: 1px solid var(--green-100); margin: 12px 20px 0; }
+    .ai-note img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; object-position: top; background: var(--white); flex-shrink: 0; }
+    .ai-note b { font-size: 14px; display: block; }
+    .ai-note span { font-size: 12.5px; color: var(--slate-600); line-height: 1.45; }
+    .chip.x { height: 30px; font-size: 12.5px; padding: 0 8px 0 12px; background: var(--white); border-color: var(--green-200); color: var(--green-dark); }
+    .chip.x i, .chip.x svg { width: 14px; height: 14px; color: var(--slate-400); }
+
+    /* contact detail */
+    .d-head { text-align: center; padding: 6px 20px 0; }
+    .d-head .av.xl { margin: 0 auto 12px; display: flex; }
+    .d-head .nm { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+    .d-head .ti { font-size: 14px; color: var(--slate-600); margin-top: 2px; }
+    .d-head .co { font-size: 14px; color: var(--slate-500); display: inline-flex; align-items: center; gap: 4px; margin-top: 2px; }
+    .d-head .co i, .d-head .co svg { width: 14px; height: 14px; }
+    .acts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 18px 20px 4px; }
+    .acts a { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: var(--slate-700); text-decoration: none; }
+    .acts a span { width: 52px; height: 52px; border-radius: 50%; background: var(--green-50); color: var(--green); border: 1px solid var(--green-100); display: flex; align-items: center; justify-content: center; }
+    .acts a span i, .acts a span svg { width: 22px; height: 22px; }
+    .acts a.pri span { background: linear-gradient(135deg, var(--green-light), var(--green)); color: var(--white); border: 0; box-shadow: var(--shadow-green); }
+    .tl { position: relative; padding-left: 18px; }
+    .tl::before { content: ""; position: absolute; left: 4px; top: 6px; bottom: 6px; width: 2px; background: var(--slate-200); border-radius: 1px; }
+    .tl .it { position: relative; padding-bottom: 14px; }
+    .tl .it::before { content: ""; position: absolute; left: -18px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: var(--white); border: 2px solid var(--green); }
+    .tl .it.sys::before { border-color: var(--slate-300); }
+    .tl .it b { font-size: 13.5px; font-weight: 600; display: block; line-height: 1.45; }
+    .tl .it span { font-size: 12px; color: var(--slate-400); }
+    .add-line { display: flex; align-items: center; gap: 8px; height: 44px; border-radius: 12px; border: 1.5px dashed var(--green-200); color: var(--green); font-size: 14px; font-weight: 700; justify-content: center; margin-top: 4px; }
+    .add-line i, .add-line svg { width: 18px; height: 18px; }
+    .appt { display: flex; gap: 12px; align-items: center; }
+    .appt .dt { width: 46px; height: 50px; border-radius: 12px; background: var(--green-50); color: var(--green-dark); display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; line-height: 1.1; }
+    .appt .dt small { font-size: 10.5px; font-weight: 700; text-transform: uppercase; }
+    .appt .dt b { font-size: 18px; font-weight: 800; }
+    .appt.task .dt { background: var(--slate-100); color: var(--slate-600); }
+    .menu-row { display: flex; align-items: center; gap: 14px; height: 54px; font-size: 15.5px; font-weight: 600; color: var(--ink); }
+    .menu-row + .menu-row { border-top: 1px solid var(--slate-100); }
+    .menu-row i, .menu-row svg { width: 21px; height: 21px; color: var(--slate-600); }
+    .menu-row.red, .menu-row.red i, .menu-row.red svg { color: var(--red-600); }
+
+    /* label sheet */
+    .lrow { display: flex; align-items: center; gap: 12px; height: 52px; }
+    .lrow + .lrow { border-top: 1px solid var(--slate-100); }
+    .lrow .nm { flex: 1; font-size: 15px; font-weight: 600; }
+    .lrow .ct { font-size: 12.5px; color: var(--slate-400); }
+    .nl-colors { display: flex; gap: 14px; padding: 4px 0; }
+    .nl-dot { width: 34px; height: 34px; border-radius: 50%; background: var(--nc); display: flex; align-items: center; justify-content: center; color: var(--white); box-shadow: 0 0 0 2px var(--white), 0 0 0 2px transparent; }
+    .nl-dot.on { box-shadow: 0 0 0 3px var(--white), 0 0 0 5px var(--nc); }
+    .nl-dot i, .nl-dot svg { width: 17px; height: 17px; }
+    .create { display: flex; align-items: center; gap: 12px; height: 52px; color: var(--green); font-weight: 700; font-size: 14.5px; border-top: 1px solid var(--slate-100); }
+    .create .pl { width: 22px; height: 22px; border-radius: 6px; background: var(--green-50); display: flex; align-items: center; justify-content: center; }
+    .create .pl i, .create .pl svg { width: 15px; height: 15px; }
+
+    .dim { opacity: .4; pointer-events: none; }
+
+    /* ---- Danh bạ v2: gọn hơn ---- */
+    .ct-head { height: auto; padding: 6px 12px 6px 20px; align-items: center; }
+    .ct-title { font-size: 26px; font-weight: 800; letter-spacing: -0.4px; }
+    .ct-meta { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--slate-500); margin-top: 2px; }
+    .ct-meta .d { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+    .ct-meta.off .d { background: var(--slate-300); }
+    .ctabs { margin: 8px 20px 0; padding: 4px; gap: 4px; border: 0; background: var(--slate-100); border-radius: 12px; }
+    .ctabs a { padding: 8px 0; border-radius: 9px; font-size: 13.5px; color: var(--slate-500); }
+    .ctabs a small { display: none; }
+    .ctabs a.on { background: var(--white); color: var(--ink); box-shadow: var(--shadow-sm); }
+    .ctabs a.on::after { display: none; }
+    .tools { padding: 12px 20px 2px; }
+    .search .ai.icon { width: 30px; padding: 0; justify-content: center; }
+    .letter { font-size: 11.5px; margin: 14px 4px 6px; }
+    .lgroup { border: 0; box-shadow: var(--shadow-sm); }
+    .crow { min-height: 60px; padding: 9px 0; }
+    .crow .av { width: 40px; height: 40px; font-size: 14px; }
+    .crow .lbl { font-size: 11px; font-weight: 600; color: var(--slate-500); background: var(--slate-100); border-radius: 6px; padding: 1px 6px; flex-shrink: 0; }
+    .az { color: var(--slate-400); }
+    /* multi-card: which of my cards a connection came through */
+    .crow .via { display: inline-flex; align-items: center; gap: 4px; margin-top: 3px; height: 20px; padding: 0 7px; border-radius: 6px; background: var(--green-50); color: var(--slate-600); font-size: 11px; font-weight: 600; }
+    .crow .via svg { width: 12px; height: 12px; color: var(--green); }
+    /* card picker sheet (same pattern as 03-A4) */
+    .pick { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1.5px solid var(--slate-200); border-radius: 14px; margin-bottom: 10px; }
+    .pick .sw { width: 52px; height: 34px; border-radius: 7px; background: var(--card-graphite); flex-shrink: 0; }
+    .pick .sw.dk { background: var(--card-pearl); border: 1px solid var(--slate-200); }
+    .pick .sw.lt { background: var(--card-stone); border: 1px solid var(--slate-200); }
+    .pick b { display: block; font-size: 14.5px; margin-bottom: 2px; }
+    .pick .f1 { min-width: 0; }
+    .pick .f1 span { display: block; font-size: 12.5px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pick .f1 span.ln { color: var(--green); font-weight: 600; }
+    .pick > svg { width: 18px; height: 18px; color: var(--slate-400); flex-shrink: 0; }
+    .pick-note { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 6px; font-size: 12px; color: var(--slate-500); }
+    .pick-note svg { width: 14px; height: 14px; }
+    .menu-row .mr-sub { margin-left: auto; font-size: 12px; font-weight: 500; color: var(--slate-400); }
+    /* sheet "Gửi thẻ nào?" bản gọn: danh sách chữ, không hình thẻ */
+    .sh-sub { font-size: 13px; color: var(--slate-500); margin: -6px 0 12px; }
+    .sh-sub b { color: var(--slate-800); font-weight: 600; }
+    .cpick { border: 1px solid var(--slate-200); border-radius: 14px; overflow: hidden; margin-bottom: 10px; }
+    .cpick .ci { display: flex; align-items: center; gap: 10px; padding: 11px 14px; }
+    .cpick .ci + .ci { border-top: 1px solid var(--slate-100); }
+    .cpick .ci b { display: block; font-size: 14.5px; }
+    .cpick .ci span { display: block; font-size: 12.5px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cpick .ci > i, .cpick .ci > svg { width: 18px; height: 18px; color: var(--slate-400); flex-shrink: 0; }
+  </style>
+</head>
+<body class="rd-canvas">
+  <div class="rd-head">
+    <a class="back" href="index.html">← Tất cả flow</a>
+    <h1>04 · Danh bạ (CRM)</h1>
+    <p>Tab "Network" được đổi tên thành <b>Danh bạ</b>. Bốn nguồn liên hệ gói gọn trong 4 tab hiện đủ chữ: Kết nối · Danh thiếp · Đã lưu · Điện thoại. Tìm kiếm thường và hỏi AI chung một ô. Mỗi danh sách đều có trạng thái trống với lối đi tiếp. Trang chi tiết liên hệ thành một CRM mini: gọi, nhắn, đặt lịch, gắn nhãn, ghi chú.</p>
+  </div>
+
+  <!-- ===================== A. Main tabs ===================== -->
+  <section class="rd-section">
+    <h2>A · Màn hình Danh bạ và 4 nguồn liên hệ</h2>
+    <div class="rd-row">
+
+      <!-- A1 Kết nối -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ct-head"><div class="f1"><div class="ct-title">Danh bạ</div><a class="ct-meta "><span class="d"></span>312 liên hệ · Đã đồng bộ Google · 2 phút trước</a></div><button class="icon-btn soft"><i data-lucide="user-plus"></i></button></div>
+          <div class="ctabs">
+            <a class="on">Kết nối<small>128</small></a><a>Danh thiếp<small>24</small></a><a>Đã lưu<small>312</small></a><a>Điện thoại<small>Chưa nhập</small></a>
+          </div>
+          <div class="tools">
+            <div class="search"><i data-lucide="search"></i><span class="ph">Tìm tên, công ty, SĐT…</span><span class="ai icon" title="Hỏi AI"><i data-lucide="sparkles"></i><span class="sr-only">Hỏi AI</span></span></div>
+            <span class="sq-btn"><i data-lucide="sliders-horizontal"></i></span>
+          </div>
+          <div class="list idx">
+            <div class="letter">A</div>
+            <div class="lgroup">
+              <div class="crow"><span class="av t3">HA</span><div class="tx"><div class="nm"><b>Trần Thị Hoài An</b></div><span class="sub">Trưởng phòng Marketing – Vinamilk</span><span class="via"><i data-lucide="id-card"></i>qua Thẻ CLB DNT</span></div></div>
+              <div class="crow"><img class="av" src="https://i.pravatar.cc/150?img=12" alt="" /><div class="tx"><div class="nm"><b>Lê Quốc Anh</b><span class="lbl">Đối tác</span></div><span class="sub">CTO – FPT Software</span><span class="via"><i data-lucide="id-card"></i>qua Thẻ InApps</span></div></div>
+            </div>
+            <div class="letter">B</div>
+            <div class="lgroup">
+              <div class="crow"><span class="av t2">GB</span><div class="tx"><div class="nm"><b>Nguyễn Gia Bảo</b></div><span class="sub">Trưởng nhóm kinh doanh – Tiki</span><span class="via"><i data-lucide="id-card"></i>qua Thẻ Mentor</span></div></div>
+            </div>
+            <div class="letter">T</div>
+            <div class="lgroup">
+              <div class="crow"><img class="av" src="https://i.pravatar.cc/150?img=68" alt="" /><div class="tx"><div class="nm"><b>Hồ Văn Tâm</b><span class="lbl">Khách hàng</span></div><span class="sub">Founder, CEO – InApps Technology</span><span class="via"><i data-lucide="id-card"></i>qua Thẻ InApps</span></div></div>
+              <div class="crow"><img class="av" src="https://i.pravatar.cc/150?img=32" alt="" /><div class="tx"><div class="nm"><b>Trần Thuỷ (Helen)</b><span class="lbl">Đối tác</span></div><span class="sub">CRO – InCard Technology</span><span class="via"><i data-lucide="id-card"></i>qua Thẻ InApps</span></div></div>
+            </div>
+            <div class="az"><span>A</span><span>B</span><span class="dim">C</span><span class="dim">D</span><span>H</span><span class="dim">K</span><span>L</span><span>M</span><span>N</span><span class="dim">P</span><span>T</span><span class="dim">V</span><span class="dim">#</span></div>
+          </div>
+          <a class="inka-fab"><img src="assets/inka.png" alt="" /><span class="sr-only">Hỏi Inka</span><span class="spark"><i data-lucide="sparkles"></i></span></a>
+          <nav class="bnav">
+            <a><i data-lucide="house"></i>Trang chủ</a>
+            <a class="on"><i data-lucide="contact-round"></i>Danh bạ</a>
+            <a class="fab"><span class="c"><i data-lucide="scan-line"></i></span>Quét</a>
+            <a><i data-lucide="compass"></i>Khám phá</a>
+            <a><i data-lucide="circle-user-round"></i>Tài khoản</a>
+          </nav>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">A1 · Danh bạ – tab Kết nối<small>Tiêu đề tiếng Việt "Danh bạ" thay cho "Network". Thanh đồng bộ to được thu thành một chip trạng thái; nút G mở cài đặt đồng bộ. 4 tab hiện đủ chữ kèm số lượng (bản cũ bị cắt chữ). Ô tìm kiếm có sẵn "Hỏi AI" thay cho icon lấp lánh khó hiểu. Danh sách nhóm theo chữ cái của <b>tên</b> (không theo họ, vì rất nhiều người họ Nguyễn), có nút gọi / nhắn ngay trên dòng và nhãn màu. Chip nhỏ dưới tên cho biết người này kết nối <b>qua thẻ nào của tôi</b> (InApps / CLB DNT / Mentor) vì một người dùng có nhiều thẻ.</small></div>
+      </div>
+
+      <!-- A2 Danh thiếp -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ct-head"><div class="f1"><div class="ct-title">Danh bạ</div><a class="ct-meta "><span class="d"></span>312 liên hệ · Đã đồng bộ Google · 2 phút trước</a></div><button class="icon-btn soft"><i data-lucide="user-plus"></i></button></div>
+          <div class="ctabs">
+            <a>Kết nối<small>128</small></a><a class="on">Danh thiếp<small>24</small></a><a>Đã lưu<small>312</small></a><a>Điện thoại<small>Chưa nhập</small></a>
+          </div>
+          <div class="scan-cta"><span class="ic"><i data-lucide="scan-line"></i></span><div><b>Quét danh thiếp giấy</b><span>Tự điền tên, SĐT, email trong 3 giây</span></div><i class="chev" data-lucide="chevron-right"></i></div>
+          <div class="tools">
+            <div class="search"><i data-lucide="search"></i><span class="ph">Tìm trong danh thiếp…</span><span class="ai icon" title="Hỏi AI"><i data-lucide="sparkles"></i><span class="sr-only">Hỏi AI</span></span></div>
+            <span class="sq-btn"><i data-lucide="sliders-horizontal"></i></span>
+          </div>
+          <div class="list" style="padding-top:0">
+            <div class="unsaved"><span class="dot"></span>2 danh thiếp chưa lưu vào danh bạ<a class="link" style="font-size:13px">Lưu tất cả</a></div>
+            <div class="letter">TUẦN NÀY</div>
+            <div class="lgroup">
+              <div class="crow"><span class="thumb" style="--tc:var(--blue-500)"><i></i><i></i><i></i></span><div class="tx"><div class="nm"><b>Phạm Minh Thư</b></div><span class="sub">Masan Group · Quét 11/11</span></div><span class="badge pending">Chưa lưu</span></div>
+              <div class="crow"><span class="thumb" style="--tc:var(--amber-500)"><i></i><i></i><i></i></span><div class="tx"><div class="nm"><b>Đỗ Thanh Hải</b></div><span class="sub">Công ty CP Đầu tư Nam Long · Quét 10/11</span></div><span class="badge pending">Chưa lưu</span></div>
+              <div class="crow"><span class="thumb"><i></i><i></i><i></i></span><div class="tx"><div class="nm"><b>Helen Thuỷ Trần</b></div><span class="sub">Công ty CP Công nghệ InCard · Quét 09/11</span></div><i class="src" data-lucide="circle-check" style="color:var(--green)"></i></div>
+            </div>
+            <div class="letter">THÁNG 10</div>
+            <div class="lgroup">
+              <div class="crow"><span class="thumb"><i></i><i></i><i></i></span><div class="tx"><div class="nm"><b>Hồ Văn Tâm</b></div><span class="sub">Công ty CP Công nghệ InApps · Quét 28/10</span></div><i class="src" data-lucide="circle-check" style="color:var(--green)"></i></div>
+            </div>
+          </div>
+          <a class="inka-fab"><img src="assets/inka.png" alt="" /><span class="sr-only">Hỏi Inka</span><span class="spark"><i data-lucide="sparkles"></i></span></a>
+          <nav class="bnav">
+            <a><i data-lucide="house"></i>Trang chủ</a>
+            <a class="on"><i data-lucide="contact-round"></i>Danh bạ</a>
+            <a class="fab"><span class="c"><i data-lucide="scan-line"></i></span>Quét</a>
+            <a><i data-lucide="compass"></i>Khám phá</a>
+            <a><i data-lucide="circle-user-round"></i>Tài khoản</a>
+          </nav>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">A2 · Tab Danh thiếp<small>Nút "+" màu cam được thay bằng thẻ CTA xanh, nói rõ lợi ích. Mỗi dòng có ảnh thu nhỏ của danh thiếp thật (không dùng logo InCard làm avatar như bản cũ), ngày quét, và nhãn "Chưa lưu" để biết thẻ nào chưa vào danh bạ. Có lối tắt "Lưu tất cả". Nhóm theo thời gian quét vì người dùng thường nhớ "quét hôm sự kiện".</small></div>
+      </div>
+
+      <!-- A3 Danh bạ -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ct-head"><div class="f1"><div class="ct-title">Danh bạ</div><a class="ct-meta "><span class="d"></span>312 liên hệ · Đã đồng bộ Google · 2 phút trước</a></div><button class="icon-btn soft"><i data-lucide="user-plus"></i></button></div>
+          <div class="ctabs">
+            <a>Kết nối<small>128</small></a><a>Danh thiếp<small>24</small></a><a class="on">Đã lưu<small>312</small></a><a>Điện thoại<small>Chưa nhập</small></a>
+          </div>
+          <div class="tools">
+            <div class="search"><i data-lucide="search"></i><span class="ph">Tìm tên, số điện thoại…</span><span class="ai icon" title="Hỏi AI"><i data-lucide="sparkles"></i><span class="sr-only">Hỏi AI</span></span></div>
+            <span class="sq-btn"><i data-lucide="sliders-horizontal"></i></span>
+          </div>
+          <div class="list">
+            <div class="letter">A</div>
+            <div class="lgroup">
+              <div class="crow" data-no-person data-go="04-C1@an"><span class="av t1">HA</span><div class="tx"><b>Trần Thị Hoài An</b><span class="sub">0903 482 117</span></div><i class="src" data-lucide="nfc"></i></div>
+              <div class="crow" data-no-person data-go="04-E1@tuananh"><span class="av t5">TA</span><div class="tx"><b>Vũ Tuấn Anh</b><span class="sub">0912 330 845</span></div><svg class="src" viewBox="0 0 48 48" style="opacity:.7"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg></div>
+            </div>
+            <div class="letter">H</div>
+            <div class="lgroup">
+              <div class="crow" data-no-person data-go="04-E1@hai"><span class="av t3">ĐH</span><div class="tx"><b>Đỗ Thanh Hải</b><span class="sub">0938 715 602</span></div><i class="src" data-lucide="id-card"></i></div>
+              <div class="crow" data-no-person data-go="04-E1@hang"><span class="av t4">MH</span><div class="tx"><b>Lý Minh Hằng</b><span class="sub">0987 224 590</span></div><svg class="src" viewBox="0 0 48 48" style="opacity:.7"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg></div>
+            </div>
+            <div class="letter">T</div>
+            <div class="lgroup">
+              <div class="crow" data-no-person data-go="04-C1@tam"><span class="av t2">VT</span><div class="tx"><b>Hồ Văn Tâm</b><span class="sub">0903 556 781</span></div><i class="src" data-lucide="nfc"></i></div>
+            </div>
+          </div>
+          <a class="inka-fab"><img src="assets/inka.png" alt="" /><span class="sr-only">Hỏi Inka</span><span class="spark"><i data-lucide="sparkles"></i></span></a>
+          <nav class="bnav">
+            <a><i data-lucide="house"></i>Trang chủ</a>
+            <a class="on"><i data-lucide="contact-round"></i>Danh bạ</a>
+            <a class="fab"><span class="c"><i data-lucide="scan-line"></i></span>Quét</a>
+            <a><i data-lucide="compass"></i>Khám phá</a>
+            <a><i data-lucide="circle-user-round"></i>Tài khoản</a>
+          </nav>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">A3 · Tab Đã lưu<small>Tất cả liên hệ đã lưu ở một nơi. Mỗi dòng có icon nhỏ cho biết nguồn (chạm thẻ, danh thiếp, Google) và chip lọc theo nguồn. Nút đồng bộ riêng của tab bị bỏ, vì việc đồng bộ đã gom về chip trạng thái phía trên. Chạm một dòng mở trang chi tiết liên hệ, không mở hồ sơ InCard: người dùng InCard (nguồn chạm thẻ) mở C1, liên hệ từ Google / danh thiếp mở E1.</small></div>
+      </div>
+
+      <!-- A4 Điện thoại -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ct-head"><div class="f1"><div class="ct-title">Danh bạ</div><a class="ct-meta "><span class="d"></span>312 liên hệ · Đã đồng bộ Google · 2 phút trước</a></div><button class="icon-btn soft"><i data-lucide="user-plus"></i></button></div>
+          <div class="ctabs">
+            <a>Kết nối<small>128</small></a><a>Danh thiếp<small>24</small></a><a>Đã lưu<small>312</small></a><a class="on">Điện thoại<small>Chưa nhập</small></a>
+          </div>
+          <div class="body">
+            <div class="empty" style="padding-top:44px">
+              <div class="ill"><i data-lucide="smartphone"></i></div>
+              <h3>Nhập danh bạ điện thoại</h3>
+              <p>Đưa liên hệ trong máy vào InCard để tìm kiếm, gắn nhãn và ghi chú cùng một chỗ.</p>
+              <div class="card flat" style="text-align:left;display:flex;gap:10px;align-items:flex-start;width:100%;margin-bottom:20px">
+                <i data-lucide="shield-check" style="width:20px;height:20px;color:var(--green);flex-shrink:0;margin-top:1px"></i>
+                <div class="t-sm">Danh bạ chỉ lưu trong tài khoản của bạn. InCard <b style="color:var(--ink)">không</b> nhắn tin hay gửi lời mời cho ai trong danh bạ. Có thể xoá bất cứ lúc nào.</div>
+              </div>
+              <button class="btn primary"><i data-lucide="contact-round"></i>Cho phép truy cập danh bạ</button>
+              <button class="btn ghost mt8">Để sau</button>
+            </div>
+          </div>
+          <a class="inka-fab"><img src="assets/inka.png" alt="" /><span class="sr-only">Hỏi Inka</span><span class="spark"><i data-lucide="sparkles"></i></span></a>
+          <nav class="bnav">
+            <a><i data-lucide="house"></i>Trang chủ</a>
+            <a class="on"><i data-lucide="contact-round"></i>Danh bạ</a>
+            <a class="fab"><span class="c"><i data-lucide="scan-line"></i></span>Quét</a>
+            <a><i data-lucide="compass"></i>Khám phá</a>
+            <a><i data-lucide="circle-user-round"></i>Tài khoản</a>
+          </nav>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">A4 · Tab Điện thoại (chưa cấp quyền)<small>Tên tab rút gọn từ "Danh bạ thiết bị" (bị cắt chữ) thành "Điện thoại". Trước khi hiện hộp thoại hệ thống, app giải thích lợi ích và cam kết riêng tư, nút gọi tên đúng hành động "Cho phép truy cập danh bạ" thay cho "Bắt đầu đồng bộ". Có "Để sau" để không ép người dùng.</small></div>
+      </div>
+
+      <!-- A7 Điện thoại (đã nhập) -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ct-head"><div class="f1"><div class="ct-title">Danh bạ</div><a class="ct-meta "><span class="d"></span>312 liên hệ · Đã đồng bộ Google · 2 phút trước</a></div><button class="icon-btn soft"><i data-lucide="user-plus"></i></button></div>
+          <div class="ctabs">
+            <a>Kết nối<small>128</small></a><a>Danh thiếp<small>24</small></a><a>Đã lưu<small>312</small></a><a class="on">Điện thoại<small>286</small></a>
+          </div>
+          <div class="tools">
+            <div class="search"><i data-lucide="search"></i><span class="ph">Tìm trong danh bạ máy…</span></div>
+          </div>
+          <div class="list">
+            <div class="letter">A</div>
+            <div class="lgroup">
+              <div class="crow" data-no-person data-go="04-E2@long"><span class="av t3">AL</span><div class="tx"><b>Anh Long điện lạnh</b><span class="sub">0918 442 097</span></div></div>
+            </div>
+            <div class="letter">B</div>
+            <div class="lgroup">
+              <div class="crow" data-no-person data-go="04-E2@mai"><span class="av t5">BM</span><div class="tx"><b>Bùi Thị Mai</b><span class="sub">0983 105 726</span></div></div>
+            </div>
+            <div class="letter">C</div>
+            <div class="lgroup">
+              <div class="crow" data-no-person data-go="04-E2@hanh"><span class="av t4">CH</span><div class="tx"><b>Chị Hạnh kế toán</b><span class="sub">0903 778 160</span></div></div>
+            </div>
+            <div class="letter">D</div>
+            <div class="lgroup">
+              <div class="crow" data-no-person data-go="04-E2@quocbao"><span class="av t2">QB</span><div class="tx"><b>Dương Quốc Bảo</b><span class="sub">0935 201 884</span></div></div>
+            </div>
+            <div class="letter">K</div>
+            <div class="lgroup">
+              <div class="crow" data-no-person data-go="04-E2@kimchi"><span class="av t1">KC</span><div class="tx"><b>Kim Chi</b><span class="sub">0909 668 214</span></div></div>
+            </div>
+          </div>
+          <a class="inka-fab"><img src="assets/inka.png" alt="" /><span class="sr-only">Hỏi Inka</span><span class="spark"><i data-lucide="sparkles"></i></span></a>
+          <nav class="bnav">
+            <a><i data-lucide="house"></i>Trang chủ</a>
+            <a class="on"><i data-lucide="contact-round"></i>Danh bạ</a>
+            <a class="fab"><span class="c"><i data-lucide="scan-line"></i></span>Quét</a>
+            <a><i data-lucide="compass"></i>Khám phá</a>
+            <a><i data-lucide="circle-user-round"></i>Tài khoản</a>
+          </nav>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">A7 · Tab Điện thoại (đã cho phép)<small>Danh sách lấy từ danh bạ trong máy, xếp theo chữ cái, chỉ có tên và số như app Danh bạ của điện thoại. Đây không phải người dùng InCard nên chạm một dòng mở trang liên hệ đơn giản (E2), không mở hồ sơ InCard.</small></div>
+      </div>
+
+      <!-- A5 Empty -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ct-head"><div class="f1"><div class="ct-title">Danh bạ</div><a class="ct-meta off"><span class="d"></span>0 liên hệ · Chưa kết nối Google · Kết nối</a></div><button class="icon-btn soft"><i data-lucide="user-plus"></i></button></div>
+          <div class="ctabs">
+            <a class="on">Kết nối<small>0</small></a><a>Danh thiếp<small>0</small></a><a>Đã lưu<small>0</small></a><a>Điện thoại<small>Chưa nhập</small></a>
+          </div>
+          <div class="body">
+            <div class="empty" style="padding-top:56px">
+              <div class="ill"><i data-lucide="users-round"></i></div>
+              <h3>Chưa có kết nối nào</h3>
+              <p>Khi ai đó chạm thẻ hoặc quét mã QR của bạn và đồng ý kết nối, họ sẽ xuất hiện ở đây.</p>
+              <button class="btn primary"><i data-lucide="share-2"></i>Chia sẻ thẻ của bạn</button>
+              <button class="btn secondary mt12"><i data-lucide="scan-line"></i>Quét danh thiếp</button>
+            </div>
+            <div style="margin:0 20px" class="card tint flat flex g12 ac">
+              <i data-lucide="lightbulb" style="width:20px;height:20px;color:var(--green);flex-shrink:0"></i>
+              <div class="t-sm" style="color:var(--slate-700)">Mẹo: kết nối Google để mang sẵn danh bạ cũ vào InCard.</div>
+            </div>
+          </div>
+          <a class="inka-fab"><img src="assets/inka.png" alt="" /><span class="sr-only">Hỏi Inka</span><span class="spark"><i data-lucide="sparkles"></i></span></a>
+          <nav class="bnav">
+            <a><i data-lucide="house"></i>Trang chủ</a>
+            <a class="on"><i data-lucide="contact-round"></i>Danh bạ</a>
+            <a class="fab"><span class="c"><i data-lucide="scan-line"></i></span>Quét</a>
+            <a><i data-lucide="compass"></i>Khám phá</a>
+            <a><i data-lucide="circle-user-round"></i>Tài khoản</a>
+          </nav>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">A5 · Trống (người dùng mới)<small>Không còn danh sách rỗng. Giải thích cách có kết nối và đưa 2 lối đi: chia sẻ thẻ của mình (mở sheet A6 "Chia sẻ thẻ nào?" để chọn thẻ trước) hoặc quét danh thiếp. Ô tìm kiếm và bộ lọc bị ẩn khi chưa có dữ liệu để tránh rối. Chip Google ở trạng thái "Chưa kết nối" mời kết nối.</small></div>
+      </div>
+
+      <!-- A6 Share picker -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ct-head"><div class="f1"><div class="ct-title">Danh bạ</div><a class="ct-meta off"><span class="d"></span>0 liên hệ · Chưa kết nối Google · Kết nối</a></div><button class="icon-btn soft"><i data-lucide="user-plus"></i></button></div>
+          <div class="ctabs"><a class="on">Kết nối<small>0</small></a><a>Danh thiếp<small>0</small></a><a>Đã lưu<small>0</small></a><a>Điện thoại<small>Chưa nhập</small></a></div>
+          <div class="body"><div class="empty" style="padding-top:56px"><div class="ill"><i data-lucide="users-round"></i></div><h3>Chưa có kết nối nào</h3></div></div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Chia sẻ thẻ nào?</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <div class="pick"><span class="sw"></span><div class="f1"><b>Thẻ InApps Technology</b><span>Giám đốc kinh doanh · InApps Technology</span><span class="ln">incard.biz/minhanh</span></div><i data-lucide="chevron-right"></i></div>
+            <div class="pick"><span class="sw dk"></span><div class="f1"><b>Thẻ CLB Doanh nhân trẻ</b><span>Phó Chủ tịch · CLB Doanh nhân trẻ Sài Gòn</span><span class="ln">incard.biz/minhanh/clb-dnt</span></div><i data-lucide="chevron-right"></i></div>
+            <div class="pick"><span class="sw lt"></span><div class="f1"><b>Thẻ Mentor khởi nghiệp</b><span>Diễn giả · Mentor khởi nghiệp</span><span class="ln">incard.biz/minhanh/mentor</span></div><i data-lucide="chevron-right"></i></div>
+          </div>
+        </div>
+        <div class="cap">A6 · Chia sẻ thẻ nào? (sheet)<small>Mở từ "Chia sẻ thẻ của bạn" (A5). Người dùng có nhiều thẻ nên app luôn hỏi trước, không tự lấy thẻ mặc định. Mỗi dòng: màu thẻ, tên thẻ, chức vụ chính · công ty và link công khai. Chạm một thẻ → mở QR / liên kết của đúng thẻ đó (05-C3, có chip tên thẻ + "Đổi").</small></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== B. Filter & AI ===================== -->
+  <section class="rd-section">
+    <h2>B · Lọc và tìm bằng AI</h2>
+    <div class="rd-row">
+
+      <!-- B1 Filter sheet -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><div class="title left">Danh bạ</div><button class="icon-btn soft"><i data-lucide="user-plus"></i></button></div>
+          <div class="ctabs"><a class="on">Kết nối<small>128</small></a><a>Danh thiếp<small>24</small></a><a>Đã lưu<small>312</small></a><a>Điện thoại<small>Chưa nhập</small></a></div>
+          <div class="tools"><div class="search"><i data-lucide="search"></i><span class="ph">Tìm tên, công ty, SĐT…</span><span class="ai icon" title="Hỏi AI"><i data-lucide="sparkles"></i><span class="sr-only">Hỏi AI</span></span></div><span class="sq-btn"><i data-lucide="sliders-horizontal"></i></span></div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Lọc và sắp xếp</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <div class="sh-sec">Sắp xếp theo</div>
+            <div class="seg"><a class="on">Mới nhất</a><a>Tên A–Z</a><a>Tương tác gần</a></div>
+            <div class="sh-sec">Nguồn kết nối</div>
+            <div class="chips wrap">
+              <span class="chip sel"><i data-lucide="check"></i>Chạm NFC</span><span class="chip sel"><i data-lucide="check"></i>Mã QR</span><span class="chip"><i data-lucide="id-card"></i>Danh thiếp</span><span class="chip">Google</span>
+            </div>
+            <div class="sh-sec">Qua thẻ của tôi</div>
+            <div class="chips wrap">
+              <span class="chip sel"><i data-lucide="check"></i>Thẻ InApps Technology</span><span class="chip">Thẻ CLB Doanh nhân trẻ</span><span class="chip">Thẻ Mentor khởi nghiệp</span>
+            </div>
+            <div class="sh-sec">Nhãn</div>
+            <div class="chips wrap">
+              <span class="chip sel"><span class="ld c1"></span>Khách hàng</span><span class="chip"><span class="ld c2"></span>Đối tác</span><span class="chip"><span class="ld c3"></span>Nhà cung cấp</span><span class="chip"><span class="ld c4"></span>Tiềm năng</span>
+            </div>
+            <div class="sh-sec">Ngày kết nối</div>
+            <div class="chips wrap">
+              <span class="chip">7 ngày qua</span><span class="chip sel">30 ngày qua</span><span class="chip">3 tháng</span><span class="chip"><i data-lucide="calendar"></i>Chọn ngày</span>
+            </div>
+            <div class="btn-row mt24">
+              <button class="btn outline">Đặt lại</button>
+              <button class="btn primary" style="flex:1.6">Xem 12 kết quả</button>
+            </div>
+          </div>
+        </div>
+        <div class="cap">B1 · Bộ lọc (sheet)<small>Nút lọc xanh to được thay bằng nút vuông nhỏ cạnh ô tìm kiếm, có số bộ lọc đang bật. Mọi tuỳ chọn chọn bằng chip, không có dropdown. Nhóm "Qua thẻ của tôi" lọc kết nối theo thẻ đã dùng để gặp (InApps / CLB DNT / Mentor). Nút chính báo trước số kết quả "Xem 12 kết quả" để người dùng biết bộ lọc có quá chặt không. "Đặt lại" đưa về mặc định.</small></div>
+      </div>
+
+      <!-- B2 AI results -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title" style="text-align:left">Kết quả tìm kiếm</div><div class="spacer44"></div></div>
+          <div class="tools" style="padding-top:0">
+            <div class="search ai-on"><i data-lucide="sparkles" style="color:var(--green)"></i><span class="q">Khách hàng ngành công nghệ ở HCM</span><i data-lucide="circle-x" style="color:var(--slate-400)"></i></div>
+          </div>
+          <div class="ai-note">
+            <img src="assets/inka.png" alt="Inka" />
+            <div><b>Tìm thấy 5 liên hệ</b><span>Inka lọc theo: nhãn Khách hàng, công ty ngành công nghệ, địa chỉ tại TP. Hồ Chí Minh. Bỏ bớt điều kiện bên dưới nếu muốn rộng hơn.</span></div>
+          </div>
+          <div class="list">
+            <div class="lgroup mt12">
+              <div class="crow"><img class="av" src="https://i.pravatar.cc/150?img=68" alt="" /><div class="tx"><div class="nm"><b>Hồ Văn Tâm</b></div><span class="sub">Founder, CEO – InApps Technology</span><span class="why"><i data-lucide="map-pin"></i>Q. Tân Bình · Phần mềm</span></div></div>
+              <div class="crow"><img class="av" src="https://i.pravatar.cc/150?img=33" alt="" /><div class="tx"><div class="nm"><b>Phan Đức Thịnh</b></div><span class="sub">Giám đốc dự án – KMS Technology</span><span class="why"><i data-lucide="map-pin"></i>Q. Bình Thạnh · Phần mềm</span></div></div>
+              <div class="crow"><span class="av t3">NL</span><div class="tx"><div class="nm"><b>Ngô Bích Liên</b></div><span class="sub">Trưởng phòng mua hàng – Tiki</span><span class="why"><i data-lucide="map-pin"></i>TP. Thủ Đức · Thương mại điện tử</span></div></div>
+              <div class="crow"><span class="av t2">QK</span><div class="tx"><div class="nm"><b>Trương Quang Khải</b></div><span class="sub">COO – MoMo</span><span class="why"><i data-lucide="map-pin"></i>Quận 7 · Fintech</span></div></div>
+            </div>
+            <p class="t-xs t-center mt12">Kết quả chưa đúng? <a class="link">Sửa câu hỏi</a></p>
+          </div>
+          <a class="inka-fab"><img src="assets/inka.png" alt="" /><span class="sr-only">Hỏi Inka</span><span class="spark"><i data-lucide="sparkles"></i></span></a>
+          <nav class="bnav">
+            <a><i data-lucide="house"></i>Trang chủ</a>
+            <a class="on"><i data-lucide="contact-round"></i>Danh bạ</a>
+            <a class="fab"><span class="c"><i data-lucide="scan-line"></i></span>Quét</a>
+            <a><i data-lucide="compass"></i>Khám phá</a>
+            <a><i data-lucide="circle-user-round"></i>Tài khoản</a>
+          </nav>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">B2 · Kết quả tìm bằng AI<small>Thay popup "AI lọc liên hệ" che màn hình: câu hỏi gõ thẳng trong ô tìm kiếm, kết quả hiện ngay trong danh sách. Inka giải thích đã hiểu câu hỏi thế nào và biến thành chip có thể bỏ từng cái. Mỗi dòng có lý do khớp (khu vực · ngành) để người dùng tin kết quả. Mũi tên quay lại về danh sách đầy đủ.</small></div>
+      </div>
+
+          <!-- B3 filter scanned cards -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title">Danh bạ</div><div class="spacer44"></div></div>
+          <div class="body fbg"><div class="ph-card"></div><div class="ph-card"></div><div class="ph-card"></div><div class="ph-card"></div></div>
+          <div class="scrim"></div>
+          <div class="sheet fsheet" style="top:120px">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Lọc danh thiếp</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <div style="flex:1;overflow:hidden"><div class="fs-sec"><h5>Sắp xếp</h5><div class="sortlist"><div class="so on"><i data-lucide="clock"></i>Mới quét nhất<span class="rd"></span></div><div class="so"><i data-lucide="arrow-down-a-z"></i>Tên A–Z<span class="rd"></span></div><div class="so"><i data-lucide="building-2"></i>Theo công ty<span class="rd"></span></div></div></div><div class="fs-sec"><h5>Trạng thái</h5><div class="chips"><span class="chip">Tất cả</span><span class="chip on"><i data-lucide="check"></i>Chưa lưu</span><span class="chip">Đã lưu vào danh bạ</span><span class="chip">Cần kiểm tra</span></div></div><div class="fs-sec"><h5>Ngày quét</h5><div class="chips"><span class="chip">Hôm nay</span><span class="chip">7 ngày</span><span class="chip">30 ngày</span><span class="chip">Chọn ngày</span></div></div><div class="fs-sec"><h5>Sự kiện / nhãn</h5><div class="chips"><span class="chip on"><i data-lucide="check"></i>Techfest 2026</span><span class="chip">Vietnam Tech Summit</span><span class="chip">Khách hàng</span><span class="chip">+ Nhãn</span></div></div></div>
+            <div class="fs-foot"><button class="btn outline">Đặt lại</button><button class="btn primary">Xem 3 kết quả</button></div>
+          </div>
+        </div>
+        <div class="cap">B3 · Lọc danh thiếp (sheet)<small>Bộ lọc riêng cho tab Danh thiếp (khác bộ lọc danh bạ): sắp xếp, trạng thái lưu, ngày quét và sự kiện đã gắn khi quét hàng loạt.</small></div>
+      </div>
+
+      <!-- B4 Filtered results (bổ sung từ screens/network/09d) -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ct-head"><div class="f1"><div class="ct-title">Danh bạ</div><a class="ct-meta "><span class="d"></span>312 liên hệ · Đã đồng bộ Google · 2 phút trước</a></div><button class="icon-btn soft"><i data-lucide="user-plus"></i></button></div>
+          <div class="ctabs"><a class="on">Kết nối<small>128</small></a><a>Danh thiếp<small>24</small></a><a>Đã lưu<small>312</small></a><a>Điện thoại<small>Chưa nhập</small></a></div>
+          <div class="tools"><div class="search"><i data-lucide="search"></i><span class="ph">Tìm tên, công ty, SĐT…</span><span class="ai icon" title="Hỏi AI"><i data-lucide="sparkles"></i><span class="sr-only">Hỏi AI</span></span></div><span class="sq-btn"><i data-lucide="sliders-horizontal"></i><span class="n">4</span></span></div>
+          <div class="chips fchips" style="flex-wrap:nowrap;overflow:hidden">
+            <span class="chip sel">Chạm NFC<i data-lucide="x"></i></span><span class="chip sel">Mã QR<i data-lucide="x"></i></span><span class="chip sel">Thẻ InApps<i data-lucide="x"></i></span><span class="chip sel"><span class="ld c1"></span>Khách hàng<i data-lucide="x"></i></span>
+          </div>
+          <div class="list" style="padding-top:0">
+            <div class="flex jb ac" style="padding:12px 0 2px"><span class="t-xs">Đang hiện <b style="color:var(--ink)">12</b> / 128 kết nối · 30 ngày qua</span><a class="link" style="font-size:13px">Xoá bộ lọc</a></div>
+            <div class="lgroup mt8">
+              <div class="crow"><img class="av" src="https://i.pravatar.cc/150?img=68" alt="" /><div class="tx"><div class="nm"><b>Hồ Văn Tâm</b><span class="lbl">Khách hàng</span></div><span class="sub">Founder, CEO – InApps Technology</span><span class="via"><i data-lucide="id-card"></i>qua Thẻ InApps · Chạm NFC</span></div></div>
+              <div class="crow"><span class="av t2">MT</span><div class="tx"><div class="nm"><b>Phạm Minh Thư</b><span class="lbl">Khách hàng</span></div><span class="sub">Trưởng phòng mua hàng – Masan Group</span><span class="via"><i data-lucide="id-card"></i>qua Thẻ InApps · Mã QR</span></div></div>
+              <div class="crow"><img class="av" src="https://i.pravatar.cc/150?img=33" alt="" /><div class="tx"><div class="nm"><b>Phan Đức Thịnh</b><span class="lbl">Khách hàng</span></div><span class="sub">Giám đốc dự án – KMS Technology</span><span class="via"><i data-lucide="id-card"></i>qua Thẻ InApps · Chạm NFC</span></div></div>
+              <div class="crow"><span class="av t3">NL</span><div class="tx"><div class="nm"><b>Ngô Bích Liên</b><span class="lbl">Khách hàng</span></div><span class="sub">Trưởng phòng mua hàng – Tiki</span><span class="via"><i data-lucide="id-card"></i>qua Thẻ InApps · Mã QR</span></div></div>
+            </div>
+          </div>
+          <a class="inka-fab"><img src="assets/inka.png" alt="" /><span class="sr-only">Hỏi Inka</span><span class="spark"><i data-lucide="sparkles"></i></span></a>
+          <nav class="bnav">
+            <a><i data-lucide="house"></i>Trang chủ</a>
+            <a class="on"><i data-lucide="contact-round"></i>Danh bạ</a>
+            <a class="fab"><span class="c"><i data-lucide="scan-line"></i></span>Quét</a>
+            <a><i data-lucide="compass"></i>Khám phá</a>
+            <a><i data-lucide="circle-user-round"></i>Tài khoản</a>
+          </nav>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">B4 · Kết quả lọc<small>Bổ sung từ bản cũ (Filtered Contacts). Sau khi bấm "Xem 12 kết quả" ở B1: mỗi bộ lọc đang bật là một chip có dấu ✕ để bỏ riêng, nút lọc hiện số bộ lọc (4). Dòng "Đang hiện 12 / 128 kết nối" cho biết đang xem một phần danh bạ, "Xoá bộ lọc" về danh sách đầy đủ. Danh sách bỏ nhóm chữ cái để thấy kết quả liền nhau.</small></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== C. Contact detail ===================== -->
+  <section class="rd-section">
+    <h2>C · Chi tiết liên hệ (CRM mini)</h2>
+    <div class="rd-row">
+
+      <!-- C1 Detail -->
+      <div class="rd-shot">
+        <div class="phone tall">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title"></div><button class="icon-btn"><i data-lucide="star"></i></button><button class="icon-btn"><i data-lucide="ellipsis-vertical"></i></button></div>
+          <div class="d-head">
+            <img class="av xl" src="https://i.pravatar.cc/150?img=68" alt="" />
+            <div class="nm">Hồ Văn Tâm</div>
+            <div class="ti">Founder, CEO</div>
+            <div class="co"><i data-lucide="building-2"></i>InApps Technology</div>
+            <div class="mt12"><a class="link" style="font-size:13.5px;display:inline-flex;align-items:center;gap:4px">Xem hồ sơ InCard<i data-lucide="arrow-up-right" style="width:15px;height:15px"></i></a></div>
+          </div>
+          <div class="acts">
+            <a class="pri"><span><i data-lucide="phone"></i></span>Gọi</a>
+            <a><span><i data-lucide="message-circle"></i></span>Nhắn tin</a>
+            <a><span><i data-lucide="mail"></i></span>Email</a>
+            <a><span><i data-lucide="calendar-plus"></i></span>Đặt lịch</a>
+          </div>
+          <div style="padding:0 20px 24px">
+            <div class="group-label">Thông tin</div>
+            <div class="group">
+              <div class="row"><span class="ic"><i data-lucide="phone"></i></span><div class="tx"><span style="margin:0 0 2px">Di động</span><b>0903 556 781</b></div><i data-lucide="copy" class="chev"></i></div>
+              <div class="row"><span class="ic"><i data-lucide="mail"></i></span><div class="tx"><span style="margin:0 0 2px">Email</span><b>tam.ho@inapps.net</b></div><i data-lucide="copy" class="chev"></i></div>
+              <div class="row"><span class="ic"><i data-lucide="building-2"></i></span><div class="tx"><span style="margin:0 0 2px">Công ty</span><b>Công ty CP Công nghệ InApps</b></div></div>
+              <div class="row"><span class="ic gray"><i data-lucide="nfc"></i></span><div class="tx"><span style="margin:0 0 2px">Nguồn kết nối</span><b>Chạm thẻ NFC · Thẻ InApps Technology</b><span style="margin:2px 0 0">12/11/2026</span></div></div>
+            </div>
+
+            <div class="sec-title"><h3>Nhãn</h3></div>
+            <div class="chips wrap">
+              <span class="chip soft"><span class="ld c1"></span>Khách hàng</span><span class="chip soft"><span class="ld c4"></span>Tiềm năng</span><span class="chip" style="border-style:dashed;color:var(--green)"><i data-lucide="plus"></i>Thêm nhãn</span>
+            </div>
+
+            <div class="sec-title"><h3>Ghi chú</h3><a><i data-lucide="plus"></i>Thêm ghi chú</a></div>
+            <div class="card flat">
+              <div class="tl">
+                <div class="it"><b>Quan tâm gói thẻ NFC cho 50 nhân viên, cần báo giá trước 20/11.</b><span>Hôm nay, 10:15</span></div>
+                <div class="it"><b>Gặp tại sự kiện Vietnam Tech Summit, trao đổi về chuyển đổi số.</b><span>12/11/2026, 16:40</span></div>
+                <div class="it sys" style="padding-bottom:0"><b style="font-weight:500;color:var(--slate-500)">Đã kết nối qua chạm thẻ NFC · Thẻ InApps Technology</b><span>12/11/2026, 16:32</span></div>
+              </div>
+            </div>
+
+            <div class="sec-title"><h3>Lịch hẹn &amp; công việc</h3><a><i data-lucide="plus"></i>Thêm</a></div>
+            <div class="group">
+              <div class="row"><div class="appt"><span class="dt"><small>Th 2</small><b>16</b></span><div class="tx"><b>Cà phê bàn hợp tác</b><span>9:00 – 10:00 · The Coffee House, Q.3</span></div></div></div>
+              <div class="row"><div class="appt task"><span class="dt"><i data-lucide="square-check-big" style="width:20px;height:20px"></i></span><div class="tx"><b>Gửi báo giá 50 thẻ NFC</b><span>Hạn 20/11 · Còn 8 ngày</span></div></div></div>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">C1 · Chi tiết liên hệ<small>Đầu trang chỉ còn thông tin quan trọng: ảnh, tên, chức vụ, công ty. 4 hành động tròn Gọi · Nhắn tin · Email · Đặt lịch luôn trong tầm ngón cái. Nhãn hiện dạng chip thay cho dropdown. Ghi chú thành dòng thời gian, có cả sự kiện tự động (đã kết nối lúc nào, qua thẻ nào của tôi). Thêm phần Lịch hẹn &amp; công việc. "Huỷ kết nối" màu đỏ được chuyển vào menu ⋮ để tránh bấm nhầm.</small></div>
+      </div>
+
+      <!-- C2 More menu -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title"></div><button class="icon-btn"><i data-lucide="star"></i></button><button class="icon-btn"><i data-lucide="ellipsis-vertical"></i></button></div>
+          <div class="d-head">
+            <img class="av xl" src="https://i.pravatar.cc/150?img=68" alt="" />
+            <div class="nm">Hồ Văn Tâm</div>
+            <div class="ti">Founder, CEO</div>
+            <div class="co"><i data-lucide="building-2"></i>InApps Technology</div>
+          </div>
+          <div class="acts">
+            <a class="pri"><span><i data-lucide="phone"></i></span>Gọi</a><a><span><i data-lucide="message-circle"></i></span>Nhắn tin</a><a><span><i data-lucide="mail"></i></span>Email</a><a><span><i data-lucide="calendar-plus"></i></span>Đặt lịch</a>
+          </div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="menu-row"><i data-lucide="pencil"></i>Sửa thông tin</div>
+            <div class="menu-row"><i data-lucide="tag"></i>Gắn nhãn</div>
+            <div class="menu-row"><i data-lucide="send"></i>Gửi thẻ của tôi<span class="mr-sub">Chọn thẻ</span></div>
+            <div class="menu-row"><i data-lucide="share-2"></i>Chia sẻ liên hệ<span class="mr-sub">Kèm thẻ của tôi</span></div>
+            <div class="menu-row"><i data-lucide="download"></i>Lưu vào danh bạ điện thoại</div>
+            <div class="menu-row"><i data-lucide="file-down"></i>Xuất file vCard</div>
+            <div class="menu-row red"><i data-lucide="user-x"></i>Huỷ kết nối</div>
+            <button class="btn outline mt12">Đóng</button>
+          </div>
+        </div>
+        <div class="cap">C2 · Menu ⋮<small>Các thao tác ít dùng gom vào một sheet. "Huỷ kết nối" nằm cuối, màu đỏ, tách khỏi thao tác thường ngày. Có "Lưu vào danh bạ điện thoại" thay cho nút "Lưu Liên hệ" mơ hồ ở bản cũ. Nút "Đóng" rõ ràng để quay lại. "Gửi thẻ của tôi" và "Chia sẻ liên hệ" đều mở sheet C5 "Gửi thẻ nào?" / "Chia sẻ thẻ nào?" — không tự gửi thẻ mặc định.</small></div>
+      </div>
+
+      <!-- C3 Confirm -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title"></div><button class="icon-btn"><i data-lucide="star"></i></button><button class="icon-btn"><i data-lucide="ellipsis-vertical"></i></button></div>
+          <div class="d-head">
+            <img class="av xl" src="https://i.pravatar.cc/150?img=68" alt="" />
+            <div class="nm">Hồ Văn Tâm</div>
+            <div class="ti">Founder, CEO</div>
+          </div>
+          <div class="scrim"></div>
+          <div class="dialog">
+            <div class="d-ic red"><i data-lucide="user-x"></i></div>
+            <h3>Huỷ kết nối với Hồ Văn Tâm?</h3>
+            <p>Bạn sẽ không còn thấy cập nhật hồ sơ của anh Tâm và ngược lại. Ghi chú, lịch hẹn vẫn được giữ trong Danh bạ. Anh Tâm sẽ không nhận thông báo.</p>
+            <button class="btn danger">Huỷ kết nối</button>
+            <button class="btn ghost mt8" style="color:var(--ink)">Giữ kết nối</button>
+          </div>
+        </div>
+        <div class="cap">C3 · Xác nhận huỷ kết nối<small>Nói rõ hậu quả (mất gì, giữ lại gì, đối phương có biết không) trước khi làm. Nút nguy hiểm dùng kiểu danger nền đỏ nhạt, không dùng nút đen. Lựa chọn an toàn "Giữ kết nối" luôn có.</small></div>
+      </div>
+
+      <!-- C4 Label sheet -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title"></div><button class="icon-btn"><i data-lucide="star"></i></button><button class="icon-btn"><i data-lucide="ellipsis-vertical"></i></button></div>
+          <div class="d-head">
+            <img class="av xl" src="https://i.pravatar.cc/150?img=68" alt="" />
+            <div class="nm">Hồ Văn Tâm</div>
+          </div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Gắn nhãn</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <div class="input focus mb8"><i data-lucide="tag"></i><span class="v">Techfest 2026</span><i data-lucide="circle-x"></i></div>
+            <div class="create" style="border-top:0"><span class="pl"><i data-lucide="plus"></i></span>Tạo nhãn mới "Techfest 2026"</div>
+            <div class="lrow"><span class="check"><span class="box on"><i data-lucide="check"></i></span></span><span class="ld c1"></span><span class="nm">Khách hàng</span><span class="ct">24</span></div>
+            <div class="lrow"><span class="check"><span class="box"></span></span><span class="ld c2"></span><span class="nm">Đối tác</span><span class="ct">18</span></div>
+            <div class="lrow"><span class="check"><span class="box"></span></span><span class="ld c3"></span><span class="nm">Nhà cung cấp</span><span class="ct">7</span></div>
+            <div class="lrow"><span class="check"><span class="box on"><i data-lucide="check"></i></span></span><span class="ld c4"></span><span class="nm">Tiềm năng</span><span class="ct">31</span></div>
+            <div class="lrow"><span class="check"><span class="box"></span></span><span class="ld c5"></span><span class="nm">Bạn bè</span><span class="ct">12</span></div>
+            <div class="btn-row mt16">
+              <button class="btn outline">Huỷ</button>
+              <button class="btn primary" style="flex:1.6">Lưu (2 nhãn)</button>
+            </div>
+          </div>
+        </div>
+        <div class="cap">C4 · Gắn nhãn (sheet)<small>Thay dropdown "Nhãn" chỉ chọn được một: chọn nhiều nhãn bằng ô tick, mỗi nhãn có màu và số liên hệ. Gõ tên chưa có thì hiện ngay dòng "Tạo nhãn mới", không phải vào màn quản lý riêng.</small></div>
+      </div>
+
+
+      <!-- C5 Send-card picker -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title"></div><button class="icon-btn"><i data-lucide="star"></i></button><button class="icon-btn"><i data-lucide="ellipsis-vertical"></i></button></div>
+          <div class="d-head">
+            <img class="av xl" src="https://i.pravatar.cc/150?img=68" alt="" />
+            <div class="nm">Hồ Văn Tâm</div>
+            <div class="ti">Founder, CEO</div>
+          </div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Gửi thẻ nào?</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <p class="sh-sub">Gửi cho <b>Hồ Văn Tâm</b></p>
+            <div class="cpick">
+              <div class="ci"><div class="f1"><b>Thẻ InApps Technology</b><span>Giám đốc kinh doanh · InApps Technology</span></div><i data-lucide="chevron-right"></i></div>
+              <div class="ci"><div class="f1"><b>Thẻ CLB Doanh nhân trẻ</b><span>Phó Chủ tịch · CLB Doanh nhân trẻ Sài Gòn</span></div><i data-lucide="chevron-right"></i></div>
+              <div class="ci"><div class="f1"><b>Thẻ Mentor khởi nghiệp</b><span>Diễn giả · Mentor khởi nghiệp</span></div><i data-lucide="chevron-right"></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="cap">C5 · Gửi thẻ nào? (sheet)<small>Mở từ "Gửi thẻ của tôi" / "Chia sẻ liên hệ" trong menu ⋮ (C2). Luôn hỏi gửi thẻ nào, không gửi im lặng thẻ mặc định. Danh sách chữ gọn: tên thẻ + chức vụ chính · công ty, không hình thẻ (cùng mẫu với 03-B5, 05-C6). Chạm một thẻ là gửi ngay, toast xác nhận "Đã gửi Thẻ … cho anh Tâm".</small></div>
+      </div>
+
+      <!-- C6 Edit contact (bổ sung từ screens/network/04-edit-card-detail + 11b-edit-contact) -->
+      <div class="rd-shot">
+        <div class="phone white tall">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="x"></i></button><div class="title">Sửa liên hệ</div><div class="spacer44"></div></div>
+          <div class="body" style="padding: 8px 24px 24px">
+            <div class="card flat flex ac g12 mb16" style="padding:10px 12px">
+              <span class="thumb" style="--tc:var(--blue-500)"><i></i><i></i><i></i></span>
+              <div class="f1"><b style="font-size:14px">Ảnh danh thiếp gốc</b><div class="t-xs">Quét 11/11/2026 · chạm để xem lớn</div></div>
+              <a class="link" style="font-size:13px">Quét lại</a>
+            </div>
+            <div class="field"><label>Họ và tên <span class="req">*</span></label><div class="input focus"><span class="v">Phạm Minh Thư</span></div></div>
+            <div class="flex g12">
+              <div class="field f1"><label>Chức vụ</label><div class="input"><span class="v">Trưởng phòng mua hàng</span></div></div>
+            </div>
+            <div class="field"><label>Công ty</label><div class="input"><i data-lucide="building-2"></i><span class="v">Masan Group</span></div></div>
+            <div class="field"><label>Di động</label><div class="input"><i data-lucide="phone"></i><span class="v">0908 214 663</span></div></div>
+            <div class="field"><label>Email</label><div class="input"><i data-lucide="mail"></i><span class="v">thu.pham@masangroup.com</span></div></div>
+            <div class="field"><label>Địa chỉ <span class="opt">(không bắt buộc)</span></label><div class="input"><i data-lucide="map-pin"></i><span class="v">Lầu 8, Central Plaza, 17 Lê Duẩn, Q.1</span></div></div>
+            <div class="field"><label>Website <span class="opt">(không bắt buộc)</span></label><div class="input"><i data-lucide="globe"></i><span class="v">masangroup.com</span></div></div>
+            <a class="link" style="font-size:13.5px;display:inline-flex;align-items:center;gap:4px;margin:-4px 0 16px"><i data-lucide="plus" style="width:16px;height:16px"></i>Thêm số điện thoại / email khác</a>
+            <div class="field"><label>Nhãn</label>
+              <div class="chips wrap"><span class="chip soft"><span class="ld c1"></span>Khách hàng<i data-lucide="x"></i></span><span class="chip soft"><span class="ld c4"></span>Techfest 2026<i data-lucide="x"></i></span><span class="chip" style="border-style:dashed;color:var(--green)"><i data-lucide="plus"></i>Thêm nhãn</span></div>
+            </div>
+            <div class="field"><label>Ghi chú</label><div class="input area"><span class="v" style="white-space:normal;line-height:1.5">Gặp ở Techfest 2026, cần báo giá thẻ NFC cho đội kinh doanh 30 người.</span></div></div>
+            <div class="field"><label>Gặp qua thẻ</label><div class="input"><i data-lucide="id-card"></i><span class="v">Thẻ InApps Technology</span><i data-lucide="chevron-down"></i></div></div>
+            <button class="btn ghost" style="color:var(--red-600)"><i data-lucide="trash-2"></i>Xoá liên hệ</button>
+          </div>
+          <div class="footer-cta"><button class="btn primary">Lưu thay đổi</button></div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">C6 · Sửa liên hệ<small>Bổ sung từ bản cũ (Edit Card / Edit Contact). Mở từ "Sửa thông tin" trong menu ⋮ (C2). Với liên hệ từ danh thiếp, ảnh danh thiếp gốc nằm trên cùng để đối chiếu khi sửa. Các ô giống màn kiểm tra kết quả quét (05-B3): họ tên, chức vụ, công ty, SĐT, email, địa chỉ, website; thêm được SĐT/email phụ. Nhãn dạng chip bỏ được từng cái, ghi chú, và "Gặp qua thẻ" để biết đã đưa thẻ nào. Liên hệ đã kết nối InCard chỉ sửa được nhãn, ghi chú và tên gợi nhớ (thông tin còn lại do chủ thẻ cập nhật). "Xoá liên hệ" màu đỏ nằm cuối form, mở C7.</small></div>
+      </div>
+
+      <!-- C7 Delete confirm (bổ sung từ screens/network/09f) -->
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="x"></i></button><div class="title">Sửa liên hệ</div><div class="spacer44"></div></div>
+          <div class="body" style="padding: 8px 24px 0">
+            <div class="field"><label>Họ và tên <span class="req">*</span></label><div class="input"><span class="v">Phạm Minh Thư</span></div></div>
+            <div class="field"><label>Chức vụ</label><div class="input"><span class="v">Trưởng phòng mua hàng</span></div></div>
+            <div class="field"><label>Công ty</label><div class="input"><i data-lucide="building-2"></i><span class="v">Masan Group</span></div></div>
+          </div>
+          <div class="scrim"></div>
+          <div class="dialog">
+            <div class="d-ic red"><i data-lucide="trash-2"></i></div>
+            <h3>Xoá Phạm Minh Thư khỏi Danh bạ?</h3>
+            <p>Thông tin, ảnh danh thiếp, nhãn và 1 ghi chú của liên hệ này sẽ bị xoá. Bản đã đồng bộ sang Google Danh bạ vẫn được giữ lại.</p>
+            <button class="btn danger">Xoá liên hệ</button>
+            <button class="btn ghost mt8" style="color:var(--ink)">Giữ lại</button>
+          </div>
+        </div>
+        <div class="cap">C7 · Xác nhận xoá liên hệ<small>Bản cũ xoá xong mới báo "Contact Deleted". Bản mới hỏi trước và nói rõ mất gì (thông tin, ảnh danh thiếp, nhãn, ghi chú) và giữ gì (bản đã đồng bộ Google). Khác "Huỷ kết nối" (C3): xoá áp dụng cho liên hệ lưu tay hoặc từ danh thiếp; liên hệ đã kết nối InCard phải huỷ kết nối trước.</small></div>
+      </div>
+
+      <!-- C8 Deleted toast with undo -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ct-head"><div class="f1"><div class="ct-title">Danh bạ</div><a class="ct-meta "><span class="d"></span>311 liên hệ · Đã đồng bộ Google · 2 phút trước</a></div><button class="icon-btn soft"><i data-lucide="user-plus"></i></button></div>
+          <div class="ctabs"><a>Kết nối<small>128</small></a><a class="on">Danh thiếp<small>23</small></a><a>Đã lưu<small>311</small></a><a>Điện thoại<small>Chưa nhập</small></a></div>
+          <div class="tools">
+            <div class="search"><i data-lucide="search"></i><span class="ph">Tìm trong danh thiếp…</span><span class="ai icon" title="Hỏi AI"><i data-lucide="sparkles"></i><span class="sr-only">Hỏi AI</span></span></div>
+            <span class="sq-btn"><i data-lucide="sliders-horizontal"></i></span>
+          </div>
+          <div class="list" style="padding-top:0">
+            <div class="letter">TUẦN NÀY</div>
+            <div class="lgroup">
+              <div class="crow"><span class="thumb" style="--tc:var(--amber-500)"><i></i><i></i><i></i></span><div class="tx"><div class="nm"><b>Đỗ Thanh Hải</b></div><span class="sub">Công ty CP Đầu tư Nam Long · Quét 10/11</span></div><span class="badge pending">Chưa lưu</span></div>
+              <div class="crow"><span class="thumb"><i></i><i></i><i></i></span><div class="tx"><div class="nm"><b>Helen Thuỷ Trần</b></div><span class="sub">Công ty CP Công nghệ InCard · Quét 09/11</span></div><i class="src" data-lucide="circle-check" style="color:var(--green)"></i></div>
+            </div>
+            <div class="letter">THÁNG 10</div>
+            <div class="lgroup">
+              <div class="crow"><span class="thumb"><i></i><i></i><i></i></span><div class="tx"><div class="nm"><b>Hồ Văn Tâm</b></div><span class="sub">Công ty CP Công nghệ InApps · Quét 28/10</span></div><i class="src" data-lucide="circle-check" style="color:var(--green)"></i></div>
+            </div>
+          </div>
+          <div class="toast"><i data-lucide="trash-2"></i><span class="f1">Đã xoá Phạm Minh Thư</span><b style="color:#4ade80">Hoàn tác</b></div>
+          <nav class="bnav">
+            <a><i data-lucide="house"></i>Trang chủ</a>
+            <a class="on"><i data-lucide="contact-round"></i>Danh bạ</a>
+            <a class="fab"><span class="c"><i data-lucide="scan-line"></i></span>Quét</a>
+            <a><i data-lucide="compass"></i>Khám phá</a>
+            <a><i data-lucide="circle-user-round"></i>Tài khoản</a>
+          </nav>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">C8 · Đã xoá liên hệ<small>Thay màn "Contact Deleted" riêng của bản cũ: xoá xong quay thẳng về danh sách, số đếm giảm ngay (24 → 23), thông báo nhỏ có "Hoàn tác" trong 5 giây. Không bắt người dùng bấm thêm một nút "OK".</small></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== D. Google sync ===================== -->
+  <section class="rd-section">
+    <h2>D · Đồng bộ Google</h2>
+    <div class="rd-row">
+
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ct-head"><div class="f1"><div class="ct-title">Danh bạ</div><a class="ct-meta "><span class="d"></span>312 liên hệ · Đã đồng bộ Google · 2 phút trước</a></div><button class="icon-btn soft"><i data-lucide="user-plus"></i></button></div>
+          <div class="ctabs"><a class="on">Kết nối<small>128</small></a><a>Danh thiếp<small>24</small></a><a>Đã lưu<small>312</small></a><a>Điện thoại<small>Chưa nhập</small></a></div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Đồng bộ Google Danh bạ</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <div class="group">
+              <div class="row"><span class="ic gray" style="background:var(--white);border:1px solid var(--slate-200)"><svg class="g-logo" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg></span><div class="tx"><b>minhanh@inapps.net</b><span>Tài khoản Google</span></div><span class="badge green"><i data-lucide="check"></i>Đã kết nối</span></div>
+              <div class="row"><span class="ic"><i data-lucide="refresh-cw"></i></span><div class="tx"><b>Tự động đồng bộ</b><span>Cập nhật mỗi khi có liên hệ mới</span></div><span class="toggle on"></span></div>
+              <div class="row"><span class="ic"><i data-lucide="arrow-left-right"></i></span><div class="tx"><b>Đồng bộ 2 chiều</b><span>Liên hệ lưu trong InCard cũng lên Google</span></div><span class="toggle"></span></div>
+            </div>
+            <div class="card flat mt12" style="background:var(--slate-50)">
+              <div class="flex jb ac"><span class="t-sm">Lần gần nhất</span><b style="font-size:14px">9:39 hôm nay</b></div>
+              <div class="flex jb ac mt8"><span class="t-sm">Đã đồng bộ</span><b style="font-size:14px">312 liên hệ</b></div>
+              <div class="flex jb ac mt8"><span class="t-sm">Bỏ qua do trùng</span><b style="font-size:14px">6 liên hệ</b></div>
+            </div>
+            <button class="btn primary mt16"><i data-lucide="refresh-cw"></i>Đồng bộ ngay</button>
+            <button class="btn ghost mt8" style="color:var(--red-600)">Ngắt kết nối Google</button>
+          </div>
+        </div>
+        <div class="cap">D1 · Cài đặt đồng bộ Google (sheet)<small>Mở từ chip trạng thái hoặc nút G. Thay dòng khó hiểu "0 đã đồng bộ" bằng con số cụ thể: lần gần nhất, bao nhiêu liên hệ, bao nhiêu bị bỏ qua vì trùng. Bật / tắt tự động đồng bộ ngay tại chỗ. Ngắt kết nối là chữ đỏ nhẹ, nằm cuối.</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar ct-head"><div class="f1"><div class="ct-title">Danh bạ</div><a class="ct-meta "><span class="d"></span>312 liên hệ · Đang đồng bộ Google · 186/312</a></div><button class="icon-btn soft"><i data-lucide="user-plus"></i></button></div>
+          <div class="ctabs"><a>Kết nối<small>128</small></a><a>Danh thiếp<small>24</small></a><a class="on">Đã lưu<small>312</small></a><a>Điện thoại<small>Chưa nhập</small></a></div>
+          <div style="padding:10px 20px 0"><div class="progress"><span style="width:60%"></span></div></div>
+          <div class="tools"><div class="search"><i data-lucide="search"></i><span class="ph">Tìm tên, số điện thoại…</span><span class="ai icon" title="Hỏi AI"><i data-lucide="sparkles"></i><span class="sr-only">Hỏi AI</span></span></div><span class="sq-btn"><i data-lucide="sliders-horizontal"></i></span></div>
+          <div class="list">
+            <div class="letter">A</div>
+            <div class="lgroup">
+              <div class="crow" data-no-person data-go="04-C1@an"><span class="av t1">HA</span><div class="tx"><b>Trần Thị Hoài An</b><span class="sub">0903 482 117</span></div></div>
+              <div class="crow" data-no-person data-go="04-E1@tuananh"><span class="av t5">TA</span><div class="tx"><b>Vũ Tuấn Anh</b><span class="sub">0912 330 845</span></div></div>
+            </div>
+            <div class="letter">H</div>
+            <div class="lgroup">
+              <div class="crow" data-no-person data-go="04-E1@hai"><span class="av t3">ĐH</span><div class="tx"><b>Đỗ Thanh Hải</b><span class="sub">0938 715 602</span></div></div>
+              <div class="crow" data-no-person data-go="04-E1@hang"><span class="av t4">MH</span><div class="tx"><b>Lý Minh Hằng</b><span class="sub">0987 224 590</span></div></div>
+            </div>
+          </div>
+          <div class="toast"><i data-lucide="circle-check"></i><span class="f1">Bạn vẫn dùng app bình thường trong lúc đồng bộ.</span></div>
+          <a class="inka-fab"><img src="assets/inka.png" alt="" /><span class="sr-only">Hỏi Inka</span><span class="spark"><i data-lucide="sparkles"></i></span></a>
+          <nav class="bnav">
+            <a><i data-lucide="house"></i>Trang chủ</a>
+            <a class="on"><i data-lucide="contact-round"></i>Danh bạ</a>
+            <a class="fab"><span class="c"><i data-lucide="scan-line"></i></span>Quét</a>
+            <a><i data-lucide="compass"></i>Khám phá</a>
+            <a><i data-lucide="circle-user-round"></i>Tài khoản</a>
+          </nav>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">D2 · Đang đồng bộ<small>Sau khi bấm "Đồng bộ ngay", sheet đóng lại, tiến trình hiện trên chip và thanh mảnh dưới tab. Không chặn màn hình: người dùng vẫn cuộn, tìm, gọi được. Khi xong chip trở về "Đã đồng bộ · vừa xong".</small></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== E. Liên hệ không dùng InCard ===================== -->
+  <section class="rd-section">
+    <h2>E · Liên hệ đã lưu &amp; danh bạ điện thoại</h2>
+    <div class="rd-row">
+
+      <!-- E1 Saved contact -->
+      <div class="rd-shot">
+        <div class="phone tall">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title"></div><button class="icon-btn"><i data-lucide="pencil"></i></button></div>
+          <div class="d-head">
+            <span class="av xl t5">TA</span>
+            <div class="nm">Vũ Tuấn Anh</div>
+            <div class="ti">Trưởng phòng IT</div>
+            <div class="co"><i data-lucide="building-2"></i>Vinamilk</div>
+          </div>
+          <div class="acts">
+            <a class="pri"><span><i data-lucide="phone"></i></span>Gọi</a>
+            <a><span><i data-lucide="message-square-text"></i></span>SMS</a>
+            <a><span><i data-lucide="mail"></i></span>Email</a>
+            <a><span><i data-lucide="calendar-plus"></i></span>Đặt lịch</a>
+          </div>
+          <div style="padding:0 20px 24px">
+            <div class="group-label">Thông tin</div>
+            <div class="group">
+              <div class="row"><span class="ic"><i data-lucide="phone"></i></span><div class="tx"><span style="margin:0 0 2px">Di động</span><b>0912 330 845</b></div><i data-lucide="copy" class="chev"></i></div>
+              <div class="row"><span class="ic"><i data-lucide="mail"></i></span><div class="tx"><span style="margin:0 0 2px">Email</span><b>tuananh.vu@vinamilk.com.vn</b></div><i data-lucide="copy" class="chev"></i></div>
+              <div class="row"><span class="ic"><i data-lucide="building-2"></i></span><div class="tx"><span style="margin:0 0 2px">Công ty</span><b>Công ty CP Sữa Việt Nam (Vinamilk)</b></div></div>
+              <div class="row"><span class="ic gray"><i data-lucide="contact-round"></i></span><div class="tx"><span style="margin:0 0 2px">Nguồn</span><b>Google Danh bạ</b><span style="margin:2px 0 0">Đồng bộ lúc 9:39 hôm nay</span></div></div>
+            </div>
+
+            <div class="sec-title"><h3>Nhãn</h3></div>
+            <div class="chips wrap">
+              <span class="chip" style="border-style:dashed;color:var(--green)"><i data-lucide="plus"></i>Thêm nhãn</span>
+            </div>
+
+            <div class="sec-title"><h3>Ghi chú</h3><a><i data-lucide="plus"></i>Thêm ghi chú</a></div>
+            <div class="card flat">
+              <div class="tl">
+                <div class="it" style="padding-bottom:0"><b>Hỏi lại về đơn thẻ NFC cho phòng IT sau Tết.</b><span>Hôm qua, 17:20</span></div>
+              </div>
+            </div>
+
+            <div class="card flat mt16" style="display:flex;gap:10px;align-items:flex-start;background:var(--slate-50)">
+              <i data-lucide="info" style="width:18px;height:18px;color:var(--slate-500);flex-shrink:0;margin-top:2px"></i>
+              <div class="t-sm">Liên hệ này chưa dùng InCard nên không có hồ sơ InCard để xem.</div>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">E1 · Chi tiết liên hệ đã lưu<small>Mở khi chạm một liên hệ ở tab Đã lưu có nguồn Google Danh bạ hoặc danh thiếp giấy. Đây chỉ là bản ghi danh bạ, không phải người dùng InCard, nên không có ảnh bìa, lượt xem, sản phẩm, nút kết nối hay "Xem hồ sơ InCard". Liên hệ lưu từ chạm thẻ (người dùng InCard) vẫn mở C1. "Nhắn tin" đổi thành SMS vì người này không có hộp thư InCard.</small></div>
+      </div>
+
+      <!-- E2 Phone contact -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title"></div><div class="spacer44"></div></div>
+          <div class="d-head">
+            <span class="av xl t1">KC</span>
+            <div class="nm">Kim Chi</div>
+            <div class="ti">Danh bạ điện thoại</div>
+          </div>
+          <div class="acts" style="grid-template-columns:repeat(3,1fr)">
+            <a class="pri"><span><i data-lucide="phone"></i></span>Gọi</a>
+            <a><span><i data-lucide="message-square-text"></i></span>SMS</a>
+            <a><span><i data-lucide="message-circle"></i></span>Zalo</a>
+          </div>
+          <div style="padding:0 20px 24px">
+            <div class="group-label">Thông tin</div>
+            <div class="group">
+              <div class="row"><span class="ic"><i data-lucide="phone"></i></span><div class="tx"><span style="margin:0 0 2px">Di động</span><b>0909 668 214</b></div><i data-lucide="copy" class="chev"></i></div>
+            </div>
+            <button class="btn primary mt16"><i data-lucide="bookmark-plus"></i>Lưu vào Danh bạ InCard</button>
+            <p class="t-sm" style="text-align:center;margin-top:12px">Liên hệ này lấy từ danh bạ trong máy. Muốn sửa hoặc xoá, mở app Danh bạ của điện thoại.</p>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">E2 · Liên hệ trong điện thoại<small>Mở khi chạm một dòng ở tab Điện thoại. Chỉ hiện đúng những gì danh bạ máy có (tên, số), giống trang liên hệ của điện thoại: Gọi · SMS · Zalo. Không có hồ sơ InCard; nhãn và ghi chú chỉ có sau khi người dùng chủ động "Lưu vào Danh bạ InCard" (liên hệ chuyển sang tab Đã lưu). Không có nút sửa / xoá vì dữ liệu thuộc danh bạ máy.</small></div>
+      </div>
+
+    </div>
+  </section>
+
+  <script>lucide.createIcons({ attrs: { 'stroke-width': 1.75 } });</script>
+</body>
+</html>

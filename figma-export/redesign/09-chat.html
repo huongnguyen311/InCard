@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard Redesign — 09 Tin nhắn</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../button-system.css" />
+  <link rel="stylesheet" href="../design-system.css" />
+  <link rel="stylesheet" href="rd.css" />
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <style>
+    :root { --online: #22c55e; --bub-in: var(--white); --chat-bg: #f3f5f7; }
+    .av.tb { background: rgba(59,130,246,0.12); color: var(--blue-500); }
+    .av.tg { background: var(--gold-bg); color: var(--gold); }
+    .av.tv { background: var(--act-ref-bg); color: #7c5cd6; }
+    .av.te { background: var(--act-conn-bg); color: #0f8f82; }
+    .avw { position: relative; flex-shrink: 0; display: inline-flex; }
+    .avw .on-dot { position: absolute; right: 1px; bottom: 1px; width: 12px; height: 12px; border-radius: 50%; background: var(--online); border: 2px solid var(--white); }
+
+    /* ---------- Inbox ---------- */
+    .ibx-top { padding: 0 20px; flex-shrink: 0; }
+    .ibx-top .chips { margin: 12px 0 4px; }
+    .ibx-top .chip { height: 34px; font-size: 13px; padding: 0 12px; }
+    .req-row { display: flex; align-items: center; gap: 12px; margin: 10px 0 4px; padding: 12px 14px; background: var(--white); border: 1px solid var(--slate-200); border-radius: 16px; }
+    .req-row .ic { width: 40px; height: 40px; border-radius: 12px; background: var(--green-50); color: var(--green); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .req-row .ic i, .req-row .ic svg { width: 20px; height: 20px; }
+    .req-row b { display: block; font-size: 14.5px; }
+    .req-row span { font-size: 12.5px; color: var(--slate-500); }
+    .req-row .stack { display: flex; margin-left: auto; }
+    .req-row .stack .av { width: 26px; height: 26px; font-size: 10px; border: 2px solid var(--white); }
+    .req-row .stack .av + .av { margin-left: -8px; }
+    .req-row > i.chev, .req-row > svg.chev { width: 18px; height: 18px; color: var(--slate-400); }
+
+    .cv { display: flex; gap: 12px; align-items: center; padding: 11px 20px; position: relative; }
+    .cv .av { width: 52px; height: 52px; font-size: 17px; }
+    .cv .tx { flex: 1; min-width: 0; }
+    .cv .l1 { display: flex; align-items: center; gap: 6px; }
+    .cv .l1 b { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cv .l1 .tm { margin-left: auto; font-size: 12px; color: var(--slate-400); flex-shrink: 0; }
+    .cv .l1 i, .cv .l1 svg { width: 14px; height: 14px; color: var(--slate-400); flex-shrink: 0; }
+    .cv .l2 { display: flex; align-items: center; gap: 8px; margin-top: 3px; }
+    .cv .l2 p { flex: 1; min-width: 0; font-size: 13.5px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cv .l2 p i, .cv .l2 p svg { width: 14px; height: 14px; vertical-align: -2px; margin-right: 2px; }
+    .cv .via-c { display: inline-flex; align-items: center; gap: 5px; margin-top: 5px; font-size: 11.5px; font-weight: 600; color: var(--slate-500); }
+    .cv .via-c .mini-sw { width: 14px; height: 10px; }
+    .cv.unread .l1 b { font-weight: 800; }
+    .cv.unread .l2 p { color: var(--ink); font-weight: 600; }
+    .cv.unread .l1 .tm { color: var(--green); font-weight: 700; }
+    .cnt { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; background: var(--green); color: var(--white); font-size: 11.5px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .cv + .cv::before { content: ""; position: absolute; top: 0; left: 84px; right: 20px; height: 1px; background: var(--slate-100); }
+    .cv.pin { background: var(--white); }
+    .sec-lb { font-size: 12px; font-weight: 700; color: var(--slate-400); letter-spacing: .8px; text-transform: uppercase; padding: 14px 20px 6px; display: flex; align-items: center; gap: 6px; }
+    .sec-lb i, .sec-lb svg { width: 13px; height: 13px; }
+    .mini-sw { display: inline-block; width: 16px; height: 11px; border-radius: 3px; background: var(--card-graphite); flex-shrink: 0; }
+    .mini-sw.pearl { background: var(--card-pearl); border: 1px solid var(--slate-200); }
+    .mini-sw.stone { background: var(--card-stone); border: 1px solid var(--slate-200); }
+    .ptag { display: inline-flex; align-items: center; gap: 4px; height: 20px; padding: 0 7px; border-radius: 10px; font-size: 11px; font-weight: 700; background: var(--gold-bg); color: var(--gold); flex-shrink: 0; }
+    .ptag i, .ptag svg { width: 11px !important; height: 11px !important; color: var(--gold) !important; }
+    .swipe-acts { position: absolute; right: 0; top: 0; bottom: 0; display: flex; }
+    .swipe-acts a { width: 76px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 11.5px; font-weight: 700; color: var(--white); }
+    .swipe-acts a i, .swipe-acts a svg { width: 20px; height: 20px; }
+    .swipe-acts .a1 { background: var(--slate-500); } .swipe-acts .a2 { background: var(--amber-500); } .swipe-acts .a3 { background: var(--red-600); }
+    .cv.swiped { transform: translateX(-228px); background: var(--white); }
+
+    /* request list */
+    .rq { background: var(--white); border: 1px solid var(--slate-200); border-radius: 18px; padding: 14px; box-shadow: var(--shadow-sm); }
+    .rq + .rq { margin-top: 12px; }
+    .rq .hd { display: flex; gap: 12px; align-items: center; }
+    .rq .hd b { display: block; font-size: 15px; }
+    .rq .hd span { display: block; font-size: 12.5px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .rq .hd .tm { font-size: 12px; color: var(--slate-400); align-self: flex-start; }
+    .rq .pv { margin: 12px 0; padding: 10px 12px; border-radius: 12px; background: var(--slate-50); border: 1px solid var(--slate-100); font-size: 13.5px; color: var(--slate-700); line-height: 1.45; }
+    .rq .meta { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+    .rq .btn-row .btn { height: 40px; font-size: 14px; border-radius: 12px; }
+    .info-note { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: 14px; background: var(--white); border: 1px dashed var(--slate-300); font-size: 13px; color: var(--slate-600); line-height: 1.45; margin: 4px 0 14px; }
+    .info-note i, .info-note svg { width: 18px; height: 18px; color: var(--green); flex-shrink: 0; margin-top: 1px; }
+
+    /* ---------- Conversation ---------- */
+    .cbar { height: 60px; flex-shrink: 0; display: flex; align-items: center; gap: 4px; padding: 0 8px 0 4px; background: var(--white); border-bottom: 1px solid var(--slate-100); }
+    .cbar .who { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; }
+    .cbar .who .av { width: 40px; height: 40px; font-size: 14px; }
+    .cbar .who .on-dot { width: 11px; height: 11px; }
+    .cbar .who .f1 b { display: block; font-size: 15.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cbar .who .f1 span { display: block; font-size: 12px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cbar .who .f1 span.live { color: var(--green); font-weight: 600; }
+    .cbar .icon-btn { width: 40px; height: 40px; }
+    .cbar .icon-btn i, .cbar .icon-btn svg { width: 21px; height: 21px; }
+    .thread { flex: 1; overflow: hidden; padding: 12px 16px 8px; background: var(--chat-bg); display: flex; flex-direction: column; justify-content: flex-end; }
+    .thread > * { flex-shrink: 0; }
+    .ctx { align-self: center; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; padding: 4px 12px 14px; }
+    .ctx .pill { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px; border-radius: 14px; background: var(--white); border: 1px solid var(--slate-200); font-size: 12px; font-weight: 600; color: var(--slate-600); }
+    .ctx .pill i, .ctx .pill svg { width: 14px; height: 14px; color: var(--green); }
+    .ctx small { font-size: 11.5px; color: var(--slate-400); }
+    .day { align-self: center; font-size: 11.5px; font-weight: 700; color: var(--slate-400); margin: 4px 0 10px; letter-spacing: .3px; }
+    .m { display: flex; gap: 8px; align-items: flex-end; margin-bottom: 4px; max-width: 100%; }
+    .m .av { width: 28px; height: 28px; font-size: 10px; }
+    .m .gap28 { width: 28px; flex-shrink: 0; }
+    .b { max-width: 268px; padding: 9px 13px; font-size: 14.5px; line-height: 1.42; background: var(--bub-in); color: var(--slate-800); border-radius: 18px; border: 1px solid var(--slate-200); position: relative; }
+    .m.first .b { border-bottom-left-radius: 6px; }
+    .m.me { justify-content: flex-end; }
+    .m.me .b { background: linear-gradient(135deg, var(--green-light), var(--green)); color: var(--white); border: 0; }
+    .m.me.first .b, .m.me .b.tail { border-bottom-left-radius: 18px; border-bottom-right-radius: 6px; }
+    .m + .m.sp { margin-top: 10px; }
+    .stamp { font-size: 11px; color: var(--slate-400); margin: 2px 0 10px 36px; display: flex; align-items: center; gap: 4px; }
+    .stamp.me { justify-content: flex-end; margin-left: 0; }
+    .stamp i, .stamp svg { width: 14px; height: 14px; color: var(--green); }
+    .react { position: absolute; bottom: -12px; right: 8px; height: 22px; padding: 0 6px; border-radius: 11px; background: var(--white); border: 1px solid var(--slate-200); font-size: 12px; display: flex; align-items: center; gap: 2px; box-shadow: var(--shadow-sm); color: var(--slate-600); }
+    .m.has-react { margin-bottom: 16px; }
+    .quote { display: block; border-left: 3px solid rgba(255,255,255,.7); padding: 2px 0 2px 8px; margin-bottom: 6px; font-size: 12.5px; opacity: .9; }
+    .quote b { display: block; font-size: 12px; }
+
+    /* rich message cards */
+    .rcard { width: 252px; background: var(--white); border: 1px solid var(--slate-200); border-radius: 18px; overflow: hidden; box-shadow: var(--shadow-sm); }
+    .m.first .rcard { border-bottom-left-radius: 6px; }
+    .m.me .rcard { border-bottom-right-radius: 6px; }
+    .rcard .rh { display: flex; align-items: center; gap: 8px; padding: 9px 12px; font-size: 12px; font-weight: 700; color: var(--slate-500); border-bottom: 1px solid var(--slate-100); }
+    .rcard .rh i, .rcard .rh svg { width: 15px; height: 15px; color: var(--green); }
+    .rcard .rb { padding: 12px; }
+    .rcard .rb b.t { display: block; font-size: 15px; }
+    .rcard .rb .s { display: block; font-size: 12.5px; color: var(--slate-500); margin-top: 2px; }
+    .rcard .kv { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--slate-700); margin-top: 7px; }
+    .rcard .kv i, .rcard .kv svg { width: 15px; height: 15px; color: var(--slate-400); flex-shrink: 0; }
+    .rcard .ra { display: flex; border-top: 1px solid var(--slate-100); }
+    .rcard .ra a { flex: 1; height: 42px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13.5px; font-weight: 700; color: var(--slate-600); }
+    .rcard .ra a + a { border-left: 1px solid var(--slate-100); }
+    .rcard .ra a.pri { color: var(--green); }
+    .rcard .ra a i, .rcard .ra a svg { width: 16px; height: 16px; }
+    /* shared business card */
+    .bc { margin: 12px 12px 0; height: 118px; border-radius: 12px; background: var(--card-graphite); color: var(--white); padding: 12px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: var(--card-shadow); }
+    .bc .top { display: flex; align-items: center; gap: 8px; }
+    .bc .top img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1.5px solid rgba(255,255,255,.4); }
+    .bc .top b { display: block; font-size: 13.5px; }
+    .bc .top span { display: block; font-size: 11px; opacity: .75; }
+    .bc .bot { display: flex; align-items: flex-end; justify-content: space-between; }
+    .bc .bot small { display: block; font-size: 9px; letter-spacing: 1px; opacity: .6; text-transform: uppercase; }
+    .bc .bot div b { font-size: 12.5px; }
+    .bc .bot img { height: 11px; opacity: .9; filter: brightness(10); }
+    .bc.pearl { background: var(--card-pearl); color: var(--ink); border: 1px solid var(--slate-200); box-shadow: var(--shadow-sm); }
+    .bc.pearl .bot img { filter: none; }
+    /* product */
+    .prod { display: flex; gap: 10px; padding: 10px; align-items: center; }
+    .pimg { width: 64px; height: 64px; border-radius: 12px; flex-shrink: 0; background: var(--card-graphite); display: flex; align-items: center; justify-content: center; color: var(--white); }
+    .pimg i, .pimg svg { width: 26px; height: 26px; }
+    .prod b.t { font-size: 14px !important; }
+    .price { font-size: 14px; font-weight: 800; color: var(--green-dark); margin-top: 6px; display: block; }
+    /* meeting */
+    .mt-date { display: flex; gap: 12px; align-items: center; }
+    .mt-date .cal { width: 46px; height: 50px; border-radius: 12px; border: 1px solid var(--slate-200); overflow: hidden; text-align: center; flex-shrink: 0; }
+    .mt-date .cal small { display: block; background: var(--green); color: var(--white); font-size: 10px; font-weight: 800; height: 16px; line-height: 16px; }
+    .mt-date .cal b { display: block; font-size: 19px; line-height: 32px; }
+    .status-ok { display: flex; align-items: center; gap: 6px; padding: 10px 12px; background: var(--green-50); color: var(--green-dark); font-size: 13px; font-weight: 700; border-top: 1px solid var(--green-100); }
+    .status-ok i, .status-ok svg { width: 16px; height: 16px; }
+    /* collab */
+    .rcard.collab { border-color: var(--gold-border); }
+    .rcard.collab .rh { background: var(--gold-bg); color: var(--gold); border-color: var(--gold-border); }
+    .rcard.collab .rh i, .rcard.collab .rh svg { color: var(--gold); }
+    .rcard .terms { margin-top: 10px; padding: 9px 10px; border-radius: 10px; background: var(--slate-50); font-size: 12.5px; color: var(--slate-600); line-height: 1.45; }
+    .photos { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; width: 220px; border-radius: 18px; overflow: hidden; }
+    .photos span { height: 104px; background-color: var(--slate-300); background-size: cover; background-position: center; }
+    .file { display: flex; align-items: center; gap: 10px; }
+    .file .fi { width: 40px; height: 40px; border-radius: 10px; background: rgba(255,255,255,.22); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .file .fi i, .file .fi svg { width: 20px; height: 20px; }
+    .file b { display: block; font-size: 13.5px; }
+    .file span { font-size: 11.5px; opacity: .85; }
+    .typing { display: inline-flex; gap: 4px; padding: 13px 14px; background: var(--white); border: 1px solid var(--slate-200); border-radius: 18px 18px 18px 6px; }
+    .typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--slate-300); }
+    .typing span:nth-child(2) { background: var(--slate-400); }
+
+    /* smart replies + composer */
+    .smart { flex-shrink: 0; display: flex; gap: 8px; padding: 8px 16px 2px; background: var(--chat-bg); overflow: hidden; align-items: center; }
+    .smart .lead { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; object-position: top; background: var(--green-50); border: 1.5px solid var(--green-100); flex-shrink: 0; }
+    .smart .chip { height: 34px; font-size: 13px; padding: 0 12px; background: var(--white); border-color: var(--green-200); color: var(--green-dark); }
+    .comp { flex-shrink: 0; display: flex; align-items: flex-end; gap: 6px; padding: 8px 10px 6px; background: var(--white); border-top: 1px solid var(--slate-100); }
+    .comp .rnd { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--slate-600); flex-shrink: 0; }
+    .comp .rnd.plus { background: var(--slate-100); color: var(--ink); }
+    .comp .rnd.plus.open { background: var(--ink); color: var(--white); transform: rotate(45deg); }
+    .comp .rnd i, .comp .rnd svg { width: 21px; height: 21px; }
+    .cbar .icon-btn.ai { background: var(--green-50); color: var(--green); border: 1.5px solid var(--green-200); }
+    .cbar .icon-btn.ai i, .cbar .icon-btn.ai svg { width: 19px; height: 19px; }
+    .comp .rnd.send { background: linear-gradient(135deg, var(--green-light), var(--green)); color: var(--white); box-shadow: 0 3px 10px rgba(0,144,55,0.3); }
+    .comp .fld { flex: 1; min-height: 42px; border-radius: 21px; background: var(--slate-50); border: 1.5px solid var(--slate-200); display: flex; align-items: center; padding: 0 6px 0 14px; font-size: 15px; color: var(--slate-400); gap: 4px; }
+    .comp .fld .v { flex: 1; color: var(--ink); line-height: 1.4; padding: 9px 0; }
+    .comp .fld.focus { border-color: var(--green); background: var(--white); }
+    .comp .fld .ph { flex: 1; }
+    .comp .fld .e { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: var(--slate-400); }
+    .comp .fld .e i, .comp .fld .e svg { width: 20px; height: 20px; }
+    .reply-bar { flex-shrink: 0; display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 16px; background: var(--white); border-top: 1px solid var(--slate-100); }
+    .reply-bar .ln { width: 3px; align-self: stretch; border-radius: 2px; background: var(--green); }
+    .reply-bar b { display: block; font-size: 12.5px; color: var(--green-dark); }
+    .reply-bar span { display: block; font-size: 13px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .reply-bar .icon-btn { width: 32px; height: 32px; margin-left: auto; }
+    .reply-bar .icon-btn i, .reply-bar .icon-btn svg { width: 18px; height: 18px; }
+
+    /* attachment tray (replaces keyboard) */
+    .tray { flex-shrink: 0; background: var(--white); padding: 14px 16px 6px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 8px; border-top: 1px solid var(--slate-100); }
+    .tray a { display: flex; flex-direction: column; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; color: var(--slate-700); text-align: center; }
+    .tray a .ti { width: 56px; height: 56px; border-radius: 18px; display: flex; align-items: center; justify-content: center; }
+    .tray a .ti i, .tray a .ti svg { width: 24px; height: 24px; }
+    .ti.c1 { background: var(--act-view-bg); color: var(--act-view); }
+    .ti.c2 { background: var(--slate-100); color: var(--slate-700); }
+    .ti.c3 { background: var(--act-ref-bg); color: #7c5cd6; }
+    .ti.c4 { background: var(--green-bg); color: var(--green); }
+    .ti.c5 { background: var(--act-meet-bg); color: #c27803; }
+    .ti.c6 { background: var(--act-conn-bg); color: #0f8f82; }
+    .ti.c7 { background: var(--red-50); color: var(--red-600); }
+    .ti.c8 { background: var(--gold-bg); color: var(--gold); }
+    .tray .recent { grid-column: 1 / -1; display: flex; gap: 6px; overflow: hidden; margin-top: -2px; }
+    .tray .recent span { width: 84px; height: 84px; border-radius: 12px; background-color: var(--slate-200); background-size: cover; background-position: center; flex-shrink: 0; position: relative; }
+    .tray .recent span.cam { background: var(--slate-100); display: flex; align-items: center; justify-content: center; color: var(--slate-600); }
+    .tray .recent span.cam i, .tray .recent span.cam svg { width: 24px; height: 24px; }
+
+    /* pick sheet (send card) */
+    .pick { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1.5px solid var(--slate-200); border-radius: 14px; margin-bottom: 10px; }
+    .pick .sw { width: 52px; height: 34px; border-radius: 7px; background: var(--card-graphite); flex-shrink: 0; }
+    .pick .sw.pearl { background: var(--card-pearl); border: 1px solid var(--slate-200); }
+    .pick .sw.stone { background: var(--card-stone); border: 1px solid var(--slate-200); }
+    .pick .f1 { min-width: 0; }
+    .pick b { display: block; font-size: 14.5px; margin-bottom: 2px; }
+    .pick .f1 span { display: block; font-size: 12.5px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pick .f1 span.lk { color: var(--green-dark); font-weight: 600; }
+    .pick > i, .pick > svg { width: 18px; height: 18px; color: var(--slate-400); flex-shrink: 0; }
+
+    /* meeting sheet */
+    .days { display: flex; gap: 8px; }
+    .days a { flex: 1; height: 62px; border-radius: 14px; border: 1.5px solid var(--slate-200); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11.5px; font-weight: 600; color: var(--slate-500); }
+    .days a b { font-size: 18px; color: var(--ink); }
+    .days a.on { border-color: var(--green); background: var(--green-50); color: var(--green-dark); }
+    .days a.on b { color: var(--green-dark); }
+    .slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .slots a { height: 40px; border-radius: 10px; border: 1.5px solid var(--slate-200); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: var(--ink); }
+    .slots a.on { background: var(--green); border-color: var(--green); color: var(--white); }
+    .slots a.off { color: var(--slate-300); background: var(--slate-50); text-decoration: line-through; }
+    .seg.sm a { height: 34px; font-size: 13px; }
+    .lbl { font-size: 13px; font-weight: 700; color: var(--slate-700); margin: 16px 0 8px; display: flex; justify-content: space-between; }
+    .lbl span { font-weight: 600; color: var(--slate-400); font-size: 12px; }
+
+    /* long-press focus */
+    .blur-bg { position: absolute; inset: 0; z-index: 20; background: rgba(15,23,42,0.35); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+    .focus-wrap { position: absolute; left: 16px; right: 16px; top: 250px; z-index: 21; display: flex; flex-direction: column; gap: 8px; }
+    .rx { align-self: flex-start; margin-left: 36px; display: flex; gap: 2px; padding: 6px 8px; background: var(--white); border-radius: 26px; box-shadow: var(--shadow-lg); font-size: 24px; }
+    .rx span { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+    .rx span.on { background: var(--green-50); }
+    .rx span.more { font-size: 0; color: var(--slate-500); background: var(--slate-100); }
+    .rx span.more i, .rx span.more svg { width: 18px; height: 18px; }
+    .ctx-menu { margin-left: 36px; width: 262px; background: var(--white); border-radius: 16px; box-shadow: var(--shadow-lg); padding: 6px; }
+    .ctx-menu a { display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 12px; border-radius: 10px; font-size: 14.5px; font-weight: 600; color: var(--slate-700); }
+    .ctx-menu a i, .ctx-menu a svg { width: 19px; height: 19px; color: var(--slate-500); }
+    .ctx-menu a.red, .ctx-menu a.red i, .ctx-menu a.red svg { color: var(--red-600); }
+    .ctx-menu a.ink, .ctx-menu a.ink i, .ctx-menu a.ink svg { color: var(--green-dark); }
+    .ctx-menu .sep { height: 1px; background: var(--slate-100); margin: 4px 6px; }
+
+    /* request banner */
+    .req-ban { flex-shrink: 0; padding: 12px 16px; background: var(--white); border-bottom: 1px solid var(--slate-100); display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--slate-600); line-height: 1.45; }
+    .req-ban i, .req-ban svg { width: 18px; height: 18px; color: var(--amber-500); flex-shrink: 0; margin-top: 1px; }
+    .req-foot { flex-shrink: 0; background: var(--white); border-top: 1px solid var(--slate-100); padding: 12px 16px 6px; }
+    .req-foot p { font-size: 12.5px; color: var(--slate-500); text-align: center; margin-bottom: 10px; }
+    .req-foot .btn-row .btn { height: 46px; font-size: 15px; }
+    .req-foot .btn-row .btn.ghost { flex: 0 0 76px; color: var(--red-600); }
+
+    /* thread info */
+    .ti-head { text-align: center; padding: 6px 20px 0; }
+    .ti-head .av { width: 88px; height: 88px; font-size: 30px; margin: 0 auto; display: flex; box-shadow: 0 0 0 3px var(--white), 0 0 0 5px var(--green-200); }
+    .ti-head h2 { font-size: 20px; font-weight: 700; margin-top: 12px; }
+    .ti-head p { font-size: 13.5px; color: var(--slate-500); margin-top: 3px; }
+    .ti-head .via { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 12px; font-weight: 600; color: var(--slate-600); background: var(--white); border: 1px solid var(--slate-200); border-radius: 12px; height: 26px; padding: 0 10px; }
+    .qa { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 18px 0 6px; }
+    .qa a { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--slate-700); }
+    .qa a span { width: 48px; height: 48px; border-radius: 50%; background: var(--white); border: 1px solid var(--slate-200); display: flex; align-items: center; justify-content: center; color: var(--ink); box-shadow: var(--shadow-sm); }
+    .qa a span i, .qa a span svg { width: 20px; height: 20px; }
+    .media { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 0 14px 14px; }
+    .media span { aspect-ratio: 1; border-radius: 8px; background-color: var(--slate-200); background-size: cover; background-position: center; }
+    .media span.more { background: var(--slate-100); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--slate-600); }
+    .row .ic.green { background: var(--green-50); color: var(--green); }
+    .row .val b { color: var(--ink); }
+    /* B4 dùng chung form với 03-B15 Đặt lịch hẹn */
+    .bk-sheet { display: flex; flex-direction: column; padding-bottom: 28px; }
+    .bk-sub { font-size: 13px; color: var(--slate-500); margin: -8px 0 14px; }
+    .bk-sub b { color: var(--slate-800); font-weight: 600; }
+    .bk-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+    .bk-days span { height: 48px; border-radius: 12px; border: 1px solid var(--slate-200); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--slate-700); cursor: pointer; }
+    .bk-days small { font-size: 10.5px; font-weight: 500; color: var(--slate-400); }
+    .bk-days b { font-size: 15px; font-weight: 600; line-height: 1; }
+    .bk-days .today small { color: var(--green); }
+    .bk-days .so.on { background: var(--green); border-color: var(--green); color: var(--white); box-shadow: 0 2px 8px rgba(0,144,55,0.2); }
+    .bk-days .so.on small { color: rgba(255,255,255,0.85); }
+    .bk-lbl { font-size: 13px; font-weight: 600; color: var(--slate-700); margin: 16px 0 8px; }
+    .bk-me { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 14px; background: var(--slate-50); border: 1px solid var(--slate-200); }
+    .bk-me img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+    .bk-me .f1 { min-width: 0; flex: 1; }
+    .bk-me b { display: block; font-size: 14.5px; }
+    .bk-me span { display: block; font-size: 12.5px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bk-me a { font-size: 13px; font-weight: 700; color: var(--green); flex-shrink: 0; }
+    /* Đặt lịch · "Đổi" thông tin của bạn: sheet chọn thẻ chồng lên */
+    .bk-me a[data-js] { cursor: pointer; }
+    .bkp-scrim { position: absolute; inset: 0; background: rgba(15,23,42,0.45); z-index: 30; border-radius: inherit; }
+    .bkp { position: absolute; left: 0; right: 0; bottom: 0; z-index: 31; background: var(--white); border-radius: 24px 24px 0 0; padding: 10px 20px 28px; box-shadow: 0 -8px 30px rgba(15,23,42,0.18); }
+    .bkp .grab { margin-bottom: 10px; }
+    .bkp-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .bkp-hd h3 { font-size: 18px; font-weight: 700; }
+    .bkp-hd button { width: 36px; height: 36px; border-radius: 50%; border: 0; background: var(--slate-100); display: flex; align-items: center; justify-content: center; color: var(--slate-600); cursor: pointer; }
+    .bkp-hd button svg { width: 18px; height: 18px; }
+    .bkp-sub { font-size: 13px; color: var(--slate-500); margin: 0 0 12px; }
+    .bkp-ls { border: 1px solid var(--slate-200); border-radius: 14px; overflow: hidden; }
+    .bkp-ci { display: flex; align-items: center; gap: 10px; padding: 11px 14px; cursor: pointer; }
+    .bkp-ci + .bkp-ci { border-top: 1px solid var(--slate-100); }
+    .bkp-ci:active { background: var(--slate-50); }
+    .bkp-ci .f1 { flex: 1; min-width: 0; }
+    .bkp-ci .bkp-av, .bk-me .bkp-av { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 14px; font-weight: 700; letter-spacing: .02em; line-height: 1; overflow: visible; white-space: nowrap; }
+    .bkp-ci > img, .bk-me > img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+    .bkp-ci b { display: block; font-size: 14.5px; color: var(--slate-800); }
+    .bkp-ci span { display: block; font-size: 12.5px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bkp-ci .ck { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--slate-300, #cbd5e1); flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--white); }
+    .bkp-ci .ck svg { width: 14px; height: 14px; }
+    .bkp-ci.on { background: var(--green-bg); }
+    .bkp-ci.on .ck { background: var(--green); border-color: var(--green); }
+    .bk-msg { height: 76px !important; margin-top: 10px; }
+    .bk-sheet .btn.primary { margin-top: 18px; }
+    /* Đặt lịch: 1 tuần/lần, xem tới 3 tuần + bộ chọn giờ : phút */
+    .bk-mon { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .bk-mon b { font-size: 15px; }
+    .bk-nav { display: flex; align-items: center; gap: 6px; }
+    .bk-rng { min-width: 104px; text-align: center; font-size: 13px; font-weight: 600; color: var(--slate-600); }
+    .bk-arw { width: 38px; height: 38px; border: 0; border-radius: 9px; background: var(--slate-100); color: var(--slate-700); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+    .bk-arw i, .bk-arw svg { width: 18px; height: 18px; }
+    .bk-arw.dis { opacity: .35; cursor: default; }
+    .bk-wk { display: none !important; }
+    .bk-wk.on { display: grid !important; }
+    .bk-days span { cursor: pointer; }
+    .bk-dots { display: flex; justify-content: center; gap: 5px; margin-top: 8px; }
+    .bk-dots i { width: 6px; height: 6px; border-radius: 3px; background: var(--slate-200); transition: width .2s; }
+    .bk-dots i.on { width: 16px; background: var(--green); }
+    .bk-lbl small { float: right; font-size: 12.5px; font-weight: 500; color: var(--slate-400); }
+    .bk-time { display: flex; align-items: center; gap: 8px; }
+    .bk-col { flex: 1; display: flex; align-items: center; height: 46px; padding: 3px; border: 1px solid var(--slate-200); border-radius: 12px; background: var(--white); user-select: none; }
+    .bk-b { width: 40px; height: 38px; flex-shrink: 0; border: 0; border-radius: 9px; background: transparent; color: var(--green); display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+    .bk-b:active { background: var(--green-bg); }
+    .bk-b svg { width: 17px; height: 17px; stroke-width: 1.75; }
+    .bk-v { flex: 1; display: flex; align-items: baseline; justify-content: center; gap: 3px; }
+    .bk-v b { font-size: 18px; font-weight: 600; color: var(--slate-800); font-variant-numeric: tabular-nums; }
+    .bk-v em { font-style: normal; font-size: 11.5px; font-weight: 500; color: var(--slate-400); }
+    .bk-colon { font-size: 18px; font-weight: 500; color: var(--slate-300, #cbd5e1); }
+
+    /* ---------- cx-: pop-up bổ sung (A6, B11–B13, C4–C6) ---------- */
+    .cx-sub { font-size: 13px; color: var(--slate-500); margin: -8px 0 14px; }
+    .cx-sub b { color: var(--ink); font-weight: 600; }
+    .dialog .cx-opt { text-align: left; margin: -6px 0 18px; padding: 12px; border-radius: 12px; background: var(--slate-50); border: 1px solid var(--slate-200); align-items: center; font-size: 13.5px; color: var(--slate-700); font-weight: 600; }
+    .cx-checks { display: flex; flex-direction: column; gap: 12px; margin: 14px 0 16px; }
+    .cx-checks .check { align-items: center; font-size: 13.5px; color: var(--slate-700); }
+    .cx-reasons { padding: 0 14px; }
+    .cx-reasons .so { height: 44px; }
+    .cx-fwd { display: flex; gap: 10px; padding: 10px 12px; border-radius: 12px; background: var(--slate-50); border: 1px solid var(--slate-100); margin-bottom: 12px; }
+    .cx-fwd .ln { width: 3px; border-radius: 2px; background: var(--green); flex-shrink: 0; }
+    .cx-fwd b { display: block; font-size: 12px; color: var(--green-dark); }
+    .cx-fwd span { display: block; font-size: 13px; color: var(--slate-600); line-height: 1.4; }
+    .cx-ls { margin-top: 4px; }
+    .cx-ls .check { align-items: center; gap: 12px; padding: 9px 0; }
+    .cx-ls .check + .check { border-top: 1px solid var(--slate-100); }
+    .cx-ls .check .f1 { flex: 1; min-width: 0; }
+    .cx-ls .check .f1 b { display: block; font-size: 14.5px; color: var(--ink); font-weight: 600; }
+    .cx-ls .check .f1 span { display: block; font-size: 12.5px; color: var(--slate-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cx-ls .check .box { border-radius: 50%; }
+    .cx-fi { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--red-50); color: var(--red-600); }
+    .cx-fi.doc { background: var(--act-view-bg); color: var(--act-view); }
+    .cx-fi i, .cx-fi svg { width: 20px; height: 20px; }
+    .cx-browse { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-top: 1px solid var(--slate-100); font-size: 14.5px; font-weight: 600; color: var(--green-dark); }
+    .cx-browse .cx-fi { background: var(--green-50); color: var(--green); }
+    .cx-browse > i, .cx-browse > svg { width: 18px; height: 18px; margin-left: auto; color: var(--slate-400); }
+    .cx-prs { display: flex; flex-direction: column; gap: 10px; }
+    .cx-prs .so { display: flex; align-items: center; gap: 12px; padding: 10px; border: 1.5px solid var(--slate-200); border-radius: 14px; }
+    .cx-prs .so.on { border-color: var(--green); background: var(--green-50); }
+    .cx-prs .so .pimg { width: 56px; height: 56px; }
+    .cx-prs .so .f1 { flex: 1; min-width: 0; }
+    .cx-prs .so b { display: block; font-size: 14.5px; color: var(--ink); }
+    .cx-prs .so span.s { display: block; font-size: 12.5px; color: var(--slate-500); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cx-prs .so .price { font-size: 13px; margin-top: 4px; }
+    .cx-prs .so .rd { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--slate-300); flex-shrink: 0; }
+    .cx-prs .so.on .rd { border: 6px solid var(--green); }
+    .cx-blk .row .tx span { white-space: normal; }
+    .cx-blk .row .btn.sm { height: 34px; font-size: 13px; padding: 0 12px; }
+  </style>
+</head>
+<body class="rd-canvas">
+  <div class="rd-head">
+    <a class="back" href="index.html">← Tất cả flow</a>
+    <h1>09 · Tin nhắn</h1>
+    <p>Nhắn tin 1-1 giữa các thành viên InCard. Vào từ biểu tượng tin nhắn ở đầu Trang chủ hoặc nút "Nhắn tin" trên hồ sơ. Cuộc trò chuyện luôn hiện bối cảnh (gặp nhau thế nào, qua thẻ nào), và các việc hay làm sau khi gặp được đưa thẳng vào khung chat: gửi thẻ, đặt lịch, gửi sản phẩm, đề xuất hợp tác. Người chưa kết nối chỉ gửi được 1 tin vào mục "Tin nhắn chờ".</p>
+  </div>
+
+  <!-- ===================== A. Hộp thư ===================== -->
+  <section class="rd-section">
+    <h2>A · Hộp thư</h2>
+    <div class="rd-row">
+
+      <!-- A1 inbox -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title left" style="padding-left:0">Tin nhắn</div><button class="icon-btn soft" aria-label="Tin nhắn mới"><i data-lucide="square-pen"></i></button></div>
+          <div class="ibx-top">
+            <div class="search"><i data-lucide="search"></i><span class="ph">Tìm người hoặc nội dung tin nhắn</span></div>
+          </div>
+          <div class="body" style="background:var(--app-bg)">
+            <div style="height:10px"></div>
+            <div class="cv unread">
+              <span class="avw"><img class="av" src="https://i.pravatar.cc/150?img=32" alt="" /><span class="on-dot"></span></span>
+              <div class="tx"><div class="l1"><b>Trần Thuỷ (Helen)</b><span class="tm">9:38</span></div><div class="l2"><p><i data-lucide="calendar-days"></i>Đã chấp nhận lịch hẹn thứ Ba 17/11</p><span class="cnt">2</span></div></div>
+            </div>
+            <div class="cv unread">
+              <span class="avw"><img class="av" src="https://i.pravatar.cc/150?img=68" alt="" /><span class="on-dot"></span></span>
+              <div class="tx"><div class="l1"><b>Hồ Văn Tâm</b><span class="tm">8:15</span></div><div class="l2"><p>Gửi anh báo giá 50 thẻ NFC nhé em</p><span class="cnt">1</span></div></div>
+            </div>
+            <div class="cv">
+              <span class="avw"><span class="av tb">LN</span></span>
+              <div class="tx"><div class="l1"><b>Lê Nhật Nam</b><span class="tm">Hôm qua</span></div><div class="l2"><p>Bạn: <i data-lucide="id-card"></i>Đã gửi thẻ CLB Doanh nhân trẻ</p><i data-lucide="check-check" style="width:16px;height:16px;color:var(--green)"></i></div></div>
+            </div>
+            <div class="cv">
+              <span class="avw"><img class="av" src="https://i.pravatar.cc/150?img=45" alt="" /></span>
+              <div class="tx"><div class="l1"><b>Đặng Phương</b><i data-lucide="bell-off"></i><span class="tm">T2</span></div><div class="l2"><p>Ok chị, em sẽ báo lại sau buổi demo</p></div></div>
+            </div>
+            <div class="cv">
+              <span class="avw"><span class="av tv">PL</span></span>
+              <div class="tx"><div class="l1"><b>Phạm Thu Lan</b><span class="tm">05/11</span></div><div class="l2"><p>Bạn: Mình gửi điều kiện co-marketing ở trên nha</p></div></div>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">A1 · Tin nhắn<small>Mở từ biểu tượng tin nhắn cạnh chuông ở Trang chủ (có chấm số chưa đọc). Danh sách gọn: ảnh, tên, giờ, tin cuối và số chưa đọc. Xem trước tin cuối hiện loại nội dung (lịch hẹn, thẻ, ảnh) bằng icon.</small></div>
+      </div>
+
+      <!-- A2 swipe actions -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title left" style="padding-left:0">Tin nhắn</div><button class="icon-btn soft"><i data-lucide="square-pen"></i></button></div>
+          <div class="ibx-top">
+            <div class="search"><i data-lucide="search"></i><span class="ph">Tìm người hoặc nội dung tin nhắn</span></div>
+          </div>
+          <div class="body" style="background:var(--app-bg)">
+            <div style="height:10px"></div>
+            <div class="cv unread">
+              <span class="avw"><img class="av" src="https://i.pravatar.cc/150?img=32" alt="" /><span class="on-dot"></span></span>
+              <div class="tx"><div class="l1"><b>Trần Thuỷ (Helen)</b><span class="tm">9:38</span></div><div class="l2"><p><i data-lucide="calendar-days"></i>Đã chấp nhận lịch hẹn thứ Ba 17/11</p><span class="cnt">2</span></div></div>
+            </div>
+            <div style="position:relative;overflow:hidden">
+              <div class="swipe-acts"><a class="a1"><i data-lucide="mail-open"></i>Đã đọc</a><a class="a2"><i data-lucide="bell-off"></i>Tắt TB</a><a class="a3"><i data-lucide="trash-2"></i>Xoá</a></div>
+              <div class="cv unread swiped">
+                <span class="avw"><img class="av" src="https://i.pravatar.cc/150?img=68" alt="" /><span class="on-dot"></span></span>
+                <div class="tx"><div class="l1"><b>Hồ Văn Tâm</b><span class="tm">8:15</span></div><div class="l2"><p>Gửi anh báo giá 50 thẻ NFC nhé em</p><span class="cnt">1</span></div></div>
+              </div>
+            </div>
+            <div class="cv unread">
+              <span class="avw"><span class="av te">GB</span></span>
+              <div class="tx"><div class="l1"><b>Nguyễn Gia Bảo</b><span class="tm">T7</span></div><div class="l2"><p><i data-lucide="image"></i>3 ảnh</p><span class="cnt">3</span></div></div>
+            </div>
+          </div>
+          <div class="toast" style="bottom:40px"><i data-lucide="pin"></i><span>Vuốt phải để ghim · vuốt trái để đánh dấu, tắt thông báo hoặc xoá</span></div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">A2 · Vuốt thao tác<small>Vuốt trái hiện 3 thao tác nhanh: Đã đọc, Tắt thông báo, Xoá (xoá có Hoàn tác). Vuốt phải để ghim lên đầu. Thông báo gợi ý thao tác chỉ hiện lần đầu.</small></div>
+      </div>
+
+      <!-- A3 message requests -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title">Tin nhắn chờ</div><button class="icon-btn"><i data-lucide="settings-2"></i></button></div>
+          <div class="body">
+            <div class="scroll">
+              <div class="info-note"><i data-lucide="shield-check"></i><span>Người chưa kết nối chỉ gửi được <b>1 tin</b>. Họ không biết bạn đã xem cho tới khi bạn chấp nhận.</span></div>
+              <div class="rq">
+                <div class="hd"><img class="av" src="https://i.pravatar.cc/150?img=33" alt="" /><div class="f1"><b>Phan Đức Thịnh</b><span>Giám đốc dự án · KMS Technology</span></div><span class="tm">10:02</span></div>
+                <div class="meta"><span class="badge gold"><i data-lucide="handshake"></i>Đề xuất hợp tác</span><span class="badge gray"><i data-lucide="users"></i>3 kết nối chung</span></div>
+                <div class="pv" style="margin-top:0">Chào chị Minh Anh, bên em đang tìm đối tác cung cấp thẻ NFC cho 400 nhân sự, muốn làm đại lý khu vực…</div>
+                <div class="btn-row"><button class="btn outline">Từ chối</button><button class="btn primary">Xem &amp; trả lời</button></div>
+              </div>
+              <div class="rq">
+                <div class="hd"><img class="av" src="https://i.pravatar.cc/150?img=26" alt="" /><div class="f1"><b>Lý Ngọc Trâm</b><span>Trưởng phòng Đối tác · Sapo</span></div><span class="tm">Hôm qua</span></div>
+                <div class="meta"><span class="badge gray"><i data-lucide="compass"></i>Từ Khám phá</span></div>
+                <div class="pv" style="margin-top:0">Hi chị, em thấy bài đăng tìm nhà phân phối ở Đà Nẵng của chị. Mình trao đổi thêm được không ạ?</div>
+                <div class="btn-row"><button class="btn outline">Từ chối</button><button class="btn primary">Xem &amp; trả lời</button></div>
+              </div>
+              <p class="t-xs t-center mt16">Từ chối sẽ xoá tin, người gửi không nhận được thông báo.</p>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">A3 · Tin nhắn chờ<small>Chặn spam mà không chặn cơ hội: người lạ được gửi 1 tin kèm nhãn nguồn (Khám phá, Đề xuất hợp tác, kết nối chung) để dễ quyết định. "Xem &amp; trả lời" mở B6; trả lời là chấp nhận. Nút bánh răng chọn ai được nhắn trực tiếp (Mọi người / Chỉ người đã kết nối).</small></div>
+      </div>
+
+
+      <!-- A4 new message -->
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="x"></i></button><div class="title">Tin nhắn mới</div><div class="spacer44"></div></div>
+          <div class="body">
+            <div class="scroll">
+              <div class="input focus" style="height:48px"><span style="font-size:14px;color:var(--slate-500);font-weight:600">Tới:</span><span class="v">Ng</span></div>
+              <div class="group-label">Kết nối của bạn</div>
+              <div class="group">
+                <div class="row"><span class="av sm te">GB</span><div class="tx"><b><u>Ng</u>uyễn Gia Bảo</b><span>Trưởng phòng Kinh doanh · Trung Nguyên Legend</span></div></div>
+                <div class="row"><span class="av sm tv">BC</span><div class="tx"><b><u>Ng</u>ô Bảo Châu</b><span>Founder · Hachi Studio</span></div></div>
+                <div class="row"><span class="av sm tg">NH</span><div class="tx"><b><u>Ng</u>uyễn Hoàng</b><span>Kế toán trưởng · Sunnycare</span></div></div>
+              </div>
+              <div class="group-label">Trong danh bạ, chưa dùng InCard</div>
+              <div class="group">
+                <div class="row"><span class="av sm">NT</span><div class="tx"><b><u>Ng</u>uyễn Văn Tú</b><span>0908 *** 112 · từ danh thiếp</span></div><button class="btn sm outline" style="height:34px;font-size:13px"><i data-lucide="send" style="width:15px;height:15px"></i>Mời</button></div>
+              </div>
+              <div class="info-note mt16"><i data-lucide="info"></i><span>Nhắn người chưa kết nối? Mở hồ sơ của họ và bấm "Nhắn tin", tin sẽ vào mục Tin nhắn chờ của họ.</span></div>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">A4 · Tin nhắn mới<small>Ô "Tới:" tìm ngay khi gõ, tô đậm phần trùng. Ưu tiên người đã kết nối; người trong danh bạ chưa có InCard thì đổi thành nút "Mời" (gửi link mời qua SMS/Zalo, tính điểm giới thiệu).</small></div>
+      </div>
+
+      <!-- A5 empty -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title left" style="padding-left:0">Tin nhắn</div><button class="icon-btn soft"><i data-lucide="square-pen"></i></button></div>
+          <div class="body" style="padding:0 20px">
+            <div class="empty" style="padding-top:90px">
+              <div class="ill"><i data-lucide="messages-square"></i></div>
+              <h3>Chưa có cuộc trò chuyện</h3>
+              <p>Sau khi chạm thẻ hoặc quét QR với ai đó, bạn có thể nhắn tin, gửi thẻ và hẹn gặp ngay tại đây.</p>
+              <button class="btn primary md" style="width:auto;padding:0 22px"><i data-lucide="user-round-plus"></i>Tìm người để kết nối</button>
+              <a class="link mt16" style="font-size:14px">Nhắn một kết nối có sẵn</a>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">A5 · Hộp thư trống<small>Giải thích tin nhắn đến từ đâu và dẫn sang việc tạo kết nối (Kết nối tiềm năng ở Trang chủ). Nếu đã có kết nối nhưng chưa nhắn ai, link phụ mở A4.</small></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== B. Cuộc trò chuyện ===================== -->
+  <section class="rd-section">
+    <h2>B · Cuộc trò chuyện</h2>
+    <div class="rd-row">
+
+      <!-- B1 conversation -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar" style="background:var(--white)"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="cbar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="who"><span class="avw"><img class="av" src="https://i.pravatar.cc/150?img=32" alt="" /><span class="on-dot"></span></span><div class="f1"><b>Trần Thuỷ (Helen)</b><span class="live">Đang hoạt động</span></div></div>
+            <button class="icon-btn ai" title="Viết với Inka" aria-label="Viết với Inka"><i data-lucide="sparkles"></i></button><button class="icon-btn"><i data-lucide="calendar-plus"></i></button>
+          </div>
+          <div class="thread">
+            <div class="ctx"><span class="pill"><i data-lucide="nfc"></i>Đã kết nối qua chạm thẻ · Thẻ InApps</span><small>CRO · InCard Technology · 12/11/2026</small></div>
+            <div class="day">HÔM QUA</div>
+            <div class="m first"><img class="av" src="https://i.pravatar.cc/150?img=32" alt="" />
+              <div class="rcard">
+                <div class="rh"><i data-lucide="id-card"></i>Helen đã gửi thẻ</div>
+                <div class="bc pearl"><div class="top"><img src="https://i.pravatar.cc/150?img=32" alt="" /><div><b>Trần Thuỷ (Helen)</b><span>CRO</span></div></div><div class="bot"><div><small>Công ty</small><b>InCard Technology</b></div><img src="assets/logo-word.png" alt="" /></div></div>
+                <div class="ra" style="margin-top:12px"><a>Xem hồ sơ</a><a class="pri"><i data-lucide="contact-round"></i>Đã lưu</a></div>
+              </div>
+            </div>
+            <div class="m me sp"><div class="b tail">Rất vui được gặp chị ở CTO Summit! Em gửi chị thông tin gói doanh nghiệp nhé.</div></div>
+            <div class="m me" style="margin-top:4px">
+              <div class="rcard">
+                <div class="rb prod"><span class="pimg"><i data-lucide="nfc"></i></span><div class="f1"><b class="t">InCard Business · 50 thẻ</b><span class="s">In logo, quản lý tập trung</span><span class="price">Từ 290.000đ / thẻ</span></div></div>
+                <div class="ra"><a class="pri">Tìm hiểu thêm<i data-lucide="arrow-up-right"></i></a></div>
+              </div>
+            </div>
+            <div class="day" style="margin-top:10px">HÔM NAY</div>
+            <div class="m first has-react"><img class="av" src="https://i.pravatar.cc/150?img=32" alt="" />
+              <div class="rcard">
+                <div class="rh"><i data-lucide="calendar-days"></i>Lịch hẹn</div>
+                <div class="rb">
+                  <div class="mt-date"><span class="cal"><small>T3</small><b>17</b></span><div class="f1"><b class="t">Cà phê bàn hợp tác</b><span class="s">10:00 – 11:00 · 17/11/2026</span></div></div>
+                  <div class="kv"><i data-lucide="map-pin"></i>The Coffee House, 86 Lê Lợi, Q.1</div>
+                </div>
+                <div class="status-ok"><i data-lucide="circle-check"></i>Cả hai đã xác nhận · đã thêm vào lịch</div>
+              </div>
+            </div>
+            <div class="m me sp"><div class="b tail">Tuyệt, em sẽ mang mẫu thẻ kim loại theo ạ 🙌</div></div>
+            <div class="stamp me">Đã xem 9:38<i data-lucide="check-check"></i></div>
+            <div class="m first"><img class="av" src="https://i.pravatar.cc/150?img=32" alt="" /><div class="typing"><span></span><span></span><span></span></div></div>
+          </div>
+          <div class="smart"><img class="lead" src="assets/inka.png" alt="Inka gợi ý" /><span class="chip">Hẹn gặp chị thứ Ba nhé!</span><span class="chip">Em gửi thêm báo giá</span></div>
+          <div class="comp"><span class="rnd plus"><i data-lucide="plus"></i></span><div class="fld"><span class="ph">Nhắn tin…</span><span class="e"><i data-lucide="smile"></i></span></div><span class="rnd"><i data-lucide="mic"></i></span></div>
+          <div class="home-ind" style="background:var(--white)"></div>
+        </div>
+        <div class="cap">B1 · Trò chuyện với Helen<small>Đầu cuộc trò chuyện luôn có dòng bối cảnh "Đã kết nối qua chạm thẻ · Thẻ InApps" để nhớ đã gặp ở đâu. Thẻ, sản phẩm, lịch hẹn hiện thành thẻ nội dung có nút hành động, không phải link trần. Nút lịch trên thanh đầu mở B4. Inka gợi ý 2 câu trả lời nhanh phía trên ô nhập (chạm là điền, không tự gửi). Inka là tính năng nổi bật nên có nút riêng ✦ "Viết với Inka" trên thanh đầu, ngay cạnh nút lịch (mọi màn chat), chạm mở B9 Inka soạn tin, không phải vào khay đính kèm.</small></div>
+      </div>
+
+      <!-- B2 typing + attach tray -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar" style="background:var(--white)"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="cbar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="who"><span class="avw"><img class="av" src="https://i.pravatar.cc/150?img=32" alt="" /><span class="on-dot"></span></span><div class="f1"><b>Trần Thuỷ (Helen)</b><span class="live">Đang hoạt động</span></div></div>
+            <button class="icon-btn ai" title="Viết với Inka" aria-label="Viết với Inka"><i data-lucide="sparkles"></i></button><button class="icon-btn"><i data-lucide="calendar-plus"></i></button>
+          </div>
+          <div class="thread" style="justify-content:flex-end">
+            <div class="m first"><img class="av" src="https://i.pravatar.cc/150?img=32" alt="" /><div class="b">Em gửi chị thêm vài hình mẫu thẻ kim loại với, chị cho team xem trước</div></div>
+            <div class="stamp">9:41</div>
+          </div>
+          <div class="comp"><span class="rnd plus open"><i data-lucide="plus"></i></span><div class="fld focus"><span class="v">Dạ chị, em gửi ngay</span><span class="e"><i data-lucide="smile"></i></span></div><span class="rnd send"><i data-lucide="arrow-up"></i></span></div>
+          <div class="tray">
+            <div class="recent"><span class="cam"><i data-lucide="camera"></i></span><span style="background-image:url('https://picsum.photos/seed/metalcard1/200/200')"></span><span style="background-image:url('https://picsum.photos/seed/metalcard2/200/200')"></span><span style="background-image:url('https://picsum.photos/seed/metalcard3/200/200')"></span></div>
+            <a><span class="ti c1"><i data-lucide="image"></i></span>Ảnh</a>
+            <a><span class="ti c2"><i data-lucide="paperclip"></i></span>Tệp</a>
+            <a><span class="ti c4"><i data-lucide="id-card"></i></span>Gửi thẻ</a>
+            <a><span class="ti c5"><i data-lucide="calendar-plus"></i></span>Đặt lịch</a>
+            <a><span class="ti c6"><i data-lucide="package"></i></span>Sản phẩm</a>
+            <a><span class="ti c8"><i data-lucide="handshake"></i></span>Hợp tác</a>
+            <a><span class="ti c7"><i data-lucide="map-pin"></i></span>Vị trí</a>
+          </div>
+          <div class="home-ind" style="background:var(--white)"></div>
+        </div>
+        <div class="cap">B2 · Đang soạn + khay đính kèm<small>Nút + xoay thành × và mở khay thay cho bàn phím. Hàng ảnh gần đây để gửi nhanh. 7 loại: Ảnh, Tệp, Gửi thẻ (B3), Đặt lịch (B4), Sản phẩm (lấy từ Sản phẩm nổi bật của thẻ), Hợp tác, Vị trí. "Inka soạn" đã đưa ra ngoài thành nút ✦ trên thanh đầu, cạnh nút lịch. Có chữ là nút mic đổi thành nút gửi.</small></div>
+      </div>
+
+
+
+      <!-- B3 send card picker -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar" style="background:var(--white)"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="cbar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="who"><span class="avw"><span class="av tb">LN</span></span><div class="f1"><b>Lê Nhật Nam</b><span>Hoạt động 2 giờ trước</span></div></div>
+            <button class="icon-btn ai" title="Viết với Inka" aria-label="Viết với Inka"><i data-lucide="sparkles"></i></button><button class="icon-btn"><i data-lucide="calendar-plus"></i></button>
+          </div>
+          <div class="thread"><div class="ctx"><span class="pill"><i data-lucide="qr-code"></i>Đã kết nối qua mã QR · Thẻ CLB Doanh nhân trẻ</span></div><div class="m first"><span class="av tb">LN</span><div class="b">Chị gửi em thẻ bên CLB để em giới thiệu với ban tổ chức nhé</div></div></div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><div><h3>Gửi thẻ nào?</h3><p class="t-xs mt4">Gửi vào cuộc trò chuyện với <b style="color:var(--ink)">Lê Nhật Nam</b></p></div><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <div class="pick" data-go="back|Đã gửi Thẻ InApps Technology vào cuộc trò chuyện"><span class="sw"></span><div class="f1"><b>Nguyễn Minh Anh</b><span>Giám đốc kinh doanh · InApps Technology</span><span class="lk">incard.biz/minhanh</span></div><i data-lucide="chevron-right"></i></div>
+            <div class="pick" data-go="back|Đã gửi Thẻ CLB Doanh nhân trẻ vào cuộc trò chuyện" style="border-color:var(--green);background:var(--green-50)"><span class="sw pearl"></span><div class="f1"><b>Nguyễn Minh Anh</b><span>Phó Chủ tịch · CLB Doanh nhân trẻ Sài Gòn</span><span class="lk">incard.biz/minhanh/clb-dnt</span></div><i data-lucide="chevron-right"></i></div>
+            <div class="pick" data-go="back|Đã gửi Thẻ Mentor khởi nghiệp vào cuộc trò chuyện"><span class="sw stone"></span><div class="f1"><b>Nguyễn Minh Anh</b><span>Diễn giả · Mentor khởi nghiệp</span><span class="lk">incard.biz/minhanh/mentor</span></div><i data-lucide="chevron-right"></i></div>
+            <div class="pick-note t-xs t-center mt8" style="display:flex;justify-content:center;gap:6px;align-items:center"><i data-lucide="info" style="width:14px;height:14px"></i>Thẻ đã dùng để kết nối với Nam được tô sẵn màu, vẫn cần bạn chọn</div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">B3 · Gửi thẻ nào? (sheet)<small>Dùng lại sheet "Gửi thẻ nào?" như ở 03-B5, 07-B2: luôn hỏi, không có thẻ mặc định. Trong chat chỉ thêm gợi ý nhẹ: viền xanh cho thẻ đã dùng khi kết nối với người này. Bấm một dòng là gửi thẻ thành tin nhắn dạng thẻ (như thẻ Helen gửi ở B1).</small></div>
+      </div>
+
+      <!-- B4 meeting sheet -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar" style="background:var(--white)"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="cbar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="who"><span class="avw"><img class="av" src="https://i.pravatar.cc/150?img=68" alt="" /><span class="on-dot"></span></span><div class="f1"><b>Hồ Văn Tâm</b><span class="live">Đang hoạt động</span></div></div>
+            <button class="icon-btn ai" title="Viết với Inka" aria-label="Viết với Inka"><i data-lucide="sparkles"></i></button><button class="icon-btn"><i data-lucide="calendar-plus"></i></button>
+          </div>
+          <div class="thread"></div>
+          <div class="scrim"></div>
+          <div class="sheet bk-sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Đặt lịch hẹn</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <p class="bk-sub">Chọn ngày giờ để gặp <b>Hồ Văn Tâm</b></p>
+            <div class="bk-mon"><b>Chọn ngày</b><div class="bk-nav"><button class="bk-arw dis" data-js="bk-prev" aria-label="Tuần trước"><i data-lucide="chevron-left"></i></button><span class="bk-rng">13/11 – 19/11</span><button class="bk-arw" data-js="bk-next" aria-label="Tuần sau"><i data-lucide="chevron-right"></i></button></div></div>
+            <div class="bk-days bk-wk on" data-rng="13/11 – 19/11"><span class="so today" data-js="bk-day" data-d="Thứ Sáu, 13/11"><small>Nay</small><b>13</b></span><span class="so" data-js="bk-day" data-d="Thứ Bảy, 14/11"><small>T7</small><b>14</b></span><span class="so" data-js="bk-day" data-d="Chủ nhật, 15/11"><small>CN</small><b>15</b></span><span class="so" data-js="bk-day" data-d="Thứ Hai, 16/11"><small>T2</small><b>16</b></span><span class="so on" data-js="bk-day" data-d="Thứ Ba, 17/11"><small>T3</small><b>17</b></span><span class="so" data-js="bk-day" data-d="Thứ Tư, 18/11"><small>T4</small><b>18</b></span><span class="so" data-js="bk-day" data-d="Thứ Năm, 19/11"><small>T5</small><b>19</b></span></div>
+            <div class="bk-days bk-wk" data-rng="20/11 – 26/11"><span class="so" data-js="bk-day" data-d="Thứ Sáu, 20/11"><small>T6</small><b>20</b></span><span class="so" data-js="bk-day" data-d="Thứ Bảy, 21/11"><small>T7</small><b>21</b></span><span class="so" data-js="bk-day" data-d="Chủ nhật, 22/11"><small>CN</small><b>22</b></span><span class="so" data-js="bk-day" data-d="Thứ Hai, 23/11"><small>T2</small><b>23</b></span><span class="so" data-js="bk-day" data-d="Thứ Ba, 24/11"><small>T3</small><b>24</b></span><span class="so" data-js="bk-day" data-d="Thứ Tư, 25/11"><small>T4</small><b>25</b></span><span class="so" data-js="bk-day" data-d="Thứ Năm, 26/11"><small>T5</small><b>26</b></span></div>
+            <div class="bk-days bk-wk" data-rng="27/11 – 03/12"><span class="so" data-js="bk-day" data-d="Thứ Sáu, 27/11"><small>T6</small><b>27</b></span><span class="so" data-js="bk-day" data-d="Thứ Bảy, 28/11"><small>T7</small><b>28</b></span><span class="so" data-js="bk-day" data-d="Chủ nhật, 29/11"><small>CN</small><b>29</b></span><span class="so" data-js="bk-day" data-d="Thứ Hai, 30/11"><small>T2</small><b>30</b></span><span class="so" data-js="bk-day" data-d="Thứ Ba, 1/12"><small>T3</small><b>1/12</b></span><span class="so" data-js="bk-day" data-d="Thứ Tư, 2/12"><small>T4</small><b>2</b></span><span class="so" data-js="bk-day" data-d="Thứ Năm, 3/12"><small>T5</small><b>3</b></span></div>
+            <div class="bk-dots"><i class="on"></i><i></i><i></i></div>
+            <div class="bk-lbl">Giờ hẹn<small class="bk-tdate">Thứ Ba, 17/11</small></div>
+            <div class="bk-time"><div class="bk-col" data-k="h" data-v="10"><button class="bk-b" data-js="bk-h-" aria-label="Giảm"><i data-lucide="minus"></i></button><span class="bk-v"><b>10</b><em>giờ</em></span><button class="bk-b" data-js="bk-h+" aria-label="Tăng"><i data-lucide="plus"></i></button></div><span class="bk-colon">:</span><div class="bk-col" data-k="m" data-v="30"><button class="bk-b" data-js="bk-m-" aria-label="Giảm"><i data-lucide="minus"></i></button><span class="bk-v"><b>30</b><em>phút</em></span><button class="bk-b" data-js="bk-m+" aria-label="Tăng"><i data-lucide="plus"></i></button></div></div>
+            <div class="bk-lbl">Thông tin của bạn</div>
+            <div class="bk-me"><img src="https://i.pravatar.cc/150?img=47" alt="" /><div class="f1"><b>Nguyễn Minh Anh</b><span>Giám đốc kinh doanh · InApps Technology</span><span>0908 112 222 · minhanh@inapps.net</span></div><a data-js="bkp-open">Đổi</a></div>
+            <div class="input area bk-msg"><span class="ph" style="white-space:normal">Lời nhắn: bạn muốn trao đổi về điều gì? (không bắt buộc)</span></div>
+            <button class="btn primary"><i data-lucide="calendar-check"></i>Xác nhận đặt lịch</button>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">B4 · Đặt lịch trong chat (sheet)<small>Mở từ nút lịch trên thanh đầu hoặc "Đặt lịch" ở khay. Dùng đúng form của 03-B15 Đặt lịch hẹn: mỗi lần hiện 1 tuần, ‹ › xem tối đa 3 tuần tới, giờ hẹn 2 ô Giờ : Phút với nút − / + lớn (không kiểm tra giờ trống, không thời lượng, không hình thức), Thông tin của bạn lấy từ thẻ (Họ tên + chức vụ · công ty, SĐT, email; "Đổi" mở sheet chọn thẻ giống 03-B15, chọn xong thông tin đổi tại chỗ), lời nhắn không bắt buộc. "Xác nhận đặt lịch" → quay lại chat, lời mời hiện thành thẻ "Lịch hẹn" có Chấp nhận / Đổi giờ phía người nhận (B5). X → đóng sheet, không gửi.</small></div>
+      </div>
+
+      <!-- B5 meeting received + reply -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar" style="background:var(--white)"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="cbar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="who"><span class="avw"><img class="av" src="https://i.pravatar.cc/150?img=68" alt="" /><span class="on-dot"></span></span><div class="f1"><b>Hồ Văn Tâm</b><span class="live">Đang hoạt động</span></div></div>
+            <button class="icon-btn ai" title="Viết với Inka" aria-label="Viết với Inka"><i data-lucide="sparkles"></i></button><button class="icon-btn"><i data-lucide="calendar-plus"></i></button>
+          </div>
+          <div class="thread">
+            <div class="day">HÔM NAY</div>
+            <div class="m first"><img class="av" src="https://i.pravatar.cc/150?img=68" alt="" /><div class="b">Gửi anh báo giá 50 thẻ NFC nhé em. Bên anh cần in logo mặt sau.</div></div>
+            <div class="m me sp has-react"><div class="file b tail"><span class="fi"><i data-lucide="file-text"></i></span><div><b>BaoGia_InCard_50the.pdf</b><span>PDF · 1,2 MB</span></div><span class="react">👍</span></div></div>
+            <div class="m first sp"><img class="av" src="https://i.pravatar.cc/150?img=68" alt="" />
+              <div class="rcard">
+                <div class="rh"><i data-lucide="calendar-days"></i>Anh Tâm mời bạn họp</div>
+                <div class="rb">
+                  <div class="mt-date"><span class="cal"><small>T2</small><b>16</b></span><div class="f1"><b class="t">Chốt hợp đồng thẻ NFC</b><span class="s">09:00 – 09:30 · 16/11/2026</span></div></div>
+                  <div class="kv"><i data-lucide="video"></i>Google Meet · link gửi sau khi chấp nhận</div>
+                  <div class="kv"><i data-lucide="circle-check"></i><span style="color:var(--green-dark);font-weight:600">Bạn đang trống giờ này</span></div>
+                </div>
+                <div class="ra"><a>Đổi giờ</a><a class="pri"><i data-lucide="check"></i>Chấp nhận</a></div>
+              </div>
+            </div>
+          </div>
+          <div class="reply-bar"><span class="ln"></span><div class="f1"><b>Trả lời Hồ Văn Tâm</b><span>Gửi anh báo giá 50 thẻ NFC nhé em. Bên anh cần in logo…</span></div><button class="icon-btn"><i data-lucide="x"></i></button></div>
+          <div class="comp"><span class="rnd plus"><i data-lucide="plus"></i></span><div class="fld focus"><span class="v">Mặt sau in logo được ạ, em cập nhật lại</span></div><span class="rnd send"><i data-lucide="arrow-up"></i></span></div>
+          <div class="home-ind" style="background:var(--white)"></div>
+        </div>
+        <div class="cap">B5 · Nhận lời mời họp · trả lời trích dẫn<small>Thẻ lịch hẹn tự kiểm tra lịch của mình ("Bạn đang trống giờ này"). Chấp nhận thì thêm vào Lịch hẹn ở 08 và Google Calendar, thẻ đổi thành trạng thái xanh như B1. Tệp hiện tên, loại, dung lượng. Vuốt phải một tin để trả lời trích dẫn (thanh xanh trên ô nhập).</small></div>
+      </div>
+
+    </div>
+    <div class="rd-row" style="margin-top:40px">
+
+      <!-- B6 request + collab -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar" style="background:var(--white)"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="cbar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="who"><span class="avw"><img class="av" src="https://i.pravatar.cc/150?img=33" alt="" /></span><div class="f1"><b>Phan Đức Thịnh</b><span>Giám đốc dự án · KMS Technology</span></div></div>
+            <button class="icon-btn"><i data-lucide="circle-user-round"></i></button>
+          </div>
+          <div class="req-ban"><i data-lucide="user-round-x"></i><span>Thịnh <b>chưa kết nối</b> với bạn. Thịnh không biết bạn đã xem cho tới khi bạn chấp nhận.</span></div>
+          <div class="thread">
+            <div class="day">10:02</div>
+            <div class="m first"><img class="av" src="https://i.pravatar.cc/150?img=33" alt="" />
+              <div class="rcard collab">
+                <div class="rh"><i data-lucide="handshake"></i>Đề xuất hợp tác · Đại lý / Reseller</div>
+                <div class="rb">
+                  <span class="s" style="margin:0;color:var(--slate-700);font-size:13.5px;line-height:1.45">Chào chị Minh Anh, bên em đang tìm đối tác cung cấp thẻ NFC cho 400 nhân sự và muốn làm đại lý khu vực phía Bắc.</span>
+                  <div class="terms"><b style="color:var(--ink)">Điều kiện chị đã đăng:</b> chiết khấu 20–30% theo số lượng, cam kết 200 thẻ/quý.</div>
+                  <div class="kv"><i class="mini-sw"></i>Gửi kèm thẻ KMS Technology</div>
+                </div>
+                <div class="ra"><a>Xem hồ sơ</a><a class="pri"><i data-lucide="calendar-plus"></i>Hẹn trao đổi</a></div>
+              </div>
+            </div>
+          </div>
+          <div class="req-foot">
+            <p>Chấp nhận để trả lời và lưu Thịnh vào danh bạ</p>
+            <div class="btn-row"><button class="btn ghost">Chặn</button><button class="btn outline">Xoá</button><button class="btn primary">Chấp nhận</button></div>
+          </div>
+          <div class="home-ind" style="background:var(--white)"></div>
+        </div>
+        <div class="cap">B6 · Tin nhắn chờ · Đề xuất hợp tác<small>Nối tiếp 03-B13 "Đề xuất hợp tác": phía người nhận thấy thẻ hợp tác có hình thức đã chọn, nội dung và điều kiện chính mình đăng ở mục Hợp tác (03-A10). Chưa chấp nhận thì không có ô nhập, chỉ có Chặn / Xoá / Chấp nhận. Chấp nhận mở ô nhập và tự lưu vào Danh bạ (nguồn: Tin nhắn).</small></div>
+      </div>
+
+      <!-- B7 long press -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar" style="background:var(--white)"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="cbar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="who"><span class="avw"><img class="av" src="https://i.pravatar.cc/150?img=32" alt="" /><span class="on-dot"></span></span><div class="f1"><b>Trần Thuỷ (Helen)</b><span class="live">Đang hoạt động</span></div></div>
+            <button class="icon-btn ai" title="Viết với Inka" aria-label="Viết với Inka"><i data-lucide="sparkles"></i></button><button class="icon-btn"><i data-lucide="calendar-plus"></i></button>
+          </div>
+          <div class="thread">
+            <div class="m first"><img class="av" src="https://i.pravatar.cc/150?img=32" alt="" /><div class="b">Chị gửi em thông tin liên hệ bên mua hàng nhé</div></div>
+            <div class="m me sp"><div class="b tail">Dạ em cảm ơn chị</div></div>
+          </div>
+          <div class="comp"><span class="rnd plus"><i data-lucide="plus"></i></span><div class="fld"><span class="ph">Nhắn tin…</span></div><span class="rnd"><i data-lucide="mic"></i></span></div>
+          <div class="home-ind" style="background:var(--white)"></div>
+          <div class="blur-bg"></div>
+          <div class="focus-wrap">
+            <div class="rx"><span>👍</span><span class="on">❤️</span><span>😂</span><span>🙏</span><span>🎉</span><span class="more"><i data-lucide="plus"></i></span></div>
+            <div class="m first"><img class="av" src="https://i.pravatar.cc/150?img=32" alt="" /><div class="b" style="box-shadow:var(--shadow-lg)">Số anh Quang bên mua hàng: 0912 345 678, email quang.le@incard.vn. Anh ấy quyết định ngân sách quý 1.</div></div>
+            <div class="ctx-menu">
+              <a><i data-lucide="reply"></i>Trả lời</a>
+              <a><i data-lucide="copy"></i>Sao chép</a>
+              <a><i data-lucide="forward"></i>Chuyển tiếp</a>
+              <a><i data-lucide="pin"></i>Ghim tin nhắn</a>
+              <div class="sep"></div>
+              <a class="ink"><i data-lucide="user-round-plus"></i>Lưu "anh Quang" vào danh bạ</a>
+              <a class="ink"><i data-lucide="list-checks"></i>Tạo công việc</a>
+              <div class="sep"></div>
+              <a class="red"><i data-lucide="flag"></i>Báo cáo</a>
+            </div>
+          </div>
+        </div>
+        <div class="cap">B7 · Nhấn giữ tin nhắn<small>Làm mờ nền, nổi tin đang chọn. Hàng cảm xúc phía trên, menu phía dưới. Ngoài thao tác chuẩn, InCard nhận ra SĐT/email trong tin để "Lưu vào danh bạ" ngay, hoặc "Tạo công việc" (sang 08 Công việc, Inka điền sẵn). Tin của mình có thêm "Thu hồi" thay cho "Báo cáo".</small></div>
+      </div>
+
+
+      <!-- B8 photos + voice -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar" style="background:var(--white)"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="cbar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="who"><span class="avw"><span class="av te">GB</span></span><div class="f1"><b>Nguyễn Gia Bảo</b><span>Hoạt động 15 phút trước</span></div></div>
+            <button class="icon-btn ai" title="Viết với Inka" aria-label="Viết với Inka"><i data-lucide="sparkles"></i></button><button class="icon-btn"><i data-lucide="calendar-plus"></i></button>
+          </div>
+          <div class="thread">
+            <div class="ctx"><span class="pill"><i data-lucide="qr-code"></i>Đã kết nối qua mã QR · Thẻ Mentor khởi nghiệp</span></div>
+            <div class="day">THỨ BẢY</div>
+            <div class="m first"><span class="av te">GB</span><div class="photos"><span style="background-image:url('https://picsum.photos/seed/booth1/300/300')"></span><span style="background-image:url('https://picsum.photos/seed/booth2/300/300')"></span><span style="background-image:url('https://picsum.photos/seed/booth3/600/300');grid-column:1/-1"></span></div></div>
+            <div class="m first" style="margin-top:4px"><span class="av te">GB</span><div class="b">Ảnh buổi chia sẻ hôm thứ Bảy chị ơi, cảm ơn chị đã mentor team em!</div></div>
+            <div class="m me sp"><div class="b tail" style="display:flex;align-items:center;gap:10px;min-width:220px"><i data-lucide="play" style="width:18px;height:18px;fill:currentColor"></i><span style="flex:1;display:flex;gap:2px;align-items:center;height:22px"><span style="width:3px;height:8px;background:#fff;border-radius:2px"></span><span style="width:3px;height:16px;background:#fff;border-radius:2px"></span><span style="width:3px;height:12px;background:#fff;border-radius:2px"></span><span style="width:3px;height:20px;background:#fff;border-radius:2px"></span><span style="width:3px;height:10px;background:#fff;border-radius:2px"></span><span style="width:3px;height:18px;background:rgba(255,255,255,.5);border-radius:2px"></span><span style="width:3px;height:8px;background:rgba(255,255,255,.5);border-radius:2px"></span><span style="width:3px;height:14px;background:rgba(255,255,255,.5);border-radius:2px"></span><span style="width:3px;height:6px;background:rgba(255,255,255,.5);border-radius:2px"></span><span style="width:3px;height:12px;background:rgba(255,255,255,.5);border-radius:2px"></span></span><span style="font-size:12px;font-weight:600">0:24</span></div></div>
+            <div class="stamp me">Đã gửi<i data-lucide="check"></i></div>
+          </div>
+          <div class="comp"><span class="rnd plus"><i data-lucide="plus"></i></span><div class="fld"><span class="ph">Nhắn tin…</span><span class="e"><i data-lucide="smile"></i></span></div><span class="rnd"><i data-lucide="mic"></i></span></div>
+          <div class="home-ind" style="background:var(--white)"></div>
+        </div>
+        <div class="cap">B8 · Ảnh &amp; tin nhắn thoại<small>Nhiều ảnh gộp thành lưới bo góc, chạm để xem toàn màn. Giữ nút mic để ghi âm, thả để gửi, vuốt lên để khoá ghi âm. Trạng thái gửi: ✓ Đã gửi → ✓✓ Đã xem (chỉ hiện ở tin cuối của mình).</small></div>
+      </div>
+
+      <style>
+        .ik-row { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid var(--slate-200); border-radius: 14px; background: var(--white); margin-bottom: 8px; }
+        .ik-row .ic { width: 38px; height: 38px; border-radius: 11px; background: var(--green-50); color: var(--green); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .ik-row .ic svg { width: 19px; height: 19px; }
+        .ik-row b { display: block; font-size: 14.5px; font-weight: 700; }
+        .ik-row span.d { display: block; font-size: 12.5px; color: var(--slate-500); margin-top: 2px; line-height: 1.4; }
+        .ik-row > svg { width: 18px; height: 18px; color: var(--slate-400); flex-shrink: 0; }
+        .ik-draft { border: 1.5px solid var(--green); background: var(--green-50); border-radius: 16px; padding: 14px; font-size: 14px; line-height: 1.55; color: var(--ink); }
+        .ik-draft .tag { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 700; color: var(--green-dark); margin-bottom: 6px; }
+        .ik-draft .tag svg { width: 13px; height: 13px; }
+        .ik-tone { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+        .ik-tone .chip { height: 32px; font-size: 12.5px; padding: 0 12px; }
+        .ik-tone .chip svg { width: 14px; height: 14px; }
+      </style>
+      <!-- B9 Inka compose — choose purpose (bổ sung từ screens/network/12b-chat-ai-modal) -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar" style="background:var(--white)"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="cbar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="who"><span class="avw"><span class="av tb">LN</span></span><div class="f1"><b>Lê Nhật Nam</b><span>Hoạt động 2 giờ trước</span></div></div>
+            <button class="icon-btn ai" title="Viết với Inka" aria-label="Viết với Inka"><i data-lucide="sparkles"></i></button><button class="icon-btn"><i data-lucide="calendar-plus"></i></button>
+          </div>
+          <div class="thread"><div class="ctx"><span class="pill"><i data-lucide="qr-code"></i>Đã kết nối qua mã QR · Thẻ CLB Doanh nhân trẻ</span></div></div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><div><h3 class="flex ac g8"><i data-lucide="sparkles" style="width:20px;height:20px;color:var(--green)"></i>Inka soạn tin</h3><p class="t-xs mt4">Gửi <b style="color:var(--ink)">Lê Nhật Nam</b> · bằng Thẻ CLB Doanh nhân trẻ</p></div><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <div class="ik-row"><span class="ic"><i data-lucide="hand"></i></span><div class="f1"><b>Giới thiệu bản thân</b><span class="d">Bạn là ai, làm gì, vì sao muốn kết nối</span></div><i data-lucide="chevron-right"></i></div>
+            <div class="ik-row"><span class="ic"><i data-lucide="handshake"></i></span><div class="f1"><b>Đề xuất hợp tác</b><span class="d">Nêu ý tưởng dự án hoặc hợp tác cụ thể</span></div><i data-lucide="chevron-right"></i></div>
+            <div class="ik-row"><span class="ic"><i data-lucide="package"></i></span><div class="f1"><b>Giới thiệu dịch vụ / sản phẩm</b><span class="d">Lấy từ Dịch vụ chính và Sản phẩm nổi bật của thẻ</span></div><i data-lucide="chevron-right"></i></div>
+            <div class="ik-row"><span class="ic"><i data-lucide="calendar-clock"></i></span><div class="f1"><b>Hẹn gặp</b><span class="d">Gợi ý thời gian và địa điểm gặp</span></div><i data-lucide="chevron-right"></i></div>
+            <div class="ik-row"><span class="ic"><i data-lucide="heart-handshake"></i></span><div class="f1"><b>Cảm ơn sau buổi gặp</b><span class="d">Tóm tắt điều đã trao đổi, hẹn bước tiếp theo</span></div><i data-lucide="chevron-right"></i></div>
+            <div class="input mt8" style="height:46px"><i data-lucide="pencil-line"></i><span class="ph">Hoặc tự mô tả, VD: “mời Nam dự meetup 20/11”</span></div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">B9 · Inka soạn tin (sheet)<small>Bổ sung từ bản cũ (Chat · Write with AI). Mở từ nút Inka ✦ trên thanh đầu, cạnh nút lịch (mọi màn trò chuyện). Bỏ emoji và tiếng Anh, thay bằng icon cùng bộ; 5 mục đích hay dùng nhất, thêm "Cảm ơn sau buổi gặp". Dòng phụ cho biết tin sẽ gửi bằng thẻ nào, vì Inka lấy chức danh, dịch vụ, sản phẩm từ chính thẻ đó (quy tắc nhiều thẻ). Ô cuối cho phép tự mô tả khi không có mẫu phù hợp. Chạm một mục → B10.</small></div>
+      </div>
+
+      <!-- B10 Inka compose — draft ready -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar" style="background:var(--white)"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="cbar">
+            <button class="icon-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="who"><span class="avw"><span class="av tb">LN</span></span><div class="f1"><b>Lê Nhật Nam</b><span>Hoạt động 2 giờ trước</span></div></div>
+            <button class="icon-btn ai" title="Viết với Inka" aria-label="Viết với Inka"><i data-lucide="sparkles"></i></button><button class="icon-btn"><i data-lucide="calendar-plus"></i></button>
+          </div>
+          <div class="thread"><div class="ctx"><span class="pill"><i data-lucide="qr-code"></i>Đã kết nối qua mã QR · Thẻ CLB Doanh nhân trẻ</span></div></div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3 class="flex ac g8"><i data-lucide="sparkles" style="width:20px;height:20px;color:var(--green)"></i>Đề xuất hợp tác</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <div class="ik-draft">
+              <span class="tag"><i data-lucide="sparkles"></i>Inka đã soạn · sửa được trước khi gửi</span><br />
+              Chào Nam, mình là Minh Anh, Phó Chủ tịch CLB Doanh nhân trẻ Sài Gòn. Thấy ICTGO đang tìm đối tác phần mềm, CLB mình có nhiều thành viên làm chuyển đổi số cho doanh nghiệp vừa và nhỏ. Nam có muốn mình giới thiệu 2–3 đơn vị phù hợp, rồi hẹn cà phê trao đổi tuần sau không?
+            </div>
+            <div class="ik-tone">
+              <span class="chip on">Lịch sự</span><span class="chip">Thân mật</span><span class="chip">Ngắn hơn</span><span class="chip"><i data-lucide="languages"></i>English</span>
+            </div>
+            <div class="btn-row mt16">
+              <button class="btn outline"><i data-lucide="refresh-cw"></i>Viết lại</button>
+              <button class="btn primary" style="flex:1.6"><i data-lucide="corner-down-left"></i>Đưa vào ô nhập</button>
+            </div>
+            <p class="t-xs t-center mt8">Còn <b style="color:var(--ink)">6/10</b> lượt Inka hôm nay</p>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">B10 · Inka đã soạn tin<small>Bản nháp hiện trong khung xanh, ghi rõ do Inka soạn. Nội dung lấy đúng chức danh của thẻ đang dùng (Thẻ CLB Doanh nhân trẻ) và nhu cầu "Đang tìm kiếm" trên hồ sơ của Nam. Chip đổi giọng văn (Lịch sự / Thân mật / Ngắn hơn / English) viết lại ngay. "Đưa vào ô nhập" không gửi luôn: tin vào ô soạn để người dùng xem, sửa rồi tự bấm gửi. Hiện số lượt Inka còn lại giống 07.</small></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== C. Thông tin cuộc trò chuyện ===================== -->
+  <section class="rd-section">
+    <h2>C · Thông tin cuộc trò chuyện</h2>
+    <div class="rd-row">
+
+      <!-- C1 info -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title"></div><div class="spacer44"></div></div>
+          <div class="body">
+            <div class="scroll" style="padding-bottom:16px">
+              <div class="ti-head">
+                <img class="av" src="https://i.pravatar.cc/150?img=32" alt="" />
+                <h2>Trần Thuỷ (Helen)</h2>
+                <p>CRO · InCard Technology</p>
+                <span class="via"><i class="mini-sw"></i>Kết nối qua Thẻ InApps · 12/11/2026</span>
+              </div>
+              <div class="qa"><a><span><i data-lucide="circle-user-round"></i></span>Hồ sơ</a><a><span><i data-lucide="bell-off"></i></span>Tắt TB</a><a><span><i data-lucide="search"></i></span>Tìm</a></div>
+              <div class="group-label">Đã trao đổi</div>
+              <div class="group">
+                <div class="row"><span class="ic green"><i data-lucide="calendar-days"></i></span><div class="tx"><b>Lịch hẹn</b><span>Sắp tới: T3 17/11 · 10:00</span></div><span class="val"><b>2</b></span><i class="chev" data-lucide="chevron-right"></i></div>
+                <div class="row"><span class="ic green"><i data-lucide="id-card"></i></span><div class="tx"><b>Thẻ đã gửi / nhận</b><span>Bạn gửi Thẻ InApps · Helen gửi thẻ InCard</span></div><i class="chev" data-lucide="chevron-right"></i></div>
+                <div class="row"><span class="ic gray"><i data-lucide="pin"></i></span><div class="tx"><b>Tin nhắn đã ghim</b><span>Số anh Quang bên mua hàng…</span></div><span class="val"><b>1</b></span><i class="chev" data-lucide="chevron-right"></i></div>
+                <div class="row" style="padding-bottom:8px"><span class="ic gray"><i data-lucide="images"></i></span><div class="tx"><b>Ảnh, tệp &amp; liên kết</b></div><span class="val"><b>14</b></span><i class="chev" data-lucide="chevron-right"></i></div>
+                <div class="media"><span style="background-image:url('https://picsum.photos/seed/metalcard1/200/200')"></span><span style="background-image:url('https://picsum.photos/seed/metalcard2/200/200')"></span><span style="background-image:url('https://picsum.photos/seed/incardnfc/200/200')"></span><span class="more">+11</span></div>
+              </div>
+              <div class="group" style="margin-top:14px">
+                <div class="row"><span class="ic gray"><i data-lucide="user-round-x"></i></span><div class="tx"><b>Chặn Helen</b></div></div>
+                <div class="row"><span class="ic gray"><i data-lucide="flag"></i></span><div class="tx"><b>Báo cáo</b></div></div>
+                <div class="row danger"><span class="ic red"><i data-lucide="trash-2"></i></span><div class="tx"><b>Xoá cuộc trò chuyện</b></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">C1 · Thông tin cuộc trò chuyện<small>Bấm vào tên/ảnh trên thanh đầu để mở. Gom những gì hai bên đã trao đổi (lịch hẹn, thẻ, tin ghim, ảnh/tệp) để tìm lại sau buổi gặp. "Hồ sơ" mở hồ sơ 03-B1. Xoá chỉ xoá phía mình.</small></div>
+      </div>
+
+      <!-- C2 block dialog -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title"></div><div class="spacer44"></div></div>
+          <div class="body"><div class="scroll"><div class="ti-head"><img class="av" src="https://i.pravatar.cc/150?img=32" alt="" /><h2>Trần Thuỷ (Helen)</h2><p>CRO · InCard Technology</p></div></div></div>
+          <div class="home-ind"></div>
+          <div class="scrim"></div>
+          <div class="dialog">
+            <div class="d-ic red"><i data-lucide="user-round-x"></i></div>
+            <h3>Chặn Helen?</h3>
+            <p>Helen sẽ không nhắn tin, gọi hay gửi lời mời họp cho bạn được nữa. Kết nối và danh bạ vẫn giữ nguyên. Helen không nhận được thông báo.</p>
+            <div class="btn-row"><button class="btn outline md">Huỷ</button><button class="btn md" style="background:var(--red-600);color:var(--white)">Chặn</button></div>
+          </div>
+        </div>
+        <div class="cap">C2 · Xác nhận chặn<small>Nói rõ chặn ảnh hưởng gì và không ảnh hưởng gì (kết nối, danh bạ vẫn giữ), để người dùng không ngại chặn khi bị làm phiền. Bỏ chặn trong Cài đặt › Quyền riêng tư.</small></div>
+      </div>
+
+
+
+      <!-- C3 message privacy -->
+      <div class="rd-shot">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title">Cài đặt tin nhắn</div><div class="spacer44"></div></div>
+          <div class="body">
+            <div class="scroll">
+              <div class="group-label" style="margin-top:8px">Ai được nhắn trực tiếp cho bạn</div>
+              <div class="group sortlist" style="padding:0 14px">
+                <div class="so on"><i data-lucide="users"></i>Chỉ người đã kết nối<span class="rd"></span></div>
+                <div class="so"><i data-lucide="globe"></i>Mọi thành viên InCard<span class="rd"></span></div>
+              </div>
+              <p class="t-xs mt8" style="padding:0 4px">Người còn lại vẫn gửi được 1 tin vào Tin nhắn chờ.</p>
+              <div class="group-label">Hiển thị</div>
+              <div class="group">
+                <div class="row"><div class="tx"><b>Trạng thái hoạt động</b><span>Cho người khác thấy "Đang hoạt động"</span></div><span class="toggle on"></span></div>
+                <div class="row"><div class="tx"><b>Thông báo đã xem</b><span>Tắt thì bạn cũng không thấy của người khác</span></div><span class="toggle on"></span></div>
+              </div>
+              <div class="group-label">Inka trong tin nhắn</div>
+              <div class="group">
+                <div class="row"><span class="ic green"><i data-lucide="sparkles"></i></span><div class="tx"><b>Gợi ý trả lời nhanh</b><span>Inka chỉ gợi ý, không tự gửi</span></div><span class="toggle on"></span></div>
+                <div class="row"><span class="ic green"><i data-lucide="contact-round"></i></span><div class="tx"><b>Nhận diện SĐT, email, lịch hẹn</b><span>Gợi ý lưu danh bạ, tạo việc</span></div><span class="toggle on"></span></div>
+              </div>
+              <div class="group" style="margin-top:14px">
+                <div class="row" data-go="toast:Đã chặn: Phan Đức Thịnh, Trương Quang Khải · vuốt trái để bỏ chặn"><span class="ic gray"><i data-lucide="user-round-x"></i></span><div class="tx"><b>Đã chặn</b></div><span class="val">2 người</span><i class="chev" data-lucide="chevron-right"></i></div>
+              </div>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">C3 · Cài đặt tin nhắn<small>Mở từ bánh răng ở Tin nhắn chờ (A3) hoặc 08 Cài đặt › Quyền riêng tư. Mặc định chỉ người đã kết nối được nhắn trực tiếp. Các tính năng Inka trong chat có thể tắt riêng.</small></div>
+      </div>
+
+
+    </div>
+  </section>
+
+  <script>lucide.createIcons({ attrs: { 'stroke-width': 1.75 } });</script>
+  <script>
+    /* Đặt lịch hẹn: chuyển tuần (tối đa 3 tuần), chọn ngày, chọn giờ : phút */
+    (function () {
+      function pad(n) { return (n < 10 ? '0' : '') + n; }
+      function setCol(col, v) {
+        var h = col.dataset.k === 'h', max = h ? 24 : 60, st = h ? 1 : 5;
+        v = (v + max) % max; col.dataset.v = v;
+        col.querySelector('b').textContent = pad(v);
+      }
+      function bk(el) {
+        var sh = el.closest('.sheet'), js = el.dataset.js;
+        if (js === 'bk-prev' || js === 'bk-next') {
+          var wk = [].slice.call(sh.querySelectorAll('.bk-wk')), i = wk.findIndex(function (w) { return w.classList.contains('on'); });
+          var j = Math.max(0, Math.min(wk.length - 1, i + (js === 'bk-next' ? 1 : -1)));
+          wk.forEach(function (w, k) { w.classList.toggle('on', k === j); });
+          sh.querySelector('.bk-rng').textContent = wk[j].dataset.rng;
+          sh.querySelector('[data-js="bk-prev"]').classList.toggle('dis', j === 0);
+          sh.querySelector('[data-js="bk-next"]').classList.toggle('dis', j === wk.length - 1);
+          [].forEach.call(sh.querySelectorAll('.bk-dots i'), function (d, k) { d.classList.toggle('on', k === j); });
+          return true;
+        }
+        if (js === 'bk-day') {
+          [].forEach.call(sh.querySelectorAll('.bk-wk span.on'), function (s) { s.classList.remove('on'); });
+          el.classList.add('on'); var t = sh.querySelector('.bk-tdate'); if (t) t.textContent = el.dataset.d;
+          return true;
+        }
+        var m = /^bk-([hm])([+-])$/.exec(js);
+        if (m) { var col = el.closest('.bk-col'), st = m[1] === 'h' ? 1 : 5; setCol(col, +col.dataset.v + (m[2] === '+' ? st : -st)); return true; }
+      }
+      var prev = window.pageAct;
+      window.pageAct = function (el) { if (el.dataset.js && el.dataset.js.indexOf('bk-') === 0) return bk(el); return prev ? prev(el) : undefined; };
+      if (window.parent === window) document.addEventListener('click', function (e) { var j = e.target.closest && e.target.closest('[data-js^="bk-"]'); if (j) bk(j); });
+      document.addEventListener('wheel', function (e) {
+        var col = e.target.closest && e.target.closest('.bk-col'); if (!col) return;
+        e.preventDefault(); var st = col.dataset.k === 'h' ? 1 : 5; setCol(col, +col.dataset.v + (e.deltaY > 0 ? st : -st));
+      }, { passive: false });
+    })();
+  </script>
+  <script>
+    /* Đặt lịch · "Đổi": chọn thẻ để lấy Họ tên + chức vụ · công ty, SĐT, email (mỗi thẻ có SĐT/email riêng) */
+    (function () {
+      var CARDS = [
+        { n: 'Nguyễn Minh Anh', av: '<img src="https://i.pravatar.cc/150?img=47" alt="" />', t: 'Giám đốc kinh doanh · InApps Technology', c: '0908 112 222 · minhanh@inapps.net' },
+        { n: 'Annie Nguyễn', av: '<span class="bkp-av" style="background:linear-gradient(135deg,#2eb07a,#009037)">AN</span>', t: 'Phó Chủ tịch · CLB Doanh nhân trẻ Sài Gòn', c: '0912 345 678 · annie@ybc.vn' },
+        { n: 'Minh Anh Nguyễn', av: '<span class="bkp-av" style="background:linear-gradient(135deg,#475569,#0f172a)">MA</span>', t: 'Diễn giả · Mentor khởi nghiệp', c: '0908 112 222 · mentor.minhanh@gmail.com' }
+      ];
+      var CK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+      var X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+      function say(m) { try { if (window.parent !== window && window.parent.toast) window.parent.toast(m); } catch (e) {} }
+      function close(ph) { [].forEach.call(ph.querySelectorAll('.bkp, .bkp-scrim'), function (n) { n.remove(); }); }
+      function open(el) {
+        var ph = el.closest('.phone'); if (!ph || ph.querySelector('.bkp')) return; var me = el.closest('.bk-me'), cur = +(me.dataset.card || 0);
+        close(ph);
+        var h = '<div class="bkp-scrim" data-js="bkp-x"></div><div class="bkp"><div class="grab"></div>'
+          + '<div class="bkp-hd"><h3>Dùng thông tin thẻ nào?</h3><button data-js="bkp-x" aria-label="Đóng">' + X + '</button></div>'
+          + '<p class="bkp-sub">Ảnh, họ tên, chức vụ, SĐT và email của thẻ được gửi kèm lịch hẹn</p><div class="bkp-ls">';
+        CARDS.forEach(function (c, i) {
+          h += '<div class="bkp-ci' + (i === cur ? ' on' : '') + '" data-js="bkp-pick" data-i="' + i + '">' + c.av + '<div class="f1"><b>' + c.n + '</b><span>' + c.t + '</span><span>' + c.c + '</span></div><span class="ck">' + (i === cur ? CK : '') + '</span></div>';
+        });
+        ph.insertAdjacentHTML('beforeend', h + '</div></div>');
+      }
+      function pick(el) {
+        var ph = el.closest('.phone'); if (!ph) return; var i = +el.dataset.i, me = ph.querySelector('.bk-me'), c = CARDS[i];
+        if (me) { me.firstElementChild.outerHTML = c.av; me.querySelector('.f1 b').textContent = c.n; var s = me.querySelectorAll('.f1 span'); s[0].textContent = c.t; s[1].textContent = c.c; me.dataset.card = i; }
+        close(ph); say('Đã dùng thông tin thẻ ' + c.n + ' · ' + c.t.split(' · ').pop());
+      }
+      function run(el) {
+        var js = el.dataset.js;
+        if (js === 'bkp-open') { open(el); return true; }
+        if (js === 'bkp-pick') { pick(el); return true; }
+        if (js === 'bkp-x') { if (el.closest('.phone')) close(el.closest('.phone')); return true; }
+      }
+      var prev = window.pageAct;
+      window.pageAct = function (el) { var js = el.dataset.js || ''; if (js === 'bkp-open' || js.indexOf('bkp-') === 0) return run(el); return prev ? prev(el) : undefined; };
+      if (window.parent === window) document.addEventListener('click', function (e) { var j = e.target.closest && e.target.closest('[data-js="bkp-open"],[data-js^="bkp-"]'); if (j) run(j); });
+    })();
+  </script>
+</body>
+</html>

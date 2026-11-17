@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>InCard Prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green: #009037;
+      --green-light: #2eb07a;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-500: #64748b;
+      --slate-400: #94a3b8;
+      --slate-200: #e2e8f0;
+      --white: #ffffff;
+      --line: rgba(255,255,255,0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Public Sans', sans-serif;
+      background: var(--slate-900);
+      color: var(--slate-200);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    /* ── Sidebar ── */
+    .side {
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      background: rgba(15,23,42,0.6);
+    }
+    .side-head { padding: 20px 20px 12px; border-bottom: 1px solid var(--line); }
+    .side-head h1 { font-size: 18px; font-weight: 800; color: var(--white); }
+    .side-head p { font-size: 12px; color: var(--slate-400); margin-top: 4px; line-height: 1.5; }
+    .side-head a { color: var(--green-light); text-decoration: none; }
+    .search {
+      margin-top: 12px; width: 100%; height: 36px; border-radius: 10px;
+      border: 1px solid var(--line); background: rgba(255,255,255,0.05);
+      color: var(--white); padding: 0 12px; font: inherit; font-size: 13px;
+    }
+    .search:focus { outline: 2px solid rgba(0,144,55,0.5); }
+    .list { overflow-y: auto; padding: 8px 10px 24px; flex: 1; }
+    .group { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--slate-500); padding: 14px 10px 6px; }
+    .item {
+      display: flex; gap: 8px; align-items: baseline; width: 100%; text-align: left;
+      background: none; border: 0; color: var(--slate-400); font: inherit; font-size: 13px;
+      padding: 6px 10px; border-radius: 8px; cursor: pointer;
+    }
+    .item:hover { background: rgba(255,255,255,0.05); color: var(--white); }
+    .item.active { background: rgba(0,144,55,0.18); color: var(--white); }
+    .item .no { font-size: 11px; color: var(--slate-500); min-width: 22px; }
+    .item.flow::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green-light);
+      margin-left: auto; align-self: center; flex-shrink: 0; }
+
+    /* ── Stage ── */
+    .stage { display: flex; flex-direction: column; align-items: center; height: 100%; overflow: auto; padding: 16px; }
+    .bar {
+      display: flex; align-items: center; gap: 8px; width: 100%; max-width: 560px;
+      margin-bottom: 14px; flex-wrap: wrap; justify-content: center;
+    }
+    .bar button {
+      height: 34px; padding: 0 14px; border-radius: 9999px; border: 1px solid var(--line);
+      background: rgba(255,255,255,0.06); color: var(--slate-200); font: inherit; font-size: 13px;
+      font-weight: 600; cursor: pointer;
+    }
+    .bar button:hover { background: rgba(255,255,255,0.12); }
+    .bar button.on { background: var(--green); border-color: var(--green); color: var(--white); }
+    .crumb { font-size: 13px; color: var(--slate-400); flex-basis: 100%; text-align: center; }
+    .crumb b { color: var(--white); font-weight: 700; }
+
+    .phone {
+      width: 398px; height: 852px; flex-shrink: 0; border-radius: 48px; padding: 4px;
+      background: #000; box-shadow: 0 0 0 1px #334155, 0 30px 80px rgba(0,0,0,0.6);
+      position: relative;
+    }
+    .phone iframe {
+      width: 390px; height: 844px; border: 0; border-radius: 44px; display: block; background: var(--white);
+    }
+    .island {
+      position: absolute; top: 22px; left: 50%; transform: translateX(-50%);
+      width: 110px; height: 30px; border-radius: 20px; background: #000; z-index: 2; pointer-events: none;
+    }
+    .hint { font-size: 12px; color: var(--slate-500); margin-top: 12px; text-align: center; }
+
+    @media (max-width: 860px) {
+      body { grid-template-columns: 1fr; overflow: auto; }
+      .side { display: none; }
+      .stage { padding: 12px 0; }
+      .phone { transform-origin: top center; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="list" id="list" hidden></nav>
+
+  <main class="stage">
+    <div class="phone" id="phone">
+      <iframe id="frame" title="InCard screen"></iframe>
+    </div>
+    <div class="hint">Phím tắt: ← / Backspace quay lại · H bật/tắt vùng bấm · R bắt đầu lại</div>
+  </main>
+
+<script>
+/* ───────────────────────── Screens ───────────────────────── */
+const GROUPS = {
+  auth: ['00-splash','01-sign-up','02-sign-in','03b-create-profile-linkedin','03-create-profile',
+    'tour-01-photo','tour-02-basic-info','tour-03-complete','04-professional-details',
+    'tour-04-job-title','tour-05-bio','tour-06-quick-actions','tour-04-professional',
+    '05-connect-with-me','06-add-portfolio-video','07-add-portfolio-image','08-add-service-product',
+    '09-success-modal','03b-create-profile-tourguide'],
+  home: ['01-home-dashboard','02-account-details','03-account-details-edit','04-potential-connections',
+    '05-syncing-database','06-connection-limit-reached','07-recent-connections','08-connection-sent',
+    '09-inka-assistant','10-inka-chat-history','11-inka-edit-title','12-inka-new-chat','13-top-performers',
+    '14-your-points','15-discover','16-post-detail','17-my-feeds-empty','18-ai-search-profile',
+    '19-ai-search-filters','20-settings','21-my-cards','22-my-member','23-my-groups','24-change-password',
+    '25-language','26-manage-google','27-calendar','28-calendar-daily','29-calendar-settings','30-my-tasks',
+    '31-my-tasks-monthly','32-referral-history'],
+  network: ['01-network','01b-no-connections','01c-sync-calendar-settings','02-scanned-cards',
+    '02b-no-scanned-cards','03-scanned-card-detail','04-edit-card-detail','05-scan-new-card',
+    '06-scanned-card','07-scan-multi-cards','08-scan-multi-card','09-contacts','09b-no-contacts',
+    '09c-filter-contacts','09d-filtered-results','09e-ai-search-contacts','09f-delete-contact-success',
+    '09g-ai-search-limit','09h-upgrade-premium','10-leads','10b-no-leads','11-contact-detail',
+    '11b-edit-contact','12-chat','12b-chat-ai-modal','09-qr-scan','10-qr-profile','11-qr-offline'],
+  notifications: ['01-news','02-requested-contact','03-others'],
+  profile: ['01-digital-profile','02-schedule-meeting','03-meeting-scheduled','04-digital-profile-own',
+    '11-nfc-scan-qr','05-nfc-tap','07-activation-failed','08-activation-success','12-edit-profile',
+    '13-connect-social','14-add-portfolio-video','15-add-portfolio-image','06-add-portfolio-images',
+    '09-add-portfolio-modal','10-compact-add-service','16-add-service-product','17-success-modal',
+    '18-import-linkedin','19-import-options','20-extracting-linkedin'],
+};
+const GROUP_LABEL = { auth: 'Auth & Onboarding', home: 'Home & Settings', network: 'Network & Scan',
+  notifications: 'Notifications', profile: 'Profile & NFC' };
+
+/* ───────────────────────── Routes ─────────────────────────
+   Rule = [matcher, target]
+   matcher: CSS selector (starts with . # [ or contains a tag+class), or
+            'text' = exact visible text / aria-label, 'text*' = text starts with.
+            Append '@n' to a selector to match only the n-th element (0-based).
+   target:  'group/screen' | 'back'                                               */
+const T = { HOME: 'home/01-home-dashboard', NET: 'network/01-network', PROFILE: 'profile/04-digital-profile-own' };
+
+const NAV = [
+  ['.nav-fab, .nav-fab-wrap', 'network/05-scan-new-card'],
+  ['nav:Home', T.HOME], ['nav:Network', T.NET], ['nav:Explore', 'home/15-discover'], ['nav:Profile', T.PROFILE],
+];
+const BACK = [
+  ['.back-btn, .header-back, .mock-back, [aria-label="Back"]', 'back'],
+  ['.close-btn, .sheet-close, .ai-modal-close, .backdrop, .overlay-backdrop', 'back'],
+];
+const NET_TABS = [
+  ['tab:Connections*', T.NET], ['tab:Scanned Cards*', 'network/02-scanned-cards'],
+  ['tab:Contacts*', 'network/09-contacts'], ['tab:Leads*', 'network/10-leads'],
+];
+const NOTI_TABS = [
+  ['tab:News*', 'notifications/01-news'], ['tab:Requests*', 'notifications/02-requested-contact'],
+  ['tab:Others*', 'notifications/03-others'],
+];
+const SCAN_TABS = [
+  ['Business Card', 'network/05-scan-new-card'], ['Scan QR', 'network/09-qr-scan'],
+  ['Personal QR', 'network/10-qr-profile'], ['QR Offline', 'network/11-qr-offline'],
+  ['QR Scan', 'network/09-qr-scan'], ['QR Profile', 'network/10-qr-profile'],
+];
+const NET_LIST = [
+  ...NET_TABS,
+  ['.filter-btn', 'network/09c-filter-contacts'],
+  ['.search-bar', 'network/09e-ai-search-contacts'],
+  ['[aria-label="Message"], .action-btn.msg', 'network/12-chat'],
+  ['[aria-label="Connect"], .action-btn.connect', 'home/08-connection-sent'],
+];
+const TOUR_PRO = [
+  ['Connect with me', 'auth/05-connect-with-me'],
+  ['Service / Product Gallery', 'auth/08-add-service-product'],
+  ['Portfolio Highlight', 'auth/06-add-portfolio-video'],
+  ['Skip tour', 'auth/04-professional-details'], ['Skip', 'auth/04-professional-details'],
+  ['Complete Profile', T.HOME],
+];
+
+const ROUTES = {
+  /* Auth */
+  'auth/00-splash': [['body', 'auth/02-sign-in']],
+  'auth/01-sign-up': [
+    ['Create your account', 'auth/03b-create-profile-linkedin'],
+    ['.btn-social', 'auth/03b-create-profile-linkedin'],
+    ['Sign In Now', 'auth/02-sign-in'],
+  ],
+  'auth/02-sign-in': [
+    ['Sign in', T.HOME], ['.btn-social', T.HOME],
+    ['Create Pro Account', 'auth/01-sign-up'],
+  ],
+  'auth/03b-create-profile-linkedin': [
+    ['.linkedin-card', 'profile/18-import-linkedin'],
+    ['.option-card', 'auth/tour-01-photo'],
+  ],
+  'auth/03-create-profile': [
+    ['.linkedin-import-banner', 'profile/19-import-options'],
+    ['Complete Profile', 'auth/04-professional-details'],
+  ],
+  'auth/tour-01-photo': [['Next', 'auth/tour-02-basic-info'], ['Skip tour', 'auth/03-create-profile'], ['Complete Profile', 'auth/04-professional-details']],
+  'auth/tour-02-basic-info': [['Next', 'auth/tour-03-complete'], ['Skip tour', 'auth/03-create-profile'], ['Complete Profile', 'auth/04-professional-details']],
+  'auth/tour-03-complete': [['Done!', 'auth/03-create-profile'], ['Skip', 'auth/03-create-profile'], ['Complete Profile', 'auth/tour-04-job-title']],
+  'auth/04-professional-details': [
+    ['Connect with me', 'auth/05-connect-with-me'],
+    ['Service / Product Gallery', 'auth/08-add-service-product'],
+    ['Portfolio Highlight', 'auth/06-add-portfolio-video'],
+    ['Complete Profile', 'profile/11-nfc-scan-qr'],
+  ],
+  'auth/tour-04-job-title': [['Next', 'auth/tour-05-bio'], ...TOUR_PRO],
+  'auth/tour-05-bio': [['Next', 'auth/tour-06-quick-actions'], ...TOUR_PRO],
+  'auth/tour-06-quick-actions': [['Done!', 'auth/04-professional-details'], ...TOUR_PRO],
+  'auth/tour-04-professional': [['Got it!', 'auth/04-professional-details'], ...TOUR_PRO],
+  'auth/05-connect-with-me': [['Done', 'auth/04-professional-details']],
+  'auth/06-add-portfolio-video': [['button.tab@1', 'auth/07-add-portfolio-image'], ['Save', 'auth/04-professional-details']],
+  'auth/07-add-portfolio-image': [['button.tab@0', 'auth/06-add-portfolio-video'], ['Save', 'auth/04-professional-details']],
+  'auth/08-add-service-product': [['Save', 'auth/09-success-modal']],
+  'auth/09-success-modal': [['Done', 'auth/04-professional-details']],
+
+  /* Home */
+  'home/01-home-dashboard': [
+    ['[aria-label="Notifications"]', 'notifications/01-news'],
+    ['[aria-label="Settings"]', 'home/20-settings'],
+    ['.header-search', 'home/18-ai-search-profile'],
+    ['.header-avatar-wrap', 'home/14-your-points'],
+    ['.see-all@0', 'home/21-my-cards'], ['.see-all@1', 'home/04-potential-connections'], ['.see-all@2', 'home/07-recent-connections'],
+    ['.digital-card', T.PROFILE],
+    ['.upgrade-btn, .upgrade-banner', 'network/09h-upgrade-premium'],
+    ['.potential-btn', 'home/08-connection-sent'],
+    ['.potential-card', 'profile/01-digital-profile'],
+    ['.leaderboard', 'home/13-top-performers'],
+    ['.conn-search', 'network/09e-ai-search-contacts'],
+    ['.connection-card', 'network/11-contact-detail'],
+    ['.inka-fab', 'home/09-inka-assistant'],
+  ],
+  'home/02-account-details': [
+    ['Edit Profile', 'home/03-account-details-edit'],
+    ['Referral History*', 'home/32-referral-history'],
+    ['Reset Password*', 'home/24-change-password'],
+    ['Subscription Plan*', 'network/09h-upgrade-premium'],
+    ['Log Out', 'auth/02-sign-in'],
+  ],
+  'home/03-account-details-edit': [['Save', 'home/02-account-details'], ['Log Out', 'auth/02-sign-in']],
+  'home/04-potential-connections': [['.connect-btn@4', 'home/06-connection-limit-reached'], ['.connect-btn', 'home/08-connection-sent']],
+  'home/05-syncing-database': [['Cancel', 'back']],
+  'home/06-connection-limit-reached': [['.upgrade-btn', 'network/09h-upgrade-premium'], ['Maybe Later', 'back']],
+  'home/07-recent-connections': [['.conn-item', 'network/11-contact-detail']],
+  'home/08-connection-sent': [['Done', 'back']],
+  'home/09-inka-assistant': [['[aria-label="New chat"]', 'home/12-inka-new-chat'], ['[aria-label="Chat history"]', 'home/10-inka-chat-history']],
+  'home/10-inka-chat-history': [['.more-btn', 'home/11-inka-edit-title']],
+  'home/11-inka-edit-title': [['Save', 'home/10-inka-chat-history'], ['Cancel', 'home/10-inka-chat-history']],
+  'home/12-inka-new-chat': [['[aria-label="Chat history"]', 'home/10-inka-chat-history']],
+  'home/13-top-performers': [['.lb-row, .podium-slot', 'profile/01-digital-profile']],
+  'home/15-discover': [['My Feeds', 'home/17-my-feeds-empty'], ['.card-body', 'home/16-post-detail']],
+  'home/17-my-feeds-empty': [['News', 'home/15-discover'], ['Timeline', 'home/15-discover']],
+  'home/18-ai-search-profile': [['.filter-btn', 'home/19-ai-search-filters'], ['.pcard-connect', 'home/08-connection-sent'], ['.pcard', 'profile/01-digital-profile']],
+  'home/19-ai-search-filters': [['.sheet-close, .apply-btn, .sheet-backdrop', 'home/18-ai-search-profile']],
+  'home/20-settings': [
+    ['.profile-card', T.PROFILE],
+    ['Account Information*', 'home/02-account-details'],
+    ['Your Card List*', 'home/21-my-cards'],
+    ['Your Group*', 'home/23-my-groups'],
+    ['Change Password*', 'home/24-change-password'],
+    ['Change Language*', 'home/25-language'],
+    ['Manage Google Account*', 'home/26-manage-google'],
+    ['Calendar*', 'home/27-calendar'],
+    ['Task List*', 'home/30-my-tasks'],
+    ['Leaderboard*', 'home/13-top-performers'],
+    ['Referral History*', 'home/32-referral-history'],
+    ['[class*="upgrade"]', 'network/09h-upgrade-premium'],
+    ['Log Out', 'auth/02-sign-in'],
+  ],
+  'home/21-my-cards': [['tab:My Member*', 'home/22-my-member'], ['View Card', T.PROFILE], ['Edit', 'profile/12-edit-profile'], ['Add New Card', 'auth/03-create-profile']],
+  'home/22-my-member': [['tab:My Cards*', 'home/21-my-cards'], ['View Card', 'profile/01-digital-profile']],
+  'home/23-my-groups': [['View', 'profile/01-digital-profile']],
+  'home/24-change-password': [['Update Password', 'back']],
+  'home/25-language': [['.lang-card', 'back']],
+  'home/26-manage-google': [['Save & Authenticate', 'back'], ['Log Out', 'back']],
+  'home/27-calendar': [['Daily', 'home/28-calendar-daily'], ['.settings-btn', 'home/29-calendar-settings']],
+  'home/28-calendar-daily': [['Monthly', 'home/27-calendar'], ['.settings-btn', 'home/29-calendar-settings']],
+  'home/29-calendar-settings': [['Sync Now', 'home/05-syncing-database']],
+  'home/30-my-tasks': [['toggle:Monthly', 'home/31-my-tasks-monthly']],
+  'home/31-my-tasks-monthly': [['toggle:Weekly', 'home/30-my-tasks']],
+
+  /* Network */
+  'network/01-network': [
+    ...NET_LIST,
+    ['.btn-sync', 'home/05-syncing-database'],
+    ['.btn-settings-inline', 'network/01c-sync-calendar-settings'],
+    ['.contact-card', 'network/11-contact-detail'],
+  ],
+  'network/01b-no-connections': [...NET_LIST, ['Potential Connections', 'home/04-potential-connections'], ['Maybe later', T.NET], ['.contact-card', 'network/11-contact-detail']],
+  'network/01c-sync-calendar-settings': [['Cancel', 'back'], ['Disconnect Google Contacts', 'network/09b-no-contacts']],
+  'network/02-scanned-cards': [...NET_LIST, ['Scan New Card', 'network/05-scan-new-card'], ['.contact-card', 'network/03-scanned-card-detail']],
+  'network/02b-no-scanned-cards': [...NET_LIST, ['Scan New Card', 'network/05-scan-new-card']],
+  'network/03-scanned-card-detail': [['Edit', 'network/04-edit-card-detail']],
+  'network/04-edit-card-detail': [['Cancel', 'network/03-scanned-card-detail'], ['Save Changes', 'network/03-scanned-card-detail']],
+  'network/05-scan-new-card': [...SCAN_TABS, ['Multiple', 'network/07-scan-multi-cards'], ['.shutter', 'network/06-scanned-card']],
+  'network/06-scanned-card': [['Save Contact', 'network/02-scanned-cards'], ['Cancel', 'back']],
+  'network/07-scan-multi-cards': [...SCAN_TABS, ['One', 'network/05-scan-new-card'], ['.shutter', 'network/08-scan-multi-card']],
+  'network/08-scan-multi-card': [['.btn-save-card, .action-link', 'network/02-scanned-cards']],
+  'network/09-contacts': [...NET_LIST, ['.refresh-btn', 'home/05-syncing-database'], ['.contact-card', 'network/11-contact-detail']],
+  'network/09b-no-contacts': [...NET_LIST, ['Sync Contacts', 'home/05-syncing-database']],
+  'network/09c-filter-contacts': [['Apply Filters', 'network/09d-filtered-results'], ['Cancel', 'back']],
+  'network/09d-filtered-results': [...NET_LIST, ['.filter-tag-remove', 'network/09-contacts'], ['.contact-card', 'network/11-contact-detail']],
+  'network/09e-ai-search-contacts': [['.sample-q, .send-btn', 'network/09g-ai-search-limit']],
+  'network/09f-delete-contact-success': [['Done', 'network/09-contacts']],
+  'network/09g-ai-search-limit': [['Upgrade to Premium', 'network/09h-upgrade-premium'], ['Maybe later', 'back']],
+  'network/09h-upgrade-premium': [['.btn-purchase, .btn-restore', 'back']],
+  'network/10-leads': [...NET_LIST, ['.contact-card', 'network/11-contact-detail']],
+  'network/10b-no-leads': [...NET_LIST, ['Find Leads', 'home/18-ai-search-profile']],
+  'network/11-contact-detail': [['.btn-edit', 'network/11b-edit-contact'], ['.btn-delete', 'network/09f-delete-contact-success'], ['.action-btn', 'network/12-chat']],
+  'network/11b-edit-contact': [['Cancel', 'network/11-contact-detail'], ['Save Changes', 'network/11-contact-detail']],
+  'network/12-chat': [['.ai-write-btn', 'network/12b-chat-ai-modal']],
+  'network/12b-chat-ai-modal': [['Generate Message', 'network/12-chat'], ['.ai-modal-close, .ai-modal-backdrop', 'network/12-chat']],
+  'network/09-qr-scan': [...SCAN_TABS, ['.shutter', 'profile/01-digital-profile']],
+  'network/10-qr-profile': [...SCAN_TABS],
+  'network/11-qr-offline': [...SCAN_TABS],
+
+  /* Notifications */
+  'notifications/01-news': [...NOTI_TABS, ['Read Now', 'home/16-post-detail']],
+  'notifications/02-requested-contact': [...NOTI_TABS, ['Accept', 'home/08-connection-sent']],
+  'notifications/03-others': [...NOTI_TABS, ['Reply', 'network/12-chat']],
+
+  /* Profile */
+  'profile/01-digital-profile': [
+    ['.btn-nfc', 'home/08-connection-sent'],
+    ['Save contact', 'network/06-scanned-card'],
+    ['Schedule', 'profile/02-schedule-meeting'],
+    ['Chat', 'network/12-chat'],
+    ['.nav-btn@0', 'back'],
+  ],
+  'profile/02-schedule-meeting': [['.btn-confirm, .sheet-cta', 'profile/03-meeting-scheduled']],
+  'profile/03-meeting-scheduled': [['.btn-wrap', 'profile/01-digital-profile']],
+  'profile/04-digital-profile-own': [
+    ['.btn-nfc', 'profile/11-nfc-scan-qr'],
+    ['Edit profile', 'profile/12-edit-profile'],
+    ['Web profile', 'profile/01-digital-profile'],
+    ['My QR', 'network/10-qr-profile'],
+    ['.nav-btn@1', 'home/20-settings'],
+  ],
+  'profile/11-nfc-scan-qr': [['Scan', 'profile/05-nfc-tap']],
+  'profile/05-nfc-tap': [['Done', 'profile/08-activation-success'], ['.physical-card', 'profile/07-activation-failed']],
+  'profile/07-activation-failed': [['Try Again', 'profile/11-nfc-scan-qr']],
+  'profile/08-activation-success': [['View My Profile', T.PROFILE], ['Go to Dashboard', T.HOME]],
+  'profile/12-edit-profile': [
+    ['Save', T.PROFILE], ['Save Changes', T.PROFILE], ['Discard Changes', T.PROFILE],
+    ['Add Social Link', 'profile/13-connect-social'],
+    ['Add Service', 'profile/10-compact-add-service'],
+    ['Add Product', 'profile/16-add-service-product'],
+    ['Add Portfolio Item', 'profile/14-add-portfolio-video'],
+  ],
+  'profile/13-connect-social': [['Done', 'profile/12-edit-profile']],
+  'profile/14-add-portfolio-video': [['Images', 'profile/15-add-portfolio-image'], ['Save', 'profile/12-edit-profile']],
+  'profile/15-add-portfolio-image': [['Video', 'profile/14-add-portfolio-video'], ['Save', 'profile/12-edit-profile']],
+  'profile/06-add-portfolio-images': [['Video', 'profile/09-add-portfolio-modal'], ['Save Portfolio', 'profile/12-edit-profile']],
+  'profile/09-add-portfolio-modal': [['Images', 'profile/06-add-portfolio-images'], ['Done', 'profile/12-edit-profile']],
+  'profile/10-compact-add-service': [['Save Product', 'profile/17-success-modal'], ['Cancel', 'back']],
+  'profile/16-add-service-product': [['Save', 'profile/17-success-modal']],
+  'profile/17-success-modal': [['View Profile', T.PROFILE]],
+  'profile/18-import-linkedin': [['Extract', 'profile/20-extracting-linkedin'], ['Cancel', 'back']],
+  'profile/19-import-options': [['.linkedin-card', 'profile/18-import-linkedin'], ['.option-card', 'profile/12-edit-profile']],
+};
+
+/* Screens that advance on their own */
+const AUTO = {
+  'auth/00-splash': ['auth/02-sign-in', 1800],
+  'home/05-syncing-database': ['network/09-contacts', 2500],
+  'profile/20-extracting-linkedin': ['profile/12-edit-profile', 2500],
+};
+
+/* ───────────────────────── Engine ───────────────────────── */
+const frame = document.getElementById('frame');
+const START = 'auth/00-splash';
+let current = null, stack = [], autoTimer = null, alwaysHs = false;
+
+const norm = s => (s || '').replace(/\s+/g, ' ').trim();
+const isCss = m => /^[.#\[]|^[a-z]+[.#\[]|^body$/.test(m);
+
+function rulesFor(id) {
+  const own = ROUTES[id] || [];
+  const nav = (id.startsWith('auth/') ? [] : NAV);
+  return [...own, ...nav, ...BACK];
+}
+
+/* Does element `el` satisfy matcher `m`? */
+function matches(el, m, doc) {
+  if (!el || el.nodeType !== 1) return false;
+  let scope = null, text = m;
+  const pref = m.match(/^(nav|tab|toggle):(.*)$/);
+  if (pref) { scope = pref[1]; text = pref[2]; }
+  if (!pref && isCss(m)) {
+    const [sel, idx] = m.split('@');
+    try {
+      if (!el.matches(sel)) return false;
+      if (idx === undefined) return true;
+      return [...doc.querySelectorAll(sel)].indexOf(el) === +idx;
+    } catch (e) { return false; }
+  }
+  if (scope === 'nav' && !el.closest('.bottom-nav, .ds-bottom-nav')) return false;
+  if (scope === 'tab' && !el.closest('.tabs, .section-tabs, .ds-tabs, .tab, [class*="tab"]')) return false;
+  if (scope === 'toggle' && !el.closest('.toggle-btn, [class*="toggle"]')) return false;
+  const star = text.endsWith('*');
+  const want = star ? text.slice(0, -1) : text;
+  const got = norm(el.textContent);
+  const aria = norm(el.getAttribute('aria-label'));
+  if (aria === want) return true;
+  return star ? got.startsWith(want) && got.length < want.length + 60 : got === want;
+}
+
+function findRoute(target, doc) {
+  const rules = rulesFor(current);
+  for (let el = target; el && el !== doc.documentElement; el = el.parentElement) {
+    for (const [m, to] of rules) if (matches(el, m, doc)) return to;
+    if (el === doc.body) break;
+  }
+  return null;
+}
+
+/* All elements that would navigate — used for hotspot flashing */
+function hotspots(doc) {
+  const out = new Set();
+  const all = doc.body ? doc.body.querySelectorAll('*') : [];
+  for (const [m] of rulesFor(current)) {
+    if (m === 'body') continue;
+    for (const el of all) {
+      if (!matches(el, m, doc)) continue;
+      // keep the outermost match so the highlight covers the whole control
+      let top = el;
+      while (top.parentElement && top.parentElement !== doc.body && matches(top.parentElement, m, doc)) top = top.parentElement;
+      out.add(top);
+    }
+  }
+  return [...out].filter(el => { const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; });
+}
+
+function flash(doc, keep) {
+  doc.querySelectorAll('.__hs').forEach(e => e.classList.remove('__hs'));
+  hotspots(doc).forEach(e => e.classList.add('__hs'));
+  if (!keep) setTimeout(() => doc.querySelectorAll('.__hs').forEach(e => e.classList.remove('__hs')), 700);
+}
+
+function go(id, push = true) {
+  if (id === 'back') return back();
+  if (!id) return;
+  if (push && current && current !== id) stack.push(current);
+  current = id;
+  frame.src = id + '.html';
+  location.hash = id;
+  render();
+}
+function back() {
+  if (stack.length) { current = stack.pop(); frame.src = current + '.html'; location.hash = current; render(); }
+  else go(T.HOME, false);
+}
+
+frame.addEventListener('load', () => {
+  clearTimeout(autoTimer);
+  const doc = frame.contentDocument;
+  if (!doc) return;
+  const st = doc.createElement('style');
+  st.textContent = `
+    .screen { border-radius: 0 !important; }
+    html, body { scrollbar-width: none; }
+    ::-webkit-scrollbar { display: none; }
+    .__hs { outline: 2px solid rgba(46,176,122,.95) !important; outline-offset: 1px;
+      background-color: rgba(46,176,122,.18) !important; transition: none !important; }
+    [data-proto] { cursor: pointer; }`;
+  doc.head.appendChild(st);
+  doc.addEventListener('click', e => {
+    const to = findRoute(e.target, doc);
+    if (to) {
+      e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+      go(to);
+      return;
+    }
+    // Let the page's own controls work (tabs, sheets, toggles); otherwise show hotspots
+    const interactive = e.target.closest('button, a, input, textarea, select, label, [onclick], [role="button"]');
+    if (!interactive) flash(doc);
+    if (e.target.closest('a[href]')) e.preventDefault();
+  }, true);
+  if (alwaysHs) flash(doc, true);
+  const auto = AUTO[current];
+  if (auto) autoTimer = setTimeout(() => go(auto[0]), auto[1]);
+});
+
+/* ───────────────────────── Sidebar & controls ───────────────────────── */
+const list = document.getElementById('list');
+const label = id => id.split('/')[1].replace(/^[\w]+?-/, m => m).replace(/-/g, ' ');
+function buildList(q = '') {
+  list.innerHTML = '';
+  q = q.toLowerCase();
+  for (const [g, items] of Object.entries(GROUPS)) {
+    const hits = items.filter(s => !q || (g + '/' + s).toLowerCase().includes(q));
+    if (!hits.length) continue;
+    const h = document.createElement('div'); h.className = 'group'; h.textContent = GROUP_LABEL[g]; list.appendChild(h);
+    for (const s of hits) {
+      const id = g + '/' + s;
+      const b = document.createElement('button');
+      b.className = 'item' + (ROUTES[id] || AUTO[id] ? ' flow' : '');
+      b.dataset.id = id;
+      const [no, ...rest] = s.split('-');
+      b.innerHTML = `<span class="no">${no}</span><span>${rest.join(' ')}</span>`;
+      b.title = id;
+      b.onclick = () => go(id);
+      list.appendChild(b);
+    }
+  }
+  render();
+}
+function render() {
+  list.querySelectorAll('.item').forEach(b => b.classList.toggle('active', b.dataset.id === current));
+  const act = list.querySelector('.item.active');
+  if (act) act.scrollIntoView({ block: 'nearest' });
+}
+function toggleHs() {
+  alwaysHs = !alwaysHs;
+  const doc = frame.contentDocument;
+  if (doc) alwaysHs ? flash(doc, true) : doc.querySelectorAll('.__hs').forEach(e => e.classList.remove('__hs'));
+}
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === 'ArrowLeft' || e.key === 'Backspace') { e.preventDefault(); back(); }
+  if (e.key === 'h' || e.key === 'H') toggleHs();
+  if (e.key === 'r' || e.key === 'R') { stack = []; go(START, false); }
+});
+
+/* Scale phone down on short viewports */
+function fit() {
+  const phone = document.getElementById('phone');
+  const avail = window.innerHeight - 70;
+  const s = Math.min(1, avail / 852, (window.innerWidth - 24) / 398);
+  phone.style.transform = s < 1 ? `scale(${s})` : '';
+  phone.style.transformOrigin = 'top center';
+  phone.style.marginBottom = s < 1 ? `${-(852 * (1 - s))}px` : '';
+}
+window.addEventListener('resize', fit);
+fit();
+
+buildList();
+const fromHash = decodeURIComponent(location.hash.slice(1));
+go(fromHash && fromHash.includes('/') ? fromHash : START, false);
+</script>
+</body>
+</html>

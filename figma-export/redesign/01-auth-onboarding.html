@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InCard Redesign — 01 Auth &amp; Onboarding</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=Roboto:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../button-system.css" />
+  <link rel="stylesheet" href="../design-system.css" />
+  <link rel="stylesheet" href="rd.css" />
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <style>
+    /* Sign in with Apple / Google — theo chuẩn của Apple HIG & Google Identity branding */
+    :root { --apple-black: #000000; --google-text: #1f1f1f; --google-border: #747775; }
+    .sso { display: flex; flex-direction: column; gap: 10px; }
+    .sso-btn { height: 50px; width: 100%; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 16px; cursor: pointer; }
+    .sso-btn .sso-logo { width: 20px; height: 20px; flex-shrink: 0; }
+    .sso-btn.apple { background: var(--apple-black); color: var(--white); border: 0; font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif; font-weight: 600; }
+    .sso-btn.apple .sso-logo { width: 19px; height: 19px; margin-top: -2px; }
+    .sso-btn.google { background: var(--white); color: var(--google-text); border: 1px solid var(--google-border); font-family: 'Roboto', Arial, sans-serif; font-weight: 500; }
+    .splash { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; background: radial-gradient(120% 70% at 50% 35%, var(--green-50) 0%, var(--white) 70%); }
+    .splash .logo-mark { width: 96px; height: 96px; }
+    .splash .logo-word { height: 34px; }
+    .splash .tag { font-size: 14px; color: var(--slate-500); }
+    .auth-top { padding: 8px 24px 0; }
+    .auth-top .brand-lockup { margin-bottom: 26px; }
+    .auth-top .logo-mark { width: 36px; height: 36px; }
+    .auth-top .logo-word { height: 22px; }
+    .welcome-ill { height: 300px; margin: 8px 20px 0; border-radius: 28px; background: linear-gradient(160deg, var(--green-50), var(--green-100)); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .welcome-ill .orbit { position: absolute; border: 1.5px dashed var(--green-200); border-radius: 50%; }
+    .welcome-ill .node { position: absolute; width: 46px; height: 46px; border-radius: 50%; background: var(--white); box-shadow: var(--shadow-md); display: flex; align-items: center; justify-content: center; color: var(--green); }
+    .welcome-ill .node i, .welcome-ill .node svg { width: 22px; height: 22px; }
+    .mini-card { width: 210px; height: 128px; border-radius: 18px; background: var(--card-graphite); color: var(--white); padding: 16px; box-shadow: var(--card-shadow); position: relative; z-index: 1; }
+    .mini-card .nfc { position: absolute; right: 14px; top: 14px; opacity: .85; }
+    .feat { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
+    .feat .ic { width: 36px; height: 36px; border-radius: 10px; background: var(--green-50); color: var(--green); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .feat .ic i, .feat .ic svg { width: 18px; height: 18px; }
+    .feat b { font-size: 14.5px; display: block; }
+    .feat span { font-size: 13px; color: var(--slate-500); }
+    .photo-pick { width: 104px; height: 104px; border-radius: 50%; background: var(--green-50); border: 2px dashed var(--green-200); display: flex; align-items: center; justify-content: center; color: var(--green); position: relative; margin: 4px auto 6px; }
+    .photo-pick i, .photo-pick svg { width: 34px; height: 34px; }
+    .success-ring { width: 120px; height: 120px; border-radius: 50%; background: var(--green-50); display: flex; align-items: center; justify-content: center; margin: 0 auto 22px; box-shadow: 0 0 0 14px rgba(0,144,55,0.05); }
+    .success-ring span { width: 76px; height: 76px; border-radius: 50%; background: linear-gradient(135deg, var(--green-light), var(--green)); color: var(--white); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-green); }
+    .success-ring i, .success-ring svg { width: 38px; height: 38px; }
+    .next-step { display: flex; gap: 12px; align-items: center; padding: 14px; border-radius: 14px; border: 1px solid var(--slate-200); background: var(--white); margin-bottom: 10px; }
+    .next-step .ic { width: 40px; height: 40px; border-radius: 12px; background: var(--green-50); color: var(--green); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .next-step .ic i, .next-step .ic svg { width: 20px; height: 20px; }
+    .next-step b { font-size: 14.5px; display: block; }
+    .next-step span { font-size: 12.5px; color: var(--slate-500); }
+    .next-step .chev { width: 18px; height: 18px; color: var(--slate-400); margin-left: auto; }
+    .mail-ill { width: 112px; height: 112px; border-radius: 32px; background: var(--green-50); color: var(--green); display: flex; align-items: center; justify-content: center; margin: 40px auto 24px; }
+    .mail-ill i, .mail-ill svg { width: 52px; height: 52px; }
+    /* Ngành nghề: ~100 lựa chọn → ô tìm + chip đã chọn + gợi ý, chọn đầy đủ trong sheet D2b */
+    .ind-pick { cursor: pointer; }
+    .ind-pick .ph { color: var(--slate-400); }
+    /* Chức danh & công ty: 1 cụm mặc định, thêm cụm bằng nút */
+    .pos-blk { border: 1px solid var(--slate-200); border-radius: 14px; padding: 14px; margin-bottom: 12px; background: var(--white); }
+    .pos-blk .field { margin-bottom: 14px; }
+    .pos-add { display: flex; align-items: center; justify-content: center; gap: 6px; height: 44px; border: 1.5px dashed var(--green-200); border-radius: 12px; color: var(--green-dark); font-size: 14px; font-weight: 700; margin-bottom: 20px; cursor: pointer; }
+    .pos-add i, .pos-add svg { width: 18px; height: 18px; }
+    .pos-blk .pv-in { flex:1; min-width:0; align-self:stretch; border:0; outline:0; background:transparent; font:inherit; color:inherit; padding:0; margin:0; }
+    .pos-blk .pv-in::placeholder { color:var(--slate-400); opacity:1; }
+    .pos-del { width: 32px; height: 32px; border-radius: 10px; border: 0; background: var(--red-100); color: var(--red-600); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .pos-del i, .pos-del svg { width: 16px; height: 16px; }
+    .pos-hd { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .pos-hd b { flex: 1; font-size: 12px; font-weight: 700; color: var(--slate-400); text-transform: uppercase; letter-spacing: .04em; }
+    .body.pos-scroll { overflow-y: auto; scrollbar-width: none; }
+    .body.pos-scroll::-webkit-scrollbar { display: none; }
+    .ind-sel { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .ind-sel .chip { height: 32px; padding: 0 10px 0 12px; font-size: 13px; gap: 5px; }
+    .ind-sel .chip.on i, .ind-sel .chip.on svg { width: 14px; height: 14px; opacity: .85; }
+    .ind-sheet { top: 96px; display: flex; flex-direction: column; padding-bottom: 0; }
+    .ind-sheet .ind-scroll { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; margin: 0 -20px; padding: 0 20px; }
+    .ind-sheet .ind-scroll::-webkit-scrollbar { display: none; }
+    .ind-row[data-js] { cursor: pointer; user-select: none; }
+    .ind-row[data-js]:active { background: var(--slate-50); }
+    .ind-row.dis { opacity: .4; }
+    .ind-sel .chip[data-js] { cursor: pointer; }
+    .hint.ind-ai { margin-top: 10px; }
+    .hint.ind-ai i, .hint.ind-ai svg { color: var(--green); }
+    .ind-empty { display: none; padding: 24px 0 8px; text-align: center; font-size: 14px; color: var(--slate-500); }
+    .ind-empty.show { display: block; }
+    .ind-sheet .sec { font-size: 12px; font-weight: 700; color: var(--slate-400); text-transform: uppercase; letter-spacing: .04em; margin: 16px 0 4px; display: flex; justify-content: space-between; }
+    .ind-sheet .sec span { text-transform: none; letter-spacing: 0; font-weight: 600; }
+    .ind-row { display: flex; align-items: center; gap: 12px; height: 48px; border-bottom: 1px solid var(--slate-100); font-size: 15px; color: var(--ink); }
+    .ind-row .tx { flex: 1; }
+    .ind-row .box { width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid var(--slate-300); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ind-row .box.on { background: var(--green); border-color: var(--green); color: var(--white); }
+    .ind-row .box i, .ind-row .box svg { width: 15px; height: 15px; }
+    .ind-foot { margin: 0 -20px; padding: 12px 20px 30px; border-top: 1px solid var(--slate-100); background: var(--white); }
+    /* A3 · Chọn ngôn ngữ (sheet) — radio giống 08-B3 */
+    .lg-list .radio { width: 22px; height: 22px; border-radius: 50%; border: 1.8px solid var(--slate-300); flex-shrink: 0; position: relative; background: var(--white); }
+    .lg-list .radio.on { border-color: var(--green); }
+    .lg-list .radio.on::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: var(--green); }
+  </style>
+  <style>
+    /* D1 · Giả lập chọn ảnh đại diện: sheet → camera / thư viện → cắt ảnh tròn → gắn vào ô ảnh */
+    :root { --cam-bg: #000000; --cam-ink: #ffffff; --cam-dim: rgba(0,0,0,0.62); --cam-line: rgba(255,255,255,0.28); --cam-btn: rgba(255,255,255,0.16); }
+    .photo-pick { cursor: pointer; }
+    .photo-pick .av-clip { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; }
+    .photo-pick .av-clip img { width: 100%; height: 100%; object-fit: cover; display: block; transform-origin: center; }
+    .photo-pick.has { border: 3px solid var(--white); box-shadow: 0 0 0 2px var(--green-200), var(--shadow-lg); background: var(--slate-100); }
+    .photo-pick .av-edit i, .photo-pick .av-edit svg { width: 15px; height: 15px; }
+    .photo-pick.busy::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: rgba(255,255,255,0.55) ; }
+    .photo-pick .av-spin { position: absolute; left: 50%; top: 50%; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; border: 3px solid var(--green-200); border-top-color: var(--green); animation: avspin .8s linear infinite; z-index: 2; }
+    @keyframes avspin { to { transform: rotate(360deg); } }
+    .pick-cap { cursor: pointer; }
+    .pick-cap b { color: var(--green); font-weight: 700; }
+
+    .av-ov { position: absolute; inset: 0; z-index: 60; display: flex; flex-direction: column; }
+    .av-ov .scrim { position: absolute; inset: 0; animation: avfade .2s ease; }
+    .av-ov .sheet { animation: avup .26s cubic-bezier(.2,.8,.2,1); padding-bottom: 34px; }
+    @keyframes avfade { from { opacity: 0; } }
+    @keyframes avup { from { transform: translateY(100%); } }
+    .av-ov .sh-row { display: flex; align-items: center; gap: 14px; padding: 13px 4px; border-radius: 12px; cursor: pointer; }
+    .av-ov .sh-row:hover { background: var(--slate-50); }
+    .av-ov .sh-row .ic { width: 42px; height: 42px; border-radius: 12px; background: var(--green-50); color: var(--green); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .av-ov .sh-row .ic.red { background: var(--red-50); color: var(--red-600); }
+    .av-ov .sh-row .ic svg { width: 20px; height: 20px; }
+    .av-ov .sh-row b { display: block; font-size: 15.5px; }
+    .av-ov .sh-row small { display: block; font-size: 12.5px; color: var(--slate-500); margin-top: 1px; }
+    .av-ov .sh-row.danger b { color: var(--red-600); }
+    .av-ov .sh-tip { display: flex; gap: 8px; align-items: flex-start; font-size: 12.5px; color: var(--slate-500); background: var(--slate-50); border-radius: 12px; padding: 10px 12px; margin: 8px 0 14px; }
+    .av-ov .sh-tip svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--green); margin-top: 1px; }
+
+    /* toàn màn: thư viện / camera / cắt ảnh */
+    .av-full { position: absolute; inset: 0; display: flex; flex-direction: column; animation: avup .28s cubic-bezier(.2,.8,.2,1); }
+    .av-full.lib { background: var(--white); }
+    .av-full.dark { background: var(--cam-bg); color: var(--cam-ink); }
+    .av-full.dark .statusbar { color: var(--cam-ink); }
+    .av-full .lb-bar { display: flex; align-items: center; justify-content: space-between; padding: 6px 16px 10px; }
+    .av-full .lb-bar a { font-size: 15px; font-weight: 600; color: var(--green); cursor: pointer; min-width: 56px; }
+    .av-full .lb-bar a:last-child { text-align: right; }
+    .av-full .lb-bar b { font-size: 16px; }
+    .av-full .lb-tabs { display: flex; gap: 8px; padding: 0 16px 10px; }
+    .av-full .lb-tabs span { font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 999px; background: var(--slate-100); color: var(--slate-600); }
+    .av-full .lb-tabs span.on { background: var(--ink); color: var(--white); }
+    .av-full .lb-grid { flex: 1; overflow-y: auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; align-content: start; scrollbar-width: none; }
+    .av-full .lb-grid::-webkit-scrollbar { display: none; }
+    .av-full .lb-grid span { aspect-ratio: 1; background: var(--slate-100) center/cover no-repeat; cursor: pointer; position: relative; }
+    .av-full .lb-grid span:hover { filter: brightness(.88); }
+    .av-full .lb-note { font-size: 12px; color: var(--slate-500); text-align: center; padding: 10px 16px 28px; border-top: 1px solid var(--slate-200); }
+
+    .av-full .cam-view { flex: 1; position: relative; overflow: hidden; margin: 6px 0 0; }
+    .av-full .cam-view img { width: 100%; height: 100%; object-fit: cover; filter: saturate(1.05); animation: avbreath 4s ease-in-out infinite alternate; }
+    @keyframes avbreath { to { transform: scale(1.04) translateX(-6px); } }
+    .av-full .cam-guide { position: absolute; left: 50%; top: 44%; width: 250px; height: 250px; margin: -125px 0 0 -125px; border-radius: 50%; border: 2px dashed rgba(255,255,255,0.75); box-shadow: 0 0 0 999px rgba(0,0,0,0.28); }
+    .av-full .cam-hint { position: absolute; left: 0; right: 0; top: 16px; text-align: center; font-size: 13px; font-weight: 600; }
+    .av-full .cam-hint span { background: var(--cam-dim); padding: 6px 12px; border-radius: 999px; }
+    .av-full .cam-top { display: flex; justify-content: space-between; padding: 4px 16px; }
+    .av-full .cam-ib { width: 44px; height: 44px; border-radius: 50%; background: var(--cam-btn); color: var(--cam-ink); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .av-full .cam-ib svg { width: 22px; height: 22px; }
+    .av-full .cam-bot { display: flex; align-items: center; justify-content: space-between; padding: 22px 40px 40px; }
+    .av-full .shutter { width: 76px; height: 76px; border-radius: 50%; border: 4px solid var(--cam-ink); padding: 4px; cursor: pointer; }
+    .av-full .shutter span { display: block; width: 100%; height: 100%; border-radius: 50%; background: var(--cam-ink); transition: transform .1s; }
+    .av-full .shutter:active span { transform: scale(.9); }
+    .av-full .cam-thumb { width: 44px; height: 44px; border-radius: 10px; background: var(--cam-btn) center/cover; border: 2px solid var(--cam-line); cursor: pointer; }
+    .av-full .flash { position: absolute; inset: 0; background: var(--white); opacity: 0; pointer-events: none; }
+    .av-full .flash.go { animation: avflash .35s ease; }
+    @keyframes avflash { 30% { opacity: .9; } }
+
+    .av-full .cr-title { text-align: center; font-size: 16px; font-weight: 700; padding: 8px 0 2px; }
+    .av-full .cr-sub { text-align: center; font-size: 12.5px; color: rgba(255,255,255,0.65); }
+    .av-full .cr-stage { flex: 1; position: relative; overflow: hidden; touch-action: none; cursor: grab; }
+    .av-full .cr-stage:active { cursor: grabbing; }
+    .av-full .cr-stage img { position: absolute; left: 50%; top: 50%; width: 280px; height: 280px; margin: -140px 0 0 -140px; object-fit: cover; user-select: none; -webkit-user-drag: none; pointer-events: none; }
+    .av-full .cr-mask { position: absolute; left: 50%; top: 50%; width: 280px; height: 280px; margin: -140px 0 0 -140px; border-radius: 50%; box-shadow: 0 0 0 999px var(--cam-dim); border: 2px solid var(--cam-ink); pointer-events: none; }
+    .av-full .cr-zoom { display: flex; align-items: center; gap: 12px; padding: 14px 32px 6px; color: rgba(255,255,255,0.7); }
+    .av-full .cr-zoom svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .av-full .cr-zoom input { flex: 1; accent-color: var(--green-light); cursor: pointer; }
+    .av-full .cr-act { display: flex; gap: 12px; padding: 14px 20px 36px; }
+    .av-full .cr-act .btn.again { background: var(--cam-btn); color: var(--cam-ink); }
+  </style>
+</head>
+<body class="rd-canvas">
+  <div class="rd-head">
+    <a class="back" href="index.html">← Tất cả flow</a>
+    <h1>01 · Đăng nhập &amp; Onboarding</h1>
+    <p>Splash → Chào mừng → Đăng nhập / Đăng ký → Quên mật khẩu → Tạo hồ sơ (2 bước, bắt buộc, không bỏ qua được) → Hoàn tất với 3 việc nên làm tiếp. Paywall không còn bật ngay sau đăng ký.</p>
+  </div>
+
+  <!-- ===================== A. Entry ===================== -->
+  <section class="rd-section">
+    <h2>A · Vào app</h2>
+    <div class="rd-row">
+
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="splash">
+            <img class="logo-mark" src="assets/logo-mark.png" alt="InCard" />
+            <img class="logo-word" src="assets/logo-word.png" alt="InCard" />
+            <div class="tag">Kết nối thông minh · Chạm là kết nối</div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">A1 · Splash<small>Logo gốc ở giữa, nền xanh nhạt. Không có chữ tiếng Anh lẫn vào.</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="body">
+            <div class="flex jb ac" style="padding: 4px 20px 0;">
+              <span class="brand-lockup"><img class="logo-mark" style="width:32px;height:32px" src="assets/logo-mark.png" alt="" /><img class="logo-word" style="height:20px" src="assets/logo-word.png" alt="InCard" /></span>
+              <span class="chip" style="height:32px"><i data-lucide="globe"></i>Tiếng Việt</span>
+            </div>
+            <div class="welcome-ill">
+              <div class="orbit" style="width:300px;height:300px"></div>
+              <div class="orbit" style="width:200px;height:200px"></div>
+              <div class="node" style="top:28px;left:46px"><i data-lucide="user-round"></i></div>
+              <div class="node" style="top:40px;right:40px"><i data-lucide="briefcase"></i></div>
+              <div class="node" style="bottom:30px;left:70px"><i data-lucide="qr-code"></i></div>
+              <div class="node" style="bottom:44px;right:56px"><i data-lucide="handshake"></i></div>
+              <div class="mini-card">
+                <i class="nfc" data-lucide="nfc"></i>
+                <img src="assets/logo-mark.png" style="width:30px;height:30px" alt="" />
+                <div style="margin-top:30px;font-weight:700;font-size:16px">Nguyễn Minh Anh</div>
+                <div style="font-size:12px;opacity:.85">Giám đốc kinh doanh</div>
+              </div>
+            </div>
+            <div style="padding: 24px 24px 0">
+              <div class="h-display">Một chạm để<br/>trao danh thiếp</div>
+              <p class="t-body mt8">Chia sẻ hồ sơ qua thẻ NFC hoặc mã QR, lưu và quản lý mọi mối quan hệ tại một nơi.</p>
+            </div>
+          </div>
+          <div style="padding: 0 24px 12px">
+            <button class="btn primary">Tạo tài khoản miễn phí</button>
+            <button class="btn ghost mt8" style="color:var(--ink)">Tôi đã có tài khoản · <span class="t-green">&nbsp;Đăng nhập</span></button>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">A2 · Chào mừng<small>Màn mới: nói rõ giá trị trước khi hỏi thông tin, có sẵn nút đổi ngôn ngữ. Hai lối đi rõ ràng.</small></div>
+      </div>
+
+      <!-- A3 Language sheet -->
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="body">
+            <div class="flex jb ac" style="padding: 4px 20px 0;">
+              <span class="brand-lockup"><img class="logo-mark" style="width:32px;height:32px" src="assets/logo-mark.png" alt="" /><img class="logo-word" style="height:20px" src="assets/logo-word.png" alt="InCard" /></span>
+              <span class="chip" style="height:32px"><i data-lucide="globe"></i>Tiếng Việt</span>
+            </div>
+            <div style="padding: 48px 24px 0">
+              <div class="h-display">Một chạm để<br/>trao danh thiếp</div>
+              <p class="t-body mt8">Chia sẻ hồ sơ qua thẻ NFC hoặc mã QR, lưu và quản lý mọi mối quan hệ tại một nơi.</p>
+            </div>
+          </div>
+          <div class="scrim"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Chọn ngôn ngữ</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <div class="group lg-list">
+              <div class="row"><div class="tx"><b>Tiếng Việt</b><span>Tiếng Việt</span></div><span class="radio on"></span></div>
+              <div class="row"><div class="tx"><b>English</b><span>Tiếng Anh</span></div><span class="radio"></span></div>
+            </div>
+            <p class="t-xs mt12">Đổi lại bất cứ lúc nào trong Tài khoản › Ngôn ngữ.</p>
+            <button class="btn primary mt16">Xong</button>
+          </div>
+        </div>
+        <div class="cap">A3 · Chọn ngôn ngữ (sheet)<small>Mở từ nút "Tiếng Việt" ở góc trên màn Chào mừng (A2). Hai lựa chọn giống màn Ngôn ngữ trong Tài khoản (08-B3), mỗi ngôn ngữ ghi bằng chính tiếng đó. Chọn là áp dụng ngay; "Xong" hoặc ✕ quay về A2.</small></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== B. Sign in ===================== -->
+  <section class="rd-section">
+    <h2>B · Đăng nhập &amp; khôi phục mật khẩu</h2>
+    <div class="rd-row">
+
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title"></div><div class="spacer44"></div></div>
+          <div class="body" style="padding: 0 24px">
+            <div class="h-display" style="white-space:nowrap;font-size:28px">Chào mừng trở lại 👋</div>
+            <p class="t-body mt8 mb24">Đăng nhập để tiếp tục kết nối.</p>
+            <div class="sso"><button class="sso-btn apple"><svg class="sso-logo" viewBox="0 0 24 24" fill="currentColor"><path d="M16.37 1.43c0 1.14-.49 2.27-1.18 3.08-.74.9-1.99 1.57-2.99 1.57-.12 0-.23-.02-.3-.03-.01-.06-.04-.22-.04-.39 0-1.15.57-2.27 1.21-2.98.8-.94 2.14-1.64 3.25-1.68.03.13.05.28.05.43zm4.56 15.71c-.03.07-.46 1.58-1.52 3.12-.94 1.34-1.94 2.71-3.43 2.71-1.52 0-1.9-.88-3.63-.88-1.7 0-2.3.91-3.67.91-1.38 0-2.33-1.26-3.43-2.8C4 18.38 2.96 15.57 2.96 12.92c0-4.28 2.8-6.55 5.55-6.55 1.45 0 2.68.95 3.6.95.87 0 2.22-1.01 3.9-1.01.61 0 2.89.06 4.37 2.19-.13.09-2.38 1.37-2.38 4.19 0 3.26 2.85 4.42 2.96 4.45z"/></svg>Tiếp tục với Apple</button><button class="sso-btn google"><svg class="sso-logo" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>Tiếp tục với Google</button></div>
+            <div class="or">hoặc dùng email</div>
+            <div class="field"><label>Email</label><div class="input focus"><i data-lucide="mail"></i><span class="v">minhanh@inapps.net</span></div></div>
+            <div class="field"><label>Mật khẩu</label><div class="input"><i data-lucide="lock"></i><span class="v">••••••••••</span><i data-lucide="eye"></i></div></div>
+            <div style="text-align:right"><a class="link" style="font-size:14px">Quên mật khẩu?</a></div>
+          </div>
+          <div style="padding: 0 24px 8px">
+            <button class="btn primary">Đăng nhập</button>
+            <p class="t-sm t-center mt12">Chưa có tài khoản? <a class="link">Đăng ký</a></p>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">B1 · Đăng nhập<small>Tiêu đề 1 dòng. Nút "Tiếp tục với Apple" và "Tiếp tục với Google" làm đúng chuẩn: chữ đầy đủ, logo gốc, Apple nền đen, Google nền trắng viền #747775 font Roboto, hai nút cùng kích thước, Apple không kém nổi bật hơn (App Review 4.8). Nút chính cố định gần ngón cái. Icon trong ô nhập giúp nhận diện nhanh.</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title"></div><div class="spacer44"></div></div>
+          <div class="body" style="padding: 0 24px">
+            <div class="h-display" style="white-space:nowrap;font-size:28px">Chào mừng trở lại 👋</div>
+            <p class="t-body mt8 mb24">Đăng nhập để tiếp tục kết nối.</p>
+            <div class="card flat" style="background:var(--red-50);border-color:var(--red-100);display:flex;gap:10px;align-items:flex-start;margin-bottom:18px">
+              <i data-lucide="circle-alert" style="width:20px;height:20px;color:var(--red-600);flex-shrink:0"></i>
+              <div class="t-sm" style="color:var(--red-600)">Email hoặc mật khẩu chưa đúng. Bạn còn 4 lần thử.</div>
+            </div>
+            <div class="field"><label>Email</label><div class="input"><i data-lucide="mail"></i><span class="v">minhanh@inapps.net</span></div></div>
+            <div class="field"><label>Mật khẩu</label><div class="input error"><i data-lucide="lock"></i><span class="v">••••••</span><i data-lucide="eye"></i></div>
+              <div class="hint err"><i data-lucide="info"></i>Mật khẩu tối thiểu 8 ký tự</div></div>
+            <div style="text-align:right"><a class="link" style="font-size:14px">Quên mật khẩu?</a></div>
+          </div>
+          <div style="padding: 0 24px 8px">
+            <button class="btn primary">Đăng nhập</button>
+            <p class="t-sm t-center mt12">Chưa có tài khoản? <a class="link">Đăng ký</a></p>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">B2 · Đăng nhập lỗi<small>Báo lỗi ngay trên form, nói rõ cần sửa gì. Giữ nguyên email đã nhập.</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title">Quên mật khẩu</div><div class="spacer44"></div></div>
+          <div class="body" style="padding: 8px 24px 0">
+            <p class="t-body mb24">Nhập email bạn đã dùng để đăng ký. Chúng tôi sẽ gửi liên kết đặt lại mật khẩu.</p>
+            <div class="field"><label>Email</label><div class="input focus"><i data-lucide="mail"></i><span class="v">minhanh@inapps.net</span></div></div>
+          </div>
+          <div style="padding: 0 24px 8px"><button class="btn primary">Gửi liên kết</button></div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">B3 · Quên mật khẩu<small>Giải thích điều gì sẽ xảy ra. Nút "Tiếp tục" mơ hồ được đổi thành "Gửi liên kết".</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="x"></i></button><div class="title"></div><div class="spacer44"></div></div>
+          <div class="body t-center" style="padding: 0 28px">
+            <div class="mail-ill"><i data-lucide="mail-check"></i></div>
+            <div class="h1">Kiểm tra hộp thư</div>
+            <p class="t-body mt8">Đã gửi liên kết đặt lại mật khẩu tới<br/><b style="color:var(--ink)">minhanh@inapps.net</b></p>
+            <p class="t-sm mt16">Không thấy email? Kiểm tra mục Spam hoặc</p>
+            <a class="link" style="font-size:14px">Gửi lại sau 0:45</a>
+          </div>
+          <div style="padding: 0 24px 8px">
+            <button class="btn primary"><i data-lucide="mail"></i>Mở ứng dụng email</button>
+            <button class="btn ghost mt8">Quay lại đăng nhập</button>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">B4 · Đã gửi email<small>Màn mới: xác nhận đã gửi, có đếm ngược gửi lại và đường quay về đăng nhập, không để người dùng kẹt lại.</small></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== C. Sign up ===================== -->
+  <section class="rd-section">
+    <h2>C · Đăng ký</h2>
+    <div class="rd-row">
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title"></div><div class="spacer44"></div></div>
+          <div class="body" style="padding: 0 24px">
+            <div class="h-display">Tạo tài khoản</div>
+            <p class="t-body mt4 mb12">Miễn phí. Mất chưa tới 1 phút.</p>
+            <div class="sso"><button class="sso-btn apple"><svg class="sso-logo" viewBox="0 0 24 24" fill="currentColor"><path d="M16.37 1.43c0 1.14-.49 2.27-1.18 3.08-.74.9-1.99 1.57-2.99 1.57-.12 0-.23-.02-.3-.03-.01-.06-.04-.22-.04-.39 0-1.15.57-2.27 1.21-2.98.8-.94 2.14-1.64 3.25-1.68.03.13.05.28.05.43zm4.56 15.71c-.03.07-.46 1.58-1.52 3.12-.94 1.34-1.94 2.71-3.43 2.71-1.52 0-1.9-.88-3.63-.88-1.7 0-2.3.91-3.67.91-1.38 0-2.33-1.26-3.43-2.8C4 18.38 2.96 15.57 2.96 12.92c0-4.28 2.8-6.55 5.55-6.55 1.45 0 2.68.95 3.6.95.87 0 2.22-1.01 3.9-1.01.61 0 2.89.06 4.37 2.19-.13.09-2.38 1.37-2.38 4.19 0 3.26 2.85 4.42 2.96 4.45z"/></svg>Tiếp tục với Apple</button><button class="sso-btn google"><svg class="sso-logo" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>Tiếp tục với Google</button></div>
+            <div class="or">hoặc dùng email</div>
+            <div class="field"><label>Email</label><div class="input"><i data-lucide="mail"></i><span class="v">minhanh@inapps.net</span><i data-lucide="circle-check" style="color:var(--green)"></i></div></div>
+            <div class="field" style="margin-bottom:14px"><label>Mật khẩu</label><div class="input focus"><i data-lucide="lock"></i><span class="v">••••••••••</span><i data-lucide="eye-off"></i></div></div>
+            <div class="field" style="margin-bottom:14px"><label>Mã giới thiệu <span class="opt">(không bắt buộc)</span></label><div class="input"><i data-lucide="gift"></i><span class="ph">VD: NKAX5V</span></div></div>
+            <div class="check"><span class="box on"><i data-lucide="check"></i></span><span>Tôi đồng ý với <a class="link">Điều khoản sử dụng</a> và <a class="link">Chính sách quyền riêng tư</a></span></div>
+          </div>
+          <div style="padding: 0 24px 8px">
+            <button class="btn primary">Tạo tài khoản</button>
+            <p class="t-sm t-center mt12">Đã có tài khoản? <a class="link">Đăng nhập</a></p>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">C1 · Đăng ký<small>Hai nút "Tiếp tục với Apple / Google" theo chuẩn Apple HIG và Google branding, cùng kích thước, xếp chồng. Ô mã giới thiệu luôn hiện sẵn (ghi rõ không bắt buộc), không cần bấm để mở. Điều khoản mở dạng bottom sheet ngay trong app, không bật sang Chrome.</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="body" style="padding: 0 24px; opacity:.35">
+            <div class="h-display mt24">Tạo tài khoản</div>
+          </div>
+          <div class="scrim"></div>
+          <div class="sheet" style="top:120px">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Điều khoản sử dụng</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <p class="t-xs mb12">Cập nhật 01/10/2026</p>
+            <div class="t-body" style="font-size:13.5px">
+              <b style="color:var(--ink)">1. Phạm vi áp dụng</b><br/>Điều khoản này áp dụng cho mọi người dùng ứng dụng InCard trên iOS và Android…<br/><br/>
+              <b style="color:var(--ink)">2. Tài khoản</b><br/>Bạn chịu trách nhiệm bảo mật thông tin đăng nhập và mọi hoạt động diễn ra trong tài khoản…<br/><br/>
+              <b style="color:var(--ink)">3. Dữ liệu liên hệ</b><br/>Thông tin bạn chia sẻ qua thẻ NFC/QR chỉ hiển thị theo quyền riêng tư bạn đã chọn…<br/><br/>
+              <b style="color:var(--ink)">4. Gói trả phí</b><br/>Gói Premium được gia hạn tự động và có thể huỷ bất cứ lúc nào…
+            </div>
+            <button class="btn primary" style="position:absolute;left:20px;right:20px;bottom:30px;width:auto">Tôi đã hiểu</button>
+          </div>
+        </div>
+        <div class="cap">C2 · Điều khoản (sheet)<small>Đọc điều khoản ngay trong app, đóng sheet là về đúng form đang điền. Không mất dữ liệu đã nhập.</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== D. Onboarding ===================== -->
+  <section class="rd-section">
+    <h2>D · Tạo hồ sơ (onboarding 2 bước)</h2>
+    <div class="rd-row">
+
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title" style="font-size:14px;color:var(--slate-500);font-weight:600">Bước 1/2</div><div class="spacer44"></div></div>
+          <div style="padding: 0 24px 14px"><div class="steps"><span class="on"></span><span></span></div></div>
+          <div class="body" style="padding: 0 24px">
+            <div class="h1">Thông tin cơ bản</div>
+            <p class="t-sm mt4 mb16">Đây là những gì người khác thấy khi bạn chạm thẻ.</p>
+            <div class="photo-pick" data-js="av-open" role="button" aria-label="Thêm ảnh đại diện"><i data-lucide="camera"></i><span class="av-edit"><i data-lucide="plus"></i></span></div>
+            <p class="t-xs t-center mb16 pick-cap" data-js="av-open">Thêm ảnh đại diện <span style="color:var(--slate-400)">(nên có)</span></p>
+            <div class="flex g12"><div class="field f1"><label>Họ <span class="req">*</span></label><div class="input"><span class="v">Nguyễn</span></div></div><div class="field f1"><label>Tên <span class="req">*</span></label><div class="input focus"><span class="v">Minh Anh</span></div></div></div>
+            <div class="field"><label>Số điện thoại <span class="req">*</span></label><div class="input"><span style="font-weight:600;color:var(--slate-600);display:inline-flex;align-items:center;gap:4px">+84<i data-lucide="chevron-down" style="width:14px;height:14px"></i></span><span style="width:1px;height:22px;background:var(--slate-200)"></span><span class="ph">908 112 222</span></div><div class="hint"><i data-lucide="id-card"></i>Hiện trên thẻ đầu tiên của bạn, mỗi thẻ sau có thể dùng số khác</div></div>
+            <div class="field"><label>Email</label><div class="input disabled"><i data-lucide="mail"></i><span class="v">minhanh@inapps.net</span><i data-lucide="lock" style="width:16px"></i></div></div>
+          </div>
+          <div style="padding: 0 24px 8px"><button class="btn primary">Tiếp tục</button></div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">D1 · Bước 1: Thông tin cơ bản<small>Bước bắt buộc, không bỏ qua được: nút Tiếp tục chỉ bật khi đã điền đủ các trường có dấu * (ảnh đại diện vẫn tuỳ chọn). Họ và Tên nằm cùng hàng theo thứ tự tiếng Việt. Có thanh tiến trình. Email đã khoá vì lấy từ tài khoản. Không còn coach mark che form. Họ tên và ảnh ở đây dùng cho thẻ đầu tiên (đồng thời là tên tài khoản); mỗi thẻ tạo sau có tên hiển thị và ảnh đại diện riêng; số điện thoại nhập ở đây thuộc thẻ đầu tiên (Thẻ InApps Technology), email đăng nhập được điền sẵn làm email của thẻ này và đổi riêng từng thẻ sau.</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title" style="font-size:14px;color:var(--slate-500);font-weight:600">Bước 2/2</div><div class="spacer44"></div></div>
+          <div style="padding: 0 24px 14px"><div class="steps"><span class="on"></span><span class="on"></span></div></div>
+          <div class="body" style="padding: 0 24px">
+            <div class="h1">Công việc của bạn</div>
+            <p class="t-sm mt4" style="margin-bottom:20px">Thông tin bắt buộc — AI dùng để gợi ý nhận diện thương hiệu cá nhân và các kết nối tiềm năng cho bạn.</p>
+            <div class="pos-blk">
+              <div class="field"><label>Chức danh <span class="req">*</span></label><div class="input focus"><i data-lucide="briefcase"></i><span class="v">Giám đốc kinh doanh</span></div><div class="hint"><i data-lucide="info"></i>VD: Giám đốc, Kỹ sư, Bác sĩ, Thạc sĩ, Sinh viên…</div></div>
+              <div class="field" style="margin-bottom:0"><label>Công ty / Tổ chức <span class="req">*</span></label><div class="input"><i data-lucide="building-2"></i><span class="v">InApps Technology</span></div><div class="hint"><i data-lucide="graduation-cap"></i>Chưa có công ty? Ghi trường học hoặc bằng cấp.</div></div>
+            </div>
+            <a class="pos-add" data-js="pos-add"><i data-lucide="plus"></i>Thêm chức danh &amp; công ty</a>
+            <div class="field"><label>Ngành nghề <span class="req">*</span> <span class="opt">(tối đa 5)</span></label>
+              <div class="input ind-pick"><i data-lucide="search"></i><span class="ph">Tìm trong hơn 100 ngành nghề</span><i data-lucide="chevron-down" style="width:18px"></i></div>
+              <div class="ind-sel"><span class="chip on" data-js="ind" data-n="Công nghệ thông tin">Công nghệ thông tin<i data-lucide="circle-x"></i></span><span class="chip on" data-js="ind" data-n="Kinh doanh – Bán hàng">Kinh doanh – Bán hàng<i data-lucide="circle-x"></i></span></div>
+              <div class="hint ind-ai"><i data-lucide="sparkles"></i>AI điền sẵn theo chức danh, công ty. Sai thì bấm để sửa.</div>
+            </div>
+          </div>
+          <div style="padding: 0 24px 8px"><button class="btn primary">Hoàn tất</button></div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">D2 · Bước 2: Công việc<small>Mặc định chỉ hiện 1 cụm Chức danh + Công ty. Ai có nhiều vai trò thì bấm "+ Thêm chức danh &amp; công ty" để mở thêm cụm mới ngay bên dưới (không giới hạn); cụm thêm vào có nút thùng rác để xoá. Cụm đầu tiên là chức danh chính. Ngành nghề có hơn 100 lựa chọn nên không bày hết thành chip: một ô tìm (chạm vào mở sheet D2b), bên dưới là các ngành đã chọn (bấm ⓧ để bỏ). AI tự điền sẵn 1–2 ngành theo chức danh và công ty vừa nhập (ở đây: Công nghệ thông tin, Kinh doanh – Bán hàng), kèm dòng ✨ "AI đã điền sẵn…". Đúng thì bấm Hoàn tất luôn, sai thì bỏ chip hoặc mở D2b để sửa. Khi user đã tự sửa, dòng ghi chú AI ẩn đi. Chọn tối đa 5 ngành để gợi ý kết nối chính xác. Bước này bắt buộc: không có nút "Bỏ qua", nút Hoàn tất chỉ bật khi đã điền đủ các trường có dấu *. Thông tin này nuôi tính năng Kết nối tiềm năng (trước đây bị trống vì thiếu dữ liệu này). Bước này tạo thẻ đầu tiên: tên thẻ tự đặt theo công ty ("Thẻ InApps Technology"), không cần nhập, đổi sau ở Quản lý thẻ; chức vụ, công ty, ngành nghề (và SĐT/email ở bước 1) thuộc thẻ này. Không giới hạn số thẻ, tạo thêm sau ở Quản lý thẻ.</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="body" style="padding: 0 24px; opacity:.35">
+            <div class="h1 mt24">Công việc của bạn</div>
+          </div>
+          <div class="scrim"></div>
+          <div class="sheet ind-sheet">
+            <div class="grab"></div>
+            <div class="sh-head"><h3>Chọn ngành nghề</h3><button class="icon-btn" style="width:36px;height:36px"><i data-lucide="x"></i></button></div>
+            <div class="input focus"><i data-lucide="search"></i><span class="ph">Tìm ngành, VD: logistics, nha khoa…</span></div>
+            <div class="ind-scroll">
+              <div class="sec">Công nghệ &amp; Viễn thông<span>8 ngành</span></div>
+              <div class="ind-row" data-js="ind" data-n="Công nghệ thông tin"><span class="tx">Công nghệ thông tin</span><span class="box on"><i data-lucide="check"></i></span></div>
+              <div class="ind-row" data-js="ind" data-n="Phần mềm &amp; SaaS"><span class="tx">Phần mềm &amp; SaaS</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Thương mại điện tử"><span class="tx">Thương mại điện tử</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="An ninh mạng"><span class="tx">An ninh mạng</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Viễn thông"><span class="tx">Viễn thông</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Phần cứng &amp; Điện tử"><span class="tx">Phần cứng &amp; Điện tử</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Trí tuệ nhân tạo &amp; Dữ liệu"><span class="tx">Trí tuệ nhân tạo &amp; Dữ liệu</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Game &amp; Giải trí số"><span class="tx">Game &amp; Giải trí số</span><span class="box"></span></div>
+              <div class="sec">Kinh doanh &amp; Thương mại<span>6 ngành</span></div>
+              <div class="ind-row" data-js="ind" data-n="Kinh doanh – Bán hàng"><span class="tx">Kinh doanh – Bán hàng</span><span class="box on"><i data-lucide="check"></i></span></div>
+              <div class="ind-row" data-js="ind" data-n="Bán lẻ"><span class="tx">Bán lẻ</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Bán buôn – Phân phối"><span class="tx">Bán buôn – Phân phối</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Xuất nhập khẩu"><span class="tx">Xuất nhập khẩu</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Hàng tiêu dùng (FMCG)"><span class="tx">Hàng tiêu dùng (FMCG)</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Nhượng quyền thương hiệu"><span class="tx">Nhượng quyền thương hiệu</span><span class="box"></span></div>
+              <div class="sec">Marketing &amp; Truyền thông<span>6 ngành</span></div>
+              <div class="ind-row" data-js="ind" data-n="Marketing – Quảng cáo"><span class="tx">Marketing – Quảng cáo</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Truyền thông – PR"><span class="tx">Truyền thông – PR</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Báo chí – Xuất bản"><span class="tx">Báo chí – Xuất bản</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Sự kiện"><span class="tx">Sự kiện</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Thiết kế – Sáng tạo"><span class="tx">Thiết kế – Sáng tạo</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Sản xuất nội dung – KOL"><span class="tx">Sản xuất nội dung – KOL</span><span class="box"></span></div>
+              <div class="sec">Tài chính – Ngân hàng<span>6 ngành</span></div>
+              <div class="ind-row" data-js="ind" data-n="Ngân hàng"><span class="tx">Ngân hàng</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Bảo hiểm"><span class="tx">Bảo hiểm</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Chứng khoán – Đầu tư"><span class="tx">Chứng khoán – Đầu tư</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Fintech – Thanh toán"><span class="tx">Fintech – Thanh toán</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Kế toán – Kiểm toán"><span class="tx">Kế toán – Kiểm toán</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Thuế"><span class="tx">Thuế</span><span class="box"></span></div>
+              <div class="sec">Tư vấn &amp; Dịch vụ chuyên môn<span>6 ngành</span></div>
+              <div class="ind-row" data-js="ind" data-n="Tư vấn quản lý"><span class="tx">Tư vấn quản lý</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Luật"><span class="tx">Luật</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Nhân sự – Tuyển dụng"><span class="tx">Nhân sự – Tuyển dụng</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Dịch thuật"><span class="tx">Dịch thuật</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Nghiên cứu thị trường"><span class="tx">Nghiên cứu thị trường</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Dịch vụ doanh nghiệp"><span class="tx">Dịch vụ doanh nghiệp</span><span class="box"></span></div>
+              <div class="sec">Bất động sản &amp; Xây dựng<span>6 ngành</span></div>
+              <div class="ind-row" data-js="ind" data-n="Bất động sản"><span class="tx">Bất động sản</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Xây dựng"><span class="tx">Xây dựng</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Kiến trúc"><span class="tx">Kiến trúc</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Thiết kế nội thất"><span class="tx">Thiết kế nội thất</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Vật liệu xây dựng"><span class="tx">Vật liệu xây dựng</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Quản lý tòa nhà"><span class="tx">Quản lý tòa nhà</span><span class="box"></span></div>
+              <div class="sec">Sản xuất &amp; Công nghiệp<span>7 ngành</span></div>
+              <div class="ind-row" data-js="ind" data-n="Sản xuất"><span class="tx">Sản xuất</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Cơ khí – Chế tạo"><span class="tx">Cơ khí – Chế tạo</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Ô tô – Xe máy"><span class="tx">Ô tô – Xe máy</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Dệt may – Da giày"><span class="tx">Dệt may – Da giày</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Hóa chất – Nhựa"><span class="tx">Hóa chất – Nhựa</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="In ấn – Bao bì"><span class="tx">In ấn – Bao bì</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Gỗ – Nội thất"><span class="tx">Gỗ – Nội thất</span><span class="box"></span></div>
+              <div class="sec">Năng lượng &amp; Môi trường<span>5 ngành</span></div>
+              <div class="ind-row" data-js="ind" data-n="Điện – Năng lượng"><span class="tx">Điện – Năng lượng</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Năng lượng tái tạo"><span class="tx">Năng lượng tái tạo</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Dầu khí"><span class="tx">Dầu khí</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Khai khoáng"><span class="tx">Khai khoáng</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Môi trường – Xử lý chất thải"><span class="tx">Môi trường – Xử lý chất thải</span><span class="box"></span></div>
+              <div class="sec">Logistics &amp; Vận tải<span>5 ngành</span></div>
+              <div class="ind-row" data-js="ind" data-n="Logistics – Kho vận"><span class="tx">Logistics – Kho vận</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Vận tải"><span class="tx">Vận tải</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Hàng không"><span class="tx">Hàng không</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Hàng hải – Cảng biển"><span class="tx">Hàng hải – Cảng biển</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Giao hàng – Chuyển phát"><span class="tx">Giao hàng – Chuyển phát</span><span class="box"></span></div>
+              <div class="sec">Y tế &amp; Sức khỏe<span>7 ngành</span></div>
+              <div class="ind-row" data-js="ind" data-n="Y tế – Bệnh viện"><span class="tx">Y tế – Bệnh viện</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Nha khoa"><span class="tx">Nha khoa</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Dược phẩm"><span class="tx">Dược phẩm</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Thiết bị y tế"><span class="tx">Thiết bị y tế</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Chăm sóc sức khỏe"><span class="tx">Chăm sóc sức khỏe</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Làm đẹp – Spa"><span class="tx">Làm đẹp – Spa</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Thể thao – Fitness"><span class="tx">Thể thao – Fitness</span><span class="box"></span></div>
+              <div class="sec">Giáo dục &amp; Đào tạo<span>6 ngành</span></div>
+              <div class="ind-row" data-js="ind" data-n="Giáo dục"><span class="tx">Giáo dục</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Đào tạo doanh nghiệp"><span class="tx">Đào tạo doanh nghiệp</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Ngoại ngữ"><span class="tx">Ngoại ngữ</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Du học – Tư vấn du học"><span class="tx">Du học – Tư vấn du học</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="EdTech – Học trực tuyến"><span class="tx">EdTech – Học trực tuyến</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Nghiên cứu – Học thuật"><span class="tx">Nghiên cứu – Học thuật</span><span class="box"></span></div>
+              <div class="sec">Du lịch, Nhà hàng &amp; Khách sạn<span>5 ngành</span></div>
+              <div class="ind-row" data-js="ind" data-n="Du lịch – Lữ hành"><span class="tx">Du lịch – Lữ hành</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Khách sạn – Lưu trú"><span class="tx">Khách sạn – Lưu trú</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Nhà hàng – Ẩm thực"><span class="tx">Nhà hàng – Ẩm thực</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Cà phê – Đồ uống"><span class="tx">Cà phê – Đồ uống</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Giải trí"><span class="tx">Giải trí</span><span class="box"></span></div>
+              <div class="sec">Nông nghiệp &amp; Thực phẩm<span>5 ngành</span></div>
+              <div class="ind-row" data-js="ind" data-n="Nông nghiệp"><span class="tx">Nông nghiệp</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Thủy sản"><span class="tx">Thủy sản</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Chăn nuôi"><span class="tx">Chăn nuôi</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Chế biến thực phẩm"><span class="tx">Chế biến thực phẩm</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Nông sản xuất khẩu"><span class="tx">Nông sản xuất khẩu</span><span class="box"></span></div>
+              <div class="sec">Thời trang &amp; Phong cách sống<span>5 ngành</span></div>
+              <div class="ind-row" data-js="ind" data-n="Thời trang"><span class="tx">Thời trang</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Mỹ phẩm"><span class="tx">Mỹ phẩm</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Trang sức – Phụ kiện"><span class="tx">Trang sức – Phụ kiện</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Đồ gia dụng"><span class="tx">Đồ gia dụng</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Mẹ &amp; Bé"><span class="tx">Mẹ &amp; Bé</span><span class="box"></span></div>
+              <div class="sec">Văn hóa, Nghệ thuật &amp; Truyền thông<span>4 ngành</span></div>
+              <div class="ind-row" data-js="ind" data-n="Điện ảnh – Truyền hình"><span class="tx">Điện ảnh – Truyền hình</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Âm nhạc"><span class="tx">Âm nhạc</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Nhiếp ảnh – Quay phim"><span class="tx">Nhiếp ảnh – Quay phim</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Mỹ thuật – Thủ công"><span class="tx">Mỹ thuật – Thủ công</span><span class="box"></span></div>
+              <div class="sec">Khu vực công &amp; Phi lợi nhuận<span>4 ngành</span></div>
+              <div class="ind-row" data-js="ind" data-n="Cơ quan nhà nước"><span class="tx">Cơ quan nhà nước</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Tổ chức phi lợi nhuận – NGO"><span class="tx">Tổ chức phi lợi nhuận – NGO</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Hiệp hội – Câu lạc bộ"><span class="tx">Hiệp hội – Câu lạc bộ</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Ngoại giao – Tổ chức quốc tế"><span class="tx">Ngoại giao – Tổ chức quốc tế</span><span class="box"></span></div>
+              <div class="sec">Khác<span>5 ngành</span></div>
+              <div class="ind-row" data-js="ind" data-n="Khởi nghiệp"><span class="tx">Khởi nghiệp</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Tự kinh doanh – Freelancer"><span class="tx">Tự kinh doanh – Freelancer</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Sinh viên"><span class="tx">Sinh viên</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Đã nghỉ hưu"><span class="tx">Đã nghỉ hưu</span><span class="box"></span></div>
+              <div class="ind-row" data-js="ind" data-n="Ngành khác"><span class="tx">Ngành khác</span><span class="box"></span></div>
+              <div class="ind-empty">Không tìm thấy ngành phù hợp</div>
+            </div>
+            <div class="ind-foot"><button class="btn primary">Xong · Đã chọn 2/5</button></div>
+          </div>
+        </div>
+        <div class="cap">D2b · Chọn ngành nghề (sheet)<small>Mở khi chạm ô "Tìm trong hơn 100 ngành nghề" ở D2. Ô tìm luôn ở trên cùng, tìm không dấu và theo từ đồng nghĩa (gõ "it" ra Công nghệ thông tin). Danh sách 96 ngành phổ biến chia 17 nhóm (Công nghệ, Kinh doanh, Marketing, Tài chính, Tư vấn, Bất động sản, Sản xuất, Năng lượng, Logistics, Y tế, Giáo dục, Du lịch – F&B, Nông nghiệp, Thời trang, Văn hóa – Nghệ thuật, Khu vực công, Khác), cuộn dọc; các ngành AI đã điền sẵn ở D2 hiện đã tích ngay trong nhóm của nó. Không lặp lại chip ngành đã chọn trong sheet, nhìn ô tích và số đếm trên nút "Xong" là đủ. Chạm cả dòng để tích / bỏ tích. Chọn tối đa 5 ngành; khi đủ 5, các ô còn lại mờ đi cho tới khi bỏ bớt. Cuối danh sách có lựa chọn "Ngành khác" (nhóm Khác) cho người không thấy ngành của mình. Bấm "Xong" quay về D2, dữ liệu giữ nguyên.</small></div>
+      </div>
+
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="body" style="padding: 40px 24px 0">
+            <div class="success-ring"><span><i data-lucide="check"></i></span></div>
+            <div class="h1 t-center">Hồ sơ đã sẵn sàng!</div>
+            <p class="t-body t-center mt8 mb24">Bắt đầu kết nối ngay với 3 bước sau:</p>
+            <div class="next-step"><span class="ic"><i data-lucide="nfc"></i></span><div><b>Kích hoạt thẻ InCard</b><span>Liên kết thẻ NFC vật lý với Thẻ InApps Technology</span></div><i class="chev" data-lucide="chevron-right"></i></div>
+            <div class="next-step"><span class="ic"><i data-lucide="scan-line"></i></span><div><b>Quét danh thiếp đầu tiên</b><span>Lưu liên hệ trong 3 giây</span></div><i class="chev" data-lucide="chevron-right"></i></div>
+            <div class="next-step"><span class="ic"><i data-lucide="user-round-pen"></i></span><div><b>Hoàn thiện hồ sơ</b><span>Thẻ InApps Technology đang ở mức 40%</span></div><i class="chev" data-lucide="chevron-right"></i></div>
+          </div>
+          <div style="padding: 0 24px 8px"><button class="btn primary">Vào trang chủ</button></div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">D3 · Hoàn tất<small>Thay màn chúc mừng trống bằng 3 việc nên làm tiếp. Mỗi việc dẫn thẳng vào flow tương ứng. Không bật paywall ở đây. "Kích hoạt thẻ InCard" là gắn thẻ NFC vật lý vào thẻ vừa tạo (Thẻ InApps Technology); "Hoàn thiện hồ sơ" và mức % cũng tính cho thẻ này.</small></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== E. Nhập từ LinkedIn (bổ sung từ screens/profile/18–20, auth/03b-linkedin) ===================== -->
+  <style>
+    .li-opt { display: flex; gap: 12px; align-items: flex-start; padding: 16px; border-radius: 16px; border: 1.5px solid var(--slate-200); background: var(--white); margin-bottom: 12px; }
+    .li-opt.on { border-color: var(--green); background: var(--green-50); }
+    .li-opt .ic { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--slate-100); color: var(--slate-600); }
+    .li-opt .ic.li { background: #0a66c2; color: var(--white); }
+    .li-opt .ic svg { width: 22px; height: 22px; }
+    .li-opt b { display: block; font-size: 15.5px; font-weight: 700; }
+    .li-opt p { font-size: 13px; color: var(--slate-500); line-height: 1.45; margin-top: 3px; }
+    .li-opt .tag { display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; font-size: 11.5px; font-weight: 700; color: var(--green-dark); }
+    .li-opt .tag svg { width: 13px; height: 13px; }
+    .li-opt .rd { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--slate-300); flex-shrink: 0; margin-top: 2px; }
+    .li-opt.on .rd { border: 7px solid var(--green); }
+    .li-steps { display: flex; flex-direction: column; gap: 14px; margin-top: 22px; text-align: left; }
+    .li-steps .s { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--slate-500); }
+    .li-steps .s .d { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--slate-100); color: var(--slate-400); flex-shrink: 0; }
+    .li-steps .s .d svg { width: 15px; height: 15px; }
+    .li-steps .s.ok { color: var(--ink); font-weight: 600; }
+    .li-steps .s.ok .d { background: var(--green); color: var(--white); }
+    .li-steps .s.run { color: var(--ink); font-weight: 600; }
+    .li-steps .s.run .d { background: var(--green-50); color: var(--green); }
+    .li-ring { width: 132px; height: 132px; margin: 8px auto 0; position: relative; }
+    .li-ring svg { width: 132px; height: 132px; transform: rotate(-90deg); }
+    .li-ring .c { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .li-ring .c b { font-size: 28px; font-weight: 800; }
+    .li-ring .c span { font-size: 12px; color: var(--slate-500); }
+  </style>
+  <section class="rd-section">
+    <h2>E · Nhập hồ sơ từ LinkedIn (tuỳ chọn)</h2>
+    <div class="rd-row">
+
+      <!-- E1 Choose how -->
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title"></div><div class="spacer44"></div></div>
+          <div class="body" style="padding: 4px 24px 0">
+            <div class="h1">Tạo hồ sơ thế nào?</div>
+            <p class="t-sm mt4 mb24">Chọn cách nhanh nhất với bạn. Bạn luôn xem lại và sửa được trước khi lưu.</p>
+            <div class="li-opt on">
+              <span class="ic li"><i data-lucide="linkedin"></i></span>
+              <div class="f1"><b>Lấy từ LinkedIn</b><p>Tự điền tên, chức danh, công ty, giới thiệu và kinh nghiệm từ trang LinkedIn công khai của bạn.</p><span class="tag"><i data-lucide="sparkles"></i>Nhanh nhất · khoảng 30 giây</span></div>
+              <span class="rd"></span>
+            </div>
+            <div class="li-opt">
+              <span class="ic"><i data-lucide="pencil-line"></i></span>
+              <div class="f1"><b>Tự điền</b><p>Điền 2 bước ngắn: thông tin cơ bản và công việc.</p></div>
+              <span class="rd"></span>
+            </div>
+          </div>
+          <div style="padding: 0 24px 8px"><button class="btn primary">Tiếp tục</button></div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">E1 · Chọn cách tạo hồ sơ<small>Bổ sung từ bản cũ (Import Options / Set Up Your Profile). Hiện ngay sau khi tạo tài khoản (C1), trước Bước 1. Chỉ 2 lựa chọn dạng radio, mặc định chọn LinkedIn vì nhanh nhất. "Tự điền" đi thẳng D1. Cũng mở được từ "Tạo thẻ mới" (03-E3) để tạo thẻ thứ 2 từ LinkedIn.</small></div>
+      </div>
+
+      <!-- E2 Paste link -->
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="arrow-left"></i></button><div class="title"></div><div class="spacer44"></div></div>
+          <div class="body" style="padding: 4px 24px 0">
+            <div class="h1">Dán link LinkedIn</div>
+            <p class="t-sm mt4 mb16">Mở LinkedIn → hồ sơ của bạn → Chia sẻ → Sao chép liên kết.</p>
+            <div class="field">
+              <label>Link hồ sơ LinkedIn</label>
+              <div class="input focus"><i data-lucide="linkedin" style="color:#0a66c2"></i><span class="v">linkedin.com/in/nguyenminhanh</span><i data-lucide="circle-check" style="color:var(--green)"></i></div>
+              <div class="hint"><i data-lucide="info"></i>Đã nhận đúng định dạng link hồ sơ</div>
+            </div>
+            <button class="btn outline md"><i data-lucide="clipboard-paste"></i>Dán từ bộ nhớ tạm</button>
+            <div class="card flat mt24" style="padding:14px">
+              <div class="flex g8 ac" style="font-size:13.5px;font-weight:700"><i data-lucide="shield-check" style="width:18px;height:18px;color:var(--green)"></i>InCard sẽ lấy</div>
+              <p class="t-xs mt8" style="line-height:1.6">Họ tên · ảnh đại diện · chức danh &amp; công ty hiện tại · giới thiệu · kỹ năng nổi bật. Không cần mật khẩu LinkedIn, không đăng gì lên LinkedIn.</p>
+            </div>
+          </div>
+          <div style="padding: 0 24px 8px"><button class="btn primary"><i data-lucide="download"></i>Lấy thông tin</button></div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">E2 · Dán link LinkedIn<small>Bản cũ có màn nhập link nhưng không nói lấy những gì. Bản mới: hướng dẫn 1 dòng cách lấy link, nút "Dán từ bộ nhớ tạm", kiểm tra định dạng ngay khi dán (dấu tích xanh), và khung cam kết: không cần mật khẩu, không đăng lên LinkedIn, liệt kê đúng các trường sẽ lấy. Link sai định dạng thì ô đỏ kèm ví dụ đúng.</small></div>
+      </div>
+
+      <!-- E3 Extracting -->
+      <div class="rd-shot">
+        <div class="phone white">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+          <div class="appbar"><button class="icon-btn"><i data-lucide="x"></i></button><div class="title"></div><div class="spacer44"></div></div>
+          <div class="body t-center" style="padding: 24px 32px 0">
+            <div class="li-ring">
+              <svg viewBox="0 0 132 132"><circle cx="66" cy="66" r="58" fill="none" stroke="var(--slate-100)" stroke-width="8"/><circle cx="66" cy="66" r="58" fill="none" stroke="var(--green)" stroke-width="8" stroke-linecap="round" stroke-dasharray="364.4" stroke-dashoffset="164"/></svg>
+              <div class="c"><b>55%</b><span>đang lấy</span></div>
+            </div>
+            <div class="h2 mt20">Đang lấy thông tin từ LinkedIn</div>
+            <p class="t-sm mt4">Thường mất dưới 30 giây. Bạn có thể huỷ bất cứ lúc nào.</p>
+            <div class="li-steps">
+              <div class="s ok"><span class="d"><i data-lucide="check"></i></span>Họ tên &amp; ảnh đại diện</div>
+              <div class="s ok"><span class="d"><i data-lucide="check"></i></span>Chức danh &amp; công ty</div>
+              <div class="s run"><span class="d"><i data-lucide="loader"></i></span>Giới thiệu &amp; kỹ năng</div>
+              <div class="s"><span class="d"><i data-lucide="briefcase"></i></span>Gợi ý ngành nghề</div>
+            </div>
+          </div>
+          <div style="padding: 0 24px 8px"><button class="btn ghost" style="color:var(--ink)">Huỷ, tự điền</button></div>
+          <div class="home-ind"></div>
+        </div>
+        <div class="cap">E3 · Đang lấy dữ liệu<small>Thay vòng quay và dòng chữ tiếng Anh "Extracting Your Data" bằng tiến trình theo từng phần, người dùng thấy rõ đã lấy được gì. "Huỷ, tự điền" chuyển sang D1 với phần đã lấy. Xong thì mở D1 → D2 với các ô điền sẵn, gắn nhãn nhỏ "Từ LinkedIn" để người dùng kiểm tra lại trước khi Hoàn tất. Lấy không được (hồ sơ ẩn, link sai) thì báo lỗi kèm nút "Tự điền".</small></div>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+  /* D2 / D2b · Ngành nghề: tích chọn tối đa 5, chip ở D2 & nút "Xong" cập nhật theo, ô tìm lọc danh sách */
+  (function () {
+    var MAX = 5, sel = ['Công nghệ thông tin', 'Kinh doanh – Bán hàng'];   // AI điền sẵn từ chức danh + công ty
+    var KEYS = { 'Công nghệ thông tin': 'it cntt tech', 'Phần mềm & SaaS': 'software it saas', 'Chứng khoán – Đầu tư': 'invest', 'Thương mại điện tử': 'ecommerce tmdt shopee',
+      'Trí tuệ nhân tạo & Dữ liệu': 'ai data', 'Marketing – Quảng cáo': 'ads digital', 'Logistics – Kho vận': 'logistic supply chain', 'Hàng tiêu dùng (FMCG)': 'fmcg',
+      'Nhà hàng – Ẩm thực': 'f&b fnb food', 'Cà phê – Đồ uống': 'f&b fnb coffee', 'Nhân sự – Tuyển dụng': 'hr', 'Bất động sản': 'bds real estate', 'Làm đẹp – Spa': 'beauty',
+      'Fintech – Thanh toán': 'fintech payment', 'Tổ chức phi lợi nhuận – NGO': 'ngo', 'Tự kinh doanh – Freelancer': 'freelance' };
+    var fold = function (s) { return (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd'); };
+    function icons(root) { lucide.createIcons({ root: root, attrs: { 'stroke-width': 1.75 } }); }
+    function render() {
+      var full = sel.length >= MAX;
+      document.querySelectorAll('.ind-row[data-js="ind"]').forEach(function (r) {
+        var on = sel.indexOf(r.dataset.n) > -1, b = r.querySelector('.box');
+        b.classList.toggle('on', on); b.innerHTML = on ? '<i data-lucide="check"></i>' : '';
+        r.classList.toggle('dis', full && !on);
+        if (on) icons(b);
+      });
+      document.querySelectorAll('.ind-sel').forEach(function (box) {
+        box.innerHTML = sel.map(function (n) { return '<span class="chip on" data-js="ind" data-n="' + n.replace(/"/g, '&quot;') + '">' + n.replace(/&/g, '&amp;') + '<i data-lucide="circle-x"></i></span>'; }).join('');
+        box.style.display = sel.length ? '' : 'none';
+        icons(box);
+      });
+      document.querySelectorAll('.ind-foot .btn').forEach(function (b) {
+        b.textContent = sel.length ? 'Xong · Đã chọn ' + sel.length + '/' + MAX : 'Xong';
+        b.classList.toggle('disabled', !sel.length);
+      });
+    }
+    function say(m) { try { if (window.parent !== window && window.parent.toast) return window.parent.toast(m); } catch (e) {} }
+    var prev = window.pageAct;
+    window.pageAct = function (el) {
+      if (el.dataset.js !== 'ind') return prev ? prev(el) : undefined;
+      var n = el.dataset.n, i = sel.indexOf(n);
+      if (i > -1) sel.splice(i, 1);
+      else if (sel.length >= MAX) { say('Chọn tối đa ' + MAX + ' ngành. Bỏ bớt một ngành để chọn ngành khác.'); return true; }
+      else sel.push(n);
+      document.querySelectorAll('.ind-ai').forEach(function (h) { h.style.display = 'none'; });   // user đã tự sửa → bỏ nhãn "AI đã điền sẵn"
+      render(); return true;
+    };
+    if (window.parent === window) document.addEventListener('click', function (e) { var j = e.target.closest && e.target.closest('[data-js]'); if (j) window.pageAct(j); });
+    document.addEventListener('input', function (e) {
+      var sh = e.target.closest && e.target.closest('.ind-sheet'); if (!sh) return;
+      var q = fold(e.target.value).trim(), any = false, sec = null, secHas = false;
+      sh.querySelectorAll('.ind-scroll > *').forEach(function (el) {
+        if (el.classList.contains('sec')) { if (sec) sec.style.display = secHas ? '' : 'none'; sec = el; secHas = false; return; }
+        if (!el.classList.contains('ind-row')) return;
+        var hit = !q || (fold(el.dataset.n) + ' ' + (KEYS[el.dataset.n] || '')).indexOf(q) > -1;
+        var other = el.dataset.n === 'Ngành khác';   // luôn hiện khi tìm, cho người không thấy ngành của mình
+        if (other) hit = true;
+        el.style.display = hit ? '' : 'none'; if (hit) { secHas = true; if (!other) any = true; }
+      });
+      if (sec) sec.style.display = secHas ? '' : 'none';
+      var em = sh.querySelector('.ind-empty'); if (em) em.classList.toggle('show', !any);
+    });
+  })();
+  /* Công việc của bạn · "+ Thêm chức danh & công ty": mở thêm cụm mới (không giới hạn); cụm phụ có thùng rác */
+  (function () {
+    function icons(r) { lucide.createIcons({ root: r, attrs: { 'stroke-width': 1.75 } }); }
+    function say(m) { try { if (window.parent !== window && window.parent.toast) window.parent.toast(m); } catch (e) {} }
+    function blocks(body) { return [].slice.call(body.querySelectorAll('.pos-blk')); }
+    function render(body) {
+      var bs = blocks(body), many = bs.length > 1;
+      bs.forEach(function (b, i) {
+        var hd = b.querySelector('.pos-hd');
+        if (!many) { if (hd) hd.remove(); return; }
+        if (!hd) { hd = document.createElement('div'); hd.className = 'pos-hd'; b.insertBefore(hd, b.firstChild); }
+        hd.innerHTML = '<b>Vai trò ' + (i + 1) + '</b>' + (i === 0
+          ? '<span class="badge green"><i data-lucide="star"></i>Chính</span>'
+          : '<button type="button" class="pos-del" data-js="pos-del" aria-label="Xoá vai trò này"><i data-lucide="trash-2"></i></button>');
+        icons(hd);
+      });
+    }
+    var NEW = '<div class="field"><label>Chức danh <span class="req">*</span></label><div class="input focus"><i data-lucide="briefcase"></i><input class="pv-in" type="text" placeholder="VD: Cố vấn, Giảng viên, Founder…" autocomplete="off" spellcheck="false"></div></div>'
+      + '<div class="field" style="margin-bottom:0"><label>Công ty / Tổ chức <span class="req">*</span></label><div class="input"><i data-lucide="building-2"></i><input class="pv-in" type="text" placeholder="Tên công ty, trường học…" autocomplete="off" spellcheck="false"></div></div>';
+    var prev = window.pageAct;
+    window.pageAct = function (el) {
+      var js = el.dataset.js;
+      if (js !== 'pos-add' && js !== 'pos-del') return prev ? prev(el) : undefined;
+      var body = el.closest('.body'), b;
+      if (js === 'pos-add') {
+        body.querySelectorAll('.pos-blk .input.focus').forEach(function (x) { x.classList.remove('focus'); });
+        b = document.createElement('div'); b.className = 'pos-blk'; b.innerHTML = NEW;
+        el.parentNode.insertBefore(b, el); icons(b); render(body);
+        body.classList.add('pos-scroll');
+        body.scrollTo({ top: Math.max(0, b.offsetTop - 12), behavior: 'smooth' });
+        b.querySelectorAll('.pv-in').forEach(function (inp) {
+          var box = inp.parentNode;
+          inp.addEventListener('focus', function () { body.querySelectorAll('.input.focus').forEach(function (x) { x.classList.remove('focus'); }); box.classList.add('focus'); });
+          inp.addEventListener('blur', function () { box.classList.remove('focus'); });
+          inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); var nx = b.querySelectorAll('.pv-in')[1]; if (nx && nx !== inp) nx.focus(); else inp.blur(); } });
+        });
+        setTimeout(function () { var f = b.querySelector('.pv-in'); if (f) f.focus({ preventScroll: true }); }, 250);
+      } else {
+        el.closest('.pos-blk').remove(); render(body); say('Đã xoá vai trò');
+      }
+      return true;
+    };
+  })();
+  /* D1 · Giả lập chọn ảnh đại diện: Chụp ảnh / Chọn từ thư viện → cắt ảnh tròn (kéo + phóng to) → hiện trên ô ảnh, giữ trong phiên */
+  (function () {
+    var KEY = 'pv-avatar', D = 280;
+    var PH = function (n) { return 'https://i.pravatar.cc/400?img=' + n; };
+    var LIB = [47, 44, 45, 49, 'img/coffee.jpg', 32, 'img/office.jpg', 9, 16, 'img/conf.jpg', 20, 25, 'img/meeting.jpg', 26, 29, 'img/gala.jpg', 5, 10];
+    var SB = '<div class="statusbar"><span>9:41</span><span class="sb-icons"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>';
+    var st = null, crop = null, phone = null;
+    try { st = JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (e) {}
+    function icons(r) { lucide.createIcons({ root: r, attrs: { 'stroke-width': 1.75 } }); }
+    function say(m) { try { if (window.parent !== window && window.parent.toast) window.parent.toast(m); } catch (e) {} }
+    function src(v) { return typeof v === 'number' ? PH(v) : 'assets/' + v; }
+    function ov() { return phone && phone.querySelector('.av-ov'); }
+    function close() { var o = ov(); if (o) o.remove(); crop = null; }
+    function open(html) {
+      close(); phone.scrollTop = 0;
+      var o = document.createElement('div'); o.className = 'av-ov'; o.dataset.js = 'av'; o.innerHTML = html;
+      phone.appendChild(o); icons(o); return o;
+    }
+    function sheet() {
+      open('<div class="scrim" data-js="av-close"></div><div class="sheet"><div class="grab"></div>'
+        + '<div class="sh-head"><h3>Ảnh đại diện</h3></div>'
+        + '<div class="sh-tip"><i data-lucide="sparkles"></i><span>Ảnh rõ mặt, nhìn thẳng giúp người nhận nhận ra bạn khi chạm thẻ.</span></div>'
+        + '<div class="sh-row" data-js="av-cam"><span class="ic"><i data-lucide="camera"></i></span><span><b>Chụp ảnh</b><small>Dùng camera trước</small></span></div>'
+        + '<div class="sh-row" data-js="av-lib"><span class="ic"><i data-lucide="images"></i></span><span><b>Chọn từ thư viện</b><small>Ảnh trong máy của bạn</small></span></div>'
+        + (st ? '<div class="sh-row danger" data-js="av-del"><span class="ic red"><i data-lucide="trash-2"></i></span><span><b>Xoá ảnh hiện tại</b></span></div>' : '')
+        + '<button class="btn tonal" style="margin-top:10px" data-js="av-close">Huỷ</button></div>');
+    }
+    function library() {
+      open('<div class="av-full lib">' + SB
+        + '<div class="lb-bar"><a data-js="av-close">Huỷ</a><b>Chọn ảnh</b><a></a></div>'
+        + '<div class="lb-tabs"><span class="on">Gần đây</span><span>Chân dung</span><span>Album</span></div>'
+        + '<div class="lb-grid">' + LIB.map(function (v) { return '<span data-js="av-pick" data-src="' + src(v) + '" style="background-image:url(\'' + (typeof v === 'number' ? 'https://i.pravatar.cc/150?img=' + v : src(v)) + '\')"></span>'; }).join('') + '</div>'
+        + '<div class="lb-note">InCard chỉ truy cập những ảnh bạn chọn</div></div>');
+    }
+    function camera() {
+      open('<div class="av-full dark">' + SB
+        + '<div class="cam-top"><span class="cam-ib" data-js="av-close"><i data-lucide="x"></i></span><span class="cam-ib" data-js="av-noop"><i data-lucide="zap-off"></i></span></div>'
+        + '<div class="cam-view"><img src="' + PH(47) + '" alt="" /><div class="cam-guide"></div><div class="cam-hint"><span>Đưa khuôn mặt vào khung tròn</span></div><div class="flash"></div></div>'
+        + '<div class="cam-bot"><span class="cam-thumb" data-js="av-lib" style="background-image:url(\'' + PH(44) + '\')"></span><span class="shutter" data-js="av-shot"><span></span></span><span class="cam-ib" data-js="av-noop"><i data-lucide="switch-camera"></i></span></div></div>');
+    }
+    function cropper(s, from) {
+      var o = open('<div class="av-full dark">' + SB
+        + '<div class="cr-title">Căn chỉnh ảnh</div><div class="cr-sub">Kéo để di chuyển · Kéo thanh bên dưới để phóng to</div>'
+        + '<div class="cr-stage"><img src="' + s + '" alt="" draggable="false" /><div class="cr-mask"></div></div>'
+        + '<div class="cr-zoom"><i data-lucide="zoom-out"></i><input type="range" min="1" max="3" step="0.01" value="1" aria-label="Phóng to" /><i data-lucide="zoom-in"></i></div>'
+        + '<div class="cr-act"><button class="btn again" data-js="av-' + from + '">' + (from === 'cam' ? 'Chụp lại' : 'Chọn ảnh khác') + '</button><button class="btn primary" data-js="av-use">Dùng ảnh này</button></div></div>');
+      crop = { src: s, z: 1, x: 0, y: 0 };
+      var img = o.querySelector('.cr-stage img'), stage = o.querySelector('.cr-stage'), rng = o.querySelector('input[type=range]'), drag = null;
+      function clamp() { var m = D / 2 * (crop.z - 1); crop.x = Math.max(-m, Math.min(m, crop.x)); crop.y = Math.max(-m, Math.min(m, crop.y)); }
+      function paint() { clamp(); img.style.transform = 'translate(' + crop.x + 'px,' + crop.y + 'px) scale(' + crop.z + ')'; }
+      rng.addEventListener('input', function () { crop.z = +rng.value; paint(); });
+      stage.addEventListener('wheel', function (e) { e.preventDefault(); crop.z = Math.max(1, Math.min(3, crop.z - e.deltaY * 0.002)); rng.value = crop.z; paint(); }, { passive: false });
+      stage.addEventListener('pointerdown', function (e) { drag = { px: e.clientX, py: e.clientY, x: crop.x, y: crop.y }; stage.setPointerCapture(e.pointerId); });
+      stage.addEventListener('pointermove', function (e) {
+        if (!drag) return;
+        var k = phone.getBoundingClientRect().width / phone.offsetWidth || 1;   // khung prototype có thể đang thu nhỏ
+        crop.x = drag.x + (e.clientX - drag.px) / k; crop.y = drag.y + (e.clientY - drag.py) / k; paint();
+      });
+      stage.addEventListener('pointerup', function () { drag = null; });
+      paint();
+    }
+    function render(pick) {
+      var cap = pick.parentNode.querySelector('.pick-cap');
+      pick.querySelectorAll('.av-clip, .av-spin').forEach(function (x) { x.remove(); });
+      pick.classList.toggle('has', !!st);
+      var cam = pick.querySelector(':scope > i, :scope > svg'); if (cam) cam.style.display = st ? 'none' : '';
+      var badge = pick.querySelector('.av-edit');
+      badge.innerHTML = '<i data-lucide="' + (st ? 'camera' : 'plus') + '"></i>'; icons(badge);
+      if (st) {
+        var f = (pick.clientWidth || 98) / D, c = document.createElement('span'); c.className = 'av-clip';
+        c.innerHTML = '<img src="' + st.src + '" alt="Ảnh đại diện" style="transform:translate(' + st.x * f + 'px,' + st.y * f + 'px) scale(' + st.z + ')" />';
+        pick.insertBefore(c, badge);
+      }
+      if (cap) cap.innerHTML = st ? '<b>Đổi ảnh đại diện</b>' : 'Thêm ảnh đại diện <span style="color:var(--slate-400)">(nên có)</span>';
+    }
+    function save() { try { st ? sessionStorage.setItem(KEY, JSON.stringify(st)) : sessionStorage.removeItem(KEY); } catch (e) {} }
+    var prev = window.pageAct;
+    window.pageAct = function (el) {
+      var js = el.dataset.js || '';
+      if (js !== 'av' && js.indexOf('av-') !== 0) return prev ? prev(el) : undefined;
+      if (js === 'av-open') { phone = el.closest('.phone'); sheet(); return true; }
+      if (!phone) phone = el.closest('.phone');
+      var pick = phone.querySelector('.photo-pick[data-js="av-open"]');
+      if (js === 'av-close') close();
+      else if (js === 'av-lib') library();
+      else if (js === 'av-cam') camera();
+      else if (js === 'av-noop') say('Tính năng camera mô phỏng trong prototype');
+      else if (js === 'av-pick') cropper(el.dataset.src, 'lib');
+      else if (js === 'av-shot') { var fl = phone.querySelector('.flash'); if (fl) fl.classList.add('go'); setTimeout(function () { cropper(PH(47), 'cam'); }, 320); }
+      else if (js === 'av-del') { st = null; save(); close(); render(pick); say('Đã xoá ảnh đại diện'); }
+      else if (js === 'av-use' && crop) {
+        st = crop; save(); close(); render(pick);
+        pick.classList.add('busy'); var sp = document.createElement('span'); sp.className = 'av-spin'; pick.appendChild(sp);
+        setTimeout(function () { pick.classList.remove('busy'); sp.remove(); say('Đã cập nhật ảnh đại diện'); }, 900);
+      }
+      return true;   // 'av' (vùng trống trong lớp phủ): không làm gì
+    };
+    if (st) document.querySelectorAll('.photo-pick[data-js="av-open"]').forEach(render);
+  })();
+  lucide.createIcons({ attrs: { 'stroke-width': 1.75 } });
+  </script>
+</body>
+</html>
